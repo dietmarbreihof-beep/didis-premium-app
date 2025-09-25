@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vermögensaufbau Masterclass: Depots nahe Höchstständen halten - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f4e97b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Statistik Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #f4e97b;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            background: #e5e5e5;
+            border-radius: 25px;
+            height: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0.3;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Concept Highlight Boxes */
+        .concept-highlight {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 5px solid #b8860b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #1a1a1a;
+        }
+
+        .concept-highlight h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 5px solid #d69e2e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #856404;
+        }
+
+        .warning-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #d69e2e;
+        }
+
+        /* Success Boxes */
+        .success-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 5px solid #38a169;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #155724;
+        }
+
+        .success-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #38a169;
+        }
+
+        /* Trading Rules */
+        .trading-rule {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #f4e97b;
+        }
+
+        .trading-rule h4 {
+            color: #f4e97b;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Interactive Elements */
+        .next-button {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+            min-width: 250px;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .next-button:active {
+            transform: translateY(0);
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid #2196f3;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1565c0;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #2196f3;
+            background: #f5f5f5;
+        }
+
+        .quiz-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid #28a745;
+        }
+
+        .key-takeaways h3 {
+            text-align: center;
+            color: #155724;
+            margin-bottom: 1.5rem;
+            font-size: 1.5em;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-title {
+                font-size: 2em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Completion Celebration */
+        .completion-celebration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .completion-celebration h2 {
+            margin-bottom: 1rem;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">💼 Vermögensaufbau Masterclass</h1>
+                <p class="hero-subtitle">Depots nahe Höchstständen halten - Der Schlüssel zum langfristigen Erfolg</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Rendite nötig nach 50% Verlust</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">90%</span>
+                        <span class="stat-label">Profis scheitern am Markt</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">#1</span>
+                        <span class="stat-label">Regel: Nahe Höchstständen bleiben</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2 class="progress-title">📊 Lernfortschritt</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 von 8 Schritten abgeschlossen</div>
+            </div>
+        </div>
+
+        <!-- Schritt 1: Das Grundproblem -->
+        <div class="section" id="step1">
+            <div class="section-title">
+                <div class="section-icon">🎯</div>
+                <span>Schritt 1: Das Grundproblem beim Vermögensaufbau</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>💡 Die harte Realität</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Der beste Weg, um an der Börse Vermögen aufzubauen, ist theoretisch der <strong>Kauf und das Halten großartiger Aktien</strong>. 
+                Aber hier kommt die Realität ins Spiel:
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Die Herausforderungen</h4>
+                <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Menschliche Fehler:</strong> Egal wie gut du bist, du wirst Fehler machen</li>
+                    <li><strong>Unvorhersehbares Pech:</strong> Externe Faktoren können jeden Plan durchkreuzen</li>
+                    <li><strong>Profi-Versagen:</strong> 90% der professionellen Hedgefondsmanager schlagen die Indizes nicht</li>
+                    <li><strong>Komplexität:</strong> Großartige Aktien zu identifizieren ist extrem schwierig</li>
+                </ul>
+            </div>
+
+            <div class="trading-rule">
+                <h4>🧠 Die entscheidende Erkenntnis</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Es ist zwar wichtig, gute Aktien zu finden, aber der <strong>effektivste Weg zum Vermögensaufbau</strong> 
+                besteht darin, deine Depots so nah wie möglich an ihren <strong>Höchstständen zu halten</strong>.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(2)">✅ Verstanden - Weiter zu den Vorteilen</button>
+        </div>
+
+        <!-- Schritt 2: Die zwei großen Vorteile -->
+        <div class="section" id="step2">
+            <div class="section-title">
+                <div class="section-icon">⚡</div>
+                <span>Schritt 2: Die zwei großen Vorteile</span>
+            </div>
+            
+            <div class="success-box">
+                <h4>🎯 Vorteil #1: Keine Zeit mit Verluste wettmachen verschwenden</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Du ersparst dir die <strong>sehr unproduktive Arbeit</strong>, Verluste wettzumachen, 
+                und kannst dich stattdessen darauf konzentrieren, <strong>mehr Gewinne zu erzielen</strong>.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>📊 Die Mathematik der Verluste</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                <strong>Beispiel:</strong> Wenn du zulässt, dass dein Depot die Hälfte seines Wertes verliert...
+                </p>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #e53e3e; font-weight: 600; font-size: 18px;">📉 50% Verlust</p>
+                    <p style="color: #1a1a1a; font-size: 16px; margin: 0.5rem 0;">➡️ Benötigst du</p>
+                    <p style="color: #38a169; font-weight: 600; font-size: 18px;">📈 100% Rendite</p>
+                    <p style="color: #666; font-size: 14px;">...um wieder auf den Ausgangswert zu kommen</p>
+                </div>
+                <p style="color: #d69e2e; font-weight: 600;">
+                Das ist eine <strong>enorme Menge an Arbeit für null Nettofortschritt!</strong>
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🚀 Vorteil #2: Compounding ermöglichen</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Depots nahe an ihren Höchstständen zu halten schafft die <strong>Voraussetzungen für Compounding</strong>. 
+                Erhebliches Vermögen entsteht, wenn du in der Lage bist, <strong>Gewinne auf deine Gewinne</strong> zu erzielen.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(3)">✅ Vorteile verstanden - Weiter zum Compounding</button>
+        </div>
+
+        <!-- Schritt 3: Compounding verstehen -->
+        <div class="section" id="step3">
+            <div class="section-title">
+                <div class="section-icon">📈</div>
+                <span>Schritt 3: Die Macht des Compounding</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>🔄 Compounding auf Portfolio-Ebene</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Die meisten Menschen denken beim Compounding nur an <strong>einzelne Aktien</strong>, 
+                aber er gilt auch auf <strong>Portfolio-Ebene</strong>. Du müssen immer wieder neue 
+                Höchststände erreichen, um einen Compounding-Effekt zu erzielen.
+                </p>
+            </div>
+
+            <div class="trading-rule">
+                <h4>⚡ Der Compounding-Effekt</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Wenn deine Depots <strong>nie zu weit von neuen Höchstständen entfernt</strong> sind, 
+                kommt die Kraft des Compounding zum Tragen. Im Laufe der Jahre kann der Compounding 
+                von Gewinnen zu <strong>erstaunlichen Renditen</strong> führen.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Der Compounding-Killer</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Große Verluste <strong>zerstören</strong> den Compounding-Effekt. Jedes Mal, wenn Du 
+                weit von deinen Höchstständen entfernt sind, musst du erst wieder "aufholen", 
+                bevor neuer Wohlstand entstehen kann.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(4)">✅ Compounding verstanden - Weiter zur Praxis</button>
+        </div>
+
+        <!-- Schritt 4: Die Herausforderung in der Praxis -->
+        <div class="section" id="step4">
+            <div class="section-title">
+                <div class="section-icon">⚖️</div>
+                <span>Schritt 4: Die Herausforderung in der Praxis</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>🎯 Einfaches Konzept, schwere Umsetzung</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Es ist ein <strong>einfaches Konzept</strong>, Anlagekonten nahe ihren Höchstständen zu halten, 
+                aber es in die <strong>Praxis umzusetzen, ist sehr schwierig</strong>.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>🌊 Das Volatilitäts-Dilemma</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Unabhängig davon, welche Aktien Du kaufen oder welchen Anlagestil Du verfolgen, 
+                wird es <strong>immer ein gewisses Maß an Volatilität</strong> geben.
+                </p>
+                <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #e53e3e; font-weight: 600;">❌ Zu früh verkaufen:</p>
+                    <p style="color: #666; margin-bottom: 0.5rem;">Verkauf bei 1-2% Rückgang → Nie große Gewinner halten</p>
+                    
+                    <p style="color: #e53e3e; font-weight: 600;">❌ Zu spät verkaufen:</p>
+                    <p style="color: #666;">Große Verluste → Lange Erholungszeit nötig</p>
+                </div>
+            </div>
+
+            <div class="trading-rule">
+                <h4>❓ Die entscheidende Frage</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                <strong>Wie hoch lassen Du die Verluste steigen, bevor Du Maßnahmen ergreifen 
+                und die betreffende Aktie verkaufen?</strong>
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(5)">✅ Das Dilemma verstanden - Weiter zu den Fehlern</button>
+        </div>
+
+        <!-- Schritt 5: Der größte Fehler -->
+        <div class="section" id="step5">
+            <div class="section-title">
+                <div class="section-icon">💥</div>
+                <span>Schritt 5: Der größte Fehler der meisten Anleger</span>
+            </div>
+            
+            <div class="warning-box">
+                <h4>🚫 Der fatale Fehler</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Der <strong>größte Fehler</strong>, den die meisten Anleger machen, ist, 
+                <strong>zu große Positionen</strong> in Aktien aufzubauen, die <strong>immer weiter fallen</strong>.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🧠 Die gefährliche Denkweise</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Anleger denken oft:
+                </p>
+                <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #c62828; font-style: italic; font-size: 16px;">
+                    "Der Markt irrt sich und wird bald zur Vernunft kommen..."
+                    </p>
+                </div>
+                <p style="color: #d69e2e; font-weight: 600;">
+                Aber wenn das nicht geschieht, sind es genau diese Verluste, 
+                die dich für <strong>lange Zeit zurückwerfen</strong> kannst.
+                </p>
+            </div>
+
+            <div class="trading-rule">
+                <h4>🛡️ Die Lösung</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Eine <strong>sehr strenge Methode zum Begrenzen von Verlusten</strong> ist entscheidend. 
+                Definieren Du im Voraus, bei welchem Verlust Du aussteigen, 
+                und halte dich daran - <strong>ohne Ausnahme</strong>.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(6)">✅ Den größten Fehler verstanden - Weiter zur Lösung</button>
+        </div>
+
+        <!-- Schritt 6: Die beste Lösung -->
+        <div class="section" id="step6">
+            <div class="section-title">
+                <div class="section-icon">🔄</div>
+                <span>Schritt 6: Die beste Lösung für hohe Volatilität</span>
+            </div>
+            
+            <div class="success-box">
+                <h4>🎯 Die optimale Strategie</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Es ist immer am besten, <strong>bereit zu sein, zu verkaufen und wieder zu kaufen</strong>. 
+                Das kostet viel Zeit und Mühe und erfordert ständige Wachsamkeit, aber es ist der Schlüssel zum Erfolg.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🔄 Flexibilität ist der Schlüssel</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Wenn Du eine Aktie verkaufen, die unter eine <strong>wichtige technische Unterstützung</strong> fällt, 
+                bedeutet das nicht, dass Du sie nicht <strong>wieder kaufen können</strong>, wenn sich die Kursbewegung verbessert.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Gefährliche Sturheit</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Lassen Du sich <strong>nicht von deiner Überzeugung</strong> hinsichtlich der Fundamentaldaten 
+                <strong>blind machen für eine schlechte Kursbewegung</strong>.
+                </p>
+                <p style="font-size: 14px; color: #666; margin-top: 1rem;">
+                Fundamentaldaten können richtig sein, aber der Markt kann länger irrational bleiben, 
+                als Du solvent bleiben kannst.
+                </p>
+            </div>
+
+            <div class="trading-rule">
+                <h4>💡 Die Kern-Philosophie</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                <strong>Preis-Action geht vor Überzeugung.</strong> Der Markt hat immer recht, 
+                auch wenn er "falsch" liegt. Respektiere die Kursbewegung.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(7)">✅ Die Lösung verstanden - Weiter zur mentalen Einstellung</button>
+        </div>
+
+        <!-- Schritt 7: Die mentale Einstellung -->
+        <div class="section" id="step7">
+            <div class="section-title">
+                <div class="section-icon">🧠</div>
+                <span>Schritt 7: Die richtige mentale Einstellung</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>🎯 Das Wichtigste zuerst</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Das Wichtigste, was du tun kannst, ist, sich <strong>mental mit dieser Idee anzufreunden</strong>. 
+                Die mentale Einstellung ist der Grundstein für erfolgreiches Risikomanagement.
+                </p>
+            </div>
+
+            <div class="warning-box">
+                <h4>🚫 Keine Rechtfertigungen suchen</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                <strong>Suche nicht nach Rechtfertigungen</strong> für einen starken Rückgang deiner Depots. 
+                Rechtfertigungen kosten dich Geld und Zeit.
+                </p>
+                <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #e53e3e; font-weight: 600;">❌ Typische Rechtfertigungen:</p>
+                    <ul style="color: #666; margin-left: 1.5rem;">
+                        <li>"Es ist nur vorübergehend"</li>
+                        <li>"Die Fundamentaldaten sind stark"</li>
+                        <li>"Der Markt versteht das Unternehmen nicht"</li>
+                        <li>"Es wird sich schon wieder erholen"</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <h4>⚡ Die richtige Reaktion</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Wenn sich die Verluste häufen, <strong>ergreifen Du Maßnahmen</strong> und 
+                sitze nicht einfach da und hoffe, dass sich alles zum Guten wendet.
+                </p>
+            </div>
+
+            <div class="trading-rule">
+                <h4>🎯 Handlungsorientiertes Mindset</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                <strong>Hoffnung ist keine Strategie.</strong> Erfolgreiche Anleger handeln basierend auf 
+                vordefinierten Regeln, nicht auf Emotionen oder Wunschdenken.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(8)">✅ Mentale Einstellung verstanden - Abschluss</button>
+        </div>
+
+        <!-- Schritt 8: Zusammenfassung und Ausblick -->
+        <div class="section" id="step8">
+            <div class="section-title">
+                <div class="section-icon">🎓</div>
+                <span>Schritt 8: Zusammenfassung und Ausblick</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>📚 Was Du gelernt haben</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Du haben die <strong>fundamentalen Prinzipien</strong> des erfolgreichen Vermögensaufbaus 
+                und Risikomanagements kennengelernt. Diese Erkenntnisse bilden das Fundament 
+                für alle weiteren Trading- und Investment-Strategien.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🔮 Der Ausblick</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                In zukünftigen Modulen werden wir noch viel mehr über <strong>konkrete Taktiken und Strategien</strong> 
+                behandeln, mit denen Du deine Depots nahe an ihren Höchstständen halten kannst.
+                </p>
+                <p style="font-size: 16px; line-height: 1.6; margin-top: 1rem;">
+                Aber das <strong>Wichtigste haben Du bereits gelernt</strong>: Die richtige mentale Einstellung 
+                und das Verständnis für die fundamentalen Prinzipien.
+                </p>
+            </div>
+
+            <div class="trading-rule">
+                <h4>🚀 dein nächster Schritt</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Beginnen Du <strong>heute</strong> damit, diese Prinzipien in deiner eigenen 
+                Investment-Strategie umzusetzen. Definiere klare Regeln für dein Risikomanagement.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="completeModule()">🎉 Modul abschließen und Key Takeaways anzeigen</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="section" id="quizSection" style="display: none;">
+            <div class="section-title">
+                <div class="section-icon">🧠</div>
+                <span>Wissenstest: Positioning & Risikomanagement</span>
+            </div>
+            
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 1:</strong> Was ist der effektivste Weg zum Vermögensaufbau laut dem Modul?
+                </div>
+                <div class="quiz-options" id="quiz1">
+                    <div class="quiz-option" onclick="selectOption(this, false)">Nur die besten Aktien kaufen und halten</div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">Depots so nah wie möglich an ihren Höchstständen halten</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Diversifikation über viele Aktien</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Nur auf Fundamentalanalyse setzen</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 2:</strong> Wie viel Rendite benötigen Du nach einem 50% Verlust?
+                </div>
+                <div class="quiz-options" id="quiz2">
+                    <div class="quiz-option" onclick="selectOption(this, false)">50%</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">75%</div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">100%</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">150%</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 3:</strong> Was ist der größte Fehler der meisten Anleger?
+                </div>
+                <div class="quiz-options" id="quiz3">
+                    <div class="quiz-option" onclick="selectOption(this, false)">Zu wenig diversifizieren</div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">Zu große Positionen in fallende Aktien aufbauen</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Zu oft handeln</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Keine Fundamentalanalyse betreiben</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 4:</strong> Was sollten Du tun, wenn sich Verluste häufen?
+                </div>
+                <div class="quiz-options" id="quiz4">
+                    <div class="quiz-option" onclick="selectOption(this, false)">Hoffen und abwarten</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Mehr kaufen um den Durchschnitt zu senken</div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">Maßnahmen ergreifen und nicht nur hoffen</div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">Rechtfertigungen für die Verluste suchen</div>
+                </div>
+            </div>
+
+            <button class="next-button" onclick="showResults()" id="showResultsBtn" style="display: none;">📊 Quiz-Ergebnisse anzeigen</button>
+            
+            <div id="quizResults" style="display: none;">
+                <div class="success-box">
+                    <h4>🎯 Quiz-Ergebnis</h4>
+                    <p id="scoreText" style="font-size: 18px; font-weight: 600;"></p>
+                    <p id="feedbackText" style="font-size: 16px; margin-top: 1rem;"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways" id="keyTakeaways" style="display: none;">
+            <h3>📋 KEY TAKEAWAYS</h3>
+            
+            <div class="takeaway-item">
+                <strong>1.</strong> Der effektivste Weg zum Vermögensaufbau ist es, Depots so nah wie möglich an ihren Höchstständen zu halten.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>2.</strong> Nach einem 50% Verlust benötigst du 100% Rendite, um wieder auf den Ausgangswert zu kommen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>3.</strong> Große Verluste zerstören den Compounding-Effekt und kosten wertvolle Zeit.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>4.</strong> Der größte Fehler ist es, zu große Positionen in fallende Aktien aufzubauen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>5.</strong> Eine strenge Methode zum Begrenzen von Verlusten ist entscheidend.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>6.</strong> Seien Du bereit zu verkaufen und wieder zu kaufen - Flexibilität ist der Schlüssel.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>7.</strong> Lassen Du sich nicht von Fundamentaldaten blind machen für schlechte Kursbewegung.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>8.</strong> Suchen Du keine Rechtfertigungen für Verluste - ergreifen Du Maßnahmen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>9.</strong> Die mentale Einstellung ist der Grundstein für erfolgreiches Risikomanagement.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>10.</strong> Hoffnung ist keine Strategie - handeln Du basierend auf vordefinierten Regeln.
+            </div>
+        </div>
+
+        <!-- Completion Celebration -->
+        <div class="completion-celebration" id="completionCelebration" style="display: none;">
+            <h2>🎉 Herzlichen Glückwunsch!</h2>
+            <h3>Vermögensaufbau Masterclass erfolgreich abgeschlossen</h3>
+            <p style="font-size: 18px; margin: 1rem 0;">
+                Du haben die fundamentalen Prinzipien des erfolgreichen Vermögensaufbaus gemeistert!
+            </p>
+            <p style="font-size: 16px;">
+                Diese Erkenntnisse werden Ihnen helfen, langfristig erfolgreich an der Börse zu sein.
+            </p>
+        </div>
+
+        <!-- Reset Button -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <button class="reset-button" onclick="resetModule()">🔄 Modul zurücksetzen</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let quizAnswered = [false, false, false, false];
+        let quizCorrect = [false, false, false, false];
+        
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const percentage = (currentStep / 8) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = `${currentStep} von 8 Schritten abgeschlossen`;
+        }
+        
+        function showStep(step) {
+            // Hide current step
+            const currentSection = document.getElementById(`step${currentStep}`);
+            if (currentSection) {
+                currentSection.style.opacity = '0.3';
+                currentSection.style.transform = 'translateY(20px)';
+            }
+            
+            // Show new step
+            setTimeout(() => {
+                const newSection = document.getElementById(`step${step}`);
+                if (newSection) {
+                    newSection.classList.add('visible');
+                    newSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                currentStep = step;
+                updateProgress();
+            }, 300);
+        }
+        
+        function completeModule() {
+            currentStep = 8;
+            updateProgress();
+            
+            // Show quiz
+            document.getElementById('quizSection').style.display = 'block';
+            document.getElementById('quizSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function selectOption(element, isCorrect) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+            
+            // Remove previous selections
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selection
+            element.classList.add('selected');
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+            }
+            
+            // Find which quiz this is
+            const quizId = parent.id;
+            const quizNumber = parseInt(quizId.replace('quiz', '')) - 1;
+            
+            quizAnswered[quizNumber] = true;
+            quizCorrect[quizNumber] = isCorrect;
+            
+            // Check if all questions answered
+            if (quizAnswered.every(answered => answered)) {
+                document.getElementById('showResultsBtn').style.display = 'block';
+            }
+        }
+        
+        function showResults() {
+            const correctCount = quizCorrect.filter(correct => correct).length;
+            const totalQuestions = quizCorrect.length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            
+            document.getElementById('scoreText').textContent = 
+                `Du haben ${correctCount} von ${totalQuestions} Fragen richtig beantwortet (${percentage}%)`;
+            
+            let feedback = '';
+            if (percentage >= 75) {
+                feedback = '🎉 Ausgezeichnet! Du haben die Konzepte sehr gut verstanden.';
+            } else if (percentage >= 50) {
+                feedback = '👍 Gut gemacht! Lesen Du das Modul nochmal durch für noch besseres Verständnis.';
+            } else {
+                feedback = '📖 Bitte lesen Du das Modul nochmal aufmerksam durch und wiederholen Du das Quiz.';
+            }
+            
+            document.getElementById('feedbackText').textContent = feedback;
+            document.getElementById('quizResults').style.display = 'block';
+            
+            // Show key takeaways and completion
+            setTimeout(() => {
+                document.getElementById('keyTakeaways').style.display = 'block';
+                document.getElementById('completionCelebration').style.display = 'block';
+                document.getElementById('completionCelebration').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 1000);
+        }
+        
+        function resetModule() {
+            currentStep = 1;
+            quizAnswered = [false, false, false, false];
+            quizCorrect = [false, false, false, false];
+            
+            // Hide all sections except first
+            for (let i = 2; i <= 8; i++) {
+                const section = document.getElementById(`step${i}`);
+                if (section) {
+                    section.classList.remove('visible');
+                }
+            }
+            
+            // Hide quiz and results
+            document.getElementById('quizSection').style.display = 'none';
+            document.getElementById('keyTakeaways').style.display = 'none';
+            document.getElementById('completionCelebration').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('showResultsBtn').style.display = 'none';
+            
+            // Reset quiz selections
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Show first step
+            const firstSection = document.getElementById('step1');
+            firstSection.classList.add('visible');
+            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            updateProgress();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('step1').classList.add('visible');
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

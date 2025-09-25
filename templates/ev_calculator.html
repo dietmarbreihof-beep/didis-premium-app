@@ -1,0 +1,930 @@
+{% extends "base.html" %}
+
+{% block title %}Expected Value (EV) Rechner - Trading Tools{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>📊 Expected Value Rechner</h1>
+            <h3>Berechne den Erwartungswert deiner Trades</h3>
+            <p>Der professionelle EV-Rechner für rationale Trading-Entscheidungen</p>
+        </div>
+    </div>
+
+    <!-- EV Calculator Section -->
+    <div class="content-section">
+        <h2 class="section-title">🔢 EV-Rechner</h2>
+        
+        <div class="calculator-section">
+            <div class="calculator-input">
+                <h4 style="margin-bottom: 1rem; color: #1a1a1a;">📈 Trade-Parameter eingeben</h4>
+                
+                <div class="input-group">
+                    <label for="profitAmount">💰 Gewinn bei Erfolg ($)</label>
+                    <input type="number" id="profitAmount" value="8" min="0.01" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label for="profitProb">📊 Wahrscheinlichkeit Gewinn (%)</label>
+                    <input type="range" id="profitProb" value="75" min="1" max="99" oninput="updateProbability()">
+                    <span id="profitProbValue" class="slider-value">75%</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="lossAmount">📉 Verlust bei Misserfolg ($)</label>
+                    <input type="number" id="lossAmount" value="14" min="0.01" step="0.1">
+                </div>
+                
+                <div class="input-group">
+                    <label>📉 Wahrscheinlichkeit Verlust:</label>
+                    <span id="lossProbValue" style="font-weight: 600; color: #e53e3e;">25%</span>
+                </div>
+                
+                <button class="calc-button" onclick="calculateEV()">🚀 EV berechnen</button>
+            </div>
+            
+            <div class="result-display" id="resultDisplay">
+                <h4 style="margin-bottom: 1rem;">📊 EV-Berechnung</h4>
+                <div id="evResult" class="result-value result-neutral">$2.50</div>
+                <div id="evInterpretation">
+                    <p>Dieser Trade hat einen <strong>positiven Erwartungswert</strong>. Du solltest ihn jedes Mal eingehen!</p>
+                </div>
+                
+                <!-- Detaillierte Berechnung -->
+                <div id="calculationDetails" style="margin-top: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 1rem;">🧮 Berechnung im Detail:</h5>
+                    <div id="calculationSteps"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart Container -->
+        <div class="chart-container">
+            <canvas id="evChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Position Sizing Section -->
+    <div class="content-section" style="margin-top: 3rem;">
+        <h2 class="section-title">📈 Positionsgrößen-Berechnung</h2>
+        
+        <div class="concept-highlight">
+            <h4>💡 Risikomanagement mit EV</h4>
+            <p>Nutze den berechneten Expected Value zusammen mit professionellem Risikomanagement. 
+            Berechne die optimale Positionsgröße basierend auf deinem maximalen Risiko pro Trade.</p>
+        </div>
+
+        <div class="calculator-section">
+            <div class="calculator-input">
+                <h4 style="margin-bottom: 1rem; color: #1a1a1a;">💰 Risikomanagement-Parameter</h4>
+                
+                <div class="input-group">
+                    <label for="portfolioSize">🏦 Depotgröße ($)</label>
+                    <input type="number" id="portfolioSize" value="50000" min="1" step="1000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="maxRiskPercent">⚠️ Maximales Risiko pro Trade (%)</label>
+                    <input type="range" id="maxRiskPercent" value="1" min="0.1" max="5" step="0.1" oninput="updateRiskPercent()">
+                    <span id="maxRiskPercentValue" class="slider-value">1.0%</span>
+                    <div style="font-size: 0.9rem; color: #666; margin-top: 0.5rem;">
+                        💡 <strong>Empfehlung:</strong> 1-2% für Anfänger, max. 3-5% für Profis
+                    </div>
+                </div>
+                
+                <button class="calc-button" onclick="calculatePositionSize()" style="background: linear-gradient(135deg, #38a169 0%, #2d7a3e 100%);">
+                    📊 Positionsgröße berechnen
+                </button>
+            </div>
+            
+            <div class="result-display" id="positionSizeResult">
+                <h4 style="margin-bottom: 1rem;">📊 Positionsgrößen-Ergebnis</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="color: #e53e3e; font-weight: bold; margin-bottom: 0.5rem;">Max. Risiko ($)</div>
+                        <div id="maxRiskDollar" style="font-size: 1.5rem; font-weight: 800; color: #e53e3e;">$500</div>
+                    </div>
+                    <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                        <div style="color: #38a169; font-weight: bold; margin-bottom: 0.5rem;">Positionsgröße</div>
+                        <div id="positionSize" style="font-size: 1.5rem; font-weight: 800; color: #38a169;">36 Aktien</div>
+                    </div>
+                </div>
+                
+                <div id="positionSizeDetails" style="padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 1rem;">📋 Berechnung im Detail:</h5>
+                    <div id="positionSizeSteps"></div>
+                </div>
+                
+                <div id="tradingAdvice" style="margin-top: 1rem; padding: 1rem; border-radius: 8px;">
+                    <!-- Wird dynamisch befüllt basierend auf EV -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Trading Example -->
+        <div style="margin-top: 2rem;">
+            <h4 style="color: #1a1a1a; margin-bottom: 1rem;">🎯 Praktisches Trading-Beispiel</h4>
+            
+            <div id="tradingExample" class="example-box">
+                <h5>📊 Vollständige Trade-Analyse</h5>
+                <div id="tradeExampleContent">
+                    <!-- Wird durch JavaScript befüllt -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Risk Level Indicators -->
+        <div style="margin-top: 2rem;">
+            <h4 style="color: #1a1a1a; margin-bottom: 1rem;">⚠️ Risiko-Level Guidance</h4>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div class="risk-level conservative" onclick="setRiskLevel(1)">
+                    <h5>🛡️ Konservativ</h5>
+                    <div class="risk-percentage">1%</div>
+                    <p>Für Anfänger und sichere Strategien</p>
+                </div>
+                
+                <div class="risk-level moderate" onclick="setRiskLevel(2)">
+                    <h5>⚖️ Moderat</h5>
+                    <div class="risk-percentage">2%</div>
+                    <p>Für erfahrene Trader mit bewährten Systemen</p>
+                </div>
+                
+                <div class="risk-level aggressive" onclick="setRiskLevel(3)">
+                    <h5>🚀 Aggressiv</h5>
+                    <div class="risk-percentage">3%</div>
+                    <p>Für Profis mit hoher Trefferquote</p>
+                </div>
+                
+                <div class="risk-level extreme" onclick="setRiskLevel(5)">
+                    <h5>⚡ Extrem</h5>
+                    <div class="risk-percentage">5%</div>
+                    <p>Nur für Experten - höchstes Risiko</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Practical Example Section -->
+    <div class="content-section" style="margin-top: 3rem;">
+        <h2 class="section-title">📊 Praxisbeispiel: Der $8 Gewinn vs $14 Verlust Trade</h2>
+        
+        <div class="example-box">
+            <h4>🎯 Trade-Szenario</h4>
+            <ul style="font-size: 16px; line-height: 1.8; margin-top: 1rem;">
+                <li><strong>Bei Erfolg:</strong> $8 Gewinn (75% Wahrscheinlichkeit)</li>
+                <li><strong>Bei Misserfolg:</strong> $14 Verlust (25% Wahrscheinlichkeit)</li>
+                <li><strong>Expected Value:</strong> $2.50</li>
+            </ul>
+        </div>
+
+        <div class="key-insight">
+            <h4>🤔 Die Überraschung</h4>
+            <p>Trotz größerer absoluter Verluste als Gewinne ist dies ein <strong>guter Trade</strong>! 
+            Der positive EV von $2.50 bedeutet, dass du langfristig profitabel bist, wenn du diesen 
+            Trade jedes Mal eingehst.</p>
+        </div>
+
+        <div class="scenario-card" onclick="toggleScenario('scenario1')">
+            <h4>💡 Gedankenexperiment: 100 solcher Trades</h4>
+            <div id="scenario1" style="display: none; margin-top: 1rem;">
+                <p><strong>Erwartete Ergebnisse:</strong></p>
+                <ul style="margin-top: 1rem; line-height: 1.8;">
+                    <li>75 Gewinn-Trades: 75 × $8 = <strong style="color: #38a169;">$600</strong></li>
+                    <li>25 Verlust-Trades: 25 × $14 = <strong style="color: #e53e3e;">$350</strong></li>
+                    <li><strong style="color: #b8860b;">Net-Gewinn: $600 - $350 = $250</strong></li>
+                    <li><strong style="color: #b8860b;">Durchschnitt pro Trade: $250 ÷ 100 = $2.50</strong></li>
+                </ul>
+                <div style="background: #f4e97b; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                    <p style="color: #1a1a1a; font-weight: 600; text-align: center;">
+                        🎯 Das ist genau dein berechneter Expected Value!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Comparison -->
+        <div style="margin-top: 2rem;">
+            <h4 style="color: #1a1a1a; margin-bottom: 1rem;">⚖️ Vergleiche verschiedene Trades:</h4>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div class="comparison-card good-trade" onclick="loadTradeExample(8, 75, 14)">
+                    <h5>✅ Guter Trade</h5>
+                    <p>Gewinn: $8 (75%)<br>Verlust: $14 (25%)</p>
+                    <div class="ev-display positive">EV: +$2.50</div>
+                </div>
+                
+                <div class="comparison-card bad-trade" onclick="loadTradeExample(5, 30, 10)">
+                    <h5>❌ Schlechter Trade</h5>
+                    <p>Gewinn: $5 (30%)<br>Verlust: $10 (70%)</p>
+                    <div class="ev-display negative">EV: -$5.50</div>
+                </div>
+                
+                <div class="comparison-card neutral-trade" onclick="loadTradeExample(10, 50, 10)">
+                    <h5>⚖️ Neutraler Trade</h5>
+                    <p>Gewinn: $10 (50%)<br>Verlust: $10 (50%)</p>
+                    <div class="ev-display neutral">EV: $0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="concept-highlight" style="margin-top: 2rem;">
+            <h4>🔑 Wichtige Erkenntnisse</h4>
+            <ul style="margin-top: 1rem; line-height: 1.8;">
+                <li>📊 Der <strong>Expected Value</strong> ist wichtiger als das Gewinn-Verlust-Verhältnis</li>
+                <li>🎯 Auch bei niedrigeren Gewinnraten kannst du profitabel sein</li>
+                <li>📈 Langfristig gleicht sich der EV aus - Geduld ist entscheidend</li>
+                <li>💡 Nutze den EV-Rechner vor jedem wichtigen Trade</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 20px;
+        margin-bottom: 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        opacity: 0.3;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section h1 {
+        font-size: 2.8em;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section h3 {
+        font-size: 1.4em;
+        font-weight: 500;
+        margin-bottom: 1rem;
+        opacity: 0.95;
+    }
+
+    .hero-section p {
+        font-size: 1.1em;
+        opacity: 0.9;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .content-section {
+        background: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 1.5rem;
+        text-align: center;
+        position: relative;
+    }
+
+    .section-title::after {
+        content: '';
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, #b8860b, #daa520);
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 2px;
+    }
+
+    .calculator-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .calculator-input {
+        background: #f7f7f7;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .calculator-input:focus-within {
+        border-color: #b8860b;
+        box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #2d2d2d;
+    }
+
+    .input-group input, .input-group select {
+        width: 100%;
+        padding: 0.8rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+    }
+
+    .input-group input:focus, .input-group select:focus {
+        outline: none;
+        border-color: #b8860b;
+    }
+
+    .slider-value {
+        display: inline-block;
+        margin-top: 0.5rem;
+        font-weight: 600;
+        color: #b8860b;
+        font-size: 1.1rem;
+    }
+
+    .calc-button {
+        background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+        color: white;
+        border: none;
+        padding: 1rem 2rem;
+        border-radius: 25px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
+    .calc-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+    }
+
+    .result-display {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        border: 2px solid #e8e8e8;
+        text-align: center;
+    }
+
+    .result-value {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 1rem 0;
+    }
+
+    .result-positive {
+        color: #38a169;
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+    }
+
+    .result-negative {
+        color: #e53e3e;
+        background: linear-gradient(135deg, #ffeaea 0%, #fed7d7 100%);
+    }
+
+    .result-neutral {
+        color: #2d2d2d;
+        background: #f7f7f7;
+    }
+
+    .chart-container {
+        margin: 2rem 0;
+        padding: 1rem;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .example-box {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        border-left: 5px solid #38a169;
+    }
+
+    .key-insight {
+        background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        border-left: 5px solid #daa520;
+    }
+
+    .concept-highlight {
+        background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 1.5rem 0;
+        color: #1a1a1a;
+        border-left: 5px solid #b8860b;
+    }
+
+    .scenario-card {
+        background: white;
+        border: 2px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .scenario-card:hover {
+        border-color: #b8860b;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .comparison-card {
+        background: white;
+        border: 2px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .comparison-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .good-trade:hover {
+        border-color: #38a169;
+    }
+
+    .bad-trade:hover {
+        border-color: #e53e3e;
+    }
+
+    .neutral-trade:hover {
+        border-color: #b8860b;
+    }
+
+    .ev-display {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-top: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .ev-display.positive {
+        background: #e8f5e8;
+        color: #38a169;
+    }
+
+    .ev-display.negative {
+        background: #ffeaea;
+        color: #e53e3e;
+    }
+
+    .ev-display.neutral {
+        background: #f7f7f7;
+        color: #2d2d2d;
+    }
+
+    .risk-level {
+        background: white;
+        border: 2px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .risk-level:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .risk-level.conservative:hover {
+        border-color: #38a169;
+    }
+
+    .risk-level.moderate:hover {
+        border-color: #d69e2e;
+    }
+
+    .risk-level.aggressive:hover {
+        border-color: #e53e3e;
+    }
+
+    .risk-level.extreme:hover {
+        border-color: #742a2a;
+    }
+
+    .risk-level h5 {
+        color: #1a1a1a;
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .risk-percentage {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 1rem 0;
+    }
+
+    .conservative .risk-percentage {
+        color: #38a169;
+    }
+
+    .moderate .risk-percentage {
+        color: #d69e2e;
+    }
+
+    .aggressive .risk-percentage {
+        color: #e53e3e;
+    }
+
+    .extreme .risk-percentage {
+        color: #742a2a;
+    }
+
+    .risk-level p {
+        color: #666;
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .risk-level.selected {
+        box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.3);
+        border-color: #b8860b;
+        background: linear-gradient(135deg, #f4e97b 0%, rgba(218, 165, 32, 0.1) 100%);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+        
+        .hero-section {
+            padding: 2rem 1rem;
+        }
+        
+        .hero-section h1 {
+            font-size: 2rem;
+        }
+        
+        .calculator-section {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .section-title {
+            font-size: 1.5rem;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    function updateProbability() {
+        const profitProb = document.getElementById('profitProb').value;
+        const lossProb = 100 - profitProb;
+        
+        document.getElementById('profitProbValue').textContent = profitProb + '%';
+        document.getElementById('lossProbValue').textContent = lossProb + '%';
+        
+        calculateEV();
+        // Auto-update position size if values are present
+        if (document.getElementById('portfolioSize').value > 0) {
+            calculatePositionSize();
+        }
+    }
+
+    function updateRiskPercent() {
+        const riskPercent = document.getElementById('maxRiskPercent').value;
+        document.getElementById('maxRiskPercentValue').textContent = riskPercent + '%';
+        
+        // Auto-calculate position size
+        calculatePositionSize();
+    }
+
+    function calculateEV() {
+        const profitAmount = parseFloat(document.getElementById('profitAmount').value);
+        const profitProb = parseFloat(document.getElementById('profitProb').value) / 100;
+        const lossAmount = parseFloat(document.getElementById('lossAmount').value);
+        const lossProb = 1 - profitProb;
+        
+        const ev = (profitAmount * profitProb) - (lossAmount * lossProb);
+        
+        const resultElement = document.getElementById('evResult');
+        const interpretationElement = document.getElementById('evInterpretation');
+        const displayElement = document.getElementById('resultDisplay');
+        const detailsElement = document.getElementById('calculationSteps');
+        
+        resultElement.textContent = '$' + ev.toFixed(2);
+        
+        // Detaillierte Berechnung anzeigen
+        const profitContribution = profitAmount * profitProb;
+        const lossContribution = lossAmount * lossProb;
+        
+        detailsElement.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin: 1rem 0;">
+                <div style="text-align: center; padding: 1rem; background: #e8f5e8; border-radius: 8px;">
+                    <div style="color: #38a169; font-weight: bold;">Gewinn-Beitrag</div>
+                    <div style="font-size: 1.2rem; color: #38a169;">$${profitContribution.toFixed(2)}</div>
+                    <div style="font-size: 0.9rem; color: #666;">$${profitAmount} × ${(profitProb * 100).toFixed(0)}%</div>
+                </div>
+                <div style="text-align: center; font-size: 1.5rem; color: #666;">−</div>
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="color: #e53e3e; font-weight: bold;">Verlust-Beitrag</div>
+                    <div style="font-size: 1.2rem; color: #e53e3e;">$${lossContribution.toFixed(2)}</div>
+                    <div style="font-size: 0.9rem; color: #666;">$${lossAmount} × ${(lossProb * 100).toFixed(0)}%</div>
+                </div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: ${ev > 0 ? '#f4e97b' : ev < 0 ? '#ffeaea' : '#f7f7f7'}; border-radius: 8px; margin-top: 1rem;">
+                <div style="font-weight: bold; color: #1a1a1a;">Expected Value = $${profitContribution.toFixed(2)} − $${lossContribution.toFixed(2)} = $${ev.toFixed(2)}</div>
+            </div>
+        `;
+        
+        if (ev > 0) {
+            resultElement.className = 'result-value result-positive';
+            displayElement.className = 'result-display result-positive';
+            interpretationElement.innerHTML = '<p>✅ <strong>Positiver EV!</strong> Dieser Trade hat einen positiven Erwartungswert. Du solltest ihn jedes Mal eingehen!</p>';
+        } else if (ev < 0) {
+            resultElement.className = 'result-value result-negative';
+            displayElement.className = 'result-display result-negative';
+            interpretationElement.innerHTML = '<p>❌ <strong>Negativer EV!</strong> Dieser Trade hat einen negativen Erwartungswert. Vermeide ihn!</p>';
+        } else {
+            resultElement.className = 'result-value result-neutral';
+            displayElement.className = 'result-display result-neutral';
+            interpretationElement.innerHTML = '<p>⚖️ <strong>Neutraler EV</strong> Break-Even Trade</p>';
+        }
+
+        updateEVChart(profitAmount, profitProb * 100, lossAmount, lossProb * 100, ev);
+    }
+
+    function updateEVChart(profit, profitProb, loss, lossProb, ev) {
+        const ctx = document.getElementById('evChart').getContext('2d');
+        
+        if (window.evChart) {
+            window.evChart.destroy();
+        }
+
+        window.evChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Gewinn-Beitrag', 'Verlust-Beitrag', 'Net EV'],
+                datasets: [{
+                    data: [profit * (profitProb / 100), -(loss * (lossProb / 100)), ev],
+                    backgroundColor: ['#38a169', '#e53e3e', ev > 0 ? '#b8860b' : '#e53e3e'],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'EV-Komponenten Analyse'
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Dollar ($)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    function toggleScenario(scenarioId) {
+        const scenario = document.getElementById(scenarioId);
+        scenario.style.display = scenario.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function calculatePositionSize() {
+        const portfolioSize = parseFloat(document.getElementById('portfolioSize').value);
+        const maxRiskPercent = parseFloat(document.getElementById('maxRiskPercent').value);
+        const lossAmount = parseFloat(document.getElementById('lossAmount').value);
+        
+        if (!portfolioSize || !maxRiskPercent || !lossAmount) return;
+        
+        // Berechnungen
+        const maxRiskDollar = portfolioSize * (maxRiskPercent / 100);
+        const positionSize = Math.floor(maxRiskDollar / lossAmount);
+        
+        // Display updates
+        document.getElementById('maxRiskDollar').textContent = '$' + maxRiskDollar.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('positionSize').textContent = positionSize.toLocaleString() + ' Aktien';
+        
+        // Detailed calculation steps
+        const detailsElement = document.getElementById('positionSizeSteps');
+        detailsElement.innerHTML = `
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 1rem; align-items: center; margin: 1rem 0;">
+                <div style="text-align: center; padding: 1rem; background: #e8f5e8; border-radius: 8px;">
+                    <div style="color: #38a169; font-weight: bold;">Depotgröße</div>
+                    <div style="font-size: 1.1rem; color: #38a169;">$${portfolioSize.toLocaleString()}</div>
+                </div>
+                <div style="text-align: center; font-size: 1.2rem; color: #666;">×</div>
+                <div style="text-align: center; padding: 1rem; background: #fff3cd; border-radius: 8px;">
+                    <div style="color: #d69e2e; font-weight: bold;">Max Risiko</div>
+                    <div style="font-size: 1.1rem; color: #d69e2e;">${maxRiskPercent}%</div>
+                </div>
+                <div style="text-align: center; font-size: 1.2rem; color: #666;">=</div>
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="color: #e53e3e; font-weight: bold;">Max Risiko ($)</div>
+                    <div style="font-size: 1.1rem; color: #e53e3e;">$${maxRiskDollar.toFixed(0)}</div>
+                </div>
+            </div>
+            <div style="text-align: center; margin: 1rem 0; font-size: 1.2rem; color: #666;">÷</div>
+            <div style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 1rem; align-items: center; margin: 1rem 0;">
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="color: #e53e3e; font-weight: bold;">Verlust pro Aktie</div>
+                    <div style="font-size: 1.1rem; color: #e53e3e;">$${lossAmount}</div>
+                </div>
+                <div style="text-align: center; font-size: 1.2rem; color: #666;">=</div>
+                <div style="text-align: center; padding: 1rem; background: #f4e97b; border-radius: 8px;">
+                    <div style="color: #1a1a1a; font-weight: bold;">Positionsgröße</div>
+                    <div style="font-size: 1.1rem; color: #1a1a1a;"><strong>${positionSize} Aktien</strong></div>
+                </div>
+            </div>
+        `;
+        
+        // Trading advice based on EV
+        const profitAmount = parseFloat(document.getElementById('profitAmount').value) || 0;
+        const profitProb = parseFloat(document.getElementById('profitProb').value) / 100 || 0;
+        const lossProb = 1 - profitProb;
+        const ev = (profitAmount * profitProb) - (lossAmount * lossProb);
+        
+        const adviceElement = document.getElementById('tradingAdvice');
+        if (ev > 0) {
+            adviceElement.className = 'example-box';
+            adviceElement.innerHTML = `
+                <h5>✅ Trading-Empfehlung: POSITIVER EV</h5>
+                <p><strong>Dieser Trade ist mathematisch profitabel!</strong></p>
+                <ul style="margin-top: 1rem; line-height: 1.8;">
+                    <li>Expected Value: <strong style="color: #38a169;">$${ev.toFixed(2)}</strong> pro Trade</li>
+                    <li>Erwarteter Gewinn: <strong>$${(ev * positionSize).toFixed(2)}</strong> bei ${positionSize} Aktien</li>
+                    <li>Maximales Risiko: <strong style="color: #e53e3e;">$${maxRiskDollar.toFixed(0)}</strong> (${maxRiskPercent}% des Depots)</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600; color: #38a169;">
+                    💡 Führe diesen Trade mit der berechneten Positionsgröße aus!
+                </p>
+            `;
+        } else if (ev < 0) {
+            adviceElement.className = 'warning-box';
+            adviceElement.innerHTML = `
+                <h5>❌ Trading-Warnung: NEGATIVER EV</h5>
+                <p><strong>Dieser Trade ist mathematisch unprofitabel!</strong></p>
+                <ul style="margin-top: 1rem; line-height: 1.8;">
+                    <li>Expected Value: <strong style="color: #e53e3e;">$${ev.toFixed(2)}</strong> pro Trade</li>
+                    <li>Erwarteter Verlust: <strong>$${(Math.abs(ev) * positionSize).toFixed(2)}</strong> bei ${positionSize} Aktien</li>
+                    <li>Maximales Risiko: <strong style="color: #e53e3e;">$${maxRiskDollar.toFixed(0)}</strong> (${maxRiskPercent}% des Depots)</li>
+                </ul>
+                <p style="margin-top: 1rem; font-weight: 600; color: #e53e3e;">
+                    ⚠️ VERMEIDE diesen Trade - er wird langfristig Verluste bringen!
+                </p>
+            `;
+        } else {
+            adviceElement.className = 'key-insight';
+            adviceElement.innerHTML = `
+                <h5>⚖️ Trading-Hinweis: NEUTRALER EV</h5>
+                <p><strong>Dieser Trade ist weder profitabel noch verlustbringend.</strong></p>
+                <p style="margin-top: 1rem; color: white;">
+                    Break-Even Trade - langfristig weder Gewinn noch Verlust zu erwarten.
+                </p>
+            `;
+        }
+        
+        // Update trading example
+        updateTradingExample(portfolioSize, maxRiskPercent, maxRiskDollar, positionSize, ev);
+    }
+    
+    function updateTradingExample(portfolioSize, riskPercent, riskDollar, positionSize, ev) {
+        const profitAmount = parseFloat(document.getElementById('profitAmount').value);
+        const lossAmount = parseFloat(document.getElementById('lossAmount').value);
+        const winRate = parseFloat(document.getElementById('profitProb').value);
+        
+        const totalInvestment = positionSize * 50; // Annahme: $50 pro Aktie
+        const potentialGain = positionSize * profitAmount;
+        const potentialLoss = positionSize * lossAmount;
+        
+        document.getElementById('tradeExampleContent').innerHTML = `
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="color: #666; font-weight: bold;">Depotgröße</div>
+                    <div style="font-size: 1.3rem; color: #1a1a1a; font-weight: 800;">$${portfolioSize.toLocaleString()}</div>
+                </div>
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="color: #666; font-weight: bold;">Risiko</div>
+                    <div style="font-size: 1.3rem; color: #e53e3e; font-weight: 800;">${riskPercent}% ($${riskDollar.toFixed(0)})</div>
+                </div>
+                <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; text-align: center;">
+                    <div style="color: #666; font-weight: bold;">Position</div>
+                    <div style="font-size: 1.3rem; color: #38a169; font-weight: 800;">${positionSize} Aktien</div>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; padding: 1.5rem; background: ${ev > 0 ? '#e8f5e8' : '#ffeaea'}; border-radius: 12px;">
+                <h6 style="color: #1a1a1a; margin-bottom: 1rem;">📊 Trade-Szenarios:</h6>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <div style="color: #38a169; font-weight: bold;">✅ Bei Gewinn (${winRate}%)</div>
+                        <div style="font-size: 1.1rem; color: #38a169;">+$${potentialGain.toLocaleString()}</div>
+                    </div>
+                    <div>
+                        <div style="color: #e53e3e; font-weight: bold;">❌ Bei Verlust (${100-winRate}%)</div>
+                        <div style="font-size: 1.1rem; color: #e53e3e;">-$${potentialLoss.toLocaleString()}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #ddd;">
+                    <div style="color: #1a1a1a; font-weight: bold;">Expected Value pro Trade:</div>
+                    <div style="font-size: 1.2rem; color: ${ev > 0 ? '#38a169' : '#e53e3e'}; font-weight: 800;">
+                        ${ev > 0 ? '+' : ''}$${(ev * positionSize).toFixed(2)}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    function setRiskLevel(riskPercent) {
+        document.getElementById('maxRiskPercent').value = riskPercent;
+        updateRiskPercent();
+        
+        // Visual feedback
+        document.querySelectorAll('.risk-level').forEach(card => card.classList.remove('selected'));
+        event.target.closest('.risk-level').classList.add('selected');
+    }
+
+    function loadTradeExample(profit, winRate, loss) {
+        document.getElementById('profitAmount').value = profit;
+        document.getElementById('profitProb').value = winRate;
+        document.getElementById('lossAmount').value = loss;
+        
+        updateProbability();
+        
+        // Scroll to calculator
+        document.querySelector('.calculator-section').scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'center'
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        calculateEV();
+        updateProbability();
+        calculatePositionSize();
+        updateRiskPercent();
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,23 @@
+# requirements_extended.txt - Dependencies für Didis Trading Academy Extended
+
+# Core Flask
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+
+# Email Support
+Flask-Mail==0.9.1
+
+# Database
+SQLAlchemy==2.0.23
+
+# Security
+Werkzeug==3.0.1
+
+# Optional: WooCommerce Integration (später)
+requests==2.31.0
+
+# Optional: Email Templates
+Jinja2==3.1.2
+
+# Development Tools
+python-dotenv==1.0.0

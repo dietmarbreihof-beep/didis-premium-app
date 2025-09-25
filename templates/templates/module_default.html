@@ -1,0 +1,227 @@
+{% extends "base.html" %}
+
+{% block title %}{{ module.title }} - Didis Trading Academy{% endblock %}
+
+{% block header_title %}{{ module.icon }} {{ module.title }}{% endblock %}
+{% block header_subtitle %}{{ module.description }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 30px;">
+        <div>
+            <h2 style="margin-top: 0;">{{ module.icon }} {{ module.title }}</h2>
+            <p style="color: #666; font-size: 1.1rem; margin: 10px 0;">{{ module.description }}</p>
+        </div>
+        
+        <div style="text-align: right; min-width: 200px;">
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                <div><strong>⏱️ Dauer:</strong> {{ module.estimated_duration }} Minuten</div>
+                <div><strong>📊 Level:</strong> {{ module.difficulty_level|title }}</div>
+                <div><strong>👁️ Views:</strong> {{ module.view_count }}</div>
+                
+                {% if module.content_type %}
+                    <div><strong>📱 Typ:</strong> 
+                        {% if module.content_type == 'streamlit' %}
+                            Interaktive App
+                        {% elif module.content_type == 'html' %}
+                            HTML-Lernmodul
+                        {% else %}
+                            {{ module.content_type|title }}
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                {% if module.is_lead_magnet %}
+                    <span style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; margin-top: 10px; display: inline-block;">
+                        🎁 KOSTENLOS
+                    </span>
+                {% else %}
+                    {% for level in module.required_subscription_levels %}
+                        <span style="background: 
+                            {% if level == 'premium' %}var(--gold-dark)
+                            {% elif level == 'elite' %}#6f42c1
+                            {% else %}#666
+                            {% endif %}; 
+                            color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600; margin: 5px; display: inline-block;">
+                            {{ level|upper }}
+                        </span>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- STREAMLIT-INTEGRATION: Externe App -->
+{% if module.external_url %}
+    <div class="card streamlit-integration">
+        <h2>🚀 Interaktives Trading-Tool</h2>
+        
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 30px; border-radius: 12px; text-align: center; margin: 20px 0;">
+            <h3 style="margin-top: 0; font-size: 1.5rem;">📊 {{ module.title }}</h3>
+            <p style="font-size: 1.1rem; opacity: 0.9; margin: 15px 0;">
+                {{ module.description }}
+            </p>
+            <p style="margin: 20px 0; opacity: 0.8;">
+                🎯 Dieses Modul läuft in einer interaktiven Streamlit-App mit Live-Daten und dynamischen Charts
+            </p>
+            
+            <a href="{{ module.external_url }}" 
+               target="_blank" 
+               class="btn" 
+               style="background: white; color: var(--primary-dark); font-size: 1.2rem; padding: 15px 30px; margin: 20px 10px; display: inline-block;">
+                🚀 Interaktives Tool öffnen
+            </a>
+            
+            <div style="margin-top: 20px; font-size: 0.9rem; opacity: 0.7;">
+                💡 Das Tool öffnet sich in einem neuen Browser-Tab
+            </div>
+        </div>
+        
+        <!-- Zusätzliche Informationen für Streamlit-Module -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h4>📱 Was dich im interaktiven Tool erwartet:</h4>
+            <ul style="margin-left: 20px; line-height: 1.8;">
+                <li><strong>Live-Charts:</strong> Echtzeitdaten und interaktive Visualisierungen</li>
+                <li><strong>Praktische Übungen:</strong> Wende das Gelernte direkt an</li>
+                <li><strong>Persönliche Einstellungen:</strong> Anpassbare Parameter für deine Strategie</li>
+                <li><strong>Export-Funktionen:</strong> Speichere deine Analysen und Ergebnisse</li>
+            </ul>
+        </div>
+    </div>
+
+<!-- STANDARD HTML-MODUL -->
+{% else %}
+    <div class="card">
+        <h2>📚 Modul-Inhalt</h2>
+        
+        {% if module.template_file %}
+            <!-- Hier wird dein bestehendes Magic Line Template geladen -->
+            <div style="background: #f8f9fa; padding: 40px; border-radius: 8px; text-align: center;">
+                <span style="font-size: 3rem;">🎯</span>
+                <h3>Lade Modul-Inhalt...</h3>
+                <p style="color: #666;">
+                    Template: {{ module.template_file }}
+                </p>
+                <div style="margin-top: 20px;">
+                    <a href="{{ url_for('module_view', slug=module.slug) }}" class="btn">
+                        📖 Modul-Inhalt anzeigen
+                    </a>
+                </div>
+            </div>
+        {% else %}
+            <div style="background: #f8f9fa; padding: 40px; border-radius: 8px; text-align: center;">
+                <span style="font-size: 3rem; opacity: 0.5;">🚧</span>
+                <h3>Modul in Entwicklung</h3>
+                <p style="color: #666;">
+                    Der Inhalt für dieses Modul wird gerade erstellt. 
+                    {% if module.is_lead_magnet %}
+                        Als Lead-Magnet wird es bald verfügbar sein!
+                    {% else %}
+                        Es wird bald für {{ module.required_subscription_levels|join(', ')|upper }}-Mitglieder verfügbar sein!
+                    {% endif %}
+                </p>
+                
+                {% if session.get('user', {}).get('username') in ['admin', 'didi'] %}
+                    <div style="margin-top: 30px; padding: 20px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px;">
+                        <h4 style="color: #856404;">🔧 Admin-Info:</h4>
+                        <p style="color: #856404; margin: 10px 0;">
+                            Erstelle ein Template <code>{{ module.slug }}.html</code> oder setze eine <code>external_url</code> 
+                            für dieses Modul, um den Inhalt anzuzeigen.
+                        </p>
+                        <div style="margin-top: 15px;">
+                            <a href="/admin/menu-structure" class="btn secondary">
+                                📂 Menü verwalten
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+
+<!-- Lernziele -->
+<div class="card">
+    <h2>🎯 Lernziele</h2>
+    <p>Nach Abschluss dieses Moduls wirst du:</p>
+    <ul style="margin-left: 20px; line-height: 1.8;">
+        <li>Die Grundlagen von <strong>{{ module.title.split()[0] }}</strong> verstehen</li>
+        <li>Praktische Anwendungen in deinem Trading umsetzen können</li>
+        <li>Typische Fehler vermeiden und Best Practices anwenden</li>
+        {% if module.external_url %}
+            <li>Das interaktive Tool sicher und effektiv nutzen</li>
+        {% endif %}
+        <li>Das Gelernte mit anderen Modulen verknüpfen können</li>
+    </ul>
+</div>
+
+<!-- Verwandte Module -->
+{% if module.category and module.category.modules %}
+<div class="card">
+    <h2>📚 Weitere Module in dieser Kategorie</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
+        {% for related_module in module.category.modules %}
+            {% if related_module.id != module.id and related_module.is_published %}
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid var(--gold-classic);">
+                    <h4 style="margin-top: 0; display: flex; align-items: center; gap: 8px;">
+                        {{ related_module.icon }} 
+                        {{ related_module.title }}
+                        {% if related_module.content_type == 'streamlit' %}
+                            <span style="background: #3b82f6; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem;">APP</span>
+                        {% endif %}
+                    </h4>
+                    <p style="color: #666; font-size: 0.9rem;">{{ related_module.description[:100] }}...</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <small style="color: #999;">⏱️ {{ related_module.estimated_duration }}min</small>
+                        {% if related_module.user_has_access(session.get('user', {}).get('membership', 'free')) %}
+                            <a href="{{ url_for('module_view', slug=related_module.slug) }}" class="btn" style="font-size: 0.8rem; padding: 6px 12px;">
+                                {% if related_module.external_url %}🚀 Tool öffnen{% else %}📖 Öffnen{% endif %}
+                            </a>
+                        {% else %}
+                            <span style="background: #ccc; color: white; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem;">
+                                🔒 Premium
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Premium-Upgrade falls erforderlich (außer für Admin/Didi) -->
+{% if not module.is_lead_magnet and session.get('user', {}).get('membership') not in module.required_subscription_levels and session.get('user', {}).get('username') not in ['admin', 'didi'] %}
+<div style="text-align: center; margin: 20px 0;">
+    <a href="{{ url_for('upgrade_required', module_slug=module.slug) }}" class="btn">
+        💎 Premium werden
+    </a>
+</div>
+{% endif %}
+
+<!-- Einheitliche Navigation -->
+{% include '_navigation.html' %}
+
+<style>
+.streamlit-integration {
+    border-left: 5px solid #3b82f6;
+}
+
+.streamlit-integration h2 {
+    color: #3b82f6;
+}
+
+@media (max-width: 768px) {
+    .card > div:first-child {
+        flex-direction: column !important;
+    }
+    
+    .card > div:first-child > div:last-child {
+        margin-top: 20px;
+        text-align: left !important;
+        min-width: auto !important;
+    }
+}
+</style>
+{% endblock %}

@@ -1,0 +1,74 @@
+{
+  "modules": [
+    {
+      "title": "AVWAP Trading Strategie",
+      "slug": "avwap-trading-strategie",
+      "description": "Lerne die Advanced Volume Weighted Average Price Strategie für professionelles Trading",
+      "category": "technische-analyse",
+      "content_type": "streamlit",
+      "external_url": "http://localhost:8501/avwap_strategie",
+      "required_subscription_levels": ["premium", "elite"],
+      "is_lead_magnet": false,
+      "estimated_duration": 90,
+      "difficulty_level": "advanced",
+      "icon": "📊",
+      "sort_order": 1
+    },
+    {
+      "title": "Support & Resistance Masterclass",
+      "slug": "support-resistance-masterclass", 
+      "description": "Meistere die Kunst der Support- und Resistance-Level",
+      "category": "technische-analyse",
+      "content_type": "streamlit",
+      "external_url": "http://localhost:8501/support_resistance",
+      "required_subscription_levels": ["premium", "elite"],
+      "is_lead_magnet": false,
+      "estimated_duration": 75,
+      "difficulty_level": "intermediate",
+      "icon": "📈",
+      "sort_order": 2
+    },
+    {
+      "title": "Trading Psychologie Basics",
+      "slug": "trading-psychologie-basics",
+      "description": "Grundlagen der Trading-Psychologie - Kostenloser Einstieg",
+      "category": "trading-psychologie", 
+      "content_type": "html",
+      "template_file": "trading_psychologie_basics.html",
+      "required_subscription_levels": [],
+      "is_lead_magnet": true,
+      "estimated_duration": 30,
+      "difficulty_level": "beginner",
+      "icon": "🧠",
+      "sort_order": 1
+    },
+    {
+      "title": "Bilanzanalyse für Anfänger",
+      "slug": "bilanzanalyse-anfaenger",
+      "description": "Lerne die Grundlagen der Bilanzanalyse",
+      "category": "fundamentalanalyse",
+      "content_type": "html", 
+      "template_file": "bilanzanalyse_basics.html",
+      "required_subscription_levels": ["premium", "elite"],
+      "is_lead_magnet": false,
+      "estimated_duration": 60,
+      "difficulty_level": "beginner",
+      "icon": "📋",
+      "sort_order": 1
+    },
+    {
+      "title": "Risikomanagement Pro",
+      "slug": "risikomanagement-pro",
+      "description": "Professionelles Risikomanagement für profitable Trader",
+      "category": "risikomanagement",
+      "content_type": "streamlit",
+      "external_url": "http://localhost:8501/risk_management",
+      "required_subscription_levels": ["elite"],
+      "is_lead_magnet": false,
+      "estimated_duration": 120,
+      "difficulty_level": "advanced", 
+      "icon": "🛡️",
+      "sort_order": 1
+    }
+  ]
+}

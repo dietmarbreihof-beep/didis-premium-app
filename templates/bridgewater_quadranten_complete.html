@@ -1,0 +1,3259 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridgewater Quadranten Masterclass | Didis Trading Academy</title>
+    <style>
+        :root {
+            /* Didis Design-System */
+            --primary-dark: #0f172a;
+            --primary-medium: #1e40af;
+            --accent-turquoise: #0891b2;
+            --success-green: #059669;
+            --error-red: #dc2626;
+            --warning-orange: #ea580c;
+            --gold-classic: #daa520;
+            --gold-light: #f4e97b;
+            --bg-page: #f8fafc;
+            --bg-card: #ffffff;
+            --bg-section: #f1f5f9;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-light: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-page);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--gold-light), var(--gold-classic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+
+        .header .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 15px;
+        }
+
+        .header .description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .nav-progress {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-light);
+        }
+
+        .nav-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .nav-item {
+            padding: 15px;
+            background: var(--bg-section);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: var(--accent-turquoise);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            background: var(--success-green);
+            color: white;
+            border-color: var(--success-green);
+        }
+
+        .nav-item.completed {
+            background: linear-gradient(135deg, var(--success-green), #047857);
+            color: white;
+        }
+
+        /* Cards and Sections */
+        .section {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08);
+            margin-bottom: 40px;
+            border: 1px solid var(--border-light);
+        }
+
+        .section h2 {
+            color: var(--primary-dark);
+            font-size: 2.2rem;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 4px solid var(--accent-turquoise);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section h3 {
+            color: var(--primary-medium);
+            font-size: 1.6rem;
+            margin: 30px 0 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .section ul {
+            margin: 20px 0 20px 30px;
+        }
+
+        .section li {
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Quadranten Grid */
+        .quadrant-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 70px;
+            height: 520px;
+            margin: 80px 0;
+            position: relative;
+        }
+
+        .quadrant-card {
+            padding: 15px;
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            z-index: 3;
+            margin: 0 15px;
+            border: 3px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .quadrant-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .quadrant-card.active {
+            border-color: white;
+            box-shadow: 0 0 0 4px var(--accent-turquoise);
+        }
+
+        .quadrant-reflation {
+            background: linear-gradient(135deg, #fef3c7, #fbbf24, #f59e0b);
+            color: var(--text-dark);
+        }
+
+        .quadrant-goldilocks {
+            background: linear-gradient(135deg, #dcfce7, #16a34a, #15803d);
+            color: white;
+        }
+
+        .quadrant-deflation {
+            background: linear-gradient(135deg, #dbeafe, var(--primary-medium), var(--primary-dark));
+            color: white;
+        }
+
+        .quadrant-stagflation {
+            background: linear-gradient(135deg, #fecaca, var(--error-red), #b91c1c);
+            color: white;
+        }
+
+        .quadrant-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1.2rem;
+        }
+
+        .quadrant-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .quadrant-conditions {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .quadrant-description {
+            font-size: 1rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Axis Labels */
+        .axis-system {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .axis-label {
+            position: absolute;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary-dark);
+            background: white;
+            padding: 8px 16px;
+            border-radius: 25px;
+            z-index: 0;
+            pointer-events: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--accent-turquoise);
+        }
+
+        .growth-up { top: -30px; left: 50%; transform: translateX(-50%); }
+        .growth-down { bottom: -30px; left: 50%; transform: translateX(-50%); }
+        .inflation-up { right: -30px; top: 50%; transform: translateY(-50%) rotate(90deg); }
+        .inflation-down { left: -30px; top: 50%; transform: translateY(-50%) rotate(-90deg); }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: linear-gradient(135deg, var(--bg-section), #e2e8f0);
+            border: 3px solid var(--accent-turquoise);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 35px 0;
+            position: relative;
+            color: var(--text-dark);
+        }
+
+        .quiz-container h3,
+        .quiz-container h4,
+        .quiz-container h5,
+        .quiz-container p,
+        .quiz-container span {
+            color: var(--text-dark) !important;
+        }
+
+        .quiz-container::before {
+            content: '🧠';
+            position: absolute;
+            top: -15px;
+            left: 30px;
+            background: var(--accent-turquoise);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .quiz-header {
+            background: var(--accent-turquoise);
+            color: white;
+            margin: -30px -30px 25px -30px;
+            padding: 20px 30px;
+            border-radius: 13px 13px 0 0;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid var(--accent-turquoise);
+        }
+
+        .quiz-question h4 {
+            color: var(--primary-dark);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            padding: 18px 20px;
+            background: var(--bg-section);
+            border: 2px solid var(--border-light);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent-turquoise);
+            background: white;
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            background: var(--accent-turquoise);
+            color: white;
+            border-color: var(--accent-turquoise);
+        }
+
+        .quiz-option.correct {
+            background: var(--success-green);
+            color: white;
+            border-color: var(--success-green);
+        }
+
+        .quiz-option.incorrect {
+            background: var(--error-red);
+            color: white;
+            border-color: var(--error-red);
+        }
+
+        .quiz-explanation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f9ff;
+            border-radius: 10px;
+            border-left: 4px solid var(--success-green);
+            display: none;
+        }
+
+        .quiz-explanation.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-explanation h5 {
+            color: var(--success-green);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        /* Info Boxes */
+        .info-box {
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 5px solid;
+        }
+
+        .info-box.tip {
+            background: rgba(5, 150, 105, 0.1);
+            border-color: var(--success-green);
+            color: var(--success-green);
+        }
+
+        .info-box.warning {
+            background: rgba(234, 88, 12, 0.1);
+            border-color: var(--warning-orange);
+            color: var(--warning-orange);
+        }
+
+        .info-box.important {
+            background: rgba(30, 64, 175, 0.1);
+            border-color: var(--primary-medium);
+            color: var(--primary-medium);
+        }
+
+        .info-box.danger {
+            background: rgba(220, 38, 38, 0.1);
+            border-color: var(--error-red);
+            color: var(--error-red);
+        }
+
+        .info-box h4 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-section));
+            border: 2px solid var(--accent-turquoise);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .demo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            text-align: center;
+        }
+
+        .control-label {
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .control-button {
+            background: var(--accent-turquoise);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .control-button:hover {
+            background: var(--primary-medium);
+            transform: translateY(-2px);
+        }
+
+        .control-button.active {
+            background: var(--success-green);
+        }
+
+        /* Asset Performance Table */
+        .asset-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .asset-table th {
+            background: var(--primary-dark);
+            color: white;
+            padding: 18px 15px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .asset-table td {
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .asset-table tr:nth-child(even) {
+            background: var(--bg-section);
+        }
+
+        .performance-positive {
+            color: var(--success-green);
+            font-weight: 600;
+        }
+
+        .performance-negative {
+            color: var(--error-red);
+            font-weight: 600;
+        }
+
+        .performance-neutral {
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        /* Progress Tracking */
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 1px solid var(--border-light);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--border-light);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-turquoise), var(--primary-medium));
+            transition: width 0.8s ease;
+            border-radius: 6px;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-medium);
+            margin-top: 10px;
+        }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(135deg, var(--accent-turquoise), var(--primary-medium));
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            margin: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(8, 145, 178, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-green), #047857);
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, var(--warning-orange), #dc2626);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            .container { padding: 15px; }
+            .header h1 { font-size: 2.2rem; }
+            .section { padding: 25px; }
+            .quadrant-showcase { 
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(4, 1fr);
+                height: auto;
+                gap: 30px;
+                margin: 50px 0;
+            }
+            .quadrant-card { 
+                min-height: 160px; 
+                padding: 15px;
+                margin: 0 10px;
+            }
+            /* Mobile: Labels weniger weit außen */
+            .growth-up { top: -25px; }
+            .growth-down { bottom: -25px; }
+            .inflation-up { right: -25px; }
+            .inflation-down { left: -25px; }
+        }
+
+        @media (max-width: 640px) {
+            .header h1 { font-size: 1.8rem; }
+            .section h2 { font-size: 1.8rem; }
+            .nav-sections { grid-template-columns: 1fr; }
+            .demo-controls { grid-template-columns: 1fr; }
+        }
+
+        /* Video Section Styles */
+        .video-section {
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-section));
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 3px solid var(--gold-classic);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-section::before {
+            content: '🎬';
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            font-size: 2rem;
+            background: var(--gold-classic);
+            padding: 10px 15px;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .video-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .video-header h2 {
+            font-size: 2.2rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--primary-dark), var(--gold-classic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .video-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .video-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 4px solid var(--gold-classic);
+        }
+
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .video-info {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid var(--accent-turquoise);
+        }
+
+        .video-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-section);
+            border-radius: 10px;
+        }
+
+        .stat-icon {
+            font-size: 1.3rem;
+        }
+
+        .stat-text {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .video-description h4 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .video-description ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .video-description li {
+            margin-bottom: 12px;
+            padding-left: 20px;
+            position: relative;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .video-description li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-green);
+            font-weight: bold;
+        }
+
+        .video-cta {
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 20px;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .video-cta .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, var(--gold-classic), var(--gold-light));
+            color: var(--primary-dark);
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+            border: 2px solid var(--gold-classic);
+        }
+
+        .video-cta .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-classic));
+        }
+
+        .cta-note {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        /* Video Section Responsive */
+        @media (max-width: 968px) {
+            .video-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .video-section {
+                padding: 25px;
+            }
+            
+            .video-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .video-section::before {
+                display: none;
+            }
+            
+            .video-header h2 {
+                font-size: 1.5rem;
+            }
+            
+            .video-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        /* Ray Dalio Introduction Section */
+        .intro-section {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(15, 23, 42, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-section::before {
+            content: '💼';
+            position: absolute;
+            top: -10px;
+            right: 30px;
+            font-size: 2rem;
+            background: var(--gold-classic);
+            padding: 10px 15px;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .intro-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .intro-header h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(45deg, var(--gold-light), var(--gold-classic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .intro-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            background: var(--gold-classic);
+            padding: 12px;
+            border-radius: 12px;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .stat-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--gold-light);
+        }
+
+        .stat-info p {
+            font-size: 1rem;
+            line-height: 1.6;
+            opacity: 0.95;
+        }
+
+        .intro-insight {
+            background: rgba(218, 165, 32, 0.15);
+            border-radius: 16px;
+            padding: 30px;
+            border: 2px solid var(--gold-classic);
+            text-align: center;
+        }
+
+        .intro-insight h4 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--gold-light);
+        }
+
+        .intro-insight p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            opacity: 0.95;
+        }
+
+        /* Responsive für Intro Section */
+        @media (max-width: 968px) {
+            .intro-section {
+                padding: 25px;
+            }
+            
+            .intro-stats {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .intro-header h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .intro-section::before {
+                display: none;
+            }
+            
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            .stat-icon {
+                align-self: center;
+            }
+        }
+
+        /* Progressive Learning System */
+        .next-step-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--success-green), #38a169);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 25px auto;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+            text-align: center;
+            min-width: 250px;
+        }
+
+        .next-step-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 161, 105, 0.4);
+            background: linear-gradient(135deg, #38a169, var(--success-green));
+        }
+
+        .next-step-button:active {
+            transform: translateY(0);
+        }
+
+        .section-hidden {
+            display: none !important;
+        }
+
+        .section-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInFromBottom {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .section-reveal {
+            animation: slideInFromBottom 0.8s ease-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>📊 Bridgewater Quadranten</h1>
+                <p class="subtitle">Die vollständige Masterclass zu Ray Dalios Wirtschafts-Framework</p>
+                <p class="description">
+                    Verstehe die vier "Jahreszeiten" der Wirtschaft und baue darauf aufbauend ein robustes, 
+                    wetterbeständiges Portfolio für alle Marktzyklen auf.
+                </p>
+            </div>
+        </div>
+
+        <!-- Progress Navigation -->
+        <div class="nav-progress">
+            <h3 style="margin-bottom: 20px; color: var(--primary-dark);">📚 Lernfortschritt</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="overall-progress"></div>
+            </div>
+            <div class="progress-text" id="progress-text">0% abgeschlossen</div>
+            
+            <div class="nav-sections">
+                <div class="nav-item active" onclick="scrollToSection('video-section')">
+                    🎥 Video & Einführung
+                </div>
+                <div class="nav-item" onclick="scrollToSection('fundamentals')">
+                    🏛️ Die Grundlagen
+                </div>
+                <div class="nav-item" onclick="scrollToSection('quadrants')">
+                    🎯 Die vier Quadranten
+                </div>
+                <div class="nav-item" onclick="scrollToSection('assets')">
+                    💰 Asset-Verhalten
+                </div>
+                <div class="nav-item" onclick="scrollToSection('portfolio')">
+                    🌤️ All Weather Portfolio
+                </div>
+                <div class="nav-item" onclick="scrollToSection('application')">
+                    🚀 Praktische Anwendung
+                </div>
+                <div class="nav-item" onclick="scrollToSection('market-discrepancy')">
+                    🔍 Marktdiskrepanz 2025
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Video Section -->
+        <div class="video-section">
+            <div class="video-header">
+                <h2>🎥 Ray Dalio erklärt die Wirtschaftsmaschine</h2>
+                <p class="video-subtitle">
+                    Schau dir Ray Dalios legendäres Video über die Funktionsweise der Wirtschaft an - 
+                    die Grundlage für das Bridgewater Quadranten-Framework
+                </p>
+            </div>
+            
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <iframe 
+                        src="https://www.youtube.com/embed/mFRopAQEzbY" 
+                        title="How The Economic Machine Works by Ray Dalio" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                
+                <div class="video-info">
+                    <div class="video-stats">
+                        <div class="stat-item">
+                            <span class="stat-icon">🏆</span>
+                            <span class="stat-text">Legendäres Video</span>
+                        </div>
+                    </div>
+                    
+                    <div class="video-description">
+                        <h4>💡 Warum dieses Video wichtig ist:</h4>
+                        <ul>
+                            <li><strong>Fundamentales Verständnis:</strong> Lerne die Grundlagen der Wirtschaftszyklen</li>
+                            <li><strong>Bridgewater's Philosophie:</strong> Verstehe die Denkweise hinter dem Quadranten-Framework</li>
+                            <li><strong>Praktische Anwendung:</strong> Sieh, wie makroökonomische Prinzipien funktionieren</li>
+                            <li><strong>Investmentweisheit:</strong> Erhalte Einblicke von einem der erfolgreichsten Hedge-Fund-Manager</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="video-cta">
+                        <a href="https://youtu.be/mFRopAQEzbY" target="_blank" rel="noopener" class="btn btn-primary">
+                            🚀 Auf YouTube ansehen
+                        </a>
+                        <p class="cta-note">
+                            <strong>Empfehlung:</strong> Schau dir das Video an, bevor du mit den Quadranten beginnst!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ray Dalio & Bridgewater Introduction -->
+        <div class="intro-section">
+            <div class="intro-header">
+                <h2>👤 Ray Dalio & Bridgewater Associates</h2>
+                <p class="intro-subtitle">
+                    Der Mann und das Unternehmen hinter dem revolutionären Wirtschafts-Framework
+                </p>
+            </div>
+            
+            <div class="intro-content">
+                <div class="intro-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">🏛️</div>
+                        <div class="stat-info">
+                            <h3>1975 gegründet</h3>
+                            <p>Bridgewater Associates verwaltet heute über <strong>150 Milliarden US-Dollar</strong> und gilt als der <strong>erfolgreichste Hedgefonds aller Zeiten</strong>.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <h3>Außergewöhnliche Performance</h3>
+                            <p>Bridgewater erzielte über Jahrzehnte <strong>konstant überdurchschnittliche Renditen</strong> und navigierte erfolgreich durch mehrere Finanzkrisen, einschließlich 2008.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🌍</div>
+                        <div class="stat-info">
+                            <h3>Makroökonomische Expertise</h3>
+                            <p>Bekannt für seine Fähigkeit, <strong>große wirtschaftliche Zyklen und Krisen vorherzusagen</strong>. Seine wirtschaftlichen Analysen werden weltweit beachtet.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🌤️</div>
+                        <div class="stat-info">
+                            <h3>"All Weather" Strategie</h3>
+                            <p>Entwickelte <strong>Anlagestrategien, die in verschiedenen wirtschaftlichen Umgebungen funktionieren</strong> - ein Ansatz, der deine eigene Philosophie des Navigierens durch verschiedene Marktphasen widerspiegelt.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="intro-insight">
+                    <h4>💡 Warum ist das für dich relevant?</h4>
+                    <p>
+                        Ray Dalios Ansatz basiert nicht auf Glück oder Spekulation, sondern auf einem <strong>systematischen Verständnis</strong> 
+                        der Wirtschaftsmaschine. Die Quadranten-Strategie, die du gleich lernst, ist das Herzstück seiner Investmentphilosophie - 
+                        und sie funktioniert sowohl für Milliarden-Dollar-Fonds als auch für dein persönliches Portfolio.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Quiz für Ray Dalio & Bridgewater -->
+            <div class="quiz-container">
+                <h3>🧠 Quiz: Ray Dalio & Bridgewater Associates</h3>
+                <p style="margin-bottom: 25px;">Teste dein Verständnis über den Mann und das Unternehmen hinter dem Framework:</p>
+                
+                <div class="quiz-question">
+                    <h4>1. Was macht Bridgewater Associates so besonders im Vergleich zu anderen Hedgefonds?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q1', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Sie handeln nur mit Kryptowährungen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q1', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Sie basieren ihre Strategien auf systematischem Verständnis der Wirtschaftszyklen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q1', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Sie verwenden nur technische Analyse</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q1', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Sie investieren nur in Immobilien</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-dalio-q1">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Bridgewater's Erfolg basiert auf Ray Dalios systematischem Ansatz zur Wirtschaftsanalyse. 
+                            Anstatt auf Glück oder Spekulation zu setzen, verstehen sie die fundamentalen Treiber 
+                            der Wirtschaftsmaschine und können so verschiedene Szenarien antizipieren.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Wie viel Kapital verwaltet Bridgewater Associates heute und was ist ihre größte Errungenschaft?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q2', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>50 Milliarden USD - größter Aktien-Hedgefonds</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q2', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>150+ Milliarden USD - erfolgreichster Hedgefonds aller Zeiten</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q2', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>25 Milliarden USD - spezialisiert auf Rohstoffe</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q2', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>500 Milliarden USD - größte Investmentbank</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-dalio-q2">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Bridgewater verwaltet über 150 Milliarden US-Dollar und gilt als der erfolgreichste 
+                            Hedgefonds aller Zeiten. Diese Größe und der Erfolg über Jahrzehnte hinweg zeigen, 
+                            dass ihre Methoden nicht nur theoretisch, sondern praktisch bewährt sind.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Was ist das Besondere an der "All Weather" Strategie von Bridgewater?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q3', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Sie funktioniert nur bei gutem Wetter</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q3', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Sie investiert nur in Wetter-Derivate</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q3', 'c', true)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Sie funktioniert in verschiedenen wirtschaftlichen Umgebungen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('dalio-q3', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Sie nutzt nur Klimadaten für Investmententscheidungen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-dalio-q3">
+                        <h5>✅ Richtige Antwort: C</h5>
+                        <p>
+                            Die "All Weather" Strategie ist darauf ausgelegt, in verschiedenen wirtschaftlichen 
+                            "Jahreszeiten" zu funktionieren - egal ob Boom, Rezession, Inflation oder Deflation. 
+                            Das ist der Kern des Quadranten-Frameworks, das du gleich lernen wirst.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Ray Dalio Quiz -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('fundamentals')">
+                    ✅ Verstanden - zu den Grundlagen
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 1: Die Grundlagen -->
+        <div class="section fade-in" id="fundamentals">
+            <h2>🏛️ Die Grundlagen von Dalios "Wirtschaftsmaschine"</h2>
+            
+            <h3>💡 Die zentrale Erkenntnis</h3>
+            <p>
+                Ray Dalio revolutionierte das Verständnis von Wirtschaftszyklen mit einer einfachen, aber kraftvollen Erkenntnis: 
+                Die Wirtschaft ist keine chaotische, unberechenbare Kraft, sondern eine <strong>Maschine</strong> mit logischen 
+                Ursache-Wirkungs-Beziehungen. Diese Maschine wird von drei Haupttriebkräften angetrieben.
+            </p>
+
+            <div class="info-box important">
+                <h4>🔑 Kernprinzip: Die Transaktion als Baustein</h4>
+                <p>
+                    Jede einzelne Transaktion - ein Käufer tauscht Geld oder Kredit gegen Güter, Dienstleistungen oder 
+                    Finanzanlagen - ist ein Baustein der gesamten Wirtschaft. Die Wirtschaft ist nichts anderes als die 
+                    <strong>Summe aller Transaktionen</strong>.
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>Preisformel:</strong> Preis = Gesamtbetrag der Ausgaben (Gesamt $) / Gesamtmenge der verkauften Güter (Gesamt Q)
+                </p>
+            </div>
+
+            <h3>⚡ Die drei primären Triebkräfte</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, #dcfce7, #16a34a); color: white; padding: 25px; border-radius: 12px;">
+                    <h4>📈 1. Langfristiges Produktivitätswachstum</h4>
+                    <p><strong>Dauer:</strong> Permanent, stetig ansteigend</p>
+                    <p><strong>Treiber:</strong> Wissen, Innovation, Effizienzgewinne</p>
+                    <p><strong>Einfluss:</strong> Langfristige Wohlstandsentwicklung</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem; opacity: 0.9;">
+                        Dies ist der wichtigste Faktor für langfristigen Wohlstand. Er hebt kontinuierlich 
+                        den Lebensstandard und ist relativ stabil vorhersagbar.
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fef3c7, #f59e0b); color: var(--text-dark); padding: 25px; border-radius: 12px;">
+                    <h4>🔄 2. Langfristiger Schuldenzyklus</h4>
+                    <p><strong>Dauer:</strong> 50-100 Jahre</p>
+                    <p><strong>Treiber:</strong> Schulden wachsen schneller als Einkommen</p>
+                    <p><strong>Endpunkt:</strong> Entschuldung ("Deleveraging")</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem; opacity: 0.8;">
+                        Selbstverstärkender Zyklus: Steigende Vermögenswerte unterstützen mehr Kredite, 
+                        bis die Schuldendienstkosten untragbar werden.
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #dbeafe, var(--primary-medium)); color: white; padding: 25px; border-radius: 12px;">
+                    <h4>⚡ 3. Kurzfristiger Schuldenzyklus</h4>
+                    <p><strong>Dauer:</strong> 5-8 Jahre</p>
+                    <p><strong>Treiber:</strong> Expansion/Kontraktion des Kredits</p>
+                    <p><strong>Steuerung:</strong> Zentralbank-Geldpolitik</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem; opacity: 0.9;">
+                        Der "Business Cycle": Zinserhöhungen zur Inflationsbekämpfung, 
+                        Zinssenkungen zur Wirtschaftsstimulation.
+                    </p>
+                </div>
+            </div>
+
+            <div class="info-box tip">
+                <h4>💰 Die zentrale Rolle des Kredits</h4>
+                <p>
+                    Kredit ist der <strong>volatilste und entscheidendste</strong> Bestandteil der Wirtschaftsmaschine. 
+                    Er ermöglicht Ausgaben über die aktuelle Geld- und Produktionsmenge hinaus und zieht damit 
+                    zukünftigen Konsum in die Gegenwart.
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>Zyklischer Mechanismus:</strong><br>
+                    Mehr Kredit → Mehr Ausgaben → Höhere Einkommen → Steigende Vermögenswerte → 
+                    Höhere Kreditaufnahmekapazität → Expansion (und umgekehrt bei Kontraktion)
+                </p>
+            </div>
+
+            <!-- Quiz nach Grundlagen -->
+            <div class="quiz-container">
+                <div class="quiz-header">📝 Wissenstest: Grundlagen der Wirtschaftsmaschine</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Was ist laut Ray Dalio der Grundbaustein der gesamten Wirtschaft?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q1', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Die Geldmenge einer Zentralbank</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q1', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Die einzelne Transaktion zwischen Käufer und Verkäufer</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q1', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Das Bruttoinlandsprodukt (BIP) eines Landes</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q1', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Die Börsenkapitalisierung der größten Unternehmen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q1">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Dalios zentrale Erkenntnis ist, dass die gesamte Wirtschaft aus einzelnen Transaktionen besteht. 
+                            Jede Transaktion - ein Tausch von Geld/Kredit gegen Güter, Dienstleistungen oder Finanzanlagen - 
+                            ist ein Baustein der Wirtschaftsmaschine.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Welcher Schuldenzyklus dauert typischerweise 50-100 Jahre und führt zu großen wirtschaftlichen Umstrukturierungen?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q2', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Kurzfristiger Schuldenzyklus (Business Cycle)</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q2', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Langfristiger Schuldenzyklus</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q2', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Produktivitätswachstumszyklus</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q2', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Zinszyklus der Zentralbanken</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q2">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Der langfristige Schuldenzyklus entsteht, wenn Schulden über Jahrzehnte schneller wachsen 
+                            als Einkommen und Geldmenge. Er kulminiert in einer Entschuldungsphase ("Deleveraging") 
+                            und führt oft zu neuen wirtschaftlichen und politischen Weltordnungen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Warum ist Kredit der "volatilste und entscheidendste" Bestandteil der Wirtschaftsmaschine?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q3', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Weil Kreditzinsen täglich schwanken</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q3', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Weil Kredit Ausgaben über die aktuelle Geld-/Produktionsmenge hinaus ermöglicht</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q3', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Weil nur Banken Kredite vergeben können</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q3', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Weil Kredite immer zurückgezahlt werden müssen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q3">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Kredit ist volatiler als Geld, da er zwischen zwei Parteien entstehen kann und viel elastischer ist. 
+                            Er ermöglicht es, zukünftigen Konsum in die Gegenwart zu ziehen, wodurch die Wirtschaft über 
+                            ihre momentanen Produktionskapazitäten hinauswachsen kann - aber auch schrumpfen kann.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 1 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('quadrants')">
+                    ✅ Verstanden - zum nächsten Schritt
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 2: Die vier Quadranten -->
+        <div class="section fade-in section-hidden" id="quadrants">
+            <h2>🎯 Die vier Quadranten: Die "Jahreszeiten" der Wirtschaft</h2>
+            
+            <p>
+                Das Bridgewater Quadranten-Framework teilt alle möglichen wirtschaftlichen Umfelder in vier 
+                "Jahreszeiten" ein, basierend auf zwei fundamentalen Variablen: <strong>Wachstum</strong> und 
+                <strong>Inflation</strong> - jeweils relativ zu den Markterwartungen.
+            </p>
+
+            <div class="info-box important">
+                <h4>🔑 Der Schlüssel: "Überraschung" treibt Märkte</h4>
+                <p>
+                    Asset-Preise bewegen sich nicht auf absolute Werte von Wachstum oder Inflation, sondern auf 
+                    <strong>Abweichungen von bereits eingepreisten Erwartungen</strong>. Wenn das BIP-Wachstum 
+                    3% beträgt, aber der Markt 2% erwartet hatte, ist das bullisch. Wenn es 3% beträgt, aber 
+                    4% erwartet wurden, ist es bearish.
+                </p>
+            </div>
+
+            <h3>🌦️ Die vier Wirtschafts-"Jahreszeiten"</h3>
+            
+            <div class="quadrant-showcase">
+                <div class="axis-system">
+                    <div class="axis-label growth-up">📈 Wachstum ↑</div>
+                    <div class="axis-label growth-down">📉 Wachstum ↓</div>
+                    <div class="axis-label inflation-up">🔥 Inflation ↑</div>
+                    <div class="axis-label inflation-down">❄️ Inflation ↓</div>
+                </div>
+                
+                <div class="quadrant-card quadrant-Inflationärer Boom" onclick="selectQuadrant('Inflationärer Boom')">
+                    <div class="quadrant-number">I</div>
+                    <div class="quadrant-title">Inflationärer Boom</div>
+                    <div class="quadrant-conditions">🚀 Wachstum ↑ + 🔥 Inflation ↑</div>
+                    <div class="quadrant-description">
+                        Überhitzende Wirtschaft mit starker Nachfrage, die die Kapazitätsgrenzen erreicht. 
+                        Zentralbanken erhöhen Zinsen zur Inflationsbekämpfung.
+                    </div>
+                </div>
+                
+                <div class="quadrant-card quadrant-goldilocks" onclick="selectQuadrant('goldilocks')">
+                    <div class="quadrant-number">II</div>
+                    <div class="quadrant-title">Goldlöckchen</div>
+                    <div class="quadrant-conditions">🚀 Wachstum ↑ + ❄️ Inflation ↓</div>
+                    <div class="quadrant-description">
+                        Das "perfekte" Wirtschaftsumfeld: Robustes Wachstum ohne Preisdruck ermöglicht 
+                        akkommodierende Geldpolitik (niedrige Zinsen, lockere Geldpolitik).
+                    </div>
+                </div>
+                
+                <div class="quadrant-card quadrant-deflation" onclick="selectQuadrant('deflation')">
+                    <div class="quadrant-number">III</div>
+                    <div class="quadrant-title">Deflationäre Pleite</div>
+                    <div class="quadrant-conditions">📉 Wachstum ↓ + ❄️ Inflation ↓</div>
+                    <div class="quadrant-description">
+                        Klassisches Rezessionsumfeld mit schwacher Nachfrage. Zentralbanken reagieren 
+                        mit aggressiven Zinssenkungen und QE.
+                    </div>
+                </div>
+                
+                <div class="quadrant-card quadrant-stagflation" onclick="selectQuadrant('stagflation')">
+                    <div class="quadrant-number">IV</div>
+                    <div class="quadrant-title">Stagflation</div>
+                    <div class="quadrant-conditions">📉 Wachstum ↓ + 🔥 Inflation ↑</div>
+                    <div class="quadrant-description">
+                        Das schwierigste Umfeld: Stagnation bei steigenden Preisen. Politisches 
+                        Dilemma für Zentralbanken.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detaillierte Quadrant-Erklärung -->
+            <div id="quadrant-details" style="display: none;">
+                <div id="quadrant-content"></div>
+            </div>
+
+            <!-- Interactive Demo -->
+            <div class="interactive-demo">
+                <h3 style="margin-bottom: 25px; color: var(--primary-dark);">🎮 Interaktive Quadrant-Simulation</h3>
+                <p>Verändere die Wirtschaftsindikatoren und beobachte, wie sich der Quadrant entwickelt:</p>
+                
+                <div class="demo-controls">
+                    <div class="control-group">
+                        <span class="control-label">BIP-Wachstum vs. Erwartung</span>
+                        <button class="control-button" onclick="setIndicator('growth', 'up')">📈 Über Erwartung</button>
+                        <button class="control-button" onclick="setIndicator('growth', 'down')">📉 Unter Erwartung</button>
+                    </div>
+                    <div class="control-group">
+                        <span class="control-label">Inflation vs. Erwartung</span>
+                        <button class="control-button" onclick="setIndicator('inflation', 'up')">🔥 Über Erwartung</button>
+                        <button class="control-button" onclick="setIndicator('inflation', 'down')">❄️ Unter Erwartung</button>
+                    </div>
+                    <div class="control-group">
+                        <span class="control-label">Ergebnis</span>
+                        <div id="current-quadrant" style="font-weight: bold; font-size: 1.1rem; color: var(--primary-medium); margin-top: 10px;">
+                            Wähle Indikatoren aus
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz nach Quadranten -->
+            <div class="quiz-container">
+                <div class="quiz-header">📝 Wissenstest: Die vier Quadranten verstehen</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Was charakterisiert den "Inflationärer Boom"-Quadranten am besten?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q4', 'a', true)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Überhitzende Wirtschaft mit steigendem Wachstum und steigender Inflation</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q4', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Perfekte Balance zwischen Wachstum und Preisstabilität</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q4', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Rezession mit fallenden Preisen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q4', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Stagnierende Wirtschaft mit deflationären Tendenzen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q4">
+                        <h5>✅ Richtige Antwort: A</h5>
+                        <p>
+                            Inflationärer Boom tritt auf, wenn sowohl Wachstum als auch Inflation über den Markterwartungen liegen. 
+                            Die Wirtschaft "läuft heiß" - starke Nachfrage stößt an Kapazitätsgrenzen, was zu Preisdruck führt. 
+                            Zentralbanken reagieren typischerweise mit Zinserhöhungen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Warum ist Stagflation das schwierigste Umfeld für politische Entscheidungsträger?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q5', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Weil die Arbeitslosigkeit zu niedrig ist</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q5', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Weil Inflationsbekämpfung die Rezession verschärft und Wachstumsstimulation die Inflation anheizt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q5', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Weil die Zinsen zu hoch sind</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q5', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Weil Unternehmen zu viele Gewinne machen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q5">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Stagflation stellt Zentralbanken vor ein unlösbares Dilemma: Zinserhöhungen zur Inflationsbekämpfung 
+                            verschärfen die wirtschaftliche Stagnation, während Zinssenkungen zur Wachstumsstimulation die 
+                            Inflation weiter anheizen. Es gibt keine "win-win" Lösung.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 2 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('assets')">
+                    ✅ Verstanden - zum nächsten Schritt
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Asset-Verhalten -->
+        <div class="section fade-in section-hidden" id="assets">
+            <h2>💰 Asset-Verhalten in den Quadranten</h2>
+            
+            <p>
+                Das Verhalten von Vermögenswerten in den verschiedenen Quadranten folgt logischen, 
+                vorhersagbaren Mustern. Verstehe diese Muster, und du kannst dein Portfolio für 
+                alle "Jahreszeiten" optimieren.
+            </p>
+
+            <h3>📈 Die Kernlogik: Zwei Hauptfaktoren bestimmen Asset-Preise</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div class="info-box tip" style="margin: 0;">
+                    <h4>🚀 Wirtschaftswachstumsrate</h4>
+                    <p>
+                        Bestimmt das <strong>Volumen der Cashflows</strong>, die Assets generieren können. 
+                        Höheres Wachstum = höhere Unternehmensgewinne, mehr Dividenden, bessere Kreditqualität.
+                    </p>
+                </div>
+                <div class="info-box warning" style="margin: 0;">
+                    <h4>🔥 Inflationsrate</h4>
+                    <p>
+                        Beeinflusst den <strong>Abzinsungssatz und Realwert</strong> der Cashflows. 
+                        Höhere Inflation = höhere Zinsen = niedrigere Barwerte zukünftiger Zahlungen.
+                    </p>
+                </div>
+            </div>
+
+            <h3>🎯 Asset-Performance nach Quadranten</h3>
+            
+            <table class="asset-table">
+                <thead>
+                    <tr>
+                        <th>Asset-Klasse</th>
+                        <th>Inflationärer Boom<br>(🚀↑ 🔥↑)</th>
+                        <th>Goldlöckchen<br>(🚀↑ ❄️↓)</th>
+                        <th>Deflation<br>(📉↓ ❄️↓)</th>
+                        <th>Stagflation<br>(📉↓ 🔥↑)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Aktien (entwickelte Märkte)</strong></td>
+                        <td class="performance-positive">+</td>
+                        <td class="performance-positive">+++</td>
+                        <td class="performance-negative">--</td>
+                        <td class="performance-negative">---</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Langfristige Staatsanleihen</strong></td>
+                        <td class="performance-negative">--</td>
+                        <td class="performance-positive">++</td>
+                        <td class="performance-positive">+++</td>
+                        <td class="performance-negative">---</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rohstoffe</strong></td>
+                        <td class="performance-positive">+++</td>
+                        <td class="performance-neutral">0</td>
+                        <td class="performance-negative">--</td>
+                        <td class="performance-positive">+++</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Gold</strong></td>
+                        <td class="performance-positive">++</td>
+                        <td class="performance-negative">-</td>
+                        <td class="performance-positive">+</td>
+                        <td class="performance-positive">+++</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Inflationsgeschützte Anleihen (TIPS)</strong></td>
+                        <td class="performance-positive">++</td>
+                        <td class="performance-neutral">0</td>
+                        <td class="performance-negative">-</td>
+                        <td class="performance-positive">+++</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cash</strong></td>
+                        <td class="performance-negative">-</td>
+                        <td class="performance-neutral">0</td>
+                        <td class="performance-positive">+</td>
+                        <td class="performance-negative">--</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 35px 0;">
+                <div class="info-box tip" style="margin: 0;">
+                    <h4>🌱 Wachstums-sensible Assets (Q I & II)</h4>
+                    <p><strong>Aktien, Unternehmensanleihen, Industriekommoditäten</strong></p>
+                    <p>Profitieren von steigenden Unternehmensgewinnen, fallenden Ausfallrisiken und erhöhter Rohstoffnachfrage.</p>
+                </div>
+                
+                <div class="info-box important" style="margin: 0;">
+                    <h4>🛡️ Absicherungs-Assets (Q III & IV)</h4>
+                    <p><strong>Staatsanleihen, Cash, Gold</strong></p>
+                    <p>Profitieren von Zinssenkungen (Anleihenpreise steigen), Kapitalerhalt und Flucht in sichere Häfen.</p>
+                </div>
+                
+                <div class="info-box warning" style="margin: 0;">
+                    <h4>🔥 Inflations-Hedge (Q I & IV)</h4>
+                    <p><strong>Rohstoffe, TIPS, Gold, Schwellenländer</strong></p>
+                    <p>Bieten Schutz vor Kaufkraftverlust durch direkte Preisbeteiligung oder Inflationsanpassung.</p>
+                </div>
+                
+                <div class="info-box danger" style="margin: 0;">
+                    <h4>❄️ Deflations-Gewinner (Q II & III)</h4>
+                    <p><strong>Staatsanleihen, Wachstumsaktien</strong></p>
+                    <p>Feste Zahlungen gewinnen an Kaufkraft, niedrige Zinsen unterstützen Wachstumsbewertungen.</p>
+                </div>
+            </div>
+
+            <!-- Asset-Rotation Beispiel -->
+            <div class="interactive-demo">
+                <h3 style="color: var(--primary-dark); margin-bottom: 20px;">💫 Asset-Rotation in Aktion für System I</h3>
+                <p>Beobachte, wie sich die optimale Asset-Allokation zwischen den Quadranten verändert:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 25px 0;">
+                    <button class="btn" onclick="showAssetAllocation('Inflationärer Boom')" style="background: linear-gradient(135deg, #fbbf24, #f59e0b);">
+                        🔥 Inflationärer Boom
+                    </button>
+                    <button class="btn btn-success" onclick="showAssetAllocation('goldilocks')">
+                        🌟 Goldlöckchen
+                    </button>
+                    <button class="btn" onclick="showAssetAllocation('deflation')" style="background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));">
+                        ❄️ Deflation
+                    </button>
+                    <button class="btn btn-warning" onclick="showAssetAllocation('stagflation')">
+                        ⚡ Stagflation
+                    </button>
+                </div>
+                
+                <div id="allocation-display" style="background: white; padding: 25px; border-radius: 12px; margin-top: 20px; display: none;">
+                    <h4 id="allocation-title"></h4>
+                    <div id="allocation-content"></div>
+                </div>
+            </div>
+
+            <!-- Quiz nach Assets -->
+            <div class="quiz-container">
+                <div class="quiz-header">📝 Wissenstest: Asset-Verhalten verstehen</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Welche Assets performen typischerweise am besten in einem Stagflations-Umfeld (Quadrant IV)?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q6', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Langfristige Staatsanleihen und Wachstumsaktien</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q6', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Rohstoffe, Gold und inflationsgeschützte Anleihen (TIPS)</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q6', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Cash und kurzfristige Staatsanleihen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q6', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Technologie-Aktien und Unternehmensanleihen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q6">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            In Stagflation (fallende Wirtschaft + steigende Inflation) schützen "reale" Assets vor 
+                            Kaufkraftverlust. Rohstoffe profitieren direkt von Preissteigerungen, Gold fungiert als 
+                            Wertspeicher, und TIPS sind explizit gegen Inflation abgesichert.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Warum performen Staatsanleihen schlecht in Inflationärer Boom (Quadrant I)?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q7', 'a', true)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Weil Zentralbanken die Zinsen erhöhen, was die Anleihenpreise fallen lässt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q7', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Weil Unternehmen weniger Anleihen ausgeben</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q7', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Weil die Regierung mehr Schulden aufnimmt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q7', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Weil Investoren nur noch Aktien kaufen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q7">
+                        <h5>✅ Richtige Antwort: A</h5>
+                        <p>
+                            Im Inflationärer Boom steigen sowohl Wachstum als auch Inflation. Zentralbanken reagieren mit 
+                            Zinserhöhungen zur Inflationsbekämpfung. Da Anleihennpreise und Zinsen sich umgekehrt 
+                            verhalten (steigende Zinsen = fallende Preise), leiden Staatsanleihen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Was macht Gold zu einem effektiven Hedge in unsicheren Zeiten?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q8', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Gold zahlt hohe Dividenden</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q8', 'b', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Gold ist eine produktive Anlage</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q8', 'c', true)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Gold bewahrt Kaufkraft über lange Zeiträume und ist nicht von Regierungen kontrolliert</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q8', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Gold hat immer steigende Preise</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q8">
+                        <h5>✅ Richtige Antwort: C</h5>
+                        <p>
+                            Golds Wert als Hedge liegt in seiner Rolle als Wertspeicher, der über Jahrtausende Kaufkraft 
+                            bewahrt hat. Im Gegensatz zu Fiat-Währungen kann es nicht von Regierungen "gedruckt" werden, 
+                            was es besonders in Zeiten von Inflation oder politischer Unsicherheit wertvoll macht.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 3 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('portfolio')">
+                    ✅ Verstanden - zum nächsten Schritt
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 4: All Weather Portfolio -->
+        <div class="section fade-in section-hidden" id="portfolio">
+            <h2>🌤️ Das All Weather Portfolio</h2>
+            
+            <p>
+                Das All Weather Portfolio ist Ray Dalios praktische Antwort auf eine fundamentale Erkenntnis: 
+                <strong>Wir können die Zukunft nicht vorhersagen, aber wir können uns darauf vorbereiten.</strong> 
+                Statt auf Prognosen zu setzen, baut dieses Portfolio auf struktureller Balance.
+            </p>
+
+            <h3>🧠 Die Philosophie: Vorbereitung statt Vorhersage</h3>
+            
+            <div class="info-box important">
+                <h4>💡 Kerngedanke der Risikoparität</h4>
+                <p>
+                    Traditionelle Portfolios allokieren <strong>Kapital</strong> gleichmäßig (z.B. 60% Aktien, 40% Anleihen). 
+                    All Weather allokiert <strong>Risiko</strong> gleichmäßig - etwa 25% des Gesamtrisikos für jeden 
+                    der vier Quadranten.
+                </p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 35px; margin: 35px 0;">
+                <div>
+                    <h4 style="color: var(--error-red); margin-bottom: 20px;">❌ Problem: Traditionelles 60/40 Portfolio</h4>
+                    <div style="background: #fef2f2; border: 2px solid var(--error-red); border-radius: 12px; padding: 25px;">
+                        <p><strong>Kapital-Allokation:</strong></p>
+                        <ul style="margin: 15px 0;">
+                            <li>60% Aktien</li>
+                            <li>40% Anleihen</li>
+                        </ul>
+                        <p style="margin-top: 20px; color: var(--error-red); font-weight: 600;">
+                            <strong>Problem:</strong> Aktien sind 3x volatiler als Anleihen → 
+                            Aktien tragen ~90% des Gesamtrisikos!
+                        </p>
+                        <p style="margin-top: 15px; color: var(--error-red);">
+                            <strong>Implizite Wette:</strong> Starke Fokussierung auf Quadrant II (Goldlöckchen)
+                        </p>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 style="color: var(--success-green); margin-bottom: 20px;">✅ Lösung: All Weather Portfolio</h4>
+                    <div style="background: #f0fdf4; border: 2px solid var(--success-green); border-radius: 12px; padding: 25px;">
+                        <p><strong>Risiko-Allokation:</strong></p>
+                        <ul style="margin: 15px 0;">
+                            <li>Quadrant I: ~25% Risiko</li>
+                            <li>Quadrant II: ~25% Risiko</li>
+                            <li>Quadrant III: ~25% Risiko</li>
+                            <li>Quadrant IV: ~25% Risiko</li>
+                        </ul>
+                        <p style="margin-top: 20px; color: var(--success-green); font-weight: 600;">
+                            <strong>Ergebnis:</strong> Strukturell balanciert für alle "Jahreszeiten"
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>📊 All Weather Asset-Allokation (vereinfacht)</h3>
+            
+            <div style="background: white; border-radius: 16px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.08);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 25px;">
+                    <div style="text-align: center; padding: 20px; background: var(--bg-section); border-radius: 12px;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #3b82f6; margin-bottom: 10px;">30%</div>
+                        <div style="font-weight: 600; color: var(--text-dark);">US-Aktien</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">Wachstumsbeteiligung</div>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; background: var(--bg-section); border-radius: 12px;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #16a34a; margin-bottom: 10px;">40%</div>
+                        <div style="font-weight: 600; color: var(--text-dark);">Langfrist-Anleihen</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">Deflationsschutz</div>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; background: var(--bg-section); border-radius: 12px;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #0891b2; margin-bottom: 10px;">15%</div>
+                        <div style="font-weight: 600; color: var(--text-dark);">Mittelfrist-Anleihen</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">Zinsstabilität</div>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; background: var(--bg-section); border-radius: 12px;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #fbbf24; margin-bottom: 10px;">7.5%</div>
+                        <div style="font-weight: 600; color: var(--text-dark);">Gold</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">Krisenabsicherung</div>
+                    </div>
+                    
+                    <div style="text-align: center; padding: 20px; background: var(--bg-section); border-radius: 12px;">
+                        <div style="font-size: 2.5rem; font-weight: bold; color: #ea580c; margin-bottom: 10px;">7.5%</div>
+                        <div style="font-weight: 600; color: var(--text-dark);">Rohstoffe</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">Inflationsschutz</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box tip">
+                <h4>🎯 Die Logik dahinter</h4>
+                <p>
+                    Die hohe Anleihenallokation (55%) gleicht die hohe Volatilität der Aktien aus. 
+                    Gold und Rohstoffe (15%) schützen vor Inflation und bieten Diversifikation zu 
+                    traditionellen Finanzanlagen. Das Ergebnis: Ein Portfolio, das in allen vier 
+                    Quadranten "funktioniert".
+                </p>
+            </div>
+
+            <h3>📈 Fallstudie: 2022 - Der ultimative Test</h3>
+            
+            <p>
+                Das Jahr 2022 bot die perfekte Gelegenheit, die Überlegenheit des All Weather-Ansatzes 
+                zu demonstrieren. Es war ein Jahr des Übergangs von Quadrant II zu Quadrant IV:
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 25px; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); padding: 25px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--text-dark); margin-bottom: 15px;">2021: Quadrant II</h4>
+                    <p style="color: var(--text-dark);">Starkes Wachstum nach Pandemie, getrieben durch Stimulus</p>
+                    <div style="margin-top: 15px; font-size: 2rem;">🌟</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 25px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--text-dark); margin-bottom: 15px;">Übergang 2022</h4>
+                    <p style="color: var(--text-dark);">Inflation hartnäckig, Fed erhöht aggressiv Zinsen</p>
+                    <div style="margin-top: 15px; font-size: 2rem;">⚡</div>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #fecaca, #fca5a5); padding: 25px; border-radius: 12px; text-align: center;">
+                    <h4 style="color: var(--text-dark); margin-bottom: 15px;">2022: Quadrant IV</h4>
+                    <p style="color: var(--text-dark);">Stagflation: Fallendes Wachstum bei steigender Inflation</p>
+                    <div style="margin-top: 15px; font-size: 2rem;">🌪️</div>
+                </div>
+            </div>
+
+            <div class="info-box warning">
+                <h4>⚠️ 2022: Das Versagen traditioneller Portfolios</h4>
+                <p>
+                    Zum ersten Mal seit Jahrzehnten fielen Aktien UND Anleihen gleichzeitig stark. 
+                    Die fundamentale Annahme traditioneller 60/40-Portfolios - die negative Korrelation 
+                    zwischen Aktien und Staatsanleihen - brach zusammen.
+                </p>
+                <p style="margin-top: 15px;">
+                    <strong>Performance 2022:</strong><br>
+                    • S&P 500: -18%<br>
+                    • US Treasury Bonds: -13%<br>
+                    • 60/40 Portfolio: ~-16%<br>
+                    • All Weather Portfolio: ~-7% (deutlich geringere Verluste dank Rohstoff-Exposure)
+                </p>
+            </div>
+
+            <!-- Quiz nach All Weather -->
+            <div class="quiz-container">
+                <div class="quiz-header">📝 Wissenstest: All Weather Portfolio Prinzipien</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Was ist der fundamentale Unterschied zwischen traditioneller Kapital-Allokation und Risikoparität?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q9', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Risikoparität verwendet mehr internationale Aktien</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q9', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Risikoparität balanciert Risikobeiträge, nicht Kapitalbeiträge</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q9', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Risikoparität investiert nur in Staatsanleihen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q9', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Risikoparität ist kurzfristig ausgerichtet</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q9">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Während traditionelle Portfolios Kapital gleichmäßig aufteilen (z.B. 60/40), zielt Risikoparität 
+                            darauf ab, dass jede "Jahreszeit" oder jeder Wirtschaftsquadrant etwa den gleichen Anteil am 
+                            Gesamtrisiko trägt (~25% pro Quadrant). Das führt zu völlig anderen Gewichtungen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Warum hat das All Weather Portfolio 2022 besser abgeschnitten als traditionelle 60/40 Portfolios?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q10', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Weil es mehr Aktien enthielt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q10', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Weil es Rohstoffe enthielt, die in der Stagflation profitierten</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q10', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Weil es keine Staatsanleihen enthielt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q10', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Weil es täglich rebalanciert wurde</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q10">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            2022 war ein Stagflations-Jahr (Quadrant IV). Während Aktien und Anleihen gleichzeitig fielen, 
+                            performten Rohstoffe stark positiv, da sie sowohl von geopolitischen Schocks (Ukraine-Krieg) 
+                            als auch von der allgemeinen Inflation profitierten. All Weather war darauf vorbereitet.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 4 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('application')">
+                    ✅ Verstanden - zum nächsten Schritt
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 5: Praktische Anwendung -->
+        <div class="section fade-in section-hidden" id="application">
+            <h2>🚀 Praktische Anwendung: Vom Wissen zur Tat</h2>
+            
+            <p>
+                Theorie ohne Praxis ist nutzlos. In diesem Abschnitt lernst du, wie du das Bridgewater 
+                Quadranten-Framework in deinen täglichen Investment-Entscheidungen anwendest.
+            </p>
+
+            <h3>🎯 Die vier Säulen der praktischen Anwendung</h3>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 35px 0;">
+                <div style="background: linear-gradient(135deg, var(--accent-turquoise), #0e7490); color: white; padding: 30px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🎯</div>
+                    <h4>1. Quadrant-Diagnose</h4>
+                    <p style="opacity: 0.9; line-height: 1.6;">
+                        Regelmäßige Bewertung des aktuellen Quadranten basierend auf Wirtschaftsindikatoren
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--warning-orange), #dc2626); color: white; padding: 30px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">⚠️</div>
+                    <h4>2. Portfolio-Bias erkennen</h4>
+                    <p style="opacity: 0.9; line-height: 1.6;">
+                        Identifizierung von Schwachstellen in der aktuellen Asset-Allokation
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--success-green), #047857); color: white; padding: 30px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🛡️</div>
+                    <h4>3. Strategische Diversifikation</h4>
+                    <p style="opacity: 0.9; line-height: 1.6;">
+                        Implementation von All Weather Prinzipien zur Risiko-Balance
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark)); color: white; padding: 30px; border-radius: 16px; text-align: center;">
+                    <div style="font-size: 2.5rem; margin-bottom: 15px;">🔮</div>
+                    <h4>4. Vorbereitung > Vorhersage</h4>
+                    <p style="opacity: 0.9; line-height: 1.6;">
+                        Fokus auf Portfolio-Robustheit statt perfekte Prognosen
+                    </p>
+                </div>
+            </div>
+
+            <h3>🔍 Säule 1: Quadrant-Diagnose Toolkit</h3>
+            
+            <div class="interactive-demo">
+                <h4 style="margin-bottom: 20px; color: var(--primary-dark);">📊 Wirtschaftsindikatoren Dashboard</h4>
+                <p>Nutze diese Schlüsselindikatoren für deine monatliche Quadrant-Bewertung:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 25px 0;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--border-light);">
+                        <h5 style="color: var(--primary-medium); margin-bottom: 10px;">📈 BIP-Wachstum</h5>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-green);" id="gdp-reading">+2.1%</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">vs. Konsens: +1.8%</div>
+                        <div class="btn" onclick="updateIndicator('gdp')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.8rem;">Update</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--border-light);">
+                        <h5 style="color: var(--primary-medium); margin-bottom: 10px;">🔥 Inflation (CPI)</h5>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--warning-orange);" id="inflation-reading">+3.2%</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">vs. Konsens: +2.8%</div>
+                        <div class="btn" onclick="updateIndicator('inflation')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.8rem;">Update</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--border-light);">
+                        <h5 style="color: var(--primary-medium); margin-bottom: 10px;">💼 Arbeitslosigkeit</h5>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--text-light);" id="unemployment-reading">4.1%</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">vs. Konsens: 4.2%</div>
+                        <div class="btn" onclick="updateIndicator('unemployment')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.8rem;">Update</div>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; text-align: center; border: 2px solid var(--border-light);">
+                        <h5 style="color: var(--primary-medium); margin-bottom: 10px;">💰 Fed Zinssatz</h5>
+                        <div style="font-size: 1.5rem; font-weight: bold; color: var(--error-red);" id="rates-reading">4.75%</div>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">Trend: ↗️ Steigend</div>
+                        <div class="btn" onclick="updateIndicator('rates')" style="margin-top: 10px; padding: 8px 16px; font-size: 0.8rem;">Update</div>
+                    </div>
+                </div>
+                
+                <div id="quadrant-diagnosis" style="background: var(--bg-section); padding: 25px; border-radius: 12px; margin-top: 25px;">
+                    <h5 style="color: var(--primary-dark); margin-bottom: 15px;">🎯 Aktuelle Diagnose:</h5>
+                    <p id="diagnosis-text">Basierend auf den aktuellen Indikatoren befinden wir uns wahrscheinlich in <strong>Quadrant I (Inflationärer Boom)</strong>. Überdurchschnittliches Wachstum und steigende Inflation führen zu geldpolitischen Straffungen.</p>
+                    <p style="margin-top: 15px; color: var(--primary-medium); font-weight: 600;">
+                        <strong>Nächste wahrscheinliche Phase:</strong> <span id="next-phase">Quadrant IV (Stagflation), wenn die Zinserhöhungen das Wachstum bremsen</span>
+                    </p>
+                </div>
+            </div>
+
+            <h3>⚖️ Säule 2: Portfolio-Bias Checker</h3>
+            
+            <div class="info-box warning">
+                <h4>🚨 Typische Portfolio-Fallen</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div>
+                        <h5 style="margin-bottom: 10px;">Goldlöckchen-Bias (häufig)</h5>
+                        <p>Typisches 60/40 Portfolio ist auf Quadrant II optimiert</p>
+                        <p style="color: var(--error-red); margin-top: 5px;"><strong>Risiko:</strong> Stagflations-Anfälligkeit</p>
+                    </div>
+                    <div>
+                        <h5 style="margin-bottom: 10px;">Home-Country Bias</h5>
+                        <p>Übergewichtung des Heimatmarktes</p>
+                        <p style="color: var(--error-red); margin-top: 5px;"><strong>Risiko:</strong> Regionale Konzentration</p>
+                    </div>
+                    <div>
+                        <h5 style="margin-bottom: 10px;">Growth-only Bias</h5>
+                        <p>Nur auf Wachstums-sensitive Assets fokussiert</p>
+                        <p style="color: var(--error-red); margin-top: 5px;"><strong>Risiko:</strong> Rezessions-Verwundbarkeit</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3>🛡️ Säule 3: All Weather Implementierung</h3>
+            
+            <div style="background: white; padding: 30px; border-radius: 16px; border: 2px solid var(--success-green); margin: 25px 0;">
+                <h4 style="color: var(--success-green); margin-bottom: 25px;">✅ Schritt-für-Schritt Implementierung</h4>
+                
+                <div style="display: grid; gap: 20px;">
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>1. Portfolio-Audit durchführen</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Aktuelle Allokation bewerten und Quadranten-Bias identifizieren</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>2. Inflationsschutz aufbauen</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Minimum 10-15% in Rohstoffen, Gold und TIPS</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>3. Deflationsschutz verstärken</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Staatsanleihen-Anteil auf 30-40% erhöhen</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>4. Wachstumsbeteiligung optimieren</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Aktienanteil auf 25-35% justieren</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>5. Rebalancing-System einrichten</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Quartalsweise Überprüfung und Anpassung</p>
+                        </div>
+                    </label>
+                    
+                    <label style="display: flex; align-items: flex-start; gap: 15px; padding: 15px; background: var(--bg-section); border-radius: 10px; cursor: pointer;">
+                        <input type="checkbox" style="margin-top: 5px;" onchange="updateImplementationProgress()">
+                        <div>
+                            <strong>6. Monitoring aufsetzen</strong>
+                            <p style="margin-top: 5px; color: var(--text-light);">Regelmäßige Quadrant-Bewertung und Portfolio-Anpassung</p>
+                        </div>
+                    </label>
+                </div>
+                
+                <div class="progress-section" style="margin-top: 25px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="implementation-progress"></div>
+                    </div>
+                    <div class="progress-text" id="implementation-text">0% implementiert</div>
+                </div>
+            </div>
+
+            <!-- Final Quiz -->
+            <div class="quiz-container">
+                <div class="quiz-header">🎓 Abschluss-Test: Praktische Anwendung</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Du beobachtest, dass die Inflation über Erwartungen steigt, während das Wachstum schwächer wird. In welchem Quadranten befindest du dich wahrscheinlich?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q11', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Quadrant I (Inflationärer Boom) - Wachstum und Inflation steigen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q11', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Quadrant II (Goldlöckchen) - Optimales Wachstum</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q11', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Quadrant III (Deflation) - Alles fällt</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q11', 'd', true)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Quadrant IV (Stagflation) - Schwaches Wachstum, hohe Inflation</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q11">
+                        <h5>✅ Richtige Antwort: D</h5>
+                        <p>
+                            Stagflation kombiniert das Schlimmste beider Welten: Stagnation/fallendes Wachstum bei 
+                            steigender Inflation. Dies ist oft das Ergebnis von Angebotsschocks (z.B. Energiekrise) 
+                            oder dem Ende einer inflationären Boom-Phase.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Dein Portfolio besteht aus 70% Aktien und 30% Staatsanleihen. Auf welchen Quadranten ist es am stärksten ausgerichtet?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q12', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Quadrant I (Inflationärer Boom)</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q12', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Quadrant II (Goldlöckchen)</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q12', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Quadrant III (Deflation)</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q12', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Quadrant IV (Stagflation)</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q12">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Ein 70/30 Portfolio ist stark auf Goldlöckchen (Quadrant II) ausgelegt, wo sowohl 
+                            Aktien als auch Anleihen gut performen. Es ist anfällig für Stagflation, wo beide 
+                            Asset-Klassen leiden können. Du brauchst mehr Inflationsschutz (Rohstoffe, Gold).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Was ist der wichtigste Vorteil des "Vorbereitung statt Vorhersage" Prinzips?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('q13', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Es garantiert höhere Renditen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q13', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Es macht das Portfolio robust gegen unvorhergesehene Veränderungen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q13', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Es eliminiert alle Verluste</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('q13', 'd', false)">
+                            <span style="font-weight: bold;">D)</span>
+                            <span>Es macht Prognosen überflüssig</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-q13">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Der Hauptvorteil der All Weather Philosophie ist Robustheit. Da wir die Zukunft nicht 
+                            perfekt vorhersagen können, bauen wir ein Portfolio, das in allen möglichen Szenarien 
+                            "funktioniert" - auch wenn es in keinem Szenario das absolute Optimum erreicht.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Final Summary and Next Steps -->
+        <div class="section fade-in">
+            <h2>🎓 Herzlichen Glückwunsch! Du hast es geschafft!</h2>
+            
+            <p style="font-size: 1.2rem; margin-bottom: 30px;">
+                Du hast nun ein tiefes Verständnis für das Bridgewater Quadranten-Framework entwickelt 
+                und kennst die praktischen Schritte zur Implementierung. Zeit für den nächsten Schritt!
+            </p>
+
+            {% if not session.get('logged_in') or session.get('user', {}).get('membership', 'free') == 'free' %}
+            <!-- CTA nur für Free User oder nicht angemeldete User -->
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 35px 0;">
+                <div style="background: linear-gradient(135deg, var(--success-green), #047857); color: white; padding: 30px; border-radius: 16px;">
+                    <h3 style="margin-bottom: 20px;">🎯 Premium Trading Club</h3>
+                    <p style="opacity: 0.9; margin-bottom: 20px;">
+                        Erhalte monatliche Quadrant-Analysen und konkrete Handelsempfehlungen basierend auf 
+                        dem aktuellen Wirtschaftszyklus.
+                    </p>
+                    <div style="font-size: 1.5rem; font-weight: bold; margin: 15px 0;">1.490€ / Jahr</div>
+                    <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" target="_blank" rel="noopener"
+                       class="btn" style="background: white; color: var(--success-green);">
+                        🚀 Premium werden
+                    </a>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark)); color: white; padding: 30px; border-radius: 16px;">
+                    <h3 style="margin-bottom: 20px;">🏆 Elite Trading Academy</h3>
+                    <p style="opacity: 0.9; margin-bottom: 20px;">
+                        1:1 Mentoring, Depot-Checks und direkter Zugang zu Didis persönlichen 
+                        Quadrant-basierten Trading-Strategien.
+                    </p>
+                    <div style="font-size: 1.5rem; font-weight: bold; margin: 15px 0;">349€ / Monat</div>
+                    <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" target="_blank" rel="noopener"
+                       class="btn" style="background: white; color: var(--primary-dark);">
+                        👑 Elite werden
+                    </a>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--gold-classic), #b8860b); color: var(--text-dark); padding: 30px; border-radius: 16px;">
+                    <h3 style="margin-bottom: 20px;">🎓 Masterclass</h3>
+                    <p style="opacity: 0.9; margin-bottom: 20px;">
+                        12-monatiges Intensiv-Coaching zum Elite-Trader mit Fokus auf makroökonomische 
+                        Zyklen und Portfolio-Management.
+                    </p>
+                    <div style="font-size: 1.5rem; font-weight: bold; margin: 15px 0;">1.200€ + MwSt.</div>
+                    <a href="https://didis-charts.com/produkt/mentoring-elite-chatroom/" target="_blank" rel="noopener"
+                       class="btn" style="background: var(--text-dark); color: white;">
+                        🧠 Mastertrader werden
+                    </a>
+                </div>
+            </div>
+            {% else %}
+            <!-- Alternative für bereits angemeldete Premium/Elite User -->
+            <div class="info-box success" style="margin: 35px 0;">
+                <h4>🎉 Du hast bereits Zugang!</h4>
+                <p>
+                    Als <strong>{{ session.get('user', {}).get('membership', '').title() }}</strong>-Member hast du bereits Zugriff 
+                    auf exklusive Trading-Inhalte und Analysen. Nutze dein Wissen aus diesem Framework, um deine 
+                    Trading-Entscheidungen zu optimieren!
+                </p>
+                {% if session.get('user', {}).get('membership') == 'premium' %}
+                <p style="margin-top: 15px;">
+                    💡 <strong>Tipp:</strong> Schaue regelmäßig in den Premium-Bereich für aktuelle Quadrant-Analysen 
+                    und konkrete Handelsempfehlungen.
+                </p>
+                {% elif session.get('user', {}).get('membership') == 'elite' %}
+                <p style="margin-top: 15px;">
+                    🏆 <strong>Elite-Vorteil:</strong> Du hast Zugang zu allen Premium-Inhalten plus 1:1 Mentoring 
+                    und direktem Zugang zu Didis Trading-Strategien.
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <div class="info-box tip">
+                <h4>📚 Deine Lernerfolge im Überblick</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 20px 0;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🏛️</div>
+                        <strong>Wirtschaftsmaschine verstanden</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🎯</div>
+                        <strong>4 Quadranten gemeistert</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">💰</div>
+                        <strong>Asset-Verhalten analysiert</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🌤️</div>
+                        <strong>All Weather Prinzipien gelernt</strong>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🚀</div>
+                        <strong>Praktische Umsetzung geplant</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 5 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('market-discrepancy')">
+                    ✅ Verstanden - zur aktuellen Marktanalyse 2025
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 6: Aktuelle Marktdiskrepanz 2025 -->
+        <div class="section fade-in section-hidden" id="market-discrepancy">
+            <h2>🔍 Aktuelle Marktdiskrepanz: Warum der Markt 2025 "falsch" reagiert</h2>
+            
+            <div class="info-box important">
+                <h4>🎯 Das Rätsel des aktuellen Marktes</h4>
+                <p>
+                    Nach dem Bridgewater Framework sollte sich die US-Wirtschaft 2025 im <strong>Quadrant 2 (Inflationärer Boom)</strong> 
+                    befinden - aber der Markt verhält sich wie in <strong>Quadrant 1 (Goldlöckchen)</strong>. Warum?
+                </p>
+            </div>
+
+            <h3>📊 Die aktuellen Wirtschaftsdaten (Q3 2025)</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, var(--success-green), #047857); color: white; padding: 25px; border-radius: 16px;">
+                    <h4>📈 Wachstum: BESCHLEUNIGEND</h4>
+                    <ul style="margin: 15px 0; list-style: none; padding: 0;">
+                        <li>• BIP Q1: -0,5% → Q2: +3,3%</li>
+                        <li>• Q3 Prognose: +3,1%</li>
+                        <li>• Klare Beschleunigung</li>
+                    </ul>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--error-red), #b91c1c); color: white; padding: 25px; border-radius: 16px;">
+                    <h4>🔥 Inflation: BESCHLEUNIGEND</h4>
+                    <ul style="margin: 15px 0; list-style: none; padding: 0;">
+                        <li>• Headline CPI: 2,7% → 2,9%</li>
+                        <li>• Kern-CPI: 3,1% (5-Monats-Hoch)</li>
+                        <li>• Über Fed-Ziel von 2%</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Bridgewater Diagnose: Quadrant 2 (Inflationärer Boom)</h4>
+                <p>
+                    <strong>Wachstum ↑ + Inflation ↑</strong> = Traditionell schlecht für Anleihen, gemischt für Aktien. 
+                    Aber der Markt ralliert wie in Quadrant 1. Was übersehen wir?
+                </p>
+            </div>
+
+            <h3>🧩 Das fehlende Puzzleteil: Ein alternatives Framework</h3>
+            
+            <p>
+                Ein führender börsenorientierter Makrodienst hat ein alternatives Framework entwickelt, das diese 
+                Diskrepanz perfekt erklärt: <strong>"Paradigm C"</strong> - ein struktureller Politikregimewechsel.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark)); color: white; padding: 30px; border-radius: 16px;">
+                    <h4>🏛️ Fiskalische Dominanz</h4>
+                    <p style="opacity: 0.95; line-height: 1.6;">
+                        Massive Staatsdefizite haben Vorrang vor traditioneller Geldpolitik. 
+                        Die Fed wird faktisch der Fiskalpolitik untergeordnet.
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--success-green), #047857); color: white; padding: 30px; border-radius: 16px;">
+                    <h4>🚀 Wachstumsfördernde Politik</h4>
+                    <p style="opacity: 0.95; line-height: 1.6;">
+                        Aggressive Mischung aus Deregulierung, Steuersenkungen und Staatsausgaben. 
+                        Ziel: Schuldenproblem durch Wachstum "überwinden".
+                    </p>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, var(--warning-orange), #dc2626); color: white; padding: 30px; border-radius: 16px;">
+                    <h4>🎭 Kooptierte Zentralbank</h4>
+                    <p style="opacity: 0.95; line-height: 1.6;">
+                        Fed wird gezwungen, reaktiver zu sein. Finanzielle Repression: 
+                        Zinsen niedriger als Inflation rechtfertigen würde.
+                    </p>
+                </div>
+            </div>
+
+            <h3>💡 Die Auflösung der Diskrepanz</h3>
+            
+            <div class="concept-highlight">
+                <h4>🔑 Zwei Frameworks, zwei Ebenen</h4>
+                <p style="font-size: 1.1rem; line-height: 1.7;">
+                    <strong>Bridgewater (zyklisch):</strong> Beschreibt den aktuellen Wirtschaftszustand → Quadrant 2<br>
+                    <strong>Paradigm C (strukturell):</strong> Beschreibt das Politikregime → Schafft Quadrant 1-ähnliche Bedingungen
+                </p>
+                <p style="font-size: 1.1rem; line-height: 1.7; margin-top: 15px;">
+                    <strong>Das Resultat:</strong> Das strukturelle Politikregime überlagert die zyklischen Daten als 
+                    Haupttreiber der Märkte. Der Markt reagiert auf die liquiditätsfördernden Aspekte von Paradigm C, 
+                    nicht auf die traditionellen Risiken eines inflationären Booms.
+                </p>
+            </div>
+
+            <h3>🎯 Strategische Kapitalallokation für 2025</h3>
+            
+            <div style="background: var(--bg-card); border: 3px solid var(--gold-classic); border-radius: 16px; padding: 30px; margin: 30px 0;">
+                <h4 style="color: var(--primary-dark); margin-bottom: 20px;">💼 Das optimale hybride Portfolio</h4>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: var(--success-green); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                        <h5>📈 Kernübergewichtung Aktien</h5>
+                        <p style="font-size: 0.9rem; opacity: 0.9;">
+                            Fokus auf KI/Tech-Werte und Nutznießer der wachstumsfördernden Politik
+                        </p>
+                    </div>
+                    
+                    <div style="background: var(--gold-classic); color: var(--text-dark); padding: 20px; border-radius: 12px; text-align: center;">
+                        <h5>🏆 Inflationsschutz: Gold</h5>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">
+                            Absicherung gegen monetäre Entwertung und fiskalische Dominanz
+                        </p>
+                    </div>
+                    
+                    <div style="background: var(--error-red); color: white; padding: 20px; border-radius: 12px; text-align: center;">
+                        <h5>📉 Untergewichtung Anleihen</h5>
+                        <p style="font-size: 0.9rem; opacity: 0.9;">
+                            Massive Staatsanleihe-Emissionen schaffen strukturellen Gegenwind
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="info-box tip" style="margin-top: 25px;">
+                    <h5>🎓 Die Lektion für dich</h5>
+                    <p>
+                        <strong>Nutze beide Frameworks:</strong> Bridgewater für zyklische Einordnung, 
+                        Paradigm C für strukturelle Trends. Das Zusammenspiel erklärt scheinbare Markt-"Irrationalität" 
+                        und hilft dir, bessere Allokationsentscheidungen zu treffen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Quiz zur aktuellen Marktdiskrepanz -->
+            <div class="quiz-container">
+                <h3>🧠 Quiz: Aktuelle Marktdiskrepanz verstehen</h3>
+                <p style="margin-bottom: 25px;">Teste dein Verständnis der komplexen Marktdynamik von 2025:</p>
+                
+                <div class="quiz-question">
+                    <h4>1. Warum verhält sich der Markt 2025 wie in Quadrant 1, obwohl die Daten Quadrant 2 zeigen?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q1', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Die Bridgewater-Quadranten funktionieren nicht mehr</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q1', 'b', true)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Ein strukturelles Politikregime (Paradigm C) überlagert die zyklischen Daten</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q1', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Die Inflationsdaten sind falsch gemessen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-market-q1">
+                        <h5>✅ Richtige Antwort: B</h5>
+                        <p>
+                            Das strukturelle Politikregime "Paradigm C" (fiskalische Dominanz, wachstumsfördernde Politik) 
+                            schafft goldlöckchenähnliche Bedingungen für die Finanzmärkte, obwohl die zyklischen Daten 
+                            auf Quadrant 2 hindeuten. Politik überlagert Zyklen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Was ist das Hauptmerkmal von "Paradigm C" laut dem börsenorientierten Makrodienst?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q2', 'a', true)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>Fiskalische Dominanz - Staatsdefizite haben Vorrang vor traditioneller Geldpolitik</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q2', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Reine Inflationsbekämpfung durch die Zentralbank</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q2', 'c', false)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Fokus auf Staatsanleihen als sicherer Hafen</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-market-q2">
+                        <h5>✅ Richtige Antwort: A</h5>
+                        <p>
+                            Paradigm C ist charakterisiert durch fiskalische Dominanz: Die Notwendigkeit, massive 
+                            Staatsdefizite zu finanzieren, hat Vorrang vor traditionellen geldpolitischen Zielen. 
+                            Die Fed wird faktisch der Fiskalpolitik untergeordnet.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Welche Portfolioallokation macht in diesem hybriden Umfeld am meisten Sinn?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q3', 'a', false)">
+                            <span style="font-weight: bold;">A)</span>
+                            <span>100% Staatsanleihen als sicherer Hafen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q3', 'b', false)">
+                            <span style="font-weight: bold;">B)</span>
+                            <span>Nur Cash und kurzfristige Anleihen</span>
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer('market-q3', 'c', true)">
+                            <span style="font-weight: bold;">C)</span>
+                            <span>Aktien-Übergewichtung + Gold als Inflationsschutz + Anleihen-Untergewichtung</span>
+                        </div>
+                    </div>
+                    <div class="quiz-explanation" id="explanation-market-q3">
+                        <h5>✅ Richtige Antwort: C</h5>
+                        <p>
+                            Das optimale hybride Portfolio nutzt Aktien für das Aufwärtspotenzial von Paradigm C, 
+                            Gold als Schutz vor monetärer Entwertung und untergewichtet Anleihen wegen der 
+                            massiven Staatsanleihe-Emissionen. Zwei Frameworks = nuancierte Allokation.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Next Step Button nach Section 6 -->
+            <div class="section-container">
+                <button class="next-step-button" onclick="showNextSection('final-summary')">
+                    ✅ Marktdiskrepanz verstanden - Abschluss
+                </button>
+            </div>
+        </div>
+
+        <!-- Final Summary -->
+        <div class="section fade-in section-hidden" id="final-summary">
+            <h2>🎓 Masterclass abgeschlossen!</h2>
+            
+            <div class="success-box">
+                <h4>🏆 Du hast jetzt das komplette Bridgewater Framework gemeistert!</h4>
+                <p style="font-size: 1.1rem; line-height: 1.7;">
+                    Von Ray Dalios Grundlagen über die vier Quadranten bis hin zur aktuellen Marktdiskrepanz 2025 - 
+                    du verstehst jetzt, wie professionelle Investoren die Wirtschaftsmaschine analysieren und 
+                    darauf basierend ihre Portfolios ausrichten.
+                </p>
+            </div>
+
+        <div style="text-align: center; margin-top: 60px; padding: 40px; background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium)); color: white; border-radius: 20px;">
+            <h3 style="margin-bottom: 15px;">💪 Dein Trading-Coach</h3>
+            <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px;">Dietmar "Didi" Breihof</p>
+            <p style="opacity: 0.9; margin-bottom: 20px;">📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung | 🎯 Dein Partner für finanzielle Freiheit</p>
+            <p style="font-style: italic; font-size: 1.1rem; opacity: 0.8;">
+                "Erfolgreiche Portfolios entstehen nicht durch perfekte Vorhersagen, sondern durch intelligente Vorbereitung auf alle Szenarien. 
+                Das Bridgewater Quadranten-Framework ist dein Kompass durch alle Marktzyklen."
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Global Variables
+        let quizAnswers = {};
+        let completedSections = new Set();
+        let currentQuadrantState = { growth: null, inflation: null };
+
+        // Progress Tracking
+        function updateProgress() {
+            const totalSections = 5;
+            const progressPercentage = (completedSections.size / totalSections) * 100;
+            
+            document.getElementById('overall-progress').style.width = progressPercentage + '%';
+            document.getElementById('progress-text').textContent = Math.round(progressPercentage) + '% abgeschlossen';
+            
+            // Update navigation items
+            document.querySelectorAll('.nav-item').forEach((item, index) => {
+                if (completedSections.has(index)) {
+                    item.classList.add('completed');
+                }
+            });
+        }
+
+        // Section Navigation
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+            
+            // Update active nav item
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Quadrant Selection
+        function selectQuadrant(quadrant) {
+            // Remove active from all quadrants
+            document.querySelectorAll('.quadrant-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active to selected quadrant
+            document.querySelector(`.quadrant-${quadrant}`).classList.add('active');
+            
+            // Show detailed explanation
+            showQuadrantDetails(quadrant);
+            
+            // Mark section as viewed
+            completedSections.add(1);
+            updateProgress();
+        }
+
+        function showQuadrantDetails(quadrant) {
+            const details = {
+                'Inflationärer Boom': {
+                    title: 'Quadrant I: Inflationärer Boom (Wachstum ↑ + Inflation ↑)',
+                    description: `
+                        <p><strong>Wirtschaftliche Bedingungen:</strong></p>
+                        <ul>
+                            <li>Überhitzende Wirtschaft mit starker Nachfrage</li>
+                            <li>Kapazitätsgrenzen werden erreicht</li>
+                            <li>Löhne und Rohstoffpreise steigen</li>
+                            <li>Zentralbanken erhöhen Zinsen zur Inflationsbekämpfung</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Bevorzugte Assets:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--success-green);">Rohstoffe (+++)</strong> - Direkte Profiteure der Inflation</li>
+                            <li><strong style="color: var(--success-green);">Value-Aktien (++)</strong> - Profitieren vom starken Wachstum</li>
+                            <li><strong style="color: var(--success-green);">Kurzfristige Staatsanleihen (+)</strong> - Profitieren von steigenden Zinsen</li>
+                            <li><strong style="color: var(--success-green);">TIPS (++)</strong> - Inflationsschutz</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Assets meiden:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--error-red);">Langfristige Staatsanleihen (--)</strong></li>
+                            <li><strong style="color: var(--error-red);">Wachstumsaktien (-)</strong></li>
+                            <li><strong style="color: var(--error-red);">Cash (-)</strong></li>
+                        </ul>
+                    `
+                },
+                'goldilocks': {
+                    title: 'Quadrant II: Goldlöckchen (Wachstum ↑ + Inflation ↓)',
+                    description: `
+                        <p><strong>Wirtschaftliche Bedingungen:</strong></p>
+                        <ul>
+                            <li>Ideales Umfeld: Robustes Wachstum ohne Preisdruck</li>
+                            <li>Produktivitätssteigerungen halten Inflation niedrig</li>
+                            <li>Zentralbanken können akkommodierend bleiben (niedrige Zinsen beibehalten)</li>
+                            <li>"Perfekte" Bedingungen für traditionelle Portfolios</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Bevorzugte Assets:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--success-green);">Wachstumsaktien (+++)</strong> - Ideale Bedingungen</li>
+                            <li><strong style="color: var(--success-green);">Unternehmensanleihen (++)</strong> - Niedrige Ausfallrisiken</li>
+                            <li><strong style="color: var(--success-green);">Langfristige Staatsanleihen (++)</strong> - Niedrige Zinsen</li>
+                            <li><strong style="color: var(--success-green);">Tech-Aktien (+++)</strong> - Profitieren von niedrigen Zinsen</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Assets neutral:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--text-light);">Rohstoffe (0)</strong> - Keine Inflationsdrücke</li>
+                            <li><strong style="color: var(--text-light);">Gold (-)</strong> - Nicht benötigt bei stabilen Bedingungen</li>
+                        </ul>
+                    `
+                },
+                'deflation': {
+                    title: 'Quadrant III: Deflationäre Pleite (Wachstum ↓ + Inflation ↓)',
+                    description: `
+                        <p><strong>Wirtschaftliche Bedingungen:</strong></p>
+                        <ul>
+                            <li>Klassisches Rezessionsumfeld</li>
+                            <li>Schwache Nachfrage, fallende Preise</li>
+                            <li>Steigende Arbeitslosigkeit</li>
+                            <li>Zentralbanken reagieren mit aggressiven Zinssenkungen und QE</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Bevorzugte Assets:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--success-green);">Langfristige Staatsanleihen (+++)</strong> - Profitieren von fallenden Zinsen</li>
+                            <li><strong style="color: var(--success-green);">Cash (+)</strong> - Behält relative Kaufkraft</li>
+                            <li><strong style="color: var(--success-green);">Gold (+)</strong> - Sicherer Hafen</li>
+                            <li><strong style="color: var(--success-green);">Quality-Aktien (+)</strong> - Starke Bilanzen überleben</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Assets meiden:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--error-red);">Aktien allgemein (--)</strong></li>
+                            <li><strong style="color: var(--error-red);">Rohstoffe (--)</strong></li>
+                            <li><strong style="color: var(--error-red);">Hochzinsanleihen (--)</strong></li>
+                        </ul>
+                    `
+                },
+                'stagflation': {
+                    title: 'Quadrant IV: Stagflation (Wachstum ↓ + Inflation ↑)',
+                    description: `
+                        <p><strong>Wirtschaftliche Bedingungen:</strong></p>
+                        <ul>
+                            <li>Das schwierigste Umfeld: Stagnation bei steigenden Preisen</li>
+                            <li>Oft durch Angebotsschocks verursacht (Energie, Lieferketten)</li>
+                            <li>Zentralbanken in unlösbarem Dilemma</li>
+                            <li>Traditionelle Portfolios leiden massiv</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Bevorzugte Assets:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--success-green);">Rohstoffe (+++)</strong> - Oft die Ursache der Inflation</li>
+                            <li><strong style="color: var(--success-green);">Gold (+++)</strong> - Ultimativer Inflationsschutz</li>
+                            <li><strong style="color: var(--success-green);">TIPS (+++)</strong> - Explizite Inflationsabsicherung</li>
+                            <li><strong style="color: var(--success-green);">Immobilien-REITs (++)</strong> - Inflationsschutz</li>
+                            <li><strong style="color: var(--success-green);">Schwellenländer-Aktien (+)</strong> - Rohstoffexporteure</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px;"><strong>Assets meiden:</strong></p>
+                        <ul>
+                            <li><strong style="color: var(--error-red);">Aktien (---)</strong> - Leiden unter beiden Faktoren</li>
+                            <li><strong style="color: var(--error-red);">Langfristige Staatsanleihen (---)</strong> - Doppelt getroffen</li>
+                            <li><strong style="color: var(--error-red);">Cash (--)</strong> - Verliert Kaufkraft</li>
+                        </ul>
+                    `
+                }
+            };
+            
+            const detail = details[quadrant];
+            document.getElementById('quadrant-details').style.display = 'block';
+            document.getElementById('quadrant-content').innerHTML = `
+                <h3 style="color: var(--primary-dark); margin-bottom: 20px;">${detail.title}</h3>
+                ${detail.description}
+            `;
+        }
+
+        // Interactive Quadrant Demo
+        function setIndicator(type, direction) {
+            currentQuadrantState[type] = direction;
+            
+            // Update button states
+            document.querySelectorAll('.control-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Determine current quadrant
+            updateCurrentQuadrant();
+        }
+
+        function updateCurrentQuadrant() {
+            const { growth, inflation } = currentQuadrantState;
+            
+            if (!growth || !inflation) {
+                document.getElementById('current-quadrant').textContent = 'Wähle beide Indikatoren';
+                return;
+            }
+            
+            let quadrant, name, description;
+            
+            if (growth === 'up' && inflation === 'up') {
+                quadrant = 'I';
+                name = 'Inflationärer Boom';
+                description = 'Überhitzende Wirtschaft - Zinserhöhungen wahrscheinlich';
+            } else if (growth === 'up' && inflation === 'down') {
+                quadrant = 'II';
+                name = 'Goldlöckchen';
+                description = 'Perfekte Bedingungen - Akkommodierende Geldpolitik möglich';
+            } else if (growth === 'down' && inflation === 'down') {
+                quadrant = 'III';
+                name = 'Deflationäre Pleite';
+                description = 'Rezession - Aggressive Zinssenkungen erwartet';
+            } else if (growth === 'down' && inflation === 'up') {
+                quadrant = 'IV';
+                name = 'Stagflation';
+                description = 'Schwierigste Phase - Zentralbank-Dilemma';
+            }
+            
+            document.getElementById('current-quadrant').innerHTML = `
+                <div style="font-size: 1.2rem; color: var(--primary-dark);">Quadrant ${quadrant}: ${name}</div>
+                <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 5px;">${description}</div>
+            `;
+        }
+
+        // Asset Allocation Demo
+        function showAssetAllocation(quadrant) {
+            const allocations = {
+                'Inflationärer Boom': {
+                    title: '🔥 Inflationärer Boom Asset-Allokation',
+                    assets: [
+                        { name: 'Rohstoffe', percent: 25, color: '#ea580c' },
+                        { name: 'Value-Aktien', percent: 20, color: '#3b82f6' },
+                        { name: 'TIPS', percent: 20, color: '#16a34a' },
+                        { name: 'Kurzfrist-Anleihen', percent: 15, color: '#0891b2' },
+                        { name: 'Gold', percent: 10, color: '#fbbf24' },
+                        { name: 'Cash', percent: 10, color: '#6b7280' }
+                    ]
+                },
+                'goldilocks': {
+                    title: '🌟 Goldlöckchen Asset-Allokation',
+                    assets: [
+                        { name: 'Wachstumsaktien', percent: 40, color: '#3b82f6' },
+                        { name: 'Langfrist-Anleihen', percent: 30, color: '#16a34a' },
+                        { name: 'Unternehmensanleihen', percent: 15, color: '#0891b2' },
+                        { name: 'Tech-Aktien', percent: 10, color: '#8b5cf6' },
+                        { name: 'Cash', percent: 5, color: '#6b7280' }
+                    ]
+                },
+                'deflation': {
+                    title: '❄️ Deflation Asset-Allokation',
+                    assets: [
+                        { name: 'Langfrist-Staatsanleihen', percent: 50, color: '#16a34a' },
+                        { name: 'Cash', percent: 20, color: '#6b7280' },
+                        { name: 'Gold', percent: 15, color: '#fbbf24' },
+                        { name: 'Quality-Aktien', percent: 10, color: '#3b82f6' },
+                        { name: 'Defensive Aktien', percent: 5, color: '#059669' }
+                    ]
+                },
+                'stagflation': {
+                    title: '⚡ Stagflation Asset-Allokation',
+                    assets: [
+                        { name: 'Rohstoffe', percent: 30, color: '#ea580c' },
+                        { name: 'Gold', percent: 25, color: '#fbbf24' },
+                        { name: 'TIPS', percent: 20, color: '#16a34a' },
+                        { name: 'Immobilien-REITs', percent: 15, color: '#0891b2' },
+                        { name: 'Schwellenländer', percent: 10, color: '#8b5cf6' }
+                    ]
+                }
+            };
+            
+            const allocation = allocations[quadrant];
+            
+            document.getElementById('allocation-title').textContent = allocation.title;
+            document.getElementById('allocation-content').innerHTML = allocation.assets.map(asset => `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin: 10px 0;">
+                    <span>${asset.name}</span>
+                    <div style="flex: 1; margin: 0 15px; height: 20px; background: #e2e8f0; border-radius: 10px; overflow: hidden;">
+                        <div style="width: ${asset.percent}%; height: 100%; background: ${asset.color};"></div>
+                    </div>
+                    <span style="font-weight: bold; min-width: 40px;">${asset.percent}%</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('allocation-display').style.display = 'block';
+        }
+
+        // Economic Indicators Demo
+        function updateIndicator(type) {
+            const indicators = {
+                gdp: ['+1.8%', '+2.1%', '+2.7%', '+1.2%', '+3.1%'],
+                inflation: ['+2.1%', '+3.2%', '+4.1%', '+1.8%', '+2.8%'],
+                unemployment: ['3.8%', '4.1%', '4.5%', '3.5%', '4.2%'],
+                rates: ['4.25%', '4.75%', '5.25%', '3.75%', '5.00%']
+            };
+            
+            const randomValue = indicators[type][Math.floor(Math.random() * indicators[type].length)];
+            document.getElementById(`${type}-reading`).textContent = randomValue;
+            
+            // Update diagnosis
+            updateEconomicDiagnosis();
+        }
+
+        function updateEconomicDiagnosis() {
+            // Simplified diagnosis based on current readings
+            const gdp = parseFloat(document.getElementById('gdp-reading').textContent);
+            const inflation = parseFloat(document.getElementById('inflation-reading').textContent);
+            
+            let quadrant, nextPhase, diagnosis;
+            
+            if (gdp > 2.0 && inflation > 3.0) {
+                quadrant = 'I (Inflationärer Boom)';
+                nextPhase = 'IV (Stagflation), wenn die Zinserhöhungen das Wachstum bremsen';
+                diagnosis = 'Überdurchschnittliches Wachstum und steigende Inflation führen zu geldpolitischen Straffungen.';
+            } else if (gdp > 2.0 && inflation < 3.0) {
+                quadrant = 'II (Goldlöckchen)';
+                nextPhase = 'I (Inflationärer Boom) bei anhaltend starkem Wachstum oder III bei Abschwung';
+                diagnosis = 'Ideale Bedingungen mit starkem Wachstum und moderater Inflation.';
+            } else if (gdp < 2.0 && inflation < 3.0) {
+                quadrant = 'III (Deflationäre Pleite)';
+                nextPhase = 'II (Goldlöckchen), wenn die Stimulus-Maßnahmen greifen';
+                diagnosis = 'Schwaches Wachstum und niedrige Inflation deuten auf Rezessionsgefahr hin.';
+            } else {
+                quadrant = 'IV (Stagflation)';
+                nextPhase = 'III bei Fokus auf Wachstum oder I bei erfolgreicher Inflationsbekämpfung';
+                diagnosis = 'Das schwierigste Umfeld: Stagnation bei hoher Inflation.';
+            }
+            
+            document.getElementById('diagnosis-text').innerHTML = 
+                `Basierend auf den aktuellen Indikatoren befinden wir uns wahrscheinlich in <strong>Quadrant ${quadrant}</strong>. ${diagnosis}`;
+            document.getElementById('next-phase').textContent = `Quadrant ${nextPhase}`;
+        }
+
+        // Quiz Functions
+        function selectQuizAnswer(questionId, answer, isCorrect) {
+            // Remove previous selections
+            const options = document.querySelectorAll(`[onclick*="${questionId}"]`);
+            options.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selected answer
+            event.target.classList.add('selected');
+            
+            // Store answer
+            quizAnswers[questionId] = { selected: answer, correct: isCorrect };
+            
+            // Show result after delay
+            setTimeout(() => {
+                const explanation = document.getElementById(`explanation-${questionId}`);
+                explanation.classList.add('show');
+                
+                if (isCorrect) {
+                    event.target.classList.remove('selected');
+                    event.target.classList.add('correct');
+                } else {
+                    event.target.classList.remove('selected');
+                    event.target.classList.add('incorrect');
+                    
+                    // Show correct answer
+                    options.forEach(option => {
+                        if (option.onclick.toString().includes('true')) {
+                            option.classList.add('correct');
+                        }
+                    });
+                }
+            }, 800);
+        }
+
+        // Implementation Progress
+        function updateImplementationProgress() {
+            const checkboxes = document.querySelectorAll('#application input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('#application input[type="checkbox"]:checked');
+            const progress = Math.round((checkedBoxes.length / checkboxes.length) * 100);
+            
+            document.getElementById('implementation-progress').style.width = progress + '%';
+            document.getElementById('implementation-text').textContent = `${progress}% implementiert`;
+            
+            if (progress === 100) {
+                completedSections.add(4);
+                updateProgress();
+            }
+        }
+
+        // Intersection Observer for section completion
+        function setupIntersectionObserver() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.id;
+                        const sectionIndex = ['fundamentals', 'quadrants', 'assets', 'portfolio', 'application'].indexOf(sectionId);
+                        if (sectionIndex !== -1) {
+                            completedSections.add(sectionIndex);
+                            updateProgress();
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            document.querySelectorAll('.section').forEach(section => {
+                if (section.id) {
+                    observer.observe(section);
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Setup intersection observer
+            setupIntersectionObserver();
+            
+            // Initial progress update
+            updateProgress();
+            
+            // Initial diagnosis
+            updateEconomicDiagnosis();
+            
+            // Animate cards on load
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+            
+            // Auto-select first quadrant for demo
+            setTimeout(() => {
+                selectQuadrant('Inflationärer Boom');
+            }, 1000);
+            
+            // Initialize progressive learning
+            initializeProgressiveLearning();
+        });
+        
+        // Progressive Learning System
+        function showNextSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // Remove hidden class
+                section.classList.remove('section-hidden');
+                
+                // Add reveal animation
+                section.classList.add('section-reveal');
+                
+                // Smooth scroll to section
+                setTimeout(() => {
+                    section.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start',
+                        inline: 'nearest'
+                    });
+                }, 100);
+                
+                // Update progress
+                updateProgress();
+            }
+        }
+        
+        function initializeProgressiveLearning() {
+            // Hide all sections except the video/intro initially
+            const sections = ['fundamentals', 'quadrants', 'assets', 'portfolio', 'application', 'market-discrepancy', 'final-summary'];
+            sections.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                if (section) {
+                    section.classList.add('section-hidden');
+                }
+            });
+            
+            // Update initial progress
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const totalSections = 8; // Video+Intro, Grundlagen, Quadranten, Assets, Portfolio, Application, Market-Discrepancy, Final
+            const visibleSections = document.querySelectorAll('.section:not(.section-hidden)').length + 1; // +1 für Video/Intro immer sichtbar
+            const progressPercentage = Math.round((visibleSections / totalSections) * 100);
+            
+            // Update progress bar
+            const progressFill = document.getElementById('overall-progress');
+            const progressText = document.getElementById('progress-text');
+            
+            if (progressFill) {
+                progressFill.style.width = progressPercentage + '%';
+            }
+            
+            if (progressText) {
+                progressText.textContent = progressPercentage + '% abgeschlossen';
+            }
+        }
+    </script>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+</body>
+</html>

@@ -1,0 +1,606 @@
+{% extends "base.html" %}
+
+{% block title %}Menü-Struktur Verwaltung - Didis Trading Academy{% endblock %}
+
+{% block header_title %}🗂️ Menü-Struktur Verwaltung{% endblock %}
+{% block header_subtitle %}Verwalte die 3-Ebenen-Hierarchie deiner Lernmodule{% endblock %}
+
+{% block content %}
+<!-- Statistiken Dashboard -->
+<div class="card">
+    <h2>📊 Übersicht</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_categories }}</div>
+            <div>Hauptkategorien</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_subcategories }}</div>
+            <div>Unterkategorien</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_modules }}</div>
+            <div>Gesamt Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.published_modules }}</div>
+            <div>Veröffentlicht</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.lead_magnets }}</div>
+            <div>Lead-Magnete</div>
+        </div>
+    </div>
+</div>
+
+<!-- Schnell-Aktionen -->
+<div class="card">
+    <h2>⚡ Schnell-Aktionen</h2>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <button class="btn" onclick="showAddCategoryModal()">
+            ➕ Hauptkategorie hinzufügen
+        </button>
+        <button class="btn secondary" onclick="showBulkOperations()">
+            🔧 Bulk-Operationen
+        </button>
+        <button class="btn secondary" onclick="exportStructure()">
+            📤 Struktur exportieren
+        </button>
+        <button class="btn secondary" onclick="toggleSortMode()">
+            🔀 Sortieren-Modus
+        </button>
+    </div>
+</div>
+
+<!-- Menü-Struktur -->
+<div class="card">
+    <h2>🗂️ Hierarchische Struktur</h2>
+    
+    <div id="menu-structure">
+        {% for category in categories %}
+        <div class="category-container" data-category-id="{{ category.id }}">
+            <div class="category-header" onclick="toggleCategory({{ category.id }})">
+                <span class="category-icon">{{ category.icon }}</span>
+                <span class="category-name">{{ category.name }}</span>
+                <span class="category-stats">
+                    ({{ category.subcategories|length }} Unterkategorien, 
+                     {{ category.modules|length }} Module)
+                </span>
+                <div class="category-actions">
+                    <button class="btn-small" onclick="editCategory({{ category.id }}); event.stopPropagation();">✏️</button>
+                    <button class="btn-small" onclick="addSubcategory({{ category.id }}); event.stopPropagation();">➕ Sub</button>
+                    <button class="btn-small" onclick="addModule({{ category.id }}, null); event.stopPropagation();">➕ Modul</button>
+                </div>
+            </div>
+            
+            <div class="category-content" id="category-{{ category.id }}" style="display: none;">
+                <!-- Unterkategorien -->
+                {% for subcategory in category.subcategories %}
+                <div class="subcategory-container" data-subcategory-id="{{ subcategory.id }}">
+                    <div class="subcategory-header" onclick="toggleSubcategory({{ subcategory.id }})">
+                        <span class="subcategory-icon">{{ subcategory.icon }}</span>
+                        <span class="subcategory-name">{{ subcategory.name }}</span>
+                        <span class="subcategory-stats">({{ subcategory.modules|length }} Module)</span>
+                        <div class="subcategory-actions">
+                            <button class="btn-small" onclick="editSubcategory({{ subcategory.id }}); event.stopPropagation();">✏️</button>
+                            <button class="btn-small" onclick="addModule({{ category.id }}, {{ subcategory.id }}); event.stopPropagation();">➕ Modul</button>
+                        </div>
+                    </div>
+                    
+                    <div class="subcategory-content" id="subcategory-{{ subcategory.id }}" style="display: none;">
+                        <!-- Module in dieser Unterkategorie -->
+                        {% for module in subcategory.modules|sort(attribute='sort_order') %}
+                        <div class="module-container" data-module-id="{{ module.id }}">
+                            <div class="module-header">
+                                <input type="checkbox" class="module-checkbox" value="{{ module.id }}">
+                                <span class="module-icon">{{ module.icon }}</span>
+                                <span class="module-title">{{ module.title }}</span>
+                                <div class="module-badges">
+                                    {% if module.is_published %}
+                                        <span class="badge badge-success">✅ Veröffentlicht</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">⚠️ Entwurf</span>
+                                    {% endif %}
+                                    
+                                    {% if module.is_lead_magnet %}
+                                        <span class="badge badge-magnet">🧲 Lead-Magnet</span>
+                                    {% else %}
+                                        {% for level in module.required_subscription_levels %}
+                                            <span class="badge badge-{{ level }}">{{ level|upper }}</span>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                                <div class="module-actions">
+                                    <button class="btn-small" onclick="editModule({{ module.id }})">✏️</button>
+                                    <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'published')">
+                                        {% if module.is_published %}👁️{% else %}🔒{% endif %}
+                                    </button>
+                                    <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'lead_magnet')">
+                                        {% if module.is_lead_magnet %}🧲{% else %}💎{% endif %}
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Module direkt unter Kategorie (ohne Unterkategorie) -->
+                {% for module in category.modules if not module.subcategory_id %}
+                <div class="module-container direct-module" data-module-id="{{ module.id }}">
+                    <div class="module-header">
+                        <input type="checkbox" class="module-checkbox" value="{{ module.id }}">
+                        <span class="module-icon">{{ module.icon }}</span>
+                        <span class="module-title">{{ module.title }}</span>
+                        <div class="module-badges">
+                            {% if module.is_published %}
+                                <span class="badge badge-success">✅ Veröffentlicht</span>
+                            {% else %}
+                                <span class="badge badge-warning">⚠️ Entwurf</span>
+                            {% endif %}
+                            
+                            {% if module.is_lead_magnet %}
+                                <span class="badge badge-magnet">🧲 Lead-Magnet</span>
+                            {% else %}
+                                {% for level in module.required_subscription_levels %}
+                                    <span class="badge badge-{{ level }}">{{ level|upper }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="module-actions">
+                            <button class="btn-small" onclick="editModule({{ module.id }})">✏️</button>
+                            <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'published')">
+                                {% if module.is_published %}👁️{% else %}🔒{% endif %}
+                            </button>
+                            <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'lead_magnet')">
+                                {% if module.is_lead_magnet %}🧲{% else %}💎{% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="modal">
+    <div class="modal-content">
+        <h3>➕ Neue Hauptkategorie</h3>
+        <form action="{{ url_for('admin_menu.add_category') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label">Name *</label>
+                <input type="text" name="name" class="form-input" placeholder="z.B. 1. Fundamentalanalyse" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Icon</label>
+                <input type="text" name="icon" class="form-input" placeholder="📊" value="📊">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Beschreibung</label>
+                <textarea name="description" class="form-input" rows="3" placeholder="Kurze Beschreibung der Kategorie..."></textarea>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn secondary" onclick="closeModal('addCategoryModal')">Abbrechen</button>
+                <button type="submit" class="btn">Kategorie erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Module Modal -->
+<div id="addModuleModal" class="modal">
+    <div class="modal-content large">
+        <h3>➕ Neues Modul</h3>
+        <form action="{{ url_for('admin_menu.add_module') }}" method="POST">
+            <input type="hidden" id="module_category_id" name="category_id">
+            <input type="hidden" id="module_subcategory_id" name="subcategory_id">
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Titel *</label>
+                    <input type="text" name="title" class="form-input" placeholder="z.B. KGV-Analyse verstehen" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Icon</label>
+                    <input type="text" name="icon" class="form-input" placeholder="🎯" value="🎯">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Beschreibung *</label>
+                    <textarea name="description" class="form-input" rows="3" placeholder="Beschreibung des Moduls..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Template-Datei</label>
+                    <input type="text" name="template_file" class="form-input" placeholder="z.B. kgv_analyse.html">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Externe URL</label>
+                    <input type="url" name="external_url" class="form-input" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dauer (Min)</label>
+                    <input type="number" name="estimated_duration" class="form-input" value="30" min="5" max="300">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schwierigkeit</label>
+                    <select name="difficulty_level" class="form-select">
+                        <option value="beginner">Anfänger</option>
+                        <option value="intermediate">Fortgeschritten</option>
+                        <option value="advanced">Experte</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Zugriffssteuerung</h4>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="is_lead_magnet" id="leadMagnetCheckbox" onchange="toggleSubscriptionLevels()"> 
+                        Lead-Magnet (kostenlos)
+                    </label>
+                </div>
+                <div id="subscriptionLevels" class="form-group">
+                    <label class="form-label">Erforderliche Abonnements:</label>
+                    <div style="display: flex; gap: 15px; margin-top: 10px;">
+                        <label><input type="checkbox" name="req_basic" value="basic"> Basic</label>
+                        <label><input type="checkbox" name="req_premium" value="premium" checked> Premium</label>
+                        <label><input type="checkbox" name="req_elite" value="elite" checked> Elite</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>Veröffentlichung</h4>
+                <label>
+                    <input type="checkbox" name="is_published" checked> 
+                    Sofort veröffentlichen
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                <button type="button" class="btn secondary" onclick="closeModal('addModuleModal')">Abbrechen</button>
+                <button type="submit" class="btn">Modul erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.category-container {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    overflow: hidden;
+}
+
+.category-header {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+    color: white;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.category-header:hover {
+    background: linear-gradient(135deg, var(--primary-medium), var(--primary-dark));
+}
+
+.category-icon {
+    font-size: 1.5rem;
+}
+
+.category-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+    flex: 1;
+}
+
+.category-stats {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+}
+
+.category-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.category-content {
+    padding: 20px;
+    background: #f8f9fa;
+}
+
+.subcategory-container {
+    margin-left: 20px;
+    border-left: 3px solid var(--gold-classic);
+    margin-bottom: 15px;
+}
+
+.subcategory-header {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-classic));
+    color: var(--primary-dark);
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 4px;
+}
+
+.subcategory-header:hover {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+.subcategory-content {
+    padding: 15px 0 0 40px;
+}
+
+.module-container {
+    margin-bottom: 8px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.module-container:hover {
+    border-color: var(--gold-classic);
+    box-shadow: 0 2px 8px rgba(218, 165, 32, 0.2);
+}
+
+.module-container.direct-module {
+    margin-left: 0;
+    border-left: 4px solid var(--success);
+}
+
+.module-header {
+    padding: 12px 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.module-checkbox {
+    margin: 0;
+}
+
+.module-title {
+    flex: 1;
+    font-weight: 500;
+}
+
+.module-badges {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background: var(--success);
+    color: white;
+}
+
+.badge-warning {
+    background: var(--warning);
+    color: var(--primary-dark);
+}
+
+.badge-magnet {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.badge-basic {
+    background: #6b7280;
+    color: white;
+}
+
+.badge-premium {
+    background: var(--gold-dark);
+    color: white;
+}
+
+.badge-elite {
+    background: #6f42c1;
+    color: white;
+}
+
+.btn-small {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: inherit;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-content.large {
+    max-width: 800px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.form-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--gold-classic);
+}
+
+.form-section h4 {
+    margin: 0 0 15px 0;
+    color: var(--primary-dark);
+}
+
+@media (max-width: 768px) {
+    .category-header, .subcategory-header, .module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .category-actions, .subcategory-actions, .module-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+function toggleCategory(categoryId) {
+    const content = document.getElementById('category-' + categoryId);
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleSubcategory(subcategoryId) {
+    const content = document.getElementById('subcategory-' + subcategoryId);
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+}
+
+function showAddCategoryModal() {
+    document.getElementById('addCategoryModal').style.display = 'block';
+}
+
+function addSubcategory(categoryId) {
+    // Vereinfacht - in der echten App würdest du ein Modal öffnen
+    const name = prompt('Name der Unterkategorie:');
+    if (name) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("admin_menu.add_subcategory") }}';
+        
+        const categoryField = document.createElement('input');
+        categoryField.type = 'hidden';
+        categoryField.name = 'category_id';
+        categoryField.value = categoryId;
+        
+        const nameField = document.createElement('input');
+        nameField.type = 'hidden';
+        nameField.name = 'name';
+        nameField.value = name;
+        
+        form.appendChild(categoryField);
+        form.appendChild(nameField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function addModule(categoryId, subcategoryId) {
+    document.getElementById('module_category_id').value = categoryId;
+    document.getElementById('module_subcategory_id').value = subcategoryId || '';
+    document.getElementById('addModuleModal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function toggleSubscriptionLevels() {
+    const checkbox = document.getElementById('leadMagnetCheckbox');
+    const levels = document.getElementById('subscriptionLevels');
+    levels.style.display = checkbox.checked ? 'none' : 'block';
+}
+
+function toggleModuleStatus(moduleId, statusType) {
+    fetch(`/admin/toggle-${statusType.replace('_', '-')}/${moduleId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Fehler: ' + data.error);
+            }
+        });
+}
+
+function exportStructure() {
+    fetch('{{ url_for("admin_menu.export_structure") }}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const blob = new Blob([JSON.stringify(data.structure, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'didis-academy-menu-structure.json';
+                a.click();
+            }
+        });
+}
+
+// Modal-Schließung bei Klick außerhalb
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// Tastatur-Shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => modal.style.display = 'none');
+    }
+});
+</script>
+{% endblock %}

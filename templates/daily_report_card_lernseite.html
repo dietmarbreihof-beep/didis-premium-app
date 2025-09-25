@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Report Card - Das Trading-Tagebuch der Profis</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Design System gemäß Cursor Rules */
+        :root {
+            --primary-dark: #1a1a1a;
+            --secondary-dark: #2d2d2d;
+            --gold-dark: #b8860b;
+            --gold-classic: #daa520;
+            --gold-light: #f4e97b;
+            --success-green: #38a169;
+            --warning-orange: #d69e2e;
+            --error-red: #e53e3e;
+            --bg-light: #f7f7f7;
+            --white: #ffffff;
+            --text-dark: #2d3748;
+            --text-light: #718096;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: 0.3s ease;
+            --max-width: 1200px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--gold-dark) 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--gold-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, var(--gold-classic) 0%, var(--gold-light) 100%);
+            border-radius: 10px;
+            transition: width var(--transition);
+            width: 0%;
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin: 2rem 0;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 1rem 0;
+            border-bottom: 2px solid var(--bg-light);
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition);
+        }
+
+        .section-content.expanded {
+            max-height: 2000px;
+        }
+
+        /* Highlight Boxes */
+        .concept-highlight {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-classic) 100%);
+            border-left: 4px solid var(--gold-dark);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid var(--warning-orange);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 4px solid var(--success-green);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+            border-left: 4px solid var(--error-red);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        /* Interactive Elements */
+        .next-button {
+            background: linear-gradient(135deg, var(--gold-classic) 0%, var(--gold-dark) 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: var(--border-radius);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 1.5rem 0;
+            width: 100%;
+            max-width: 400px;
+            display: block;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .next-button:active {
+            transform: translateY(0);
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: var(--bg-light);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1rem 0;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
+        }
+
+        .quiz-options {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .quiz-options li {
+            background: white;
+            margin: 0.5rem 0;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .quiz-options li:hover {
+            border-color: var(--gold-classic);
+            transform: translateX(5px);
+        }
+
+        .quiz-options li.selected {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-classic) 100%);
+            border-color: var(--gold-dark);
+        }
+
+        /* Report Card Template */
+        .report-card-template {
+            background: white;
+            border: 2px solid var(--gold-classic);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .template-field {
+            margin: 1rem 0;
+            padding: 0.5rem;
+            border-bottom: 1px dashed var(--text-light);
+        }
+
+        .template-label {
+            font-weight: bold;
+            color: var(--gold-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+            border: 2px solid var(--success-green);
+        }
+
+        .key-takeaways h2 {
+            text-align: center;
+            color: #155724;
+            margin-bottom: 1rem;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 0.75rem;
+            margin: 0.4rem 0;
+            border-left: 4px solid var(--success-green);
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Fade in Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pulse Animation for Quiz Button */
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>📊 Daily Report Card</h1>
+            <p>Das mächtigste Werkzeug für beschleunigte Trading-Entwicklung nach Lance Breitstein</p>
+            <div class="stats-grid" style="margin-top: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-number">10x</div>
+                    <div class="stat-label">Schnellere Verbesserung</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Fokus pro Tag</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">365</div>
+                    <div class="stat-label">Tage bewusste Entwicklung</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-section">
+            <h3>📈 Dein Fortschritt durch diese Lektion</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p id="progressText">0% abgeschlossen - Bereit für das Transformations-Tool?</p>
+        </div>
+
+        <!-- Schritt 1: Das Problem unstrukturierter Trader -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(1)">
+                <div class="section-title">🎯 Schritt 1: Das Frustrations-Problem</div>
+                <div class="section-icon" id="icon1">▶️</div>
+            </div>
+            <div class="section-content" id="content1">
+                <div class="error-box">
+                    <h4>❌ Erkennst du dich wieder?</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Mangelnde Klarheit:</strong> Du weißt nicht, worauf du dich konzentrieren sollst</li>
+                        <li><strong>Wiederholte Fehler:</strong> Jeden Monat die gleichen Trading-Fehler</li>
+                        <li><strong>Unsicherheit:</strong> Bin ich überhaupt besser geworden?</li>
+                        <li><strong>Fehlende Reflexion:</strong> Keine Methode zur systematischen Verbesserung</li>
+                    </ul>
+                </div>
+
+                <div class="concept-highlight">
+                    <h4>💡 Lance's Erkenntnis</h4>
+                    <p>
+                    Das <strong>Hauptproblem</strong> liegt nicht im mangelnden Wissen, sondern in der <strong>fehlenden Struktur</strong> 
+                    für gezieltes Lernen. Die meisten Trader üben wie Hobby-Golfer - gedankenlos und ohne Plan.
+                    </p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Tiger Woods würde niemals...</h4>
+                    <p>
+                    ...einfach 100 Golfbälle gedankenlos schlagen. Jeder Schlag hat einen <strong>spezifischen Zweck</strong> 
+                    und arbeitet an einer <strong>konkreten Schwäche</strong>. Genauso solltest du traden!
+                    </p>
+                </div>
+
+                <button class="next-button" onclick="nextStep(2)">
+                    ✅ Verstanden - Zeige mir die Lösung! →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 2: Die Daily Report Card als Lösung -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(2)">
+                <div class="section-title">💪 Schritt 2: Die Daily Report Card Lösung</div>
+                <div class="section-icon" id="icon2">▶️</div>
+            </div>
+            <div class="section-content" id="content2">
+                <div class="success-box">
+                    <h4>🚀 Die Transformation beginnt hier!</h4>
+                    <p>
+                    Die Daily Report Card ist ein <strong>strukturierter täglicher Überprüfungsprozess</strong>, 
+                    der darauf abzielt, deinen Handel <strong>exponentiell</strong> zu verbessern.
+                    </p>
+                </div>
+
+                <div class="concept-highlight">
+                    <h4>🎯 Kernprinzip: Deliberate Practice</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Gezieltes Üben:</strong> Jede Session hat einen klaren Fokus</li>
+                        <li><strong>Bewusste Verbesserung:</strong> Du arbeitest aktiv an spezifischen Schwächen</li>
+                        <li><strong>Messbarer Fortschritt:</strong> Du siehst täglich deine Entwicklung</li>
+                        <li><strong>Schnelle Anpassung:</strong> Reaktion auf neue Marktregime</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🏆 Bewiesene Ergebnisse</h4>
+                    <p>
+                    Trader, die die Daily Report Card nutzen, können sich <strong>schneller an neue Marktregime anpassen</strong> 
+                    und zeigen <strong>konsistenteren Fortschritt</strong> als ihre Konkurrenten.
+                    </p>
+                </div>
+
+                <button class="next-button" onclick="nextStep(3)">
+                    ✅ Zeige mir den Aufbau der Report Card! →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 3: Aufbau und Logik -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(3)">
+                <div class="section-title">🏗️ Schritt 3: Die 10 Komponenten der Daily Report Card</div>
+                <div class="section-icon" id="icon3">▶️</div>
+            </div>
+            <div class="section-content" id="content3">
+                <div class="concept-highlight">
+                    <h4>📋 Die vollständige Struktur</h4>
+                    <p>Jede Komponente hat einen spezifischen Zweck für deine Trading-Entwicklung:</p>
+                </div>
+
+                <!-- Komponente 1 -->
+                <div class="success-box">
+                    <h4>1️⃣ Datum und Note (A-F)</h4>
+                    <p><strong>⚠️ WICHTIG:</strong> Die Note richtet sich <strong>ausschließlich</strong> danach, ob du dein Tagesziel erreicht hast - NICHT nach Gewinn oder Verlust!</p>
+                    <p><em>Beispiel: Du verlierst $500, aber hältst dich perfekt an dein "Max 5 Trades" Ziel → Note: A+</em></p>
+                </div>
+
+                <!-- Komponente 2 -->
+                <div class="warning-box">
+                    <h4>2️⃣ Ein einziges, prozessorientiertes Ziel</h4>
+                    <p><strong>Forschung zeigt:</strong> Fokus auf EIN Ziel ist effektiver als auf mehrere!</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li>"Overtrading reduzieren: Max. 5 Trades heute"</li>
+                        <li>"Positionsgrößen bewusster wählen"</li>
+                        <li>"Level-2-Hinweise vor jedem Trade prüfen"</li>
+                        <li>"Stop-Loss bei jedem Trade setzen"</li>
+                    </ul>
+                </div>
+
+                <!-- Komponenten 3-4 -->
+                <div class="concept-highlight">
+                    <h4>3️⃣ Erinnerungen/Aphorismen</h4>
+                    <p>Persönliche Merksätze für schwierige Momente:</p>
+                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
+                        <li>"The trend is your friend until it ends"</li>
+                        <li>"Cut losses short, let profits run"</li>
+                        <li>"When in doubt, stay out"</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>4️⃣ Tagesaufteilung in Zeitblöcke</h4>
+                    <p><strong>Genius-Move:</strong> Teile deinen Trading-Tag in Segmente (z.B. 9:30-11, 11-12, 12-14 Uhr)</p>
+                    <p><strong>Vorteil:</strong> Du kannst einen Block "verlieren", aber den Tag dennoch "gewinnen"!</p>
+                </div>
+
+                <button class="next-button" onclick="nextStep(4)">
+                    ✅ Weiter zu den restlichen Komponenten! →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 4: Weitere Komponenten (5-10) -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(4)">
+                <div class="section-title">📊 Schritt 4: Die restlichen Komponenten (5-10)</div>
+                <div class="section-icon" id="icon4">▶️</div>
+            </div>
+            <div class="section-content" id="content4">
+                <!-- Komponente 5 -->
+                <div class="warning-box">
+                    <h4>5️⃣ Morning Temperature</h4>
+                    <p><strong>Mental/Physisch Check-in:</strong> Wie fühlst du dich heute?</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Fokus-Level:</strong> 1-10 (beeinflusst Positionsgröße)</li>
+                        <li><strong>Schlafqualität:</strong> Ausgeruht oder müde?</li>
+                        <li><strong>Stress-Level:</strong> Privates, das ablenkt?</li>
+                        <li><strong>Energie:</strong> Bereit für aktives Trading?</li>
+                    </ul>
+                    <p><em>Niedrige "Temperature" = Kleinere Positionen oder kein Trading!</em></p>
+                </div>
+
+                <!-- Komponente 6 -->
+                <div class="success-box">
+                    <h4>6️⃣ Gelerntes/Verbesserungen</h4>
+                    <p><strong>Tägliche Reflexion:</strong> Was habe ich heute gelernt oder verbessert?</p>
+                    <p>Selbst an frustrierenden Tagen findest du <strong>etwas Positives</strong>:</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li>"Geduld bei schlechten Setups gezeigt"</li>
+                        <li>"Neues Chart-Pattern erkannt"</li>
+                        <li>"Disziplin beim Stop-Loss bewiesen"</li>
+                    </ul>
+                </div>
+
+                <!-- Komponente 7 -->
+                <div class="concept-highlight">
+                    <h4>7️⃣ Änderungen für morgen</h4>
+                    <p><strong>Konkrete, umsetzbare Anpassungen</strong> basierend auf heute:</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li>"Weniger aggressiv sein - war auf Erfolgsserie"</li>
+                        <li>"Früher Gewinn mitnehmen bei schwachen Setups"</li>
+                        <li>"Level-2 genauer analysieren vor Entry"</li>
+                    </ul>
+                </div>
+
+                <!-- Komponenten 8-10 -->
+                <div class="warning-box">
+                    <h4>8️⃣ Überblick & 9️⃣ Einfachste $50k & 🔟 Gehandelte Ticker</h4>
+                    <p><strong>8. Überblick:</strong> Ablenkungen, Markttrends, sonstige Notizen</p>
+                    <p><strong>9. Einfachste $50k:</strong> Der risikoärmste Trade mit bestem ROI (nicht der größte!)</p>
+                    <p><strong>10. Ticker:</strong> Liste der gehandelten Wertpapiere + wichtigste Trades</p>
+                </div>
+
+                <button class="next-button" onclick="nextStep(5)">
+                    ✅ Jetzt will ich die Vorlage sehen! →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 5: Report Card Vorlage -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(5)">
+                <div class="section-title">📝 Schritt 5: Deine Daily Report Card Vorlage</div>
+                <div class="section-icon" id="icon5">▶️</div>
+            </div>
+            <div class="section-content" id="content5">
+                <div class="concept-highlight">
+                    <h4>🎯 Hier ist deine persönliche Vorlage</h4>
+                    <p>Kopiere diese Vorlage und fülle sie täglich aus. Passe sie an deine Bedürfnisse an!</p>
+                </div>
+
+                <div class="report-card-template">
+                    <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: var(--gold-dark); margin-bottom: 2rem;">
+                        📊 DAILY REPORT CARD 📊
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📅 Datum:</div>
+                        <div>_______________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📊 Note (A-F):</div>
+                        <div>_____ (basierend auf Zielerreichung, NICHT P&L!)</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🎯 EINZIGES TAGESZIEL:</div>
+                        <div>_______________________________________________</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">(z.B. "Max 5 Trades heute" oder "Stop-Loss bei jedem Trade")</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">💭 Erinnerungen/Aphorismen:</div>
+                        <div>_______________________________________________</div>
+                        <div>_______________________________________________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🌅 Morning Temperature (1-10):</div>
+                        <div>Fokus: ___ | Schlaf: ___ | Stress: ___ | Energie: ___</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">⏰ Tagesaufteilung:</div>
+                        <div>9:30-11:00: ________________________</div>
+                        <div>11:00-12:00: _______________________</div>
+                        <div>12:00-14:00: _______________________</div>
+                        <div>14:00-16:00: _______________________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🎓 Heute gelernt/verbessert:</div>
+                        <div>_______________________________________________</div>
+                        <div>_______________________________________________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🔄 Änderungen für morgen:</div>
+                        <div>_______________________________________________</div>
+                        <div>_______________________________________________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">💰 Einfachste $50k heute:</div>
+                        <div>_______________________________________________</div>
+                        <div style="font-size: 0.8rem; color: var(--text-light);">(Bester ROI, nicht größter Trade!)</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📈 Gehandelte Ticker:</div>
+                        <div>_______________________________________________</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📝 Überblick/Notizen:</div>
+                        <div>_______________________________________________</div>
+                        <div>_______________________________________________</div>
+                    </div>
+                </div>
+
+                <button class="next-button" onclick="nextStep(6)">
+                    ✅ Verstanden! Zeige mir ein praktisches Beispiel →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 6: Beispiel Report Card -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(6)">
+                <div class="section-title">📋 Schritt 6: Beispiel einer ausgefüllten Daily Report Card</div>
+                <div class="section-icon" id="icon6">▶️</div>
+            </div>
+            <div class="section-content" id="content6">
+                <div class="concept-highlight">
+                    <h4>💡 So könnte deine erste Daily Report Card aussehen</h4>
+                    <p>Hier ist ein realistisches Beispiel eines Traders, der an seinem <strong>Overtrading-Problem</strong> arbeitet:</p>
+                </div>
+
+                <div class="report-card-template" style="background: #f8f9ff; border: 2px solid #4c6ef5;">
+                    <div style="text-align: center; font-size: 1.2rem; font-weight: bold; color: #4c6ef5; margin-bottom: 2rem;">
+                        📊 DAILY REPORT CARD - BEISPIEL 📊
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📅 Datum:</div>
+                        <div><strong>Mittwoch, 25. September 2024</strong></div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📊 Note (A-F):</div>
+                        <div><strong>B+</strong> (Ziel fast erreicht, 6 statt 5 Trades - aber großer Fortschritt!)</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🎯 EINZIGES TAGESZIEL:</div>
+                        <div><strong>Maximal 5 Trades heute - Qualität über Quantität</strong></div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">💭 Erinnerungen/Aphorismen:</div>
+                        <div>"Weniger ist mehr - jeder Trade muss einen Grund haben"</div>
+                        <div>"Wenn ich unsicher bin, bleibe ich draußen"</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🌅 Morning Temperature (1-10):</div>
+                        <div>Fokus: <strong>8</strong> | Schlaf: <strong>7</strong> | Stress: <strong>3</strong> | Energie: <strong>8</strong></div>
+                        <div style="color: var(--success-green); font-size: 0.9rem;"><em>→ Guter Tag für normales Risiko</em></div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">⏰ Tagesaufteilung:</div>
+                        <div><strong>9:30-11:00:</strong> B+ (2 gute AVWAP-Trades, diszipliniert)</div>
+                        <div><strong>11:00-12:00:</strong> C (1 impulsiver Trade ohne Setup)</div>
+                        <div><strong>12:00-14:00:</strong> A- (2 Trades nach Plan, geduldig gewartet)</div>
+                        <div><strong>14:00-16:00:</strong> C+ (1 zusätzlicher Trade - Overtrading!)</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🎓 Heute gelernt/verbessert:</div>
+                        <div>• <strong>AVWAP-Bounces funktionieren besser am Morgen</strong></div>
+                        <div>• <strong>Nach 2 Gewinntrades werde ich übermütig → Pause einlegen</strong></div>
+                        <div>• <strong>Level-2 vor Trade checken spart schlechte Entries</strong></div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">🔄 Änderungen für morgen:</div>
+                        <div>• <strong>Nach 2 Gewinntrades → 15min Pause machen</strong></div>
+                        <div>• <strong>Level-2 Checklist vor jedem Entry verwenden</strong></div>
+                        <div>• <strong>Nachmittags defensiver werden (niedrigeres Volumen)</strong></div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">💰 Einfachste $50k heute:</div>
+                        <div><strong>TSLA Morgen-Bounce an AVWAP bei $245</strong></div>
+                        <div style="font-size: 0.9rem; color: var(--text-light);">Perfektes Setup, hohe Gewinnwahrscheinlichkeit, klarer Stop-Loss</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📈 Gehandelte Ticker:</div>
+                        <div><strong>TSLA</strong> (2x), <strong>NVDA</strong> (2x), <strong>AAPL</strong> (1x), <strong>SPY</strong> (1x)</div>
+                    </div>
+                    
+                    <div class="template-field">
+                        <div class="template-label">📝 Überblick/Notizen:</div>
+                        <div>• Markt bullish, aber nachmittags schwächer</div>
+                        <div>• NVDA nach Earnings sehr volatil - mehr Vorsicht</div>
+                        <div>• <strong>Fortschritt:</strong> Vor einem Monat waren es 12+ Trades/Tag!</div>
+                        <div style="color: var(--success-green);">• <strong>P&L: +$847</strong> (aber das ist NICHT der Bewertungsmaßstab!)</div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎯 Was macht diese Report Card gut?</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Ehrliche Bewertung:</strong> Note B+ trotz Gewinn, weil Ziel nicht erreicht</li>
+                        <li><strong>Spezifische Erkenntnisse:</strong> "AVWAP-Bounces am Morgen besser"</li>
+                        <li><strong>Konkrete Lösungen:</strong> "Nach 2 Gewinntrades 15min Pause"</li>
+                        <li><strong>Fortschritt erkannt:</strong> Von 12+ auf 6 Trades reduziert</li>
+                        <li><strong>Fokus auf Prozess:</strong> P&L ist erwähnt, aber nicht der Maßstab</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>📚 Lernpunkte aus diesem Beispiel</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Perfekt ist der Feind des Guten:</strong> B+ ist ein großartiger Fortschritt!</li>
+                        <li><strong>Muster erkennen:</strong> "Nach Gewinntrades übermütig" ist wertvoll</li>
+                        <li><strong>Zeitbasierte Erkenntnisse:</strong> Morgens vs. nachmittags unterschiedlich</li>
+                        <li><strong>Emotionale Intelligenz:</strong> Selbstreflexion über Trigger-Punkte</li>
+                    </ul>
+                </div>
+
+                <div class="concept-highlight">
+                    <h4>🔥 Challenge für dich</h4>
+                    <p>
+                    <strong>Kopiere dieses Beispiel</strong> und passe es an dein größtes Trading-Problem an. 
+                    Egal ob Overtrading, zu frühe Gewinnmitnahmen, oder fehlende Disziplin - 
+                    die Struktur bleibt gleich!
+                    </p>
+                </div>
+
+                <button class="next-button" onclick="nextStep(7)">
+                    ✅ Verstanden! Zeige mir fortgeschrittene Taktiken →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 7: Fortgeschrittene Taktiken -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(7)">
+                <div class="section-title">🚀 Schritt 7: Fortgeschrittene Taktiken für Profis</div>
+                <div class="section-icon" id="icon7">▶️</div>
+            </div>
+            <div class="section-content" id="content7">
+                <!-- Trading Pods -->
+                <div class="success-box">
+                    <h4>👥 Trading Pods (Geheimwaffe!)</h4>
+                    <p><strong>Vervielfache dein Lernen:</strong> Teile deine Daily Report Card mit anderen Tradern</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Verschiedene Perspektiven:</strong> Sieh wie andere denken</li>
+                        <li><strong>Neue Strategien:</strong> Lerne aus deren Erfahrungen</li>
+                        <li><strong>Accountability:</strong> Soziale Verpflichtung hält dich auf Kurs</li>
+                        <li><strong>Schnelleres Lernen:</strong> 5 Trader = 5x mehr Erfahrungen</li>
+                    </ul>
+                </div>
+
+                <!-- Lösungsorientierung -->
+                <div class="warning-box">
+                    <h4>🔧 Lösungsorientierte Reflexionen</h4>
+                    <p><strong>Nicht nur Probleme erkennen - lösen!</strong></p>
+                    <table style="width: 100%; margin: 1rem 0;">
+                        <tr>
+                            <td style="width: 50%; padding: 0.5rem; background: #f8d7da;">
+                                <strong>❌ Schlecht:</strong><br>"Ich war zu gierig"
+                            </td>
+                            <td style="width: 50%; padding: 0.5rem; background: #d4edda;">
+                                <strong>✅ Gut:</strong><br>"Morgen setze ich Gewinnziele vor dem Trade"
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 0.5rem; background: #f8d7da;">
+                                <strong>❌ Schlecht:</strong><br>"Overtrading wieder"
+                            </td>
+                            <td style="padding: 0.5rem; background: #d4edda;">
+                                <strong>✅ Gut:</strong><br>"Max 3 Trades morgen, dann Computer aus"
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Weitere Taktiken -->
+                <div class="concept-highlight">
+                    <h4>🎯 Weitere Pro-Taktiken</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Erfolge feiern:</strong> Kleine Siege verstärken gute Gewohnheiten</li>
+                        <li><strong>"Don't break the chain":</strong> Konsistenz ist der Schlüssel zum Erfolg</li>
+                        <li><strong>Anpassung:</strong> Modifiziere die Vorlage nach deinen Bedürfnissen</li>
+                        <li><strong>Wöchentliche Reviews:</strong> Erkenne Muster in deinen täglichen Reports</li>
+                    </ul>
+                </div>
+
+                <button class="next-button" onclick="nextStep(8)">
+                    ✅ Jetzt zu den häufigen Fragen! →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 8: FAQs -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(8)">
+                <div class="section-title">❓ Schritt 8: Häufige Fragen & Antworten</div>
+                <div class="section-icon" id="icon8">▶️</div>
+            </div>
+            <div class="section-content" id="content8">
+                <div class="warning-box">
+                    <h4>🤔 "Wann sollte ich mein Ziel ändern?"</h4>
+                    <p><strong>Lance's Antwort:</strong> Wenn es nicht mehr den höchsten ROI für deinen Fortschritt bietet.</p>
+                    <p><em>"Perfektion ist der Feind des Fortschritts"</em> - Wenn du ein Ziel ausreichend verbessert hast, wechsle zum nächsten wichtigsten Bereich.</p>
+                </div>
+
+                <div class="error-box">
+                    <h4>🎯 "Kann ich mehrere Ziele gleichzeitig verfolgen?"</h4>
+                    <p><strong>NEIN!</strong> Lance empfiehlt dringend, sich auf EIN Ziel zu fokussieren.</p>
+                    <p><strong>Wissenschaftlich bewiesen:</strong> Fokus auf ein Ziel führt zu besseren Ergebnissen. Ein Ziel kann Wochen bis Monate dauern!</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>📅 "Soll ich die Report Card auch an langsamen Tagen ausfüllen?"</h4>
+                    <p><strong>JA, UNBEDINGT!</strong> Diese Tage sind oft die wichtigsten.</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Produktiv bleiben:</strong> Während andere stagnieren</li>
+                        <li><strong>Schwächen finden:</strong> Zeit für Reflexion und Planung</li>
+                        <li><strong>Gewohnheit stärken:</strong> Konsistenz ist der Schlüssel</li>
+                        <li><strong>Markt studieren:</strong> Vorbereitung für aktive Tage</li>
+                    </ul>
+                </div>
+
+                <div class="concept-highlight">
+                    <h4>⏰ "Wie lange dauert das täglich?"</h4>
+                    <p><strong>5-10 Minuten</strong> für den enormen Nutzen!</p>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Morgens:</strong> 2-3 Minuten (Ziel, Temperature, Erinnerungen)</li>
+                        <li><strong>Abends:</strong> 5-7 Minuten (Reflexion, Gelerntes, Anpassungen)</li>
+                        <li><strong>ROI:</strong> Diese 10 Minuten können dich Tausende sparen!</li>
+                    </ul>
+                </div>
+
+                <button class="next-button" onclick="nextStep(9)">
+                    ✅ Ich bin bereit zu starten! Was ist der erste Schritt? →
+                </button>
+            </div>
+        </div>
+
+        <!-- Schritt 9: Implementierung & Start -->
+        <div class="section">
+            <div class="section-header" onclick="toggleStep(9)">
+                <div class="section-title">🚀 Schritt 9: Sofort-Implementierung - Dein Aktionsplan</div>
+                <div class="section-icon" id="icon9">▶️</div>
+            </div>
+            <div class="section-content" id="content9">
+                <div class="success-box">
+                    <h4>✅ Dein 7-Tage-Challenge Start</h4>
+                    <p><strong>Beginne HEUTE - nicht morgen!</strong></p>
+                </div>
+
+                <div class="concept-highlight">
+                    <h4>📝 Tag 1-3: Foundation legen</h4>
+                    <ol style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Vorlage kopieren:</strong> Speichere die Report Card in deinem Trading-Setup</li>
+                        <li><strong>Erstes Ziel wählen:</strong> Was ist deine größte Trading-Schwäche JETZT?</li>
+                        <li><strong>Morning Routine:</strong> Fülle jeden Morgen Temperature und Ziel aus</li>
+                        <li><strong>Abend-Reflexion:</strong> Honest Review - hast du dein Ziel erreicht?</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    <h4>📊 Tag 4-7: Erste Anpassungen</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>Muster erkennen:</strong> Wann erreichst du deine Ziele am besten?</li>
+                        <li><strong>Template anpassen:</strong> Was funktioniert für dich? Was nicht?</li>
+                        <li><strong>Trading Pod suchen:</strong> Finde andere Trader für Austausch</li>
+                        <li><strong>Erste Erfolge feiern:</strong> Auch kleine Verbesserungen zählen!</li>
+                    </ul>
+                </div>
+
+                <div class="error-box">
+                    <h4>⚠️ Häufige Anfängerfehler vermeiden</h4>
+                    <ul style="margin: 1rem 0; padding-left: 2rem;">
+                        <li><strong>❌ Zu viele Ziele:</strong> Bleib bei EINEM Fokus-Bereich</li>
+                        <li><strong>❌ P&L-Fixierung:</strong> Note basiert auf Prozess, nicht Gewinn</li>
+                        <li><strong>❌ Unregelmäßigkeit:</strong> Konsistenz ist wichtiger als Perfektion</li>
+                        <li><strong>❌ Zu kompliziert:</strong> Halte es einfach und praktikabel</li>
+                    </ul>
+                </div>
+
+                <button class="next-button" onclick="nextStep(10)">
+                    ✅ Daily Report Card Challenge abgeschlossen! 🎉 →
+                </button>
+            </div>
+        </div>
+
+        <!-- Key Takeaways (nach allen Schritten) -->
+        <div class="key-takeaways" id="keyTakeaways" style="display: none;">
+            <h2>📋 KEY TAKEAWAYS</h2>
+            
+            <div class="takeaway-item">
+                <p><strong>1.</strong> Die Daily Report Card ist das mächtigste Tool für beschleunigte Trading-Entwicklung - sie zwingt dich zu bewusster, gezielter Verbesserung.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>2.</strong> Fokus auf EIN prozessorientiertes Ziel ist wissenschaftlich bewiesen effektiver als mehrere Ziele gleichzeitig.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>3.</strong> Deine Note basiert auf Zielerreichung, NICHT auf Gewinn oder Verlust - das ist entscheidend für nachhaltigen Erfolg.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>4.</strong> "Deliberate Practice" wie Tiger Woods - jede Trading-Session muss einen spezifischen Verbesserungszweck haben.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>5.</strong> Morning Temperature beeinflusst deine Positionsgröße - niedrige "Temperature" bedeutet defensiveres Trading.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>6.</strong> Tagesaufteilung in Zeitblöcke erlaubt es, einen Zeitraum zu "verlieren" aber den ganzen Tag zu "gewinnen".</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>7.</strong> Trading Pods vervielfachen dein Lernen - teile deine Report Cards mit anderen Tradern für exponentielles Wachstum.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>8.</strong> Lösungsorientierte Reflexionen sind entscheidend - identifiziere nicht nur Probleme, sondern entwickle konkrete Lösungen.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>9.</strong> Konsistenz schlägt Perfektion - die tägliche Praxis ist wichtiger als perfekte Report Cards.</p>
+            </div>
+            
+            <div class="takeaway-item">
+                <p><strong>10.</strong> Auch langsame Trading-Tage sind wertvoll für die Report Card - sie bieten Zeit für Reflexion und Vorbereitung.</p>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="section" id="finalQuiz" style="display: none; margin-bottom: 2rem;">
+            <div class="section-header">
+                <div class="section-title">🧠 Abschluss-Quiz: Daily Report Card Mastery</div>
+            </div>
+            <div class="section-content expanded">
+                <div class="quiz-container">
+                    <div class="quiz-question">1. Wonach richtet sich die tägliche Note (A-F) in der Daily Report Card?</div>
+                    <ul class="quiz-options">
+                        <li onclick="selectAnswer(this, false)">Nach dem täglichen Gewinn oder Verlust</li>
+                        <li onclick="selectAnswer(this, true)">Nach der Erreichung des prozessorientierten Tagesziels</li>
+                        <li onclick="selectAnswer(this, false)">Nach der Anzahl der erfolgreichen Trades</li>
+                        <li onclick="selectAnswer(this, false)">Nach der Performance im Vergleich zum Markt</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">2. Wie viele Ziele solltest du gleichzeitig in der Daily Report Card verfolgen?</div>
+                    <ul class="quiz-options">
+                        <li onclick="selectAnswer(this, false)">3-5 Ziele für maximalen Fortschritt</li>
+                        <li onclick="selectAnswer(this, true)">Nur EIN Ziel - Fokus ist entscheidend</li>
+                        <li onclick="selectAnswer(this, false)">So viele wie möglich für schnelle Verbesserung</li>
+                        <li onclick="selectAnswer(this, false)">2 Ziele als optimaler Kompromiss</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">3. Was bedeutet "Morning Temperature" in der Daily Report Card?</div>
+                    <ul class="quiz-options">
+                        <li onclick="selectAnswer(this, false)">Die aktuelle Marktvolatilität</li>
+                        <li onclick="selectAnswer(this, true)">Bewertung des mentalen/physischen Zustands für Positionsgrößen-Anpassung</li>
+                        <li onclick="selectAnswer(this, false)">Die Zimmertemperatur im Trading-Büro</li>
+                        <li onclick="selectAnswer(this, false)">Ein technischer Indikator für den Markt-Open</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">4. Was sind "Trading Pods" in der fortgeschrittenen Daily Report Card Nutzung?</div>
+                    <ul class="quiz-options">
+                        <li onclick="selectAnswer(this, false)">Eine neue Trading-Software</li>
+                        <li onclick="selectAnswer(this, true)">Gruppen von Tradern, die ihre Report Cards teilen für exponentielles Lernen</li>
+                        <li onclick="selectAnswer(this, false)">Spezielle Trading-Setups</li>
+                        <li onclick="selectAnswer(this, false)">Automatisierte Trading-Algorithmen</li>
+                    </ul>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">5. Warum solltest du die Daily Report Card auch an langsamen Trading-Tagen ausfüllen?</div>
+                    <ul class="quiz-options">
+                        <li onclick="selectAnswer(this, false)">Nur zur Gewohnheitsbildung</li>
+                        <li onclick="selectAnswer(this, true)">Für Reflexion, Marktanalyse und Gewohnheitsstärkung während andere stagnieren</li>
+                        <li onclick="selectAnswer(this, false)">Es ist nicht nötig an langsamen Tagen</li>
+                        <li onclick="selectAnswer(this, false)">Um die Statistik zu vervollständigen</li>
+                    </ul>
+                </div>
+
+                <div style="text-align: center; margin: 1rem 0; padding: 1rem; background: var(--bg-light); border-radius: var(--border-radius);">
+                    <p id="quizProgress" style="margin-bottom: 1rem; color: var(--text-light); font-size: 1rem; font-weight: 500;">
+                        📝 Beantworte alle 5 Fragen, um dein Ergebnis zu sehen
+                    </p>
+                    <button class="next-button" onclick="checkQuizResults()" id="quizSubmit" style="display: none; animation: pulse 2s infinite; margin: 0;">
+                        🎯 Quiz-Ergebnisse anzeigen
+                    </button>
+                </div>
+
+                <div id="quizResults" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div style="text-align: center; margin: 2rem 0 3rem 0;">
+            <button onclick="resetProgress()" style="background: var(--text-light); color: white; border: none; padding: 0.5rem 1rem; border-radius: var(--border-radius); cursor: pointer;">
+                🔄 Lektion zurücksetzen
+            </button>
+        </div>
+        
+        <!-- Extra space to prevent cutoff -->
+        <div style="height: 100px;"></div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        let quizAnswers = [];
+        const totalSteps = 9;
+
+        function updateProgress() {
+            const progress = Math.min((currentStep / totalSteps) * 100, 100);
+            document.getElementById('progressFill').style.width = progress + '%';
+            
+            let progressText;
+            if (progress === 0) {
+                progressText = "0% abgeschlossen - Bereit für das Transformations-Tool?";
+            } else if (progress < 50) {
+                progressText = `${Math.round(progress)}% abgeschlossen - Du machst großartige Fortschritte!`;
+            } else if (progress < 100) {
+                progressText = `${Math.round(progress)}% abgeschlossen - Fast geschafft!`;
+            } else {
+                progressText = "100% abgeschlossen - Daily Report Card Master! 🎉";
+            }
+            
+            document.getElementById('progressText').textContent = progressText;
+        }
+
+        function toggleStep(stepNumber) {
+            const content = document.getElementById(`content${stepNumber}`);
+            const icon = document.getElementById(`icon${stepNumber}`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.textContent = '▶️';
+            } else {
+                // Collapse all other steps
+                for (let i = 1; i <= totalSteps; i++) {
+                    const otherContent = document.getElementById(`content${i}`);
+                    const otherIcon = document.getElementById(`icon${i}`);
+                    if (otherContent && otherIcon) {
+                        otherContent.classList.remove('expanded');
+                        otherIcon.textContent = '▶️';
+                    }
+                }
+                
+                // Expand current step
+                content.classList.add('expanded');
+                icon.textContent = '🔽';
+            }
+        }
+
+        function nextStep(stepNumber) {
+            if (stepNumber > currentStep) {
+                currentStep = stepNumber;
+                updateProgress();
+            }
+
+            // Show Key Takeaways after step 9
+            if (stepNumber > totalSteps) {
+                document.getElementById('keyTakeaways').style.display = 'block';
+                document.getElementById('finalQuiz').style.display = 'block';
+                document.getElementById('keyTakeaways').classList.add('fade-in');
+                document.getElementById('finalQuiz').classList.add('fade-in');
+            }
+
+            // Auto-expand next step
+            setTimeout(() => {
+                if (stepNumber <= totalSteps) {
+                    toggleStep(stepNumber);
+                }
+            }, 300);
+
+            // Smooth scroll to next section
+            const nextSection = document.getElementById(`content${stepNumber}`);
+            if (nextSection) {
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function selectAnswer(element, isCorrect) {
+            // Remove previous selections in this quiz
+            const siblings = element.parentNode.querySelectorAll('li');
+            siblings.forEach(sibling => sibling.classList.remove('selected'));
+            
+            // Mark selected answer
+            element.classList.add('selected');
+            
+            // Store answer
+            const quizIndex = Array.from(document.querySelectorAll('.quiz-container')).indexOf(element.closest('.quiz-container'));
+            quizAnswers[quizIndex] = isCorrect;
+            
+            // Update progress
+            const totalQuestions = document.querySelectorAll('.quiz-container').length;
+            const answeredQuestions = quizAnswers.filter(answer => answer !== undefined).length;
+            
+            // Update progress text
+            const progressElement = document.getElementById('quizProgress');
+            if (answeredQuestions === totalQuestions) {
+                progressElement.textContent = `✅ Alle ${totalQuestions} Fragen beantwortet! Klicke auf den Button für dein Ergebnis.`;
+                progressElement.style.color = 'var(--success-green)';
+                document.getElementById('quizSubmit').style.display = 'block';
+                
+                // Scroll to show the submit button without hiding answers
+                setTimeout(() => {
+                    const submitButton = document.getElementById('quizSubmit');
+                    const rect = submitButton.getBoundingClientRect();
+                    const isVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+                    
+                    if (!isVisible) {
+                        submitButton.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'end'
+                        });
+                    }
+                }, 300);
+            } else {
+                progressElement.textContent = `📝 ${answeredQuestions}/${totalQuestions} Fragen beantwortet`;
+                progressElement.style.color = 'var(--text-light)';
+            }
+        }
+
+        function checkQuizResults() {
+            const correctAnswers = quizAnswers.filter(answer => answer === true).length;
+            const totalQuestions = quizAnswers.length;
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            let resultMessage;
+            let resultClass;
+            
+            if (percentage >= 80) {
+                resultMessage = `🎉 Hervorragend! ${correctAnswers}/${totalQuestions} richtig (${percentage}%) - Du bist bereit für die Daily Report Card Challenge!`;
+                resultClass = 'success-box';
+            } else if (percentage >= 60) {
+                resultMessage = `👍 Gut gemacht! ${correctAnswers}/${totalQuestions} richtig (${percentage}%) - Lies nochmal die Kernkonzepte durch.`;
+                resultClass = 'warning-box';
+            } else {
+                resultMessage = `📖 ${correctAnswers}/${totalQuestions} richtig (${percentage}%) - Nimm dir Zeit, um die Lektion nochmal durchzugehen.`;
+                resultClass = 'error-box';
+            }
+            
+            document.getElementById('quizResults').innerHTML = `
+                <div class="${resultClass}">
+                    <h4>${resultMessage}</h4>
+                    <p><strong>Nächster Schritt:</strong> Starte heute deine erste Daily Report Card! Die Transformation beginnt mit dem ersten Tag.</p>
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button class="next-button" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" style="max-width: 300px;">
+                            🔝 Zurück zum Anfang
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('quizResults').style.display = 'block';
+            document.getElementById('quizSubmit').style.display = 'none';
+        }
+
+        function resetProgress() {
+            currentStep = 0;
+            quizAnswers = [];
+            updateProgress();
+            
+            // Collapse all steps
+            for (let i = 1; i <= totalSteps; i++) {
+                const content = document.getElementById(`content${i}`);
+                const icon = document.getElementById(`icon${i}`);
+                if (content && icon) {
+                    content.classList.remove('expanded');
+                    icon.textContent = '▶️';
+                }
+            }
+            
+            // Hide key takeaways and quiz
+            document.getElementById('keyTakeaways').style.display = 'none';
+            document.getElementById('finalQuiz').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('quizSubmit').style.display = 'none';
+            
+            // Reset quiz selections
+            document.querySelectorAll('.quiz-options li').forEach(li => li.classList.remove('selected'));
+            
+            // Reset quiz progress text
+            const progressElement = document.getElementById('quizProgress');
+            if (progressElement) {
+                progressElement.textContent = '📝 Beantworte alle 5 Fragen, um dein Ergebnis zu sehen';
+                progressElement.style.color = 'var(--text-light)';
+            }
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

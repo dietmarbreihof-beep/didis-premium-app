@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading-Playbook Masterclass - Metalearning & The Process</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f4e97b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .process-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-top: 1rem;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            border-left: 4px solid #daa520;
+            padding-left: 1rem;
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            font-style: italic;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .quote-section::before {
+            content: '"';
+            font-size: 4em;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #059669;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .key-point p {
+            color: #155724;
+            font-size: 1.05em;
+        }
+
+        .process-step {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #d69e2e;
+            margin: 1rem 0;
+        }
+
+        .process-step h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .process-step p, .process-step ul {
+            color: #856404;
+            font-size: 1.05em;
+        }
+
+        .process-step ul {
+            margin: 0.5rem 0 0 1rem;
+        }
+
+        .process-step li {
+            margin: 0.3rem 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fce4ec, #f8bbd9);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #e91e63;
+            margin: 1rem 0;
+        }
+
+        .warning-box h4 {
+            color: #880e4f;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .warning-box p {
+            color: #880e4f;
+            font-size: 1.05em;
+        }
+
+        .interactive-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .interactive-title {
+            font-size: 2em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #f4e97b, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .checklist-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: rgba(218, 165, 32, 0.2);
+        }
+
+        .checklist-item.completed {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-right: 1rem;
+            transform: scale(1.2);
+        }
+
+        .playbook-template {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .playbook-template h5 {
+            color: #f4e97b;
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        .playbook-template textarea {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            padding: 1rem;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            resize: vertical;
+        }
+
+        .playbook-template textarea::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Navigation */
+        .nav-links {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links a {
+            color: #b8860b;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">📋 Trading-Playbook Masterclass</h1>
+                <p class="hero-subtitle">Systematische Trade-Vorbereitung nach The Playbook von Mike BellaFiori</p>
+                <p style="font-size: 1.1em; opacity: 0.8;">Von der Idee zum profitablen System - Dein "Quarterback-Spielbuch" für erfolgreiches Trading</p>
+                <div class="process-badge">🏆 Elite - System III</div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="content-card">
+            <div class="section-title">🎯 Was ist ein Trading-Playbook?</div>
+            <p style="font-size: 1.1em; margin-bottom: 1rem;">
+                Ein Trading-Playbook ist dein persönliches <strong>"Buch der Setups"</strong> - ein systematisches Dokument, 
+                das spezifische Trades detailliert beschreibt, die du ausführen kannst und für die du Risiken zuweist.
+            </p>
+            
+            <div class="quote-section">
+                Ähnlich einem Quarterback-Spielbuch ist es dein strategischer Leitfaden für effektives Trading. 
+                Das Konzept wurde von Mike Bella Fiori populär gemacht und von Lance perfektioniert.
+            </div>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>📊 Systematische Dokumentation</h4>
+                    <p>Jedes Setup wird mit spezifischen Kriterien, Einstiegspunkten und Risikomanagement dokumentiert.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🎯 Konsistente Ausführung</h4>
+                    <p>Eliminiert emotionale Entscheidungen durch vordefinierte Handelsregeln und klare Prozesse.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📈 Kontinuierliche Verbesserung</h4>
+                    <p>Ermöglicht systematisches Backtesting und Optimierung deiner Trading-Strategien.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Warum ein Playbook wichtig ist -->
+        <div class="content-card">
+            <div class="section-title">❓ Warum ist ein Playbook entscheidend?</div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Das Problem der meisten Amateur-Trader</h4>
+                <p>
+                    Die meisten Amateur-Trader haben kein definiertes System, was es unmöglich macht, 
+                    die Qualität ihrer Trades oder die Übereinstimmung mit Studien zu beurteilen.
+                </p>
+            </div>
+
+            <p style="font-size: 1.1em; margin-bottom: 1.5rem;">
+                Ein Playbook revolutioniert deine Trading-Bewertung: <strong>Der Erfolg eines Handelstages wird nicht 
+                am Gewinn und Verlust (P&L) gemessen, sondern daran, ob Trades innerhalb des Systems 
+                und den besten Setups ausgeführt wurden.</strong>
+            </p>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>🔍 Objektive Bewertung</h4>
+                    <p>Bewerte deine Performance anhand der Einhaltung deines Systems, nicht nur am P&L.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📚 Referenz für Studien</h4>
+                    <p>Dient als Grundlage für zukünftige Analysen und das Erkennen von Setup-Nuancen.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🧪 Backtesting-Basis</h4>
+                    <p>Ermöglicht systematisches Testen historischer Daten für kontinuierliche Optimierung.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lance's Methodik -->
+        <div class="content-card">
+            <div class="section-title">⚙️ Lance's Playbook-Methodik</div>
+            
+            <p style="font-size: 1.1em; margin-bottom: 2rem;">
+                Lance hat über Jahre eine bewährte Methodik entwickelt, um Trading-Playbooks systematisch zu erstellen und zu optimieren:
+            </p>
+
+            <div class="process-step">
+                <h4>📝 Schritt 1: Organisation mit Evernote</h4>
+                <p>Für jede Kategorie von Trade-Setups wird ein separates Notizbuch in Evernote erstellt.</p>
+                <ul>
+                    <li>Momentum-Breakouts</li>
+                    <li>Mean-Reversion-Plays</li>
+                    <li>Gap-Trading-Setups</li>
+                    <li>Earnings-Reaktionen</li>
+                    <li>Sector-Rotation-Trades</li>
+                </ul>
+            </div>
+
+            <div class="process-step">
+                <h4>🎯 Schritt 2: Master-Notiz pro Setup-Typ</h4>
+                <p>Jedes Notizbuch enthält eine Master-Notiz mit folgenden Komponenten:</p>
+                <ul>
+                    <li><strong>Annotierte Charts:</strong> 5 bis 20 typische Charts, die zeigen, wie sich das Setup üblicherweise entfaltet</li>
+                    <li><strong>Setup-Kriterien:</strong> Klare Definition der Einstiegsbedingungen</li>
+                    <li><strong>Risikomanagement:</strong> Stop-Loss-Regeln und Positionsgrößen</li>
+                    <li><strong>Exit-Strategien:</strong> Gewinnmitnahme und Verlustbegrenzung</li>
+                </ul>
+            </div>
+
+            <div class="process-step">
+                <h4>📊 Schritt 3: Chart-Ranking-System</h4>
+                <p>Innerhalb jeder Kategorie wird ein Dokument erstellt, das die Charts nach Qualität bewertet:</p>
+                <ul>
+                    <li><strong>Herausragend (A+):</strong> Perfekte Setup-Bedingungen</li>
+                    <li><strong>Sehr gut (A):</strong> Starke Setup-Wahrscheinlichkeit</li>
+                    <li><strong>Gut (B):</strong> Solide Setup-Grundlage</li>
+                    <li><strong>Durchschnittlich (C):</strong> Akzeptable Bedingungen</li>
+                    <li><strong>Schwach (D):</strong> Riskante oder unklare Setups</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>💡 Lance's Geheimnis: Exponentielles Bet Sizing</h4>
+                <p>
+                    Das Verständnis dieser Setup-Nuancen ist entscheidend für das "exponentielle Bet Sizing" - 
+                    du setzt bei A+ Setups mehr Kapital ein als bei C-Setups, um langfristig P&L zu maximieren.
+                </p>
+            </div>
+        </div>
+
+        <!-- Interactive Playbook Builder -->
+        <div class="interactive-section">
+            <h2 class="interactive-title">🛠️ Dein Playbook-Builder</h2>
+            <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1em;">
+                Erstelle systematisch dein eigenes Trading-Playbook mit dieser interaktiven Checkliste
+            </p>
+            
+            <div class="playbook-template">
+                <h5>📋 Setup-Kategorie definieren</h5>
+                <textarea placeholder="z.B. Momentum-Breakout, Gap-Fill, Earnings-Play, etc."></textarea>
+            </div>
+
+            <div class="playbook-template">
+                <h5>🎯 Einstiegskriterien</h5>
+                <textarea placeholder="Definiere klare, messbare Kriterien für den Trade-Einstieg..."></textarea>
+            </div>
+
+            <div class="playbook-template">
+                <h5>🛡️ Risikomanagement</h5>
+                <textarea placeholder="Stop-Loss-Regeln (Z.B.Kelly-Score), maximales Risiko pro Trade, Positionsgröße..."></textarea>
+            </div>
+
+            <div class="playbook-template">
+                <h5>🚪 Exit-Strategien</h5>
+                <textarea placeholder="Gewinnmitnahme-Regeln, Trailing-Stops, Zeit-Exits..."></textarea>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check1">
+                <label for="check1">5-20 annotierte Charts für dieses Setup gesammelt</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check2">
+                <label for="check2">Setup-Kriterien klar und messbar definiert</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check3">
+                <label for="check3">Risikomanagement-Regeln festgelegt</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check4">
+                <label for="check4">Exit-Strategien dokumentiert</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check5">
+                <label for="check5">Chart-Ranking-System (A+ bis D) implementiert</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check6">
+                <label for="check6">Backtesting-Daten gesammelt</label>
+            </div>
+
+            <div class="checklist-item">
+                <input type="checkbox" id="check7">
+                <label for="check7">Bet-Sizing-Regeln basierend auf Setup-Qualität definiert</label>
+            </div>
+        </div>
+
+        <!-- Kernbotschaft -->
+        <div class="content-card">
+            <div class="section-title">🎯 Die Nicht-Verhandelbaren</div>
+            
+            <div class="quote-section">
+                Unabhängig von der genauen Vorlage ist es entscheidend, eine Datenbank zu erstellen, 
+                die Charts für alle verschiedenen Handels-Kategorien organisiert.
+            </div>
+
+            <p style="font-size: 1.1em; margin-bottom: 1.5rem;">
+                Lance's Kernbotschaft ist klar: <strong>Ein System zur Definition von Trades und zur Unterscheidung 
+                der besten und schlechtesten Setups ist für jeden Trade-Typ unerlässlich.</strong>
+            </p>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>🗂️ Systematische Organisation</h4>
+                    <p>Erstelle eine strukturierte Datenbank für alle deine Trading-Kategorien und Setups.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📏 Klare Definitionen</h4>
+                    <p>Jeder Trade-Typ muss eindeutig definiert und von anderen Setups abgrenzbar sein.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>⚖️ Qualitätsbewertung</h4>
+                    <p>Entwickle ein System zur Bewertung der Setup-Qualität für optimales Risikomanagement.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🔄 Kontinuierliche Verfeinerung</h4>
+                    <p>Dein Playbook ist ein lebendiges Dokument, das ständig aktualisiert und verbessert wird.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="content-card">
+            <div class="section-title">🎯 Key Takeaways: Playbook Essentials</div>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>📋 Playbook = Quarterback-Spielbuch</h4>
+                    <p>Systematische Dokumentation aller Trading-Setups mit klaren Kriterien und Regeln.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🎯 Erfolg ≠ P&L am Tag</h4>
+                    <p>Bewerte deinen Erfolg anhand der Einhaltung deines Systems, nicht nur am täglichen Gewinn.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📊 Chart-Ranking ist entscheidend</h4>
+                    <p>A+ bis D Bewertung ermöglicht exponentielles Bet Sizing für maximale Profitabilität.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🗂️ Organisation mit Evernote</h4>
+                    <p>Separate Notizbücher für jede Setup-Kategorie mit Master-Notizen und annotierten Charts.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🔍 Nuancen erkennen</h4>
+                    <p>Feine Unterschiede zwischen Setup-Qualitäten sind der Schlüssel zum langfristigen Erfolg.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📚 Lebendiges Dokument</h4>
+                    <p>Dein Playbook entwickelt sich ständig weiter durch neue Erkenntnisse und Backtesting.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="/">🏠 Startseite</a>
+            <a href="/modules">📚 Alle Module</a>
+            <a href="/meta-learning-quiz">🧠 Meta-Learning</a>
+            <a href="/magic-line">🎯 Magic Line</a>
+            <a href="https://didis-trading-club.streamlit.app/" target="_blank" rel="noopener noreferrer">🚀 Zur Hauptapp</a>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #1a1a1a; margin-bottom: 1rem;">🏆 Elite - System III</h3>
+            <p style="color: #666; margin-bottom: 0.5rem;"><em>🧠 Metalearning & The Process</em></p>
+            <p style="color: #666; font-size: 1.1em;"><strong>Didis Premium Trading Academy</strong></p>
+            <p style="color: #666;">📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung | 📋 Trading-Playbook Masterclass</p>
+        </div>
+    </div>
+
+    <script>
+        // Interactive Checklist Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const checklistItems = document.querySelectorAll('.checklist-item');
+            
+            checklistItems.forEach(item => {
+                const checkbox = item.querySelector('input[type="checkbox"]');
+                
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        item.classList.add('completed');
+                        // Save to localStorage
+                        localStorage.setItem(this.id, 'checked');
+                    } else {
+                        item.classList.remove('completed');
+                        localStorage.removeItem(this.id);
+                    }
+                    
+                    updateProgress();
+                });
+                
+                // Load saved state
+                if (localStorage.getItem(checkbox.id) === 'checked') {
+                    checkbox.checked = true;
+                    item.classList.add('completed');
+                }
+                
+                // Make entire item clickable
+                item.addEventListener('click', function(e) {
+                    if (e.target.type !== 'checkbox') {
+                        checkbox.click();
+                    }
+                });
+            });
+            
+            updateProgress();
+        });
+        
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checked = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked');
+            const progress = Math.round((checked.length / checkboxes.length) * 100);
+            
+            if (progress === 100) {
+                // Show celebration
+                setTimeout(() => {
+                    alert('🎉 Gratulation! Du hast alle Schritte für dein Trading-Playbook abgeschlossen!');
+                }, 500);
+            }
+        }
+        
+        // Auto-save textarea content
+        document.querySelectorAll('textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                localStorage.setItem('playbook_' + this.placeholder.substring(0, 20), this.value);
+            });
+            
+            // Load saved content
+            const savedContent = localStorage.getItem('playbook_' + textarea.placeholder.substring(0, 20));
+            if (savedContent) {
+                textarea.value = savedContent;
+            }
+        });
+    </script>
+</body>
+</html>

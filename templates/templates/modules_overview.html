@@ -1,0 +1,627 @@
+{% extends "base.html" %}
+
+{% block title %}Alle Lernmodule - Didis Trading Academy{% endblock %}
+
+{% block header_title %}📚 Trading Masterclass{% endblock %}
+{% block header_subtitle %}Über 100 professionelle Lernmodule für deinen Trading-Erfolg{% endblock %}
+
+{% block content %}
+<!-- User Progress & Stats -->
+<div class="card">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem;">{{ accessible_modules }}</div>
+            <div>Verfügbare Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem;">{{ total_modules }}</div>
+            <div>Gesamt Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem;">{{ lead_magnets }}</div>
+            <div>Kostenlose Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem;">{{ user_subscription|upper }}</div>
+            <div>Dein Status</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter & Suche -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+            <input type="text" 
+                   id="moduleSearch" 
+                   placeholder="🔍 Module durchsuchen..." 
+                   style="flex: 1; max-width: 300px; padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;"
+                   onkeyup="filterModules()">
+            
+            <select id="difficultyFilter" onchange="filterModules()" style="padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                <option value="">Alle Schwierigkeiten</option>
+                <option value="beginner">Anfänger</option>
+                <option value="intermediate">Fortgeschritten</option>
+                <option value="advanced">Experte</option>
+            </select>
+            
+            <select id="accessFilter" onchange="filterModules()" style="padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                <option value="">Alle Module</option>
+                <option value="accessible">Verfügbare</option>
+                <option value="lead_magnet">Lead-Magnete</option>
+                <option value="premium">Premium</option>
+                <option value="elite">Elite</option>
+            </select>
+        </div>
+        
+        <div style="display: flex; gap: 10px;">
+            <button class="btn secondary" onclick="toggleViewMode()" id="viewToggle">
+                📋 Kompakt-Ansicht
+            </button>
+            <button class="btn secondary" onclick="expandAll()">
+                📂 Alle öffnen
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Hierarchische Module-Struktur -->
+<div id="moduleStructure">
+    {% for category in menu_structure %}
+    <div class="category-card" data-category="{{ category.slug }}">
+        <div class="category-header" onclick="toggleCategoryContent('{{ category.slug }}')">
+            <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                <span class="category-icon">{{ category.icon }}</span>
+                <div>
+                    <h2 style="margin: 0; font-size: 1.4rem; color: var(--primary-dark);">{{ category.name }}</h2>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 0.9rem;">{{ category.description }}</p>
+                </div>
+            </div>
+            <div class="category-stats">
+                <span class="module-count">{{ category.modules|length }} Module</span>
+                <span class="expand-icon" id="expand-{{ category.slug }}">▼</span>
+            </div>
+        </div>
+        
+        <div class="category-content" id="content-{{ category.slug }}" style="display: none;">
+            
+            <!-- Unterkategorien -->
+            {% for subcategory in category.subcategories %}
+            {% if subcategory.modules %}
+            <div class="subcategory-section">
+                <div class="subcategory-header" onclick="toggleSubcategoryContent('{{ subcategory.slug }}')">
+                    <span class="subcategory-icon">{{ subcategory.icon }}</span>
+                    <h3>{{ subcategory.name }}</h3>
+                    <span class="subcategory-count">({{ subcategory.modules|length }})</span>
+                    <span class="expand-icon" id="expand-{{ subcategory.slug }}">▼</span>
+                </div>
+                
+                <div class="modules-grid" id="content-{{ subcategory.slug }}" style="display: none;">
+                    {% for module in subcategory.modules|sort(attribute='sort_order') %}
+                    {% if module.is_published %}
+                    <div class="module-card {{ 'accessible' if module.user_has_access(user_subscription) else 'locked' }}" 
+                         data-module-title="{{ module.title|lower }}" 
+                         data-difficulty="{{ module.difficulty_level }}"
+                         data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}">
+                        
+                        <div class="module-header">
+                            <span class="module-icon">{{ module.icon }}</span>
+                            <h4>{{ module.title }}</h4>
+                            {% if not module.user_has_access(user_subscription) %}
+                                <span class="lock-icon">🔒</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="module-meta">
+                            <span class="duration">⏱️ {{ module.estimated_duration }} Min</span>
+                            <span class="difficulty difficulty-{{ module.difficulty_level }}">
+                                {{ module.difficulty_level|title }}
+                            </span>
+                        </div>
+                        
+                        <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
+                        
+                        <div class="module-badges">
+                            {% if module.is_lead_magnet %}
+                                <span class="badge badge-free">🎁 KOSTENLOS</span>
+                            {% else %}
+                                {% for level in module.required_subscription_levels %}
+                                    <span class="badge badge-{{ level }}">{{ level|upper }}</span>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="module-actions">
+                            {% if module.user_has_access(user_subscription) %}
+                                <a href="{{ url_for('module_view', slug=module.slug) }}" class="btn module-btn">
+                                    🚀 Modul starten
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('upgrade_required', module_slug=module.slug) }}" class="btn secondary module-btn">
+                                    💎 Premium erforderlich
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}
+            
+            <!-- Module direkt unter Kategorie (ohne Unterkategorie) -->
+            {% set direct_modules = category.modules|selectattr('subcategory_id', 'none')|list %}
+            {% if direct_modules %}
+            <div class="modules-grid direct-modules">
+                {% for module in direct_modules|sort(attribute='sort_order') %}
+                {% if module.is_published %}
+                <div class="module-card {{ 'accessible' if module.user_has_access(user_subscription) else 'locked' }}" 
+                     data-module-title="{{ module.title|lower }}" 
+                     data-difficulty="{{ module.difficulty_level }}"
+                     data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}">
+                    
+                    <div class="module-header">
+                        <span class="module-icon">{{ module.icon }}</span>
+                        <h4>{{ module.title }}</h4>
+                        {% if not module.user_has_access(user_subscription) %}
+                            <span class="lock-icon">🔒</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="module-meta">
+                        <span class="duration">⏱️ {{ module.estimated_duration }} Min</span>
+                        <span class="difficulty difficulty-{{ module.difficulty_level }}">
+                            {{ module.difficulty_level|title }}
+                        </span>
+                    </div>
+                    
+                    <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
+                    
+                    <div class="module-badges">
+                        {% if module.is_lead_magnet %}
+                            <span class="badge badge-free">🎁 KOSTENLOS</span>
+                        {% else %}
+                            {% for level in module.required_subscription_levels %}
+                                <span class="badge badge-{{ level }}">{{ level|upper }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="module-actions">
+                        {% if module.user_has_access(user_subscription) %}
+                            <a href="{{ url_for('module_view', slug=module.slug) }}" class="btn module-btn">
+                                🚀 Modul starten
+                            </a>
+                        {% else %}
+                            <a href="{{ url_for('upgrade_required', module_slug=module.slug) }}" class="btn secondary module-btn">
+                                💎 Premium erforderlich
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Upgrade-CTA für Free-User -->
+{% if user_subscription == 'free' %}
+<div class="card" style="background: linear-gradient(135deg, var(--gold-dark), var(--gold-classic)); color: white; text-align: center;">
+    <h2>🚀 Mehr Module freischalten?</h2>
+    <p style="font-size: 1.1rem; margin: 20px 0;">
+        Als <strong>Premium-Mitglied</strong> erhältst du Zugriff auf über {{ total_modules - lead_magnets }} professionelle Trading-Module!
+    </p>
+    <div style="display: flex; justify-content: center; gap: 15px; margin-top: 30px; flex-wrap: wrap;">
+        <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" target="_blank" class="btn" style="background: white; color: var(--primary-dark);">
+            🎯 Premium werden (1.490€/Jahr)
+        </a>
+        <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" target="_blank" class="btn" style="background: rgba(255,255,255,0.2);">
+            👑 Elite werden (349€/Monat)
+        </a>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.category-card {
+    background: var(--bg-card);
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.category-card:hover {
+    border-color: var(--gold-classic);
+    box-shadow: 0 4px 20px rgba(218, 165, 32, 0.1);
+}
+
+.category-header {
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.3s ease;
+}
+
+.category-header:hover {
+    background: linear-gradient(135deg, #e9ecef, #dee2e6);
+}
+
+.category-icon {
+    font-size: 2rem;
+}
+
+.category-stats {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #666;
+}
+
+.module-count {
+    font-weight: 600;
+}
+
+.expand-icon {
+    transition: transform 0.3s ease;
+    font-weight: bold;
+}
+
+.expand-icon.expanded {
+    transform: rotate(180deg);
+}
+
+.category-content {
+    padding: 20px;
+}
+
+.subcategory-section {
+    margin-bottom: 30px;
+}
+
+.subcategory-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-classic));
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 15px;
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+.subcategory-header:hover {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+.subcategory-icon {
+    font-size: 1.2rem;
+}
+
+.subcategory-count {
+    margin-left: auto;
+    opacity: 0.8;
+}
+
+.modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    margin-top: 15px;
+}
+
+.modules-grid.direct-modules {
+    margin-top: 0;
+}
+
+.module-card {
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.module-card.accessible:hover {
+    border-color: var(--success);
+    box-shadow: 0 4px 15px rgba(5, 150, 105, 0.1);
+    transform: translateY(-2px);
+}
+
+.module-card.locked {
+    opacity: 0.7;
+    background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+}
+
+.module-card.locked:hover {
+    border-color: var(--gold-classic);
+}
+
+.module-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.module-icon {
+    font-size: 1.5rem;
+}
+
+.module-header h4 {
+    flex: 1;
+    margin: 0;
+    color: var(--primary-dark);
+    font-size: 1.1rem;
+}
+
+.lock-icon {
+    opacity: 0.5;
+}
+
+.module-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    font-size: 0.85rem;
+    color: #666;
+}
+
+.difficulty {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.difficulty-beginner {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.difficulty-intermediate {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.difficulty-advanced {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.module-description {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.module-badges {
+    margin-bottom: 15px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-free {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    color: white;
+}
+
+.badge-basic {
+    background: #6b7280;
+    color: white;
+}
+
+.badge-premium {
+    background: var(--gold-dark);
+    color: white;
+}
+
+.badge-elite {
+    background: #6f42c1;
+    color: white;
+}
+
+.module-actions {
+    text-align: center;
+}
+
+.module-btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 10px;
+}
+
+@media (max-width: 768px) {
+    .modules-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .category-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .category-stats {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+</style>
+
+<script>
+let isCompactView = false;
+
+function toggleCategoryContent(categorySlug) {
+    const content = document.getElementById('content-' + categorySlug);
+    const icon = document.getElementById('expand-' + categorySlug);
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.classList.add('expanded');
+    } else {
+        content.style.display = 'none';
+        icon.classList.remove('expanded');
+    }
+}
+
+function toggleSubcategoryContent(subcategorySlug) {
+    const content = document.getElementById('content-' + subcategorySlug);
+    const icon = document.getElementById('expand-' + subcategorySlug);
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'grid';
+        icon.classList.add('expanded');
+    } else {
+        content.style.display = 'none';
+        icon.classList.remove('expanded');
+    }
+}
+
+function expandAll() {
+    const allContents = document.querySelectorAll('[id^="content-"]');
+    const allIcons = document.querySelectorAll('[id^="expand-"]');
+    
+    allContents.forEach(content => {
+        if (content.classList.contains('modules-grid')) {
+            content.style.display = 'grid';
+        } else {
+            content.style.display = 'block';
+        }
+    });
+    
+    allIcons.forEach(icon => icon.classList.add('expanded'));
+}
+
+function toggleViewMode() {
+    const toggle = document.getElementById('viewToggle');
+    const moduleCards = document.querySelectorAll('.module-card');
+    
+    isCompactView = !isCompactView;
+    
+    if (isCompactView) {
+        toggle.textContent = '📋 Detail-Ansicht';
+        moduleCards.forEach(card => {
+            card.style.padding = '15px';
+            const description = card.querySelector('.module-description');
+            if (description) description.style.display = 'none';
+        });
+    } else {
+        toggle.textContent = '📋 Kompakt-Ansicht';
+        moduleCards.forEach(card => {
+            card.style.padding = '20px';
+            const description = card.querySelector('.module-description');
+            if (description) description.style.display = 'block';
+        });
+    }
+}
+
+function filterModules() {
+    const searchTerm = document.getElementById('moduleSearch').value.toLowerCase();
+    const difficultyFilter = document.getElementById('difficultyFilter').value;
+    const accessFilter = document.getElementById('accessFilter').value;
+    
+    const moduleCards = document.querySelectorAll('.module-card');
+    
+    moduleCards.forEach(card => {
+        const title = card.getAttribute('data-module-title');
+        const difficulty = card.getAttribute('data-difficulty');
+        const accessType = card.getAttribute('data-access-type');
+        
+        let showCard = true;
+        
+        // Text-Suche
+        if (searchTerm && !title.includes(searchTerm)) {
+            showCard = false;
+        }
+        
+        // Schwierigkeit
+        if (difficultyFilter && difficulty !== difficultyFilter) {
+            showCard = false;
+        }
+        
+        // Zugriff
+        if (accessFilter) {
+            if (accessFilter === 'accessible' && card.classList.contains('locked')) {
+                showCard = false;
+            } else if (accessFilter === 'lead_magnet' && accessType !== 'lead_magnet') {
+                showCard = false;
+            } else if (accessFilter === 'premium' && !accessType.includes('premium')) {
+                showCard = false;
+            } else if (accessFilter === 'elite' && !accessType.includes('elite')) {
+                showCard = false;
+            }
+        }
+        
+        card.style.display = showCard ? 'block' : 'none';
+    });
+    
+    // Kategorien ohne sichtbare Module ausblenden
+    const categories = document.querySelectorAll('.category-card');
+    categories.forEach(category => {
+        const visibleModules = category.querySelectorAll('.module-card:not([style*="display: none"])');
+        const categoryContent = category.querySelector('.category-content');
+        
+        if (visibleModules.length === 0 && (searchTerm || difficultyFilter || accessFilter)) {
+            category.style.display = 'none';
+        } else {
+            category.style.display = 'block';
+            // Auto-expand bei Suche
+            if (searchTerm || difficultyFilter || accessFilter) {
+                categoryContent.style.display = 'block';
+                const expandIcon = category.querySelector('.expand-icon');
+                if (expandIcon) expandIcon.classList.add('expanded');
+                
+                // Auch Unterkategorien öffnen
+                const subcategoryContents = category.querySelectorAll('[id^="content-"][id*="-"]:not([id*="category"])');
+                subcategoryContents.forEach(content => {
+                    if (content.classList.contains('modules-grid')) {
+                        content.style.display = 'grid';
+                    }
+                });
+            }
+        }
+    });
+}
+
+// Auto-Suche bei URL-Parameter
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const search = urlParams.get('search');
+    if (search) {
+        document.getElementById('moduleSearch').value = search;
+        filterModules();
+    }
+});
+
+// Tastatur-Navigation
+document.getElementById('moduleSearch').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        filterModules();
+    }
+});
+</script>
+{% endblock %}

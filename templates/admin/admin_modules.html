@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Module Management{% endblock %}
+
+{% block header_title %}🔧 Admin Panel{% endblock %}
+{% block header_subtitle %}Lead-Magnet & Modul-Verwaltung{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📚 Modul-Übersicht & Lead-Magnet Steuerung</h2>
+    
+    <div style="margin-bottom: 30px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+            <div style="background: #e6f7ff; padding: 20px; border-radius: 8px; text-align: center;">
+                <h3 style="margin: 0; color: #1890ff;">{{ modules|length }}</h3>
+                <p style="margin: 5px 0 0; color: #666;">Gesamt Module</p>
+            </div>
+            
+            <div style="background: #f6ffed; padding: 20px; border-radius: 8px; text-align: center;">
+                <h3 style="margin: 0; color: #52c41a;">{{ modules|selectattr('is_lead_magnet')|list|length }}</h3>
+                <p style="margin: 5px 0 0; color: #666;">Lead-Magnete</p>
+            </div>
+            
+            <div style="background: #fff7e6; padding: 20px; border-radius: 8px; text-align: center;">
+                <h3 style="margin: 0; color: #fa8c16;">{{ modules|selectattr('is_published')|list|length }}</h3>
+                <p style="margin: 5px 0 0; color: #666;">Veröffentlicht</p>
+            </div>
+            
+            <div style="background: #fff2f0; padding: 20px; border-radius: 8px; text-align: center;">
+                <h3 style="margin: 0; color: #f5222d;">{{ modules|selectattr('is_published', 'equalto', false)|list|length }}</h3>
+                <p style="margin: 5px 0 0; color: #666;">Entwürfe</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--primary-dark); color: white;">
+                    <th style="padding: 15px; text-align: left; border-bottom: 2px solid #ddd;">Modul</th>
+                    <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Kategorie</th>
+                    <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Status</th>
+                    <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Lead-Magnet</th>
+                    <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Subscription</th>
+                    <th style="padding: 15px; text-align: center; border-bottom: 2px solid #ddd;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for module in modules %}
+                <tr style="border-bottom: 1px solid #eee;">
+                    <td style="padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.2rem;">{{ module.icon }}</span>
+                            <div>
+                                <strong>{{ module.title }}</strong>
+                                <br>
+                                <small style="color: #666;">{{ module.description[:100] }}{% if module.description|length > 100 %}...{% endif %}</small>
+                                <br>
+                                <small style="color: #999;">
+                                    ⏱️ {{ module.estimated_duration }}min | 
+                                    📊 {{ module.difficulty_level|title }} |
+                                    👁️ {{ module.view_count }} Views
+                                </small>
+                            </div>
+                        </div>
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="font-size: 0.9rem;">
+                            {% if module.category %}
+                                <strong>{{ module.category.name }}</strong>
+                                {% if module.subcategory %}
+                                    <br><small>{{ module.subcategory.name }}</small>
+                                {% endif %}
+                            {% else %}
+                                <em>Keine Kategorie</em>
+                            {% endif %}
+                        </div>
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        {% if module.is_published %}
+                            <span style="background: var(--success); color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                ✅ Live
+                            </span>
+                        {% else %}
+                            <span style="background: #999; color: white; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                📝 Entwurf
+                            </span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        {% if module.is_lead_magnet %}
+                            <span style="background: var(--gold-classic); color: var(--primary-dark); padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">
+                                🧲 Lead-Magnet
+                            </span>
+                        {% else %}
+                            <span style="background: #f0f0f0; color: #666; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem;">
+                                🔒 Geschützt
+                            </span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        {% if module.required_subscription_levels %}
+                            {% for level in module.required_subscription_levels %}
+                                <span style="background: 
+                                    {% if level == 'premium' %}var(--gold-dark)
+                                    {% elif level == 'elite' %}#6f42c1
+                                    {% else %}#666
+                                    {% endif %}; 
+                                    color: white; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; margin: 2px;">
+                                    {{ level|upper }}
+                                </span>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: #999; font-size: 0.8rem;">Keine Beschränkung</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px; text-align: center;">
+                        <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+                            <!-- Lead-Magnet Toggle -->
+                            <a href="{{ url_for('toggle_lead_magnet', module_id=module.id) }}" 
+                               style="background: {% if module.is_lead_magnet %}var(--error){% else %}var(--gold-classic){% endif %}; 
+                                      color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.8rem;"
+                               onclick="return confirm('Lead-Magnet Status ändern?')">
+                                {% if module.is_lead_magnet %}
+                                    🔒 Sperren
+                                {% else %}
+                                    🧲 Freischalten
+                                {% endif %}
+                            </a>
+                            
+                            <!-- Publish Toggle -->
+                            <a href="{{ url_for('toggle_published', module_id=module.id) }}" 
+                               style="background: {% if module.is_published %}#666{% else %}var(--success){% endif %}; 
+                                      color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.8rem;"
+                               onclick="return confirm('Veröffentlichungs-Status ändern?')">
+                                {% if module.is_published %}
+                                    👁️ Verstecken
+                                {% else %}
+                                    🚀 Veröffentlichen
+                                {% endif %}
+                            </a>
+                            
+                            <!-- Modul ansehen -->
+                            {% if module.is_published %}
+                                <a href="{{ url_for('module_view', slug=module.slug) }}" 
+                                   target="_blank"
+                                   style="background: #1890ff; color: white; padding: 6px 12px; border-radius: 4px; text-decoration: none; font-size: 0.8rem;">
+                                    👀 Ansehen
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🚀 Quick-Aktionen</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+            <h3>📊 Lead-Magnet Strategie</h3>
+            <p>Empfohlene Module für Lead-Generierung:</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>📋 Grundlagen-Module (Beginner)</li>
+                <li>🎯 Beliebte Strategien (Magic Line)</li>
+                <li>⚠️ Risikomanagement Basics</li>
+                <li>🧠 Trading Psychologie Einführung</li>
+            </ul>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+            <h3>🎯 Conversion Optimierung</h3>
+            <p>Nach Lead-Magnet zum Premium leiten:</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>📈 Teaser für Premium-Inhalte</li>
+                <li>🎁 Special Offers einbauen</li>
+                <li>👥 Community-Features bewerben</li>
+                <li>📧 Email-Sequences aktivieren</li>
+            </ul>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">
+            <h3>📈 Analytics</h3>
+            <p>Wichtige Metriken im Blick:</p>
+            <ul style="margin-left: 20px; line-height: 1.6;">
+                <li>👁️ Modul-Views tracken</li>
+                <li>🕒 Verweildauer messen</li>
+                <li>🔗 Conversion-Rate überwachen</li>
+                <li>📊 A/B-Tests durchführen</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin: 40px 0;">
+    <a href="{{ url_for('home') }}" class="btn secondary">← Zurück zur Startseite</a>
+    <a href="{{ url_for('modules_overview') }}" class="btn">📚 Modul-Übersicht</a>
+</div>
+
+<style>
+table {
+    font-size: 0.9rem;
+}
+
+table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+table tr:hover {
+    background-color: #f8f9fa;
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8rem;
+    }
+    
+    table th, table td {
+        padding: 10px 8px;
+    }
+}
+</style>
+
+<script>
+// Auto-refresh alle 5 Minuten für Live-Updates
+setTimeout(function() {
+    location.reload();
+}, 300000);
+
+// Bestätigung für kritische Aktionen
+document.querySelectorAll('a[onclick*="confirm"]').forEach(link => {
+    link.addEventListener('click', function(e) {
+        const action = this.textContent.trim();
+        if (!confirm(`Bist du sicher, dass du "${action}" ausführen möchtest?`)) {
+            e.preventDefault();
+        }
+    });
+});
+</script>
+{% endblock %}

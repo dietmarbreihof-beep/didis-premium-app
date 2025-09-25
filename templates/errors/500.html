@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}500 - Server-Fehler{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <h1 class="error-code">500</h1>
+                <h2 class="error-title">Server-Fehler</h2>
+                <p class="error-description">
+                    Es ist ein interner Server-Fehler aufgetreten. 
+                    Bitte versuchen Sie es später erneut oder kontaktieren Sie den Administrator.
+                </p>
+                <div class="error-actions">
+                    <a href="{{ url_for('home') }}" class="btn btn-primary">
+                        <i class="fas fa-home"></i> Zur Startseite
+                    </a>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left"></i> Zurück
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.error-page {
+    padding: 3rem 0;
+}
+
+.error-code {
+    font-size: 8rem;
+    font-weight: bold;
+    color: #dc3545;
+    margin-bottom: 0;
+    line-height: 1;
+}
+
+.error-title {
+    font-size: 2rem;
+    color: #495057;
+    margin-bottom: 1rem;
+}
+
+.error-description {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+.error-actions .btn {
+    margin: 0 0.5rem;
+    padding: 0.75rem 1.5rem;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,1101 @@
+{% extends "base.html" %}
+
+{% block title %}Trading-Playbook System III - Didis Premium Trading Academy{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Hero Section -->
+    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">📋</div>
+        <h1 style="color: white; margin-bottom: 15px; font-size: 32px; font-weight: 700;">Trading-Playbook System III</h1>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 18px; line-height: 1.6; max-width: 800px; margin: 0 auto;">
+            Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.
+        </p>
+        <div style="margin-top: 25px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                ⏱️ 45-60 min
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                📊 Fortgeschritten
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 8px 16px; border-radius: 20px; font-size: 14px;">
+                🎯 Praktische Anwendung
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Tracking -->
+    <div id="progress-container" style="background: white; padding: 25px; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: #1a1a1a; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+            <span>📈</span> Ihr Trading-Playbook Fortschritt
+        </h3>
+        <div style="background: #f7f7f7; border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
+            <div id="progress-bar" style="background: linear-gradient(135deg, #daa520 0%, #f4e97b 100%); height: 12px; width: 0%; transition: width 0.5s ease;"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 14px; color: #666;">
+            <span id="progress-text">0% abgeschlossen</span>
+            <span id="progress-steps">0 von 8 Schritten</span>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        
+        <!-- Schritt 1: Marktlage Analysieren -->
+        <div id="step-1" class="playbook-step" style="background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</span>
+                📊 Marktlage Analysieren
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🔍 Market-Regime bestimmen</h4>
+                <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+                    Basierend auf Ihrem MEDP-Trade vom 18.09.2025: Das aktuelle Market-Regime ist <strong style="color: #10b981;">#Reflation</strong>
+                </p>
+                
+                <div class="checklist">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Marktlage-Checkliste:</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="briefing-check" style="margin-right: 10px;">
+                        <label for="briefing-check" style="color: #666;">
+                            <strong>Briefing.com "The Big Picture"</strong> gelesen und aktuelle Marktthemen identifiziert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="market-tone-check" style="margin-right: 10px;">
+                        <label for="market-tone-check" style="color: #666;">
+                            <strong>Market-Tone</strong> analysiert: SPY Verhalten, VIX Level, Fed-Reaktionen
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="regime-check" style="margin-right: 10px;">
+                        <label for="regime-check" style="color: #666;">
+                            <strong>Market-Regime</strong> klassifiziert: Reflation, Deflation, Stagflation oder Goldilocks
+                        </label>
+                    </div>
+                </div>
+
+                <div class="market-analysis-tool" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; border: 1px solid #e0e0e0;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">📈 Aktuelle Marktdaten (Beispiel vom 18.09.2025):</h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div style="text-align: center; padding: 15px; background: #f0f8f0; border-radius: 8px;">
+                            <div style="font-size: 24px; color: #10b981; font-weight: bold;">SPY</div>
+                            <div style="font-size: 14px; color: #666;">Pullback, kein starker Abverkauf</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #f0f8f0; border-radius: 8px;">
+                            <div style="font-size: 24px; color: #10b981; font-weight: bold;">VIX < 20</div>
+                            <div style="font-size: 14px; color: #666;">Niedrige Volatilität</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #fff8e1; border-radius: 8px;">
+                            <div style="font-size: 24px; color: #f59e0b; font-weight: bold;">FED</div>
+                            <div style="font-size: 14px; color: #666;">Keine extreme Reaktion</div>
+                        </div>
+                    </div>
+                    
+                    <!-- MEDP Beispiel Sektion -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #b8860b;">
+                        <h6 style="color: #b8860b; margin-bottom: 15px;">🎯 MEDP Trade-Beispiel (18.09.2025)</h6>
+                        <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px; align-items: start;">
+                            <div>
+                                <h7 style="color: #1a1a1a; font-weight: 600; margin-bottom: 10px; display: block;">📋 Trade Setup:</h7>
+                                <ul style="color: #666; font-size: 14px; line-height: 1.6; margin: 0; padding-left: 15px;">
+                                    <li><strong>Ticker:</strong> MEDP (Medpace Holdings)</li>
+                                    <li><strong>Sektor:</strong> Healthcare - Diagnostics & Research</li>
+                                    <li><strong>Methode:</strong> #BTFD + #Confluence</li>
+                                    <li><strong>Support:</strong> 50 MA im 2h Chart</li>
+                                    <li><strong>Confluence:</strong> Tweezer + MA + Wicks</li>
+                                </ul>
+                                
+                                <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 6px; border: 1px solid #e0e0e0;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 14px;">
+                                        <div><strong>Entry:</strong> $485.60</div>
+                                        <div><strong>PT:</strong> $497.00</div>
+                                        <div><strong>SL:</strong> $485.50</div>
+                                        <div><strong>Size:</strong> 100 Aktien</div>
+                                        <div><strong>Risk:</strong> $25</div>
+                                        <div><strong>Reward:</strong> $1,200</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="text-align: center;">
+                                <div style="background: #1a1a1a; padding: 15px; border-radius: 8px; position: relative;">
+                                    <!-- Echter MEDP Chart Screenshot -->
+                                    <div style="position: relative; border-radius: 6px; overflow: hidden;">
+                                        <img src="/templates/Screenshots/MEDP_Setup.jpg" alt="MEDP 2H Chart - Support Level Analysis" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 6px;">
+                                        
+                                        <!-- Chart Annotations Overlay -->
+                                        <div style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 6px; font-size: 12px; color: white; border: 1px solid #b8860b;">
+                                            <div style="color: #10b981; margin-bottom: 3px;">📈 <strong>ENTRY: $485.60</strong></div>
+                                            <div style="color: #f59e0b; margin-bottom: 3px;">🎯 <strong>PT: $497.00</strong></div>
+                                            <div style="color: #ef4444;">🛑 <strong>SL: $485.50</strong></div>
+                                        </div>
+                                        
+                                        <!-- Support Level Indicator -->
+                                        <div style="position: absolute; bottom: 15px; left: 15px; background: rgba(184, 134, 11, 0.95); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2);">
+                                            🎯 50 MA Support bei $485.45
+                                        </div>
+                                        
+                                        <!-- Confluence Note -->
+                                        <div style="position: absolute; bottom: 15px; right: 15px; background: rgba(16, 185, 129, 0.95); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.2);">
+                                            ✅ Confluence: Tweezer + MA + Wicks
+                                        </div>
+                                        
+                                        <!-- Volume Indicator -->
+                                        <div style="position: absolute; top: 15px; left: 15px; background: rgba(139, 92, 246, 0.95); color: white; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;">
+                                            📊 Hohe Volumen-Aktivität
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p style="color: #666; font-size: 12px; margin-top: 10px; text-align: center;">
+                                    <strong>Confluence-Faktoren:</strong> Tweezer Pattern + 50 MA Support + Wicks bei $487<br>
+                                    <strong>CRV:</strong> 48:1 (Excellent!) | <strong>Reaktion:</strong> 5M Chart abwarten
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="step-1-btn" class="step-button" onclick="completeStep(1)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Marktanalyse abgeschlossen ✓
+            </button>
+        </div>
+
+        <!-- Schritt 2: Trading-Methode Wählen -->
+        <div id="step-2" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</span>
+                🎯 Trading-Methode Wählen
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">📋 Bewährte Trading-Methoden</h4>
+                
+                <div class="method-selection" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                    <div class="method-card" data-method="btfd" style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
+                        <h5 style="color: #10b981; margin-bottom: 10px;">#BTFD (Buy The F***ing Dip)</h5>
+                        <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                            <strong>Wann:</strong> Reflation-Regime, niedriger VIX, technische Support-Level<br>
+                            <strong>Ziel:</strong> Schnelle Rebounds nach Pullbacks kaufen<br>
+                            <strong>Risk:</strong> Mittel - Stop-Loss unter Support
+                        </p>
+                    </div>
+                    
+                    <div class="method-card" data-method="confluence" style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
+                        <h5 style="color: #f59e0b; margin-bottom: 10px;">#Confluence Trading</h5>
+                        <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                            <strong>Wann:</strong> Mehrere Signale treffen zusammen<br>
+                            <strong>Ziel:</strong> Tweezer, 50MA, Wicks im 2h kombinieren<br>
+                            <strong>Risk:</strong> Niedrig - Mehrfache Bestätigung
+                        </p>
+                    </div>
+                    
+                    <div class="method-card" data-method="focus" style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
+                        <h5 style="color: #8b5cf6; margin-bottom: 10px;">#Fokusaktie System</h5>
+                        <p style="color: #666; font-size: 14px; line-height: 1.5;">
+                            <strong>Wann:</strong> Einzelaktie aus Scanner-Liste<br>
+                            <strong>Ziel:</strong> Konzentration auf 1-3 beste Setups<br>
+                            <strong>Risk:</strong> Hoch - Konzentration, aber bessere Kontrolle
+                        </p>
+                    </div>
+                </div>
+
+                <div id="selected-method" style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #10b981; display: none;">
+                    <h5 style="color: #10b981; margin-bottom: 10px;">✅ Gewählte Methode:</h5>
+                    <div id="method-details"></div>
+                </div>
+            </div>
+
+            <button id="step-2-btn" class="step-button" onclick="completeStep(2)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: none;">
+                Methode gewählt ✓
+            </button>
+        </div>
+
+        <!-- Schritt 3: Scanner & Aktien-Auswahl -->
+        <div id="step-3" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</span>
+                🔍 Scanner & Aktien-Auswahl
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">📊 Drei Aktien aus Scanner auswählen</h4>
+                <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+                    Beispiel: <strong style="color: #10b981;">New Highs</strong> aus der Fokusaktienliste verwenden
+                </p>
+                
+                <div class="stock-selection" style="margin-bottom: 25px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">🎯 Aktien-Eingabe (Beispiel: MEDP)</h5>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Aktie 1:</label>
+                            <input type="text" id="stock-1" placeholder="z.B. MEDP" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Aktie 2:</label>
+                            <input type="text" id="stock-2" placeholder="z.B. AAPL" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Aktie 3:</label>
+                            <input type="text" id="stock-3" placeholder="z.B. TSLA" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-checklist">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Auswahlkriterien prüfen:</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="atr-check" style="margin-right: 10px;">
+                        <label for="atr-check" style="color: #666;">
+                            <strong>Average True Range (ATR)</strong> ausreichende Breite für profitable Trades
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="volume-check" style="margin-right: 10px;">
+                        <label for="volume-check" style="color: #666;">
+                            <strong>Volumen</strong> ausreichend für gute Liquidität (> 1M Shares/Tag)
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="trend-check" style="margin-right: 10px;">
+                        <label for="trend-check" style="color: #666;">
+                            <strong>Trend-Struktur</strong> intakt - höhere Hochs und höhere Tiefs
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="step-3-btn" class="step-button" onclick="completeStep(3)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Aktien ausgewählt ✓
+            </button>
+        </div>
+
+        <!-- Schritt 4: Support-Zonen Identifizieren -->
+        <div id="step-4" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">4</span>
+                📈 Support-Zonen Identifizieren
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🎯 Support-Level nach MEDP-Beispiel</h4>
+                
+                <div class="support-example" style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #10b981;">
+                    <h5 style="color: #10b981; margin-bottom: 20px;">📊 MEDP Trade-Beispiel: Support-Zonen Analyse (18.09.2025)</h5>
+                    
+                    <!-- Trade Summary -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px;">
+                        <div style="text-align: center; padding: 15px; background: #f0f8f0; border-radius: 8px;">
+                            <div style="font-size: 18px; color: #10b981; font-weight: bold;">Entry: $485.60</div>
+                            <div style="font-size: 12px; color: #666;">Beim 50 MA im 2h</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #fff8e1; border-radius: 8px;">
+                            <div style="font-size: 18px; color: #f59e0b; font-weight: bold;">PT: $497</div>
+                            <div style="font-size: 12px; color: #666;">$12/Aktie x 100 = $1200</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #fef2f2; border-radius: 8px;">
+                            <div style="font-size: 18px; color: #ef4444; font-weight: bold;">SL: $485.50</div>
+                            <div style="font-size: 12px; color: #666;">10 Cent + 5 Cent Slippage</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Detaillierte Support-Analyse -->
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h6 style="color: #1a1a1a; margin-bottom: 15px;">🔍 Identifizierte Support-Level bei MEDP:</h6>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                            <div style="background: white; padding: 15px; border-radius: 6px; border-left: 3px solid #b8860b;">
+                                <h7 style="color: #b8860b; font-weight: 600; display: block; margin-bottom: 8px;">🎯 Primärer Support: $485.45</h7>
+                                <ul style="color: #666; font-size: 13px; margin: 0; padding-left: 15px; line-height: 1.5;">
+                                    <li><strong>50 MA im 2h Chart</strong> - Dynamischer Support</li>
+                                    <li><strong>Tweezer Bottom</strong> - Käufer-Interesse sichtbar</li>
+                                    <li><strong>Hohe Volumen-Spikes</strong> - Institutionelle Aktivität</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 6px; border-left: 3px solid #10b981;">
+                                <h7 style="color: #10b981; font-weight: 600; display: block; margin-bottom: 8px;">📈 Sekundärer Support: $482.00</h7>
+                                <ul style="color: #666; font-size: 13px; margin: 0; padding-left: 15px; line-height: 1.5;">
+                                    <li><strong>Vortagestief</strong> - Psychologischer Level</li>
+                                    <li><strong>Horizontaler Support</strong> - Mehrfach getestet</li>
+                                    <li><strong>ADX Low</strong> - Trend-Wendepunkt</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: white; padding: 15px; border-radius: 6px; border-left: 3px solid #f59e0b;">
+                                <h7 style="color: #f59e0b; font-weight: 600; display: block; margin-bottom: 8px;">⚠️ Kritischer Support: $478.50</h7>
+                                <ul style="color: #666; font-size: 13px; margin: 0; padding-left: 15px; line-height: 1.5;">
+                                    <li><strong>200 MA Daily</strong> - Langzeit-Trend</li>
+                                    <li><strong>Gap Fill Level</strong> - Technische Lücke</li>
+                                    <li><strong>Major Support Zone</strong> - Starke Käufer-Zone</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Echter MEDP Chart mit detaillierter Analyse -->
+                    <div style="background: #1a1a1a; padding: 20px; border-radius: 8px; position: relative;">
+                        <h6 style="color: #f4e97b; margin-bottom: 15px;">📊 MEDP 2H Chart - Echte Support Level Analyse (18.09.2025)</h6>
+                        
+                        <!-- MEDP Chart mit Overlays -->
+                        <div style="position: relative; border-radius: 6px; overflow: hidden; background: #000;">
+                            <img src="/templates/Screenshots/MEDP_Setup.jpg" alt="MEDP 2H Chart - Detaillierte Support Level Analyse" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 6px;">
+                            
+                            <!-- Detaillierte Chart Annotations -->
+                            <div style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 8px; font-size: 13px; color: white; border: 2px solid #b8860b; min-width: 200px;">
+                                <h7 style="color: #f4e97b; font-weight: 600; margin-bottom: 8px; display: block;">🎯 Trade Setup</h7>
+                                <div style="color: #10b981; margin-bottom: 4px;">📈 <strong>ENTRY:</strong> $485.60</div>
+                                <div style="color: #f59e0b; margin-bottom: 4px;">🎯 <strong>TARGET:</strong> $497.00</div>
+                                <div style="color: #ef4444; margin-bottom: 4px;">🛑 <strong>STOP:</strong> $485.50</div>
+                                <div style="color: #8b5cf6; margin-bottom: 4px;">📊 <strong>SIZE:</strong> 100 Aktien</div>
+                                <div style="color: #f4e97b; font-size: 12px; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.2);">
+                                    <strong>CRV:</strong> 76:1 ✨
+                                </div>
+                            </div>
+                            
+                            <!-- Support Level Markierungen -->
+                            <div style="position: absolute; bottom: 80px; left: 20px; background: rgba(184, 134, 11, 0.95); color: white; padding: 10px 15px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 2px solid rgba(255,255,255,0.3);">
+                                🎯 <strong>Primärer Support</strong><br>
+                                50 MA @ $485.45
+                            </div>
+                            
+                            <div style="position: absolute; bottom: 140px; left: 20px; background: rgba(16, 185, 129, 0.95); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3);">
+                                📈 Sekundärer Support: $482.00
+                            </div>
+                            
+                            <div style="position: absolute; bottom: 200px; left: 20px; background: rgba(245, 158, 11, 0.95); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3);">
+                                ⚠️ Kritischer Support: $478.50
+                            </div>
+                            
+                            <!-- Confluence Indicators -->
+                            <div style="position: absolute; bottom: 20px; right: 20px; background: rgba(16, 185, 129, 0.95); color: white; padding: 12px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 2px solid rgba(255,255,255,0.3);">
+                                ✅ <strong>Confluence bestätigt:</strong><br>
+                                <span style="font-size: 12px;">Tweezer + 50MA + Wicks + Volume</span>
+                            </div>
+                            
+                            <!-- Volume Indicator -->
+                            <div style="position: absolute; top: 20px; left: 20px; background: rgba(139, 92, 246, 0.95); color: white; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3);">
+                                📊 Hohe Volumen-Spikes
+                            </div>
+                            
+                            <!-- Wicks Indicator -->
+                            <div style="position: absolute; top: 80px; left: 20px; background: rgba(245, 158, 11, 0.95); color: white; padding: 6px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;">
+                                🔥 Wicks @ $487
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(244, 233, 123, 0.1); border-radius: 8px; border-left: 4px solid #f4e97b;">
+                            <p style="color: #f4e97b; font-size: 14px; margin: 0; line-height: 1.6;">
+                                <strong>🎯 Analyse-Zusammenfassung:</strong> Der MEDP Chart zeigt eine perfekte Confluence-Situation mit Tweezer Bottom Pattern, 50 MA Support, 
+                                Wicks bei $487 und erhöhter Volumen-Aktivität. Die Entry bei $485.60 bietet ein ausgezeichnetes Risk/Reward-Verhältnis von 76:1.
+                            </p>
+                        </div>
+                        
+                        <p style="color: #ddd; font-size: 12px; margin-top: 15px; text-align: center;">
+                            <strong>Entry-Trigger:</strong> 5M Chart Bestätigung abwarten - Käufer-Interesse bei Support bestätigen<br>
+                            <strong>Execution:</strong> Reaktion im 5M Chart abwarten, dann Entry bei $485.60 mit SL bei $485.50
+                        </p>
+                    </div>
+                </div>
+
+                <div class="support-checklist">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Support-Zonen Checkliste:</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="horizontal-support" style="margin-right: 10px;">
+                        <label for="horizontal-support" style="color: #666;">
+                            <strong>Horizontaler Support</strong> bei den letzten ADX Lows eingezeichnet
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="previous-low" style="margin-right: 10px;">
+                        <label for="previous-low" style="color: #666;">
+                            <strong>Vortagestief</strong> als potentieller Support markiert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="avwap-support" style="margin-right: 10px;">
+                        <label for="avwap-support" style="color: #666;">
+                            <strong>AVWAP</strong> eingezeichnet und als dynamischer Support bewertet
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="moving-average" style="margin-right: 10px;">
+                        <label for="moving-average" style="color: #666;">
+                            <strong>50 MA im 2h</strong> als primärer Support identifiziert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="alarm-set" style="margin-right: 10px;">
+                        <label for="alarm-set" style="color: #666;">
+                            <strong>Alarm gesetzt</strong> für Support-Touch Benachrichtigung
+                        </label>
+                    </div>
+                </div>
+
+                <div class="confluence-note" style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #10b981;">
+                    <h5 style="color: #10b981; margin-bottom: 10px;">🎯 Confluence-Faktor</h5>
+                    <p style="color: #666; line-height: 1.6; margin: 0;">
+                        <strong>MEDP-Beispiel:</strong> Tweezer + 50MA + Wicks im 2h = Starke Confluence für Support bei $485.60
+                    </p>
+                </div>
+            </div>
+
+            <button id="step-4-btn" class="step-button" onclick="completeStep(4)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Support-Zonen definiert ✓
+            </button>
+        </div>
+
+        <!-- Schritt 5: Risk Management Berechnung -->
+        <div id="step-5" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">5</span>
+                ⚖️ Risk Management Berechnung
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">💰 Position Sizing nach MEDP-Beispiel</h4>
+                
+                <div class="risk-calculator" style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 20px;">🧮 Risk Calculator</h5>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Entry Preis ($):</label>
+                            <input type="number" id="entry-price" value="485.60" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Stop Loss ($):</label>
+                            <input type="number" id="stop-loss" value="485.40" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Max. Verlust ($):</label>
+                            <input type="number" id="max-loss" value="25" step="1" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                    </div>
+                    
+                    <div id="risk-results" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <div style="text-align: center; padding: 15px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ef4444;">
+                            <div style="font-size: 18px; color: #ef4444; font-weight: bold;" id="risk-per-share">$0.20</div>
+                            <div style="font-size: 12px; color: #666;">Risk pro Aktie</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #f0f8f0; border-radius: 8px; border-left: 4px solid #10b981;">
+                            <div style="font-size: 18px; color: #10b981; font-weight: bold;" id="position-size">100</div>
+                            <div style="font-size: 12px; color: #666;">Anzahl Aktien</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #fff8e1; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <div style="font-size: 18px; color: #f59e0b; font-weight: bold;" id="total-risk">$25.00</div>
+                            <div style="font-size: 12px; color: #666;">Gesamt-Risiko</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="risk-rules" style="background: #e8f5e8; padding: 20px; border-radius: 8px; border-left: 4px solid #10b981;">
+                    <h5 style="color: #10b981; margin-bottom: 15px;">📋 Risk Management Regeln</h5>
+                    <ul style="color: #666; line-height: 1.8; margin: 0; padding-left: 20px;">
+                        <li><strong>SL-Betrag:</strong> z.B. 30 Cent (wie im MEDP-Beispiel: 20 Cent + 5 Cent Slippage)</li>
+                        <li><strong>Max. Verlust pro Trade:</strong> Mittlerer Brutto-Gewinn ÷ 2 (aus TradeSync)</li>
+                        <li><strong>Erfahrene Trader:</strong> Max. Loss = Hälfte des besten Trading-Tages</li>
+                        <li><strong>Position Size:</strong> Max. Verlust ÷ Risk pro Aktie = Anzahl Aktien</li>
+                    </ul>
+                </div>
+            </div>
+
+            <button id="step-5-btn" class="step-button" onclick="completeStep(5)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Risk Management berechnet ✓
+            </button>
+        </div>
+
+        <!-- Schritt 6: Profit Target & CRV -->
+        <div id="step-6" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">6</span>
+                🎯 Profit Target & CRV
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">💎 Profit Target Definition</h4>
+                
+                <div class="target-calculator" style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 20px;">🎯 MEDP Profit Target Beispiel</h5>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 25px;">
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Entry Preis ($):</label>
+                            <input type="number" id="pt-entry-price" value="485.60" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Profit Target ($):</label>
+                            <input type="number" id="profit-target" value="497.00" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                        <div>
+                            <label style="display: block; color: #666; font-weight: 500; margin-bottom: 5px;">Risk pro Aktie ($):</label>
+                            <input type="number" id="crv-risk" value="0.20" step="0.01" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px;">
+                        </div>
+                    </div>
+                    
+                    <div id="crv-results" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
+                        <div style="text-align: center; padding: 15px; background: #f0f8f0; border-radius: 8px; border-left: 4px solid #10b981;">
+                            <div style="font-size: 18px; color: #10b981; font-weight: bold;" id="reward-per-share">$11.40</div>
+                            <div style="font-size: 12px; color: #666;">Reward pro Aktie</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #fff8e1; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                            <div style="font-size: 24px; color: #f59e0b; font-weight: bold;" id="crv-ratio">57:1</div>
+                            <div style="font-size: 12px; color: #666;">Risk/Reward Ratio</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #10b981;">
+                            <div style="font-size: 18px; color: #10b981; font-weight: bold;" id="total-profit">$1,140</div>
+                            <div style="font-size: 12px; color: #666;">Gesamt-Profit (100 Aktien)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="crv-rules" style="background: #fff8e1; padding: 20px; border-radius: 8px; border-left: 4px solid #f59e0b; margin-bottom: 20px;">
+                    <h5 style="color: #f59e0b; margin-bottom: 15px;">⚠️ CRV 5 Regel</h5>
+                    <p style="color: #666; line-height: 1.6; margin-bottom: 15px;">
+                        <strong>Mindest-CRV:</strong> 1 zu 5 (für jeden $1 Risk, mindestens $5 Reward)
+                    </p>
+                    <div id="crv-verdict" style="padding: 15px; border-radius: 8px; font-weight: 600; text-align: center;">
+                        <!-- Wird durch JavaScript gefüllt -->
+                    </div>
+                </div>
+
+                <div class="target-strategy">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">📈 Widerstand ermitteln</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="resistance-level" style="margin-right: 10px;">
+                        <label for="resistance-level" style="color: #666;">
+                            <strong>Nächster Widerstand</strong> auf verschiedenen Timeframes identifiziert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="volume-profile" style="margin-right: 10px;">
+                        <label for="volume-profile" style="color: #666;">
+                            <strong>Volume Profile</strong> für Widerstandszonen analysiert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="sell-discipline" style="margin-right: 10px;">
+                        <label for="sell-discipline" style="color: #666;">
+                            <strong>Verkaufs-Disziplin:</strong> "Verkaufe da Basta" - keine Emotionen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="step-6-btn" class="step-button" onclick="completeStep(6)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Profit Target & CRV definiert ✓
+            </button>
+        </div>
+
+        <!-- Schritt 7: Trade Execution Plan -->
+        <div id="step-7" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">7</span>
+                ⚡ Trade Execution Plan
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🎯 Execution nach MEDP-Beispiel</h4>
+                
+                <div class="execution-plan" style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 20px;">📋 Trade Execution Checkliste</h5>
+                    
+                    <div class="execution-steps">
+                        <div class="step-item" style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #10b981; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">1</div>
+                            <div>
+                                <h6 style="color: #1a1a1a; margin: 0 0 5px 0;">🚨 Alarm wartet auf Support-Touch</h6>
+                                <p style="color: #666; margin: 0; font-size: 14px;">Beim 50 MA im 2h ($485.60 für MEDP) - Reaktion im 5M abwarten</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item" style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #f59e0b; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">2</div>
+                            <div>
+                                <h6 style="color: #1a1a1a; margin: 0 0 5px 0;">📊 5M Chart Bestätigung</h6>
+                                <p style="color: #666; margin: 0; font-size: 14px;">Wicks bei $487 beobachten - Zeigt Käufer-Interesse an</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item" style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #8b5cf6; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">3</div>
+                            <div>
+                                <h6 style="color: #1a1a1a; margin: 0 0 5px 0;">💰 Order Platzierung</h6>
+                                <p style="color: #666; margin: 0; font-size: 14px;">100 Aktien bei $485.60 kaufen - Stop Loss bei $485.40</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item" style="display: flex; align-items: start; gap: 15px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="background: #ef4444; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; flex-shrink: 0;">4</div>
+                            <div>
+                                <h6 style="color: #1a1a1a; margin: 0 0 5px 0;">🎯 Profit Target Monitor</h6>
+                                <p style="color: #666; margin: 0; font-size: 14px;">Verkauf bei $497.00 - "Verkaufe da Basta" Regel befolgen</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="execution-checklist">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Pre-Market Vorbereitung:</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="platform-ready" style="margin-right: 10px;">
+                        <label for="platform-ready" style="color: #666;">
+                            <strong>Trading-Platform</strong> bereit, alle Orders vorbereitet
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="alerts-set" style="margin-right: 10px;">
+                        <label for="alerts-set" style="color: #666;">
+                            <strong>Alerts gesetzt</strong> für Support-Touch und Profit Target
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="risk-confirmed" style="margin-right: 10px;">
+                        <label for="risk-confirmed" style="color: #666;">
+                            <strong>Risk nochmals bestätigt</strong> - Max. $25 Verlust pro Trade
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="backup-plan" style="margin-right: 10px;">
+                        <label for="backup-plan" style="color: #666;">
+                            <strong>Backup-Plan</strong> falls Setup nicht funktioniert
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="step-7-btn" class="step-button" onclick="completeStep(7)" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                Execution Plan bereit ✓
+            </button>
+        </div>
+
+        <!-- Schritt 8: Trade Journal & Review -->
+        <div id="step-8" class="playbook-step" style="display: none; background: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); border-left: 4px solid #b8860b;">
+            <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 15px;">
+                <span style="background: linear-gradient(135deg, #b8860b 0%, #f4e97b 100%); color: #1a1a1a; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">8</span>
+                📝 Trade Journal & Review
+            </h2>
+            
+            <div class="content-box" style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">📊 Trade Dokumentation</h4>
+                
+                <div class="journal-template" style="background: white; padding: 25px; border-radius: 8px; margin-bottom: 20px;">
+                    <h5 style="color: #1a1a1a; margin-bottom: 20px;">📋 MEDP Trade Journal - Vollständige Dokumentation (18.09.2025)</h5>
+                    
+                    <!-- Trade Header -->
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-bottom: 20px; text-align: center;">
+                        <h6 style="color: #1a1a1a; margin: 0 0 5px 0;">🏥 MEDP (Medpace Holdings) - Healthcare Sector</h6>
+                        <p style="color: #666; margin: 0; font-size: 14px;">Trade ID: MEDP-20250918-001 | Mice au Place System</p>
+                    </div>
+                    
+                    <div style="display: grid; gap: 20px;">
+                        <div style="border-left: 4px solid #10b981; padding-left: 15px;">
+                            <h6 style="color: #10b981; margin: 0 0 10px 0;">🎯 Trade Setup & Market Context</h6>
+                            <ul style="color: #666; margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li><strong>Market-Regime:</strong> #Reflation - Wirtschaftswachstum mit moderater Inflation</li>
+                                <li><strong>Market-Tone:</strong> SPY Pullback, kein starker Abverkauf nach FED-Entscheidung</li>
+                                <li><strong>VIX Level:</strong> Unter 20 - Niedrige Volatilität, optimales BTFD-Environment</li>
+                                <li><strong>Methode:</strong> #BTFD + #Confluence - Buy The Dip mit mehrfacher Bestätigung</li>
+                                <li><strong>Confluence:</strong> Tweezer Bottom + 50MA Support + Wicks bei $487</li>
+                                <li><strong>Kategorie:</strong> #Fokusaktie, #bigSize - Konzentration auf bestes Setup</li>
+                                <li><strong>Scanner-Quelle:</strong> New Highs Liste - Momentum-Aktie in Korrektur</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="border-left: 4px solid #f59e0b; padding-left: 15px;">
+                            <h6 style="color: #f59e0b; margin: 0 0 10px 0;">💰 Trade Execution & Risk Management</h6>
+                            <ul style="color: #666; margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li><strong>Entry:</strong> $485.60 - Exakt beim 50 MA Touch im 2h Chart</li>
+                                <li><strong>Position Size:</strong> 100 Aktien - Berechnet nach 2% Regel</li>
+                                <li><strong>Stop Loss:</strong> $485.50 - 10 Cent Risk + 5 Cent Slippage-Puffer</li>
+                                <li><strong>Profit Target:</strong> $497.00 - Nächster Widerstand ($11.40/Aktie)</li>
+                                <li><strong>Total Risk:</strong> $15.00 (15 Cent x 100 Aktien)</li>
+                                <li><strong>Total Reward:</strong> $1,140 (bei PT-Erreichen)</li>
+                                <li><strong>CRV:</strong> 76:1 - Weit über Minimum 5:1</li>
+                                <li><strong>% Portfolio Risk:</strong> 0.3% - Konservativ dimensioniert</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="border-left: 4px solid #8b5cf6; padding-left: 15px;">
+                            <h6 style="color: #8b5cf6; margin: 0 0 10px 0;">📈 Technical Analysis Details</h6>
+                            <ul style="color: #666; margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li><strong>Primärer Support:</strong> 50 MA bei $485.45 - Dynamischer Support-Level</li>
+                                <li><strong>Sekundärer Support:</strong> Vortagestief $482.00 - Psychologischer Level</li>
+                                <li><strong>Confluence Factors:</strong> 3 unabhängige Bestätigungen gleichzeitig</li>
+                                <li><strong>5M Confirmation:</strong> Wicks bei $487 - Käufer verteidigen Level</li>
+                                <li><strong>Volume Profile:</strong> Hohe Aktivität bei Support-Touch</li>
+                                <li><strong>Sector Strength:</strong> Healthcare outperformt SPY</li>
+                                <li><strong>Relative Strength:</strong> MEDP vs. XLV positiv</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="border-left: 4px solid #ef4444; padding-left: 15px;">
+                            <h6 style="color: #ef4444; margin: 0 0 10px 0;">🧠 Psychology & Execution Notes</h6>
+                            <ul style="color: #666; margin: 0; padding-left: 20px; line-height: 1.6;">
+                                <li><strong>Pre-Trade State:</strong> Ruhig, systematisch, Plan befolgt</li>
+                                <li><strong>Entry Trigger:</strong> 5M Chart Bestätigung abgewartet</li>
+                                <li><strong>Execution Quality:</strong> Geduldig, kein FOMO, perfekte Ausführung</li>
+                                <li><strong>Risk Acceptance:</strong> $15 Verlust mental akzeptiert vor Entry</li>
+                                <li><strong>Profit Expectations:</strong> Realistisch, kein Overtrading-Risiko</li>
+                                <li><strong>Exit Strategy:</strong> "Verkaufe da Basta" bei $497 - keine Emotionen</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Trade Outcome Section (Template) -->
+                    <div style="background: #f0f8f0; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #10b981;">
+                        <h6 style="color: #10b981; margin: 0 0 15px 0;">📊 Trade Outcome (Nach Abschluss auszufüllen)</h6>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                            <div style="background: white; padding: 15px; border-radius: 6px;">
+                                <strong>Exit Preis:</strong> $______<br>
+                                <strong>Exit Grund:</strong> ☐ PT ☐ SL ☐ Time ☐ Other
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: 6px;">
+                                <strong>P&L:</strong> $______<br>
+                                <strong>% Gewinn/Verlust:</strong> _____%
+                            </div>
+                            <div style="background: white; padding: 15px; border-radius: 6px;">
+                                <strong>Haltedauer:</strong> ____ Min<br>
+                                <strong>Slippage:</strong> ____ Cent
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 6px;">
+                            <strong>Lessons Learned:</strong><br>
+                            <textarea style="width: 100%; height: 60px; border: 1px solid #ddd; border-radius: 4px; padding: 8px; font-family: inherit;" placeholder="Was lief gut? Was kann verbessert werden? Erkenntnisse für zukünftige Trades..."></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="journal-checklist">
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Post-Trade Review:</h5>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="trade-screenshot" style="margin-right: 10px;">
+                        <label for="trade-screenshot" style="color: #666;">
+                            <strong>Chart Screenshot</strong> gespeichert mit Entry/Exit/Stop markiert
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="execution-notes" style="margin-right: 10px;">
+                        <label for="execution-notes" style="color: #666;">
+                            <strong>Execution Notes:</strong> Was lief gut/schlecht bei der Ausführung?
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="emotional-state" style="margin-right: 10px;">
+                        <label for="emotional-state" style="color: #666;">
+                            <strong>Emotionaler Zustand:</strong> Ruhig, gestresst, überconfident?
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="lessons-learned" style="margin-right: 10px;">
+                        <label for="lessons-learned" style="color: #666;">
+                            <strong>Lessons Learned:</strong> Was für zukünftige Trades mitnehmen?
+                        </label>
+                    </div>
+                    <div class="checkbox-item" style="margin-bottom: 10px;">
+                        <input type="checkbox" id="tradesync-update" style="margin-right: 10px;">
+                        <label for="tradesync-update" style="color: #666;">
+                            <strong>TradeSync aktualisiert:</strong> P&L und Statistiken eingetragen
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <button id="step-8-btn" class="step-button" onclick="completeStep(8)" style="background: linear-gradient(135deg, #10b981 0%, #38a169 100%); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-size: 18px;">
+                🎉 Trading-Playbook System III Abgeschlossen! 
+            </button>
+        </div>
+
+        <!-- Completion Section -->
+        <div id="completion-section" style="display: none; background: linear-gradient(135deg, #10b981 0%, #38a169 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🏆</div>
+            <h2 style="color: white; margin-bottom: 15px; font-size: 32px; font-weight: 700;">Glückwunsch!</h2>
+            <p style="color: rgba(255, 255, 255, 0.9); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto 25px auto;">
+                Sie haben das Trading-Playbook System III erfolgreich abgeschlossen! Sie sind jetzt bereit für professionelle Trade-Vorbereitung nach dem "Mice au Place" System.
+            </p>
+            <div style="background: rgba(255, 255, 255, 0.2); padding: 20px; border-radius: 12px; margin-top: 25px;">
+                <h4 style="color: white; margin-bottom: 15px;">🎯 Was Sie gelernt haben:</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; text-align: left;">
+                    <div>✅ Marktlage systematisch analysieren</div>
+                    <div>✅ Trading-Methoden gezielt wählen</div>
+                    <div>✅ Aktien nach klaren Kriterien scannen</div>
+                    <div>✅ Support-Zonen professionell identifizieren</div>
+                    <div>✅ Risk Management mathematisch berechnen</div>
+                    <div>✅ Profit Targets und CRV optimieren</div>
+                    <div>✅ Trade Execution systematisch planen</div>
+                    <div>✅ Trades professionell dokumentieren</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Key Takeaways -->
+<div class="card" style="margin-top: 30px;">
+    <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+        <span>💡</span> Key Takeaways: Trading-Playbook System III
+    </h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <div style="background: #f0f8f0; padding: 25px; border-radius: 12px; border-left: 4px solid #10b981;">
+            <h4 style="color: #10b981; margin-bottom: 15px;">🎯 Systematische Vorbereitung</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Erfolgreiche Trader bereiten jeden Trade systematisch vor. Das "Mice au Place" System 
+                sorgt dafür, dass nichts dem Zufall überlassen wird - von der Marktanalyse bis zur Dokumentation.
+            </p>
+        </div>
+        
+        <div style="background: #fff8e1; padding: 25px; border-radius: 12px; border-left: 4px solid #f59e0b;">
+            <h4 style="color: #f59e0b; margin-bottom: 15px;">📊 Confluence ist König</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Die besten Trades entstehen wenn mehrere Faktoren zusammentreffen: Tweezer + 50MA + Wicks = 
+                Starke Confluence. Je mehr Bestätigung, desto höher die Erfolgswahrscheinlichkeit.
+            </p>
+        </div>
+        
+        <div style="background: #fef2f2; padding: 25px; border-radius: 12px; border-left: 4px solid #ef4444;">
+            <h4 style="color: #ef4444; margin-bottom: 15px;">⚖️ Risk First, Profit Second</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Bestimmen Sie immer zuerst das Risiko, dann die Position Size. Die CRV-5-Regel schützt vor 
+                schlechten Trades: Verwerfen Sie jedes Setup mit weniger als 1:5 Risk/Reward.
+            </p>
+        </div>
+        
+        <div style="background: #f8f4ff; padding: 25px; border-radius: 12px; border-left: 4px solid #8b5cf6;">
+            <h4 style="color: #8b5cf6; margin-bottom: 15px;">📝 Dokumentation = Verbesserung</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Nur was gemessen wird, kann verbessert werden. Detaillierte Trade-Journale helfen dabei, 
+                Muster zu erkennen und die Trading-Performance kontinuierlich zu optimieren.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Progress Tracking
+let currentStep = 1;
+let completedSteps = 0;
+const totalSteps = 8;
+
+// Initialize risk calculator
+document.addEventListener('DOMContentLoaded', function() {
+    updateRiskCalculator();
+    updateCRVCalculator();
+    
+    // Add event listeners for calculators
+    ['entry-price', 'stop-loss', 'max-loss'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateRiskCalculator);
+    });
+    
+    ['pt-entry-price', 'profit-target', 'crv-risk'].forEach(id => {
+        document.getElementById(id).addEventListener('input', updateCRVCalculator);
+    });
+    
+    // Method selection
+    document.querySelectorAll('.method-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Remove active class from all cards
+            document.querySelectorAll('.method-card').forEach(c => {
+                c.style.borderColor = '#e0e0e0';
+                c.style.background = 'white';
+            });
+            
+            // Add active class to clicked card
+            this.style.borderColor = '#b8860b';
+            this.style.background = '#fff8e1';
+            
+            // Show selected method
+            const method = this.dataset.method;
+            const selectedDiv = document.getElementById('selected-method');
+            const detailsDiv = document.getElementById('method-details');
+            
+            let methodInfo = '';
+            switch(method) {
+                case 'btfd':
+                    methodInfo = '<strong>#BTFD (Buy The F***ing Dip)</strong><br>Ideal für Reflation-Regime mit niedrigem VIX. Kaufe technische Support-Level.';
+                    break;
+                case 'confluence':
+                    methodInfo = '<strong>#Confluence Trading</strong><br>Mehrere technische Signale kombinieren für höhere Trefferquote.';
+                    break;
+                case 'focus':
+                    methodInfo = '<strong>#Fokusaktie System</strong><br>Konzentration auf wenige, aber dafür perfekt analysierte Setups.';
+                    break;
+            }
+            
+            detailsDiv.innerHTML = methodInfo;
+            selectedDiv.style.display = 'block';
+            document.getElementById('step-2-btn').style.display = 'inline-block';
+        });
+    });
+});
+
+function updateProgress() {
+    const percentage = Math.round((completedSteps / totalSteps) * 100);
+    document.getElementById('progress-bar').style.width = percentage + '%';
+    document.getElementById('progress-text').textContent = percentage + '% abgeschlossen';
+    document.getElementById('progress-steps').textContent = completedSteps + ' von ' + totalSteps + ' Schritten';
+}
+
+function completeStep(step) {
+    // Hide current step
+    document.getElementById('step-' + step).style.display = 'none';
+    
+    // Update progress
+    completedSteps = step;
+    updateProgress();
+    
+    // Show next step or completion
+    if (step < totalSteps) {
+        document.getElementById('step-' + (step + 1)).style.display = 'block';
+        currentStep = step + 1;
+    } else {
+        // Show completion section
+        document.getElementById('completion-section').style.display = 'block';
+        // Celebration effect
+        setTimeout(() => {
+            if (typeof confetti !== 'undefined') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }, 500);
+    }
+}
+
+function updateRiskCalculator() {
+    const entryPrice = parseFloat(document.getElementById('entry-price').value) || 0;
+    const stopLoss = parseFloat(document.getElementById('stop-loss').value) || 0;
+    const maxLoss = parseFloat(document.getElementById('max-loss').value) || 0;
+    
+    const riskPerShare = Math.abs(entryPrice - stopLoss);
+    const positionSize = maxLoss > 0 ? Math.floor(maxLoss / riskPerShare) : 0;
+    const totalRisk = riskPerShare * positionSize;
+    
+    document.getElementById('risk-per-share').textContent = '$' + riskPerShare.toFixed(2);
+    document.getElementById('position-size').textContent = positionSize;
+    document.getElementById('total-risk').textContent = '$' + totalRisk.toFixed(2);
+}
+
+function updateCRVCalculator() {
+    const entryPrice = parseFloat(document.getElementById('pt-entry-price').value) || 0;
+    const profitTarget = parseFloat(document.getElementById('profit-target').value) || 0;
+    const riskPerShare = parseFloat(document.getElementById('crv-risk').value) || 0;
+    
+    const rewardPerShare = Math.abs(profitTarget - entryPrice);
+    const crvRatio = riskPerShare > 0 ? rewardPerShare / riskPerShare : 0;
+    const totalProfit = rewardPerShare * 100; // Assuming 100 shares
+    
+    document.getElementById('reward-per-share').textContent = '$' + rewardPerShare.toFixed(2);
+    document.getElementById('crv-ratio').textContent = crvRatio.toFixed(0) + ':1';
+    document.getElementById('total-profit').textContent = '$' + totalProfit.toLocaleString();
+    
+    // CRV Verdict
+    const verdictDiv = document.getElementById('crv-verdict');
+    if (crvRatio >= 5) {
+        verdictDiv.innerHTML = '✅ EXCELLENT CRV - Trade durchführen!';
+        verdictDiv.style.background = '#e8f5e8';
+        verdictDiv.style.color = '#10b981';
+    } else if (crvRatio >= 3) {
+        verdictDiv.innerHTML = '⚠️ ACCEPTABLE CRV - Mit Vorsicht handeln';
+        verdictDiv.style.background = '#fff8e1';
+        verdictDiv.style.color = '#f59e0b';
+    } else {
+        verdictDiv.innerHTML = '❌ POOR CRV - Trade verwerfen!';
+        verdictDiv.style.background = '#fef2f2';
+        verdictDiv.style.color = '#ef4444';
+    }
+}
+
+// Hover effects for step buttons
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.step-button').forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+            this.style.boxShadow = '0 8px 25px rgba(0, 0, 0, 0.2)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+            this.style.boxShadow = 'none';
+        });
+    });
+});
+
+// Checkbox progress tracking
+document.addEventListener('change', function(e) {
+    if (e.target.type === 'checkbox') {
+        // Visual feedback for completed checkboxes
+        const label = e.target.nextElementSibling;
+        if (e.target.checked) {
+            label.style.textDecoration = 'line-through';
+            label.style.opacity = '0.7';
+        } else {
+            label.style.textDecoration = 'none';
+            label.style.opacity = '1';
+        }
+    }
+});
+</script>
+
+<style>
+.playbook-step {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.method-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.step-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.checkbox-item input[type="checkbox"]:checked + label {
+    color: #10b981;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin: 15px;
+        padding: 20px;
+    }
+    
+    .playbook-step {
+        padding: 20px !important;
+    }
+    
+    h1 {
+        font-size: 24px !important;
+    }
+    
+    h2 {
+        font-size: 20px !important;
+    }
+}
+</style>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+{% endblock %}

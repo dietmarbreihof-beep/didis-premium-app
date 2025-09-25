@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magic Line Strategie - Didis Trading Masterclass</title>
+    <style>
+        :root {
+            /* Primärfarben */
+            --primary-dark: #1a1a1a;
+            --primary-medium: #2d2d2d;
+            
+            /* Akzentfarben */
+            --gold-dark: #b8860b;
+            --gold-classic: #daa520;
+            --gold-light: #f4e97b;
+            
+            /* Funktionsfarben */
+            --success: #059669;
+            --warning: #d69e2e;
+            --error: #dc2626;
+            
+            /* Hintergründe */
+            --bg-page: #f7f7f7;
+            --bg-card: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-page);
+            color: var(--primary-dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, var(--gold-light), var(--gold-classic));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            color: var(--primary-dark);
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            border-bottom: 3px solid var(--gold-classic);
+            padding-bottom: 10px;
+        }
+
+        .card h3 {
+            color: var(--gold-dark);
+            margin: 25px 0 15px 0;
+            font-size: 1.4rem;
+        }
+
+        .sell-signals {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .signal-item {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--warning);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .signal-item:hover {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            transform: translateX(5px);
+        }
+
+        .signal-item.active {
+            background: linear-gradient(135deg, #d1ecf1, #b8daff);
+            border-left-color: var(--success);
+        }
+
+        .signal-item h4 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .signal-item p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .quiz-section {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-classic));
+            color: var(--primary-dark);
+        }
+
+        .quiz-question {
+            margin-bottom: 20px;
+        }
+
+        .quiz-question h3 {
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .quiz-option:hover {
+            background: white;
+            border-color: var(--gold-dark);
+        }
+
+        .quiz-option.selected {
+            background: var(--success);
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background: var(--error);
+            color: white;
+        }
+
+        .quiz-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-result.show {
+            display: block;
+        }
+
+        .quiz-result.correct {
+            background: rgba(5, 150, 105, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .quiz-result.incorrect {
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-classic));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .interactive-element {
+            background: var(--primary-dark);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-classic));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-decoration: none;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .risk-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .risk-indicator {
+            background: #fff5f5;
+            border: 1px solid var(--error);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .risk-indicator h4 {
+            color: var(--error);
+            margin-bottom: 5px;
+        }
+
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gold-classic);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-left: 50px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 25px;
+            width: 12px;
+            height: 12px;
+            background: var(--gold-classic);
+            border-radius: 50%;
+        }
+
+        .didi-signature {
+            text-align: center;
+            margin-top: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+            color: white;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+            
+            .sell-signals {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            border: 1px solid var(--warning);
+            color: #856404;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Magic Line Strategie</h1>
+            <p>Meistere die Kunst des perfekten Ausstiegs - Didis bewährte Verkaufssignale</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="card">
+            <h2>📊 Was ist die Magic Line?</h2>
+            <p>Die Magic Line ist eine der wichtigsten Komponenten meiner Trading-Strategie. Sie ist der <strong>ULTIMATE low-risk Entry Point</strong> und hilft dir dabei, sowohl den optimalen Einstiegs- als auch Ausstiegszeitpunkt zu identifizieren.</p>
+            
+            <div class="alert alert-info">
+                <strong>💡 Didi's Tipp:</strong> Die Mehrheit der ultimativen Gewinne eines Superstocks entstehen in den ersten Wochen nach der Berührung der Magic Line!
+            </div>
+
+            <h3>🎯 Warum ist die Magic Line so wichtig?</h3>
+            <p>Die Magic Line ist der Ort, wo Smart Money Institutionen ihre Positionen aufbauen. Wenn der Aktienkurs die Magic Line berührt, "zünden sie das Feuerwerk" und treiben den Kurs explosionsartig nach oben.</p>
+        </div>
+
+        <div class="card">
+            <h2>🔍 Wie findest du die Magic Line?</h2>
+            <p><strong>Hier ist meine bewährte 4-Schritt-Methode:</strong></p>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>📅 Schritt 1: Wechsle zum Weekly Chart</h3>
+                    <p><strong>Timeframe: WÖCHENTLICH!</strong> Die Magic Line funktioniert nur im Weekly-Chart. Tages- oder Stunden-Charts sind ungeeignet.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>🚀 Schritt 2: Warte auf den Breakout</h3>
+                    <p>Nach dem Breakout aus Phase 1 (Basing) wartest du auf den <strong>ersten Pullback</strong>. Hier beginnt die Magie!</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>📈 Schritt 3: Justiere den Moving Average</h3>
+                    <p><strong>Daumenregel: 30-MA</strong> - Aber jede Aktie hat ihren eigenen Charakter. Oft ist der <strong>10-MA die richtige Wahl</strong>. Justiere den MA so, dass er das Tief berührt, nach dem die Aktie den Aufwärtstrend wieder aufgenommen hat.</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>✨ Schritt 4: Die Magic Line ist geboren!</h3>
+                    <p>Wenn der Moving Average richtig eingestellt ist und <strong>stetig von unten ansteigt</strong>, hast du deine Magic Line gefunden!</p>
+                </div>
+            </div>
+
+            <div class="interactive-element">
+                <h3>🎯 Das Geheimnis der Institutionen</h3>
+                <p>Während der Aktienkurs und die Magic Line langsam konvergieren, akkumulieren milliardenschwere institutionelle Trading-Departments ihre Positionen. Sobald die Magic Line den Aktienkurs berührt, <strong>"setzen sie das Feuerwerk in Gang"</strong> - sie kaufen strategisch große Blöcke, um den Kurs höher zu treiben!</p>
+                
+                <div class="alert alert-warning">
+                    <strong>⚡ Insider-Tipp:</strong> Positive News wird oft strategisch genau dann veröffentlicht, wenn die technischen Bedingungen für einen großen Kursanstieg reif sind. Das ist kein Zufall!
+                </div>
+            </div>
+
+            <h3>🔧 Praktische Anwendung</h3>
+            <div class="risk-indicators">
+                <div class="risk-indicator" style="background: #e6f7ff; border-color: #1890ff;">
+                    <h4>📊 10-MA Magic Line</h4>
+                    <p>Für volatile, aggressive Wachstumsaktien</p>
+                </div>
+                
+                <div class="risk-indicator" style="background: #f6ffed; border-color: #52c41a;">
+                    <h4>📈 30-MA Magic Line</h4>
+                    <p>Für stabilere, etablierte Unternehmen</p>
+                </div>
+                
+                <div class="risk-indicator" style="background: #fff7e6; border-color: #fa8c16;">
+                    <h4>🎯 Custom MA</h4>
+                    <p>Individuell angepasst an den Aktiencharakter</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚡ Die doppelte Power der Magic Line</h2>
+            <p>Die Magic Line ist dein <strong>2-in-1 Trading-Tool</strong> - sie funktioniert sowohl für perfekte Einstiege als auch für rechtzeitige Ausstiege!</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 30px 0;">
+                <div style="background: linear-gradient(135deg, #d4edda, #c3e6cb); padding: 25px; border-radius: 12px; border-left: 5px solid var(--success);">
+                    <h3>🟢 EINSTIEG: "Buy the Magic Line"</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Berührung von unten:</strong> Kurs trifft Magic Line = Kaufsignal</li>
+                        <li><strong>Low-Risk Entry:</strong> Stopp knapp unter der Linie</li>
+                        <li><strong>Institutionelle Akkumulation:</strong> Smart Money kauft hier</li>
+                        <li><strong>Explosive Gewinne:</strong> Meist in den ersten Wochen</li>
+                    </ul>
+                </div>
+                
+                <div style="background: linear-gradient(135deg, #f8d7da, #f5c6cb); padding: 25px; border-radius: 12px; border-left: 5px solid var(--error);">
+                    <h3>🔴 AUSSTIEG: "Sell the Magic Line"</h3>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Wochenschluss darunter:</strong> Das stärkste Verkaufssignal</li>
+                        <li><strong>7-10 Wochen nach Thrust:</strong> Momentum lässt nach</li>
+                        <li><strong>Mehrfache Tests:</strong> 4.-5. Berührung = Schwäche</li>
+                        <li><strong>Gewinnmitnahmen sichern:</strong> Bevor es zu spät ist</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>🎯 Didi's Strategie:</strong> Nutze die Magic Line für explosive Einstiege UND disziplinierte Ausstiege. So maximierst du Gewinne und minimierst Verluste!
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>🚨 Die 8 wichtigsten Verkaufssignale</h2>
+            <p>Hier sind die bewährtesten Signale nach einem starken Aktienanstieg:</p>
+            
+            <div class="sell-signals" id="sellSignals">
+                <div class="signal-item" data-signal="1">
+                    <h4>⏱️ 7-10 Wochen nach Magic Line Thrust</h4>
+                    <p>Ein starker Anstieg verliert nach 7-10 Wochen oft seine Kraft</p>
+                </div>
+                
+                <div class="signal-item" data-signal="2">
+                    <h4>📅 9 Monate in einem Anstieg</h4>
+                    <p>Die meisten Trends erreichen nach 9 Monaten ihren Höhepunkt</p>
+                </div>
+                
+                <div class="signal-item" data-signal="3">
+                    <h4>🚀 Parabolische Anstiege</h4>
+                    <p>Wenn es "zu schön um wahr zu sein" aussieht, ist es das meist auch</p>
+                </div>
+                
+                <div class="signal-item" data-signal="4">
+                    <h4>📈 Wöchentliche Gaps bei neuen Hochs</h4>
+                    <p>Gaps bei Höchstständen sind oft Erschöpfungssignale</p>
+                </div>
+                
+                <div class="signal-item" data-signal="5">
+                    <h4>❌ Wochenschluss unter der Magic Line</h4>
+                    <p>Das stärkste Signal - wenn die Unterstützung bricht</p>
+                </div>
+                
+                <div class="signal-item" data-signal="6">
+                    <h4>📊 Größte wöchentliche Preisspanne</h4>
+                    <p>Extreme Volatilität nach langem Anstieg</p>
+                </div>
+                
+                <div class="signal-item" data-signal="7">
+                    <h4>🔢 4. oder 5. Anstieg von der Magic Line</h4>
+                    <p>Nach mehrfachen Tests verliert die Linie ihre Kraft</p>
+                </div>
+                
+                <div class="signal-item" data-signal="8">
+                    <h4>🌊 Hohe Volatilität um die Magic Line</h4>
+                    <p>Besonders wenn sie abflacht oder fällt</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>⚠️ Zusätzliche Risiko-Indikatoren</h2>
+            <p>Diese Faktoren verstärken die Verkaufssignale:</p>
+            
+            <div class="risk-indicators">
+                <div class="risk-indicator">
+                    <h4>📰 Medien-Hype</h4>
+                    <p>Headlines & Euphorie</p>
+                </div>
+                
+                <div class="risk-indicator">
+                    <h4>💰 Insider-Verkäufe</h4>
+                    <p>Massive Verkäufe</p>
+                </div>
+                
+                <div class="risk-indicator">
+                    <h4>📊 Stock Split</h4>
+                    <p>Aktiensplit angekündigt</p>
+                </div>
+                
+                <div class="risk-indicator">
+                    <h4>🏢 Expansion</h4>
+                    <p>Unternehmenserweiterung</p>
+                </div>
+                
+                <div class="risk-indicator">
+                    <h4>📈 Aktienangebot</h4>
+                    <p>Neue Aktien ausgegeben</p>
+                </div>
+                
+                <div class="risk-indicator">
+                    <h4>💬 Forum-Euphorie</h4>
+                    <p>Message Board Hype</p>
+                </div>
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>⚠️ Wichtig:</strong> Ein einzelnes Signal reicht oft nicht. Achte auf Kombinationen mehrerer Faktoren!
+            </div>
+        </div>
+
+        <div class="card quiz-section">
+            <h2>🧠 Quiz: Teste dein Wissen</h2>
+            
+            <div class="quiz-question">
+                <h3>Frage 1: In welchem Timeframe funktioniert die Magic Line am besten?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="1" data-answer="false">
+                        A) Tages-Chart (Daily)
+                    </div>
+                    <div class="quiz-option" data-question="1" data-answer="true">
+                        B) Wochen-Chart (Weekly)
+                    </div>
+                    <div class="quiz-option" data-question="1" data-answer="false">
+                        C) Stunden-Chart (Hourly)
+                    </div>
+                    <div class="quiz-option" data-question="1" data-answer="false">
+                        D) Minuten-Chart (Minute)
+                    </div>
+                </div>
+                <div class="quiz-result" id="result1">
+                    <div class="correct-answer">✅ Richtig! Die Magic Line funktioniert nur im Weekly-Chart!</div>
+                    <div class="incorrect-answer">❌ Falsch! Die Magic Line funktioniert ausschließlich im Weekly-Chart.</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <h3>Frage 2: Welcher Moving Average ist die Daumenregel für die Magic Line?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="2" data-answer="false">
+                        A) 10-MA (aber oft die richtige Wahl)
+                    </div>
+                    <div class="quiz-option" data-question="2" data-answer="true">
+                        B) 30-MA (als Daumenregel)
+                    </div>
+                    <div class="quiz-option" data-question="2" data-answer="false">
+                        C) 50-MA
+                    </div>
+                    <div class="quiz-option" data-question="2" data-answer="false">
+                        D) 200-MA
+                    </div>
+                </div>
+                <div class="quiz-result" id="result2">
+                    <div class="correct-answer">✅ Perfekt! Der 30-MA ist die Daumenregel, aber jede Aktie hat ihren eigenen Charakter!</div>
+                    <div class="incorrect-answer">❌ Nicht ganz! Der 30-MA ist die Daumenregel, oft ist aber der 10-MA die richtige Wahl.</div>
+                </div>
+            </div>
+
+            <div class="quiz-question">
+                <h3>Frage 3: Wann ist das stärkste Verkaufssignal gegeben?</h3>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="3" data-answer="false">
+                        A) Nach einem parabolischen Anstieg
+                    </div>
+                    <div class="quiz-option" data-question="3" data-answer="false">
+                        B) Bei Medien-Hype
+                    </div>
+                    <div class="quiz-option" data-question="3" data-answer="true">
+                        C) Wochenschluss unter der Magic Line
+                    </div>
+                    <div class="quiz-option" data-question="3" data-answer="false">
+                        D) Nach 9 Monaten Anstieg
+                    </div>
+                </div>
+                <div class="quiz-result" id="result3">
+                    <div class="correct-answer">✅ Richtig! Der Wochenschluss unter der Magic Line ist das stärkste Signal.</div>
+                    <div class="incorrect-answer">❌ Falsch! Das stärkste Signal ist der Wochenschluss unter der Magic Line.</div>
+                </div>
+            </div>
+
+            <button class="btn" onclick="checkQuiz()">📝 Quiz auswerten</button>
+        </div>
+
+        <div class="card">
+            <h2>📚 Praktische Anwendung</h2>
+            
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Schritt 1: Magic Line identifizieren</h3>
+                    <p>Zeichne die wichtigsten Unterstützungslinien in deinen Chart</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>Schritt 2: Signale beobachten</h3>
+                    <p>Achte auf die 8 Hauptsignale und zusätzlichen Risiko-Indikatoren</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>Schritt 3: Kombinationen erkennen</h3>
+                    <p>Mehrere Signale gleichzeitig = höhere Wahrscheinlichkeit</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <h3>Schritt 4: Diszipliniert handeln</h3>
+                    <p>Emotionen beiseite - folge deinem Plan!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-element">
+            <h2>🎯 Deine nächsten Schritte</h2>
+            <p>Willst du die Magic Line Strategie in der Praxis lernen? Dann schau dir meine Trading-Services an:</p>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" class="btn">
+                    🚀 Premium Trading Club
+                </a>
+                <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" class="btn">
+                    🐢 Langfrist-Depot
+                </a>
+                <a href="https://didis-charts.com/produkt/mentoring-elite-chatroom/" class="btn">
+                    🎓 Mastertrader werden
+                </a>
+            </div>
+        </div>
+
+        <div class="didi-signature">
+            <h3>💪 Dein Trading-Coach</h3>
+            <p><strong>Dietmar "Didi" Breihof</strong></p>
+            <p>📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung | 🎯 Dein Partner für finanzielle Freiheit</p>
+            <p style="margin-top: 20px; font-style: italic;">
+                "Der Chart hat Vorrang vor allem anderen. Lerne die Signale zu lesen - dann wirst du erfolgreich sein!"
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Interaktive Elemente
+        let progress = 0;
+        const totalSteps = 8;
+        
+        // Verkaufssignale interaktiv machen
+        document.querySelectorAll('.signal-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+                updateProgress();
+            });
+        });
+        
+        function updateProgress() {
+            const activeSignals = document.querySelectorAll('.signal-item.active').length;
+            const progressPercent = (activeSignals / totalSteps) * 100;
+            document.getElementById('progressFill').style.width = progressPercent + '%';
+        }
+        
+        // Quiz Funktionalität
+        let quizAnswers = {};
+        
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const question = this.dataset.question;
+                const isCorrect = this.dataset.answer === 'true';
+                
+                // Alle Optionen der Frage deselektieren
+                document.querySelectorAll(`[data-question="${question}"]`).forEach(opt => {
+                    opt.classList.remove('selected', 'incorrect');
+                });
+                
+                // Diese Option auswählen
+                this.classList.add('selected');
+                quizAnswers[question] = isCorrect;
+            });
+        });
+        
+        function checkQuiz() {
+            let score = 0;
+            let total = 3;
+            
+            for(let i = 1; i <= total; i++) {
+                const resultDiv = document.getElementById(`result${i}`);
+                resultDiv.classList.add('show');
+                
+                if(quizAnswers[i] === true) {
+                    score++;
+                    resultDiv.classList.add('correct');
+                    resultDiv.querySelector('.correct-answer').style.display = 'block';
+                    resultDiv.querySelector('.incorrect-answer').style.display = 'none';
+                } else {
+                    resultDiv.classList.add('incorrect');
+                    resultDiv.querySelector('.correct-answer').style.display = 'none';
+                    resultDiv.querySelector('.incorrect-answer').style.display = 'block';
+                    
+                    // Falsche Antworten markieren
+                    document.querySelectorAll(`[data-question="${i}"].selected`).forEach(opt => {
+                        if(opt.dataset.answer !== 'true') {
+                            opt.classList.add('incorrect');
+                        }
+                    });
+                }
+            }
+            
+            // Gesamtergebnis anzeigen
+            const percentage = Math.round((score / total) * 100);
+            let message = '';
+            
+            if(percentage === 100) {
+                message = '🎉 Perfekt! Du hast die Magic Line komplett verstanden!';
+            } else if(percentage >= 67) {
+                message = '👍 Sehr gut! Du bist auf dem richtigen Weg zum Magic Line Meister!';
+            } else if(percentage >= 33) {
+                message = '💪 Gut gemacht! Schau dir die Methode nochmal an und du wirst Profi!';
+            } else {
+                message = '📚 Weiter lernen! Die Magic Line braucht etwas Übung - aber sie ist es wert!';
+            }
+            
+            alert(`Quiz Ergebnis: ${score}/${total} Punkte (${percentage}%)\n\n${message}`);
+        }
+        
+        // Smooth Scrolling für interne Links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Animation beim Scrollen
+        window.addEventListener('scroll', () => {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                const cardTop = card.getBoundingClientRect().top;
+                const cardVisible = 150;
+                
+                if(cardTop < window.innerHeight - cardVisible) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }
+            });
+        });
+        
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            // Alle Karten initial unsichtbar machen
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                // Gestaffelte Animation
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Premium erforderlich - {{ module.title if module else 'Modul' }}{% endblock %}
+
+{% block header_title %}🔒 Premium erforderlich{% endblock %}
+{% block header_subtitle %}Upgrade für Zugriff auf dieses Modul{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center;">
+    {% if module %}
+        <div style="margin-bottom: 30px;">
+            <span style="font-size: 4rem;">{{ module.icon }}</span>
+            <h2>{{ module.title }}</h2>
+            <p style="color: #666; font-size: 1.1rem; margin: 20px 0;">
+                {{ module.description }}
+            </p>
+        </div>
+        
+        <div style="background: #fff7e6; border: 1px solid #ffa940; padding: 20px; border-radius: 8px; margin: 30px 0;">
+            <h3 style="color: #fa8c16; margin-top: 0;">💎 Dieses Modul ist Premium-Inhalt</h3>
+            <p>Um Zugriff auf "{{ module.title }}" zu erhalten, benötigst du eines der folgenden Abonnements:</p>
+            
+            <div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+                {% for level in module.required_subscription_levels %}
+                <span style="background: 
+                    {% if level == 'premium' %}var(--gold-dark)
+                    {% elif level == 'elite' %}#6f42c1
+                    {% else %}#666
+                    {% endif %}; 
+                    color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">
+                    {{ level|upper }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div style="margin-bottom: 30px;">
+            <span style="font-size: 4rem;">🔒</span>
+            <h2>Premium erforderlich</h2>
+            <p style="color: #666; font-size: 1.1rem; margin: 20px 0;">
+                Dieses Modul ist nur für Premium-Mitglieder verfügbar.
+            </p>
+        </div>
+    {% endif %}
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin: 40px 0;">
+        <!-- Premium Option -->
+        <div style="background: linear-gradient(135deg, var(--gold-dark), var(--gold-classic)); color: white; padding: 30px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-top: 0; font-size: 1.5rem;">🏆 Premium</h3>
+            <div style="font-size: 2rem; font-weight: bold; margin: 20px 0;">1.490€</div>
+            <div style="opacity: 0.9; margin-bottom: 30px;">pro Jahr inkl. MwSt.</div>
+            
+            <ul style="text-align: left; list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">✅ 30-Minuten-Depot Strategie</li>
+                <li style="margin: 10px 0;">✅ Magic Line & Chart-Patterns</li>
+                <li style="margin: 10px 0;">✅ Telegram Premium Group</li>
+                <li style="margin: 10px 0;">✅ Wöchentliche Analysen</li>
+                <li style="margin: 10px 0;">✅ Alle Fundamentalanalyse Module</li>
+            </ul>
+            
+            <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" 
+               target="_blank"
+               class="btn" 
+               style="background: white; color: var(--primary-dark); margin-top: 20px; font-weight: 600;">
+                🚀 Premium werden
+            </a>
+        </div>
+        
+        <!-- Elite Option -->
+        <div style="background: linear-gradient(135deg, #6f42c1, #e83e8c); color: white; padding: 30px; border-radius: 12px; text-align: center;">
+            <h3 style="margin-top: 0; font-size: 1.5rem;">👑 Elite</h3>
+            <div style="font-size: 2rem; font-weight: bold; margin: 20px 0;">349€</div>
+            <div style="opacity: 0.9; margin-bottom: 30px;">pro Monat inkl. MwSt.</div>
+            
+            <ul style="text-align: left; list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">✅ 5-Minuten-Depot (VIP)</li>
+                <li style="margin: 10px 0;">✅ Alle Premium Features</li>
+                <li style="margin: 10px 0;">✅ Elite Chatroom Zugang</li>
+                <li style="margin: 10px 0;">✅ Persönliche Depot-Checks</li>
+                <li style="margin: 10px 0;">✅ 1:1 Trading Mentoring</li>
+                <li style="margin: 10px 0;">✅ Alle Module freigeschaltet</li>
+            </ul>
+            
+            <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" 
+               target="_blank"
+               class="btn" 
+               style="background: white; color: var(--primary-dark); margin-top: 20px; font-weight: 600;">
+                👑 Elite werden
+            </a>
+        </div>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; margin: 30px 0;">
+        <h3>🎁 Kostenlose Alternative</h3>
+        <p>Probiere unsere kostenlosen Lead-Magnet Module:</p>
+        
+        <div style="display: flex; justify-content: center; gap: 15px; margin: 20px 0; flex-wrap: wrap;">
+            <a href="{{ url_for('module_view', slug='balance-sheet-basics') }}" class="btn secondary">
+                📋 Balance Sheet Basics
+            </a>
+            <a href="{{ url_for('module_view', slug='zwei-prozent-regel') }}" class="btn secondary">
+                ⚠️ Die 2% Regel
+            </a>
+        </div>
+    </div>
+    
+    <div style="margin-top: 50px;">
+        <h3>💪 Warum Didis Academy?</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0;">
+            <div>
+                <h4 style="color: var(--gold-dark);">📈 Bewiesene Erfolge</h4>
+                <p>ROOT +3000%, SMCI +1000%, QXO, CELH und viele weitere Super-Stocks</p>
+            </div>
+            <div>
+                <h4 style="color: var(--gold-dark);">⏱️ Zeit sparen</h4>
+                <p>Von 2 Stunden täglich auf nur 5-30 Minuten für deine Trades</p>
+            </div>
+            <div>
+                <h4 style="color: var(--gold-dark);">🎯 30+ Jahre Erfahrung</h4>
+                <p>Profitiere von jahrzehntelanger Börsen- und Trading-Expertise</p>
+            </div>
+            <div>
+                <h4 style="color: var(--gold-dark);">⭐ 5-Sterne bewertet</h4>
+                <p>Ausschließlich Bestnoten auf TrustPilot von zufriedenen Mitgliedern</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="text-align: center; margin: 40px 0;">
+    <a href="{{ url_for('home') }}" class="btn secondary">← Zurück zur Startseite</a>
+    
+    {% if session.get('logged_in') %}
+        <span style="margin: 0 10px; color: #666;">|</span>
+        <a href="{{ url_for('modules') }}" class="btn secondary">📚 Alle Module ansehen</a>
+    {% else %}
+        <span style="margin: 0 10px; color: #666;">|</span>
+        <a href="{{ url_for('demo_login', type='premium') }}" class="btn">🎯 Premium Demo testen</a>
+    {% endif %}
+</div>
+
+<style>
+.btn {
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+</style>
+{% endblock %}

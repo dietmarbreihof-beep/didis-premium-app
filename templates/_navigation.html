@@ -1,0 +1,178 @@
+<!-- 
+    Wiederverwendbare Navigation-Komponente für alle Module
+    Verwendung: Fügen Sie diese Datei mit include ein
+    
+    Features:
+    - Hauptnavigation (Startseite, Module, Admin, Hauptapp)
+    - Weiter/Zurück Navigation zwischen Modulen
+    - Admin-Link nur für admin/didi sichtbar
+    - Responsive Design
+    - Einheitliches Styling
+    - Automatische Session-Erkennung
+-->
+
+<style>
+    /* Navigation Styles - Einheitlich für alle Module */
+    .module-navigation {
+        text-align: center;
+        margin: 40px 0 20px 0;
+        padding: 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .module-navigation a {
+        color: var(--gold-dark, #b8860b);
+        text-decoration: none;
+        margin: 0 15px;
+        font-weight: 600;
+        padding: 10px 15px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .module-navigation a:hover {
+        color: var(--gold-classic, #daa520);
+        background: var(--bg-page, #f7f7f7);
+        transform: translateY(-2px);
+    }
+
+    /* Für Module ohne CSS-Variablen - Fallback */
+    .module-navigation {
+        --gold-dark: #b8860b;
+        --gold-classic: #daa520;
+        --bg-page: #f7f7f7;
+    }
+
+    /* Modul-Navigation (Weiter/Zurück) */
+    .module-nav-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 30px 0;
+        padding: 20px;
+        background: linear-gradient(135deg, var(--gold-dark, #b8860b), var(--gold-classic, #daa520));
+        border-radius: 12px;
+        color: white;
+    }
+
+    .nav-button {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-width: 120px;
+        justify-content: center;
+    }
+
+    .nav-button:hover {
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.5);
+        color: white;
+        text-decoration: none;
+        transform: translateY(-2px);
+    }
+
+    .nav-button:disabled,
+    .nav-button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .nav-center {
+        text-align: center;
+        flex: 1;
+        margin: 0 20px;
+    }
+
+    .nav-center h4 {
+        margin: 0;
+        font-size: 1.1em;
+        opacity: 0.9;
+    }
+
+    @media (max-width: 768px) {
+        .module-navigation a {
+            display: block;
+            margin: 5px 0;
+        }
+
+        .module-nav-controls {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .nav-center {
+            margin: 0;
+            order: -1;
+        }
+
+        .nav-button {
+            width: 100%;
+            max-width: 200px;
+        }
+    }
+</style>
+
+<!-- Modul-Navigation (Weiter/Zurück) - nur anzeigen wenn Module vorhanden -->
+{% if prev_module or next_module %}
+<div class="module-nav-controls">
+    <!-- Zurück Button -->
+    {% if prev_module %}
+        <a href="{{ url_for('module_view', slug=prev_module.slug) }}" class="nav-button">
+            ⬅️ <span>{{ prev_module.title[:20] }}{% if prev_module.title|length > 20 %}...{% endif %}</span>
+        </a>
+    {% else %}
+        <div class="nav-button disabled">
+            ⬅️ <span>Erstes Modul</span>
+        </div>
+    {% endif %}
+
+    <!-- Mitte: Aktuelles Modul -->
+    <div class="nav-center">
+        {% if module %}
+            <h4>{{ module.title }}</h4>
+        {% endif %}
+    </div>
+
+    <!-- Weiter Button -->
+    {% if next_module %}
+        <a href="{{ url_for('module_view', slug=next_module.slug) }}" class="nav-button">
+            <span>{{ next_module.title[:20] }}{% if next_module.title|length > 20 %}...{% endif %}</span> ➡️
+        </a>
+    {% else %}
+        <div class="nav-button disabled">
+            <span>Letztes Modul</span> ➡️
+        </div>
+    {% endif %}
+</div>
+{% endif %}
+
+<!-- Hauptnavigation -->
+<div class="module-navigation">
+    <a href="{{ url_for('home') }}">🏠 Startseite</a>
+    <a href="{{ url_for('modules') }}">📚 Alle Module</a>
+    
+    <!-- Admin-Link nur für admin/didi -->
+    {% if session.get('logged_in') and session.get('user', {}).get('username') in ['admin', 'didi'] %}
+        <a href="{{ url_for('admin_modules') }}">🔧 Admin</a>
+    {% endif %}
+    
+    <a href="https://didis-trading-club.streamlit.app/" target="_blank">🚀 Zur Hauptapp</a>
+</div>
+
+<!-- Footer -->
+<div style="text-align: center; margin-top: 30px; color: #666; padding: 20px;">
+    <p><strong>Didis Premium Trading Academy</strong></p>
+    <p>📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung</p>
+</div>

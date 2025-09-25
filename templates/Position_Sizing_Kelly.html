@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lerne das Kelly-Kriterium für optimales Risikomanagement im Trading. Interaktiver Rechner und Simulator inklusive.">
+    <meta name="keywords" content="Kelly-Kriterium, Risikomanagement, Trading, Position Sizing, Money Management">
+    
+    <title>Kelly-Kriterium - Position Sizing | Didis Trading Academy</title>
+    
+    <!-- Import Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+            line-height: 1.6;
+            font-size: 1.05em;
+            min-height: 100vh;
+        }
+
+        .container-fluid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Header mit Primär-Verlauf */
+        .main-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 11, 0.1) 100%);
+            pointer-events: none;
+        }
+        
+        .main-header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Fortschritts-Tracking mit Glasmorphismus */
+        .progress-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #daa520;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .progress-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #b8860b;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e5e7eb;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b, #daa520);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Aufklappbare Sektionen mit Premium-Design */
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(218, 165, 32, 0.2), transparent);
+            transition: right 0.6s ease;
+        }
+        
+        .section-header:hover::before {
+            right: 100%;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            transform: translateY(-1px);
+        }
+
+        .section-header h2 {
+            font-size: 1.4em;
+            margin: 0;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section-toggle {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            color: #daa520;
+            position: relative;
+            z-index: 1;
+        }
+
+        .section.expanded .section-toggle {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .section.expanded .section-content {
+            max-height: 5000px;
+        }
+
+        .content-inner {
+            padding: 40px;
+            font-size: 1.05em;
+            line-height: 1.6;
+        }
+
+        /* Premium Content-Boxen */
+        .analogy-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%);
+            border-left: 4px solid #b8860b;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .analogy-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #daa520;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left: 4px solid #38a169;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .success-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #2f855a;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left: 4px solid #dc2626;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .danger-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #b91c1c;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-left: 4px solid #0891b2;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .example-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #0e7490;
+        }
+        
+        /* Interaktiver Simulator - FUNKTIONIERENDER CODE */
+        .simulator-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 4px solid #0891b2;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .simulator-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #0e7490;
+        }
+
+        .simulator-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .simulator-header h3 {
+            color: #1a1a1a;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* Simulator Controls Layout */
+        .simulator-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .control-label {
+            display: block;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .control-value {
+            font-weight: bold;
+            color: #daa520;
+        }
+
+        .control-slider {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            outline: none;
+            -webkit-appearance: none;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .control-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .control-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .control-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* Kelly-Result Display */
+        .kelly-result {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-left: 4px solid #daa520;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .kelly-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #b8860b;
+        }
+        
+        .kelly-result h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .kelly-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #b8860b, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 15px 0;
+        }
+
+        .kelly-interpretation {
+            color: #6b7280;
+            font-size: 1rem;
+            min-height: 40px;
+        }
+        
+        /* Chart-Container */
+        .chart-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            height: 400px;
+        }
+        
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+        
+        /* Navigation Button */
+        .nav-button {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+            margin: 20px 0;
+        }
+        
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+        }
+        
+        /* Mobile Responsivität */
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 10px;
+            }
+            
+            .main-header h1 {
+                font-size: 2.2rem;
+            }
+            
+            .simulator-layout {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+            
+            .section-header {
+                padding: 15px 20px;
+            }
+            
+            .content-inner {
+                padding: 20px;
+            }
+
+            .simulator-container {
+                padding: 20px;
+            }
+        }
+        
+        /* Scroll-Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .animate-in {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <!-- Navigation zurück -->
+        <div style="margin-bottom: 20px;">
+            <a href="/modules" class="nav-button">← Zurück zur Modulübersicht</a>
+        </div>
+        
+        <!-- Hero Header -->
+        <div class="main-header">
+            <h1>💰 Kelly-Kriterium</h1>
+            <p>Wie viel Geld soll ich riskieren? - Professionelles Position Sizing für Trader</p>
+        </div>
+
+        <!-- Fortschritts-Tracking -->
+        <div class="progress-container">
+            <h3 style="margin-bottom: 15px; color: #1a1a1a; font-weight: 600;">📈 Lernfortschritt</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+            <p id="progressText" style="color: #6b7280; font-size: 0.9rem;">0% abgeschlossen</p>
+        </div>
+
+        <!-- Abschnitt 1: Was ist das Kelly-Kriterium? -->
+        <div class="section" data-section="1">
+            <div class="section-header" onclick="toggleSection(1)">
+                <h2>🎯 Was ist das Kelly-Kriterium?</h2>
+                <span class="section-toggle">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="content-inner">
+                    <p>Stell dir vor, du hättest eine Kristallkugel, die dir nicht die Zukunft zeigt, sondern die perfekte Antwort auf die wichtigste Frage im Trading gibt:</p>
+                    
+                    <div class="analogy-box">
+                        <h3>🎲 Das Schulhof-Spiel</h3>
+                        <p>Du hast 10€ Taschengeld und dein Freund bietet dir ein Spiel an:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Er wirft eine Münze</li>
+                            <li>Bei Kopf: Du gewinnst das Doppelte deines Einsatzes</li>
+                            <li>Bei Zahl: Du verlierst deinen Einsatz</li>
+                            <li>Die Münze ist manipuliert und zeigt öfter Kopf (60% der Zeit)</li>
+                        </ul>
+                        <p><strong>Die große Frage:</strong> Wie viel von deinen 10€ solltest du setzen?</p>
+                    </div>
+
+                    <p>Genau diese Frage beantwortet das Kelly-Kriterium! Es ist eine mathematische Formel, die dir sagt:</p>
+                    
+                    <div class="success-box">
+                        <h3>✅ Was das Kelly-Kriterium macht:</h3>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Berechnet die optimale Einsatzgröße</strong> für jede Wette</li>
+                            <li><strong>Maximiert dein Geld langfristig</strong> - nicht nur einen Trade</li>
+                            <li><strong>Berücksichtigt deine Gewinnchancen</strong> und wie viel du gewinnen kannst</li>
+                            <li><strong>Schützt dich vor dem Totalverlust</strong> durch zu hohe Einsätze</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>🧮 Einfaches Beispiel:</h4>
+                        <p>Bei unserem Münzspiel würde Kelly sagen: <strong>"Setze 20% deines Geldes"</strong></p>
+                        <p>Das bedeutet: Von deinen 10€ setzt du 2€. Egal ob du gewinnst oder verlierst, beim nächsten Spiel setzt du wieder 20% von dem, was du dann hast.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abschnitt 2: Die Kelly-Formel verstehen -->
+        <div class="section" data-section="2">
+            <div class="section-header" onclick="toggleSection(2)">
+                <h2>🧮 Die Kelly-Formel verstehen</h2>
+                <span class="section-toggle">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="content-inner">
+                    <p>Keine Angst vor Mathe! Wir erklären die Formel so einfach wie ein Kochrezept.</p>
+
+                    <div style="background: linear-gradient(135deg, #dbeafe, #bfdbfe); border: 2px solid #0891b2; border-radius: 12px; padding: 25px; margin: 25px 0; text-align: center;">
+                        <div style="font-size: 1.8rem; font-weight: bold; color: #0891b2; margin-bottom: 15px; font-family: 'Courier New', monospace;">
+                            Kelly % = Gewinnrate - (1-Gewinnrate) ÷ Gewinn-Verlust-Verhältnis
+                        </div>
+                    </div>
+
+                    <div class="analogy-box">
+                        <h3>🍕 Die Pizza-Analogie</h3>
+                        <p>Stell dir vor, du teilst eine Pizza zwischen deinen Freunden auf:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Gewinnrate:</strong> Wie oft bekommst du ein größeres Stück? (z.B. 6 von 10 Mal = 60%)</li>
+                            <li><strong>Gewinn-Verlust-Verhältnis:</strong> Wenn du gewinnst, wie viel größer ist dein Stück im Vergleich zu dem, was du aufgibst?</li>
+                            <li><strong>Kelly-Ergebnis:</strong> Wie stark solltest du beim nächsten Pizza-Tausch "drängeln"?</li>
+                        </ul>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>💡 Schritt-für-Schritt Beispiel:</h4>
+                        <p><strong>Situation:</strong> Du hast 10 Trades gemacht:</p>
+                        <ul style="margin: 10px 0 10px 20px;">
+                            <li>6 Trades gewonnen, 4 verloren</li>
+                            <li>Bei Gewinnen: durchschnittlich +200€</li>
+                            <li>Bei Verlusten: durchschnittlich -100€</li>
+                        </ul>
+                        
+                        <p><strong>Berechnung:</strong></p>
+                        <ul style="margin: 10px 0 10px 20px;">
+                            <li>Gewinnrate = 6÷10 = 0,6 (60%)</li>
+                            <li>Gewinn-Verlust-Verhältnis = 200€÷100€ = 2</li>
+                            <li>Kelly % = 0,6 - (1-0,6)÷2 = 0,6 - 0,4÷2 = 0,6 - 0,2 = 0,4 = <strong>40%</strong></li>
+                        </ul>
+                        
+                        <p><strong>Bedeutung:</strong> Die Formel schlägt vor, maximal 40% deines Kapitals bei einem Trade zu riskieren.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abschnitt 3: Warum "Full Kelly" gefährlich ist - MIT FUNKTIONIERENDEM SIMULATOR -->
+        <div class="section" data-section="3">
+            <div class="section-header" onclick="toggleSection(3)">
+                <h2>⚠️ Warum "Full Kelly" gefährlich ist</h2>
+                <span class="section-toggle">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="content-inner">
+                    <p>Die Kelly-Formel ist mathematisch perfekt - aber die Realität ist es nicht!</p>
+
+                    <div class="danger-box">
+                        <h3>🚨 Das Problem mit "Full Kelly"</h3>
+                        <p><strong>"Full Kelly"</strong> bedeutet, dass du genau den Prozentsatz verwendest, den die Formel ausspuckt. Das klingt logisch, aber ist in der Praxis sehr gefährlich!</p>
+                    </div>
+
+                    <!-- FUNKTIONIERENDER KELLY SIMULATOR -->
+                    <div class="simulator-container">
+                        <div class="simulator-header">
+                            <h3>🎯 Interaktiver Kelly-Rechner & Simulation</h3>
+                            <p>Pass die Gewinnwahrscheinlichkeit (W) und das Chance-Risiko-Verhältnis (R) an, um den optimalen Kelly-Prozentsatz zu berechnen. Die untenstehende Simulation visualisiert, wie sich dein Kapital über eine Reihe von Trades unter verschiedenen Strategien entwickeln könnte, basierend auf deinen Eingaben.</p>
+                        </div>
+
+                        <div class="simulator-layout">
+                            <div class="controls-section">
+                                <div class="control-group">
+                                    <label for="winProb" class="control-label">
+                                        Gewinnwahrscheinlichkeit (W): <span id="winProbValue" class="control-value"></span>
+                                    </label>
+                                    <input id="winProb" type="range" min="1" max="99" value="60" class="control-slider">
+                                </div>
+                                <div class="control-group">
+                                    <label for="winLossRatio" class="control-label">
+                                        Chance-Risiko-Verhältnis (R): <span id="winLossRatioValue" class="control-value"></span>
+                                    </label>
+                                    <input id="winLossRatio" type="range" min="0.1" max="5" value="1.5" step="0.1" class="control-slider">
+                            </div>
+                        </div>
+
+                        <div class="kelly-result">
+                                <h3>Optimaler Kelly-Einsatz (K%)</h3>
+                                <p id="kellyValue" class="kelly-value">0.00%</p>
+                                <p id="kellyInterpretation" class="kelly-interpretation"></p>
+                            </div>
+                        </div>
+
+                        <div class="chart-section">
+                        <div class="chart-container">
+                                <canvas id="growthChart"></canvas>
+                                </div>
+                        </div>
+                    </div>
+
+                    <div class="example-box">
+                        <h4>💸 Was du im Simulator siehst:</h4>
+                        <p><strong>Beobachte die Unterschiede:</strong></p>
+                        <ul style="margin: 10px 0 10px 20px;">
+                            <li><strong>Half Kelly (grüne Linie):</strong> Sanfte, stetige Entwicklung nach oben</li>
+                            <li><strong>Full Kelly (blaue Linie):</strong> Viel volatiler, extremere Schwankungen</li>
+                            <li><strong>Overbetting (rote Linie):</strong> Wie eine wilde Achterbahn - oft Totalverlust!</li>
+                        </ul>
+                        <p><strong>Ändere die Parameter und sieh, was passiert:</strong> Auch bei guten Gewinnraten kann Full Kelly zu dramatischen Verlusten führen!</p>
+                    </div>
+
+                    <div class="danger-box">
+                        <h3>⚡ Die Realität des Marktes</h3>
+                        <p>Märkte sind nicht wie Münzwürfe. Du kannst:</p>
+                        <ul style="margin-left: 20px;">
+                            <li>Plötzlich ihr Verhalten ändern</li>
+                            <li>Wochen oder Monate in eine Richtung laufen</li>
+                            <li>Von externen Schocks getroffen werden</li>
+                            <li>Deine besten Strategien plötzlich nicht mehr funktionieren lassen</li>
+                        </ul>
+                    </div>
+                    
+                    <!-- PRAXISBEISPIEL: AMD TRADE 2025 -->
+                    <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #b8860b; border-radius: 12px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 30px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.1)'">
+                        <h4 style="color: #b8860b; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">📈 Praxisbeispiel: AMD Trade 2025</h4>
+                        <p style="font-style: italic; margin-bottom: 20px; color: #374151; font-size: 1.1rem;">"Ein Beispiel aus meiner eigenen Trading-Praxis - und warum Position Sizing entscheidend ist:"</p>
+                        
+                        <div style="background: rgba(255, 255, 255, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #daa520; margin: 20px 0;">
+                            <h5 style="color: #1a1a1a; font-weight: 600; margin-bottom: 15px;">🎯 Die Setup-Analyse:</h5>
+                            <ul style="margin-left: 20px; line-height: 1.8; color: #374151;">
+                                <li><strong>Marktlage:</strong> AMD bei ~80$ gekauft - monatelang im Abwärtstrend</li>
+                                <li><strong>Kontext:</strong> Nvidia war gleichzeitig monatelang im Aufwärtstrend</li>
+                                <li><strong>Fundamentalanalyse:</strong> Sprach <strong>ganz klar für eine Trendumkehr</strong></li>
+                                <li><strong>Historische Erfahrung:</strong> Kenne AMD-Verhalten seit <strong>Jahrzehnten</strong></li>
+                                <li><strong>Fundamentale Stärke:</strong> AMD stand <strong>noch nie so gut da wie 2025</strong></li>
+                                <li><strong>Technische Analyse:</strong> Chart sprach für <strong>baldige Trendumkehr</strong></li>
+                            </ul>
+                </div>
+                        
+                        <div style="background: rgba(254, 243, 199, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #d69e2e; margin: 20px 0;">
+                            <h5 style="color: #d69e2e; font-weight: 600; margin-bottom: 15px;">💪 Meine Kelly-Berechnung:</h5>
+                            <ul style="margin-left: 20px; line-height: 1.8; color: #374151;">
+                                <li><strong>Gewinnwahrscheinlichkeit (W):</strong> 90% (sehr hohe Überzeugung)</li>
+                                <li><strong>Chancen-Risiko-Verhältnis (R):</strong> über 5:1</li>
+                                <li><strong>Kelly-Ergebnis:</strong> Mathematisch sehr hoher Prozentsatz</li>
+                                <li><strong>Meine Position:</strong> <strong style="color: #d69e2e;">Ca. 80% Depotgewicht</strong> (Calls + Aktien)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="background: rgba(209, 250, 229, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #38a169; margin: 20px 0;">
+                            <h5 style="color: #38a169; font-weight: 600; margin-bottom: 15px;">🎓 Die wichtige Lektion:</h5>
+                            <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">
+                                <strong>Selbst bei höchster Überzeugung und jahrzehntelanger Erfahrung</strong> ist es entscheidend, 
+                                die Position-Size mathematisch zu durchdenken. 80% Depotgewicht ist ein enormes Risiko - 
+                                auch bei den besten Setups.
+                            </p>
+                            <p style="line-height: 1.8; color: #374151; font-weight: 600;">
+                                <strong>Das Kelly-Kriterium hilft uns, mathematisch fundierte Entscheidungen zu treffen, 
+                                statt nur auf Bauchgefühl zu setzen.</strong>
+                            </p>
+                        </div>
+                        
+                        <div style="background: rgba(255, 240, 240, 0.8); padding: 20px; border-radius: 8px; border-left: 4px solid #dc2626; margin: 20px 0;">
+                            <p style="color: #dc2626; font-weight: 600; text-align: center; font-size: 1.05rem;">
+                                ⚠️ <strong>Wichtiger Hinweis:</strong> Auch bei besten Analysen und höchster Überzeugung 
+                                sollte man die mathematischen Prinzipien des Kelly-Kriteriums respektieren!
+                            </p>
+                        </div>
+                        
+                        <div style="background: rgba(254, 243, 199, 0.9); padding: 25px; border-radius: 8px; border: 2px solid #d69e2e; margin: 20px 0;">
+                            <h5 style="color: #d69e2e; font-weight: 700; margin-bottom: 15px; text-align: center;">🧮 Teste  meine AMD-Parameter im Simulator!</h5>
+                            <p style="text-align: center; color: #374151; margin-bottom: 15px;">
+                                Stelle den Simulator auf meine Werte ein und sehe, was Kelly empfohlen hätte:
+                            </p>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 8px;">
+                                <div style="text-align: center;">
+                                    <strong style="color: #d69e2e;">Gewinnwahrscheinlichkeit:</strong><br>
+                                    <span style="font-size: 1.5rem; font-weight: bold; color: #1a1a1a;">90%</span>
+                                </div>
+                                <div style="text-align: center;">
+                                    <strong style="color: #d69e2e;">Chancen-Risiko-Verhältnis:</strong><br>
+                                    <span style="font-size: 1.5rem; font-weight: bold; color: #1a1a1a;">5:1</span>
+                                </div>
+                            </div>
+                            <p style="text-align: center; color: #6b7280; font-size: 0.9rem; margin-top: 15px; font-style: italic;">
+                                Nutze den obigen Simulator, um zu sehen, was Kelly bei diesen Parametern empfohlen hätte!
+                            </p>
+                        </div>
+                        
+                        <!-- ZWEITES PRAXISBEISPIEL: DAVID'S REALISTISCHE PERFORMANCE -->
+                        <div style="background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%); border-left: 4px solid #0891b2; border-radius: 12px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 30px rgba(0, 0, 0, 0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 20px rgba(0, 0, 0, 0.1)'">
+                            <h4 style="color: #0891b2; font-size: 1.3rem; margin-bottom: 20px; font-weight: 700;">📊 Praxisbeispiel: David's Trading-Performance</h4>
+                            <p style="font-style: italic; margin-bottom: 20px; color: #374151; font-size: 1.1rem;">"Ein realistisches Beispiel für solide Trading-Performance - und was Kelly dazu sagt:"</p>
+                            
+                            <!-- Screenshot der echten Trading-Statistik -->
+                            <div style="text-align: center; margin: 25px 0; padding: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border: 2px solid #0891b2;">
+                                <h5 style="color: #0891b2; font-weight: 600; margin-bottom: 15px;">📸 Echte Trading-Statistik von David:</h5>
+                                <img src="Screenshots/Trading_Statstik_David.jpg" 
+                                     alt="David's Trading Statistik - 145 Trades, 68.97% Win Rate, CRV 1.57" 
+                                     style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); cursor: pointer;"
+                                     onclick="this.style.transform = this.style.transform === 'scale(1.5)' ? 'scale(1)' : 'scale(1.5)'; this.style.transition = 'transform 0.3s ease';"
+                                     title="Klicken zum Vergrößern">
+                                <p style="color: #6b7280; font-size: 0.85rem; margin-top: 10px; font-style: italic;">
+                                    Klicken Sie auf das Bild zum Vergrößern • Echte Daten aus der Praxis
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255, 255, 255, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #0891b2; margin: 20px 0;">
+                                <h5 style="color: #1a1a1a; font-weight: 600; margin-bottom: 15px;">📈 Gewinnwahrscheinlichkeit (Win Rate):</h5>
+                                <ul style="margin-left: 20px; line-height: 1.8; color: #374151;">
+                                    <li><strong>Gesamtanzahl Trades:</strong> 100 + 45 = 145 Trades</li>
+                                    <li><strong>Win Rate:</strong> 100 ÷ 145 = <strong style="color: #0891b2;">68,97%</strong></li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: rgba(209, 250, 229, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #38a169; margin: 20px 0;">
+                                <h5 style="color: #38a169; font-weight: 600; margin-bottom: 15px;">💰 CRV (Chancen-Risiko-Verhältnis):</h5>
+                                <ul style="margin-left: 20px; line-height: 1.8; color: #374151;">
+                                    <li><strong>Formel:</strong> Durchschnittlicher Gewinn ÷ Durchschnittlicher Verlust</li>
+                                    <li><strong>CRV:</strong> 10,42% ÷ 6,66% = <strong style="color: #38a169;">1,57</strong></li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: rgba(254, 243, 199, 0.8); padding: 25px; border-radius: 8px; border-left: 4px solid #d69e2e; margin: 20px 0;">
+                                <h5 style="color: #d69e2e; font-weight: 600; margin-bottom: 15px;">🎯 Bewertung der Performance:</h5>
+                                <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">
+                                    <strong>Das sind sehr solide Zahlen für David!</strong> Warum diese Kombination stark ist:
+                                </p>
+                                <ul style="margin-left: 20px; line-height: 1.8; color: #374151;">
+                                    <li><strong>Win Rate von knapp 69%</strong> ist überdurchschnittlich gut</li>
+                                    <li><strong>CRV von 1,57</strong> bedeutet: Für jeden Euro Risiko erzielt er durchschnittlich 1,57 Euro Gewinn</li>
+                                    <li><strong>Diese Kombination</strong> aus hoher Trefferquote UND positivem CRV ist der Schlüssel für nachhaltigen Trading-Erfolg</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="background: rgba(240, 253, 244, 0.8); padding: 25px; border-radius: 8px; border: 2px solid #38a169; margin: 20px 0;">
+                                <h5 style="color: #38a169; font-weight: 700; margin-bottom: 15px;">🧮 Mathematischer Erwartungswert:</h5>
+                                <div style="background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 8px; font-family: 'Courier New', monospace; text-align: center; margin: 15px 0;">
+                                    <span style="font-size: 1.1rem; color: #1a1a1a;">(0,6897 × 10,42%) + (0,3103 × -6,66%) = <strong style="color: #38a169; font-size: 1.3rem;">+5,12% pro Trade</strong></span>
+                                </div>
+                                <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">
+                                    David hat damit einen <strong>positiven Erwartungswert von über 5% pro Trade</strong> - das ist exzellent und zeigt ein profitables System mit klarem Edge am Markt.
+                                </p>
+                                <p style="line-height: 1.8; color: #374151; font-style: italic;">
+                                    Diese Kennzahlen entsprechen dem, was ich auch meinen Premium-Mitgliedern bei unserem strategischen Positionstrading vermittele: <strong>Hohe Trefferquote kombiniert mit gutem Risikomanagement.</strong>
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(254, 243, 199, 0.9); padding: 25px; border-radius: 8px; border: 2px solid #d69e2e; margin: 20px 0;">
+                                <h5 style="color: #d69e2e; font-weight: 700; margin-bottom: 15px; text-align: center;">🧮 Was kann David jetzt noch verbessern?</h5>
+                                <p style="text-align: center; color: #374151; margin-bottom: 15px;">
+                                    <strong>Gib David's Werte in den Simulator ein:</strong>
+                                </p>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: rgba(255, 255, 255, 0.7); padding: 20px; border-radius: 8px;">
+                                    <div style="text-align: center;">
+                                        <strong style="color: #d69e2e;">Gewinnwahrscheinlichkeit:</strong><br>
+                                        <span style="font-size: 1.5rem; font-weight: bold; color: #1a1a1a;">69%</span>
+                                    </div>
+                                    <div style="text-align: center;">
+                                        <strong style="color: #d69e2e;">Chancen-Risiko-Verhältnis:</strong><br>
+                                        <span style="font-size: 1.5rem; font-weight: bold; color: #1a1a1a;">1.57</span>
+                                    </div>
+                                </div>
+                                <p style="text-align: center; color: #6b7280; font-size: 0.9rem; margin-top: 15px; font-style: italic;">
+                                    Teste im Simulator, was Kelly für David's realistische Performance empfiehlt!
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255, 240, 240, 0.9); padding: 25px; border-radius: 8px; border-left: 4px solid #dc2626; margin: 20px 0;">
+                                <h5 style="color: #dc2626; font-weight: 700; margin-bottom: 15px;">⚠️ Wichtiger Hinweis von mir:</h5>
+                                <p style="line-height: 1.8; color: #374151; margin-bottom: 15px;">
+                                    <strong>Ich verwende Kelly nur, um herauszufinden, ob mein Position Sizing zu gering oder zu hoch ist.</strong> 
+                                    Den Kelly-Einsatz übernehme ich nicht blind.
+                                </p>
+                                <p style="line-height: 1.8; color: #dc2626; font-weight: 600;">
+                                    <strong>Börsengeschäfte sind immer riskant!</strong> Overnight-Risiko, Gap-Down, geopolitische Krisen - 
+                                    all das kann die beste Analyse zunichte machen.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Abschnitt 4: Die sichere Alternative -->
+        <div class="section" data-section="4">
+            <div class="section-header" onclick="toggleSection(4)">
+                <h2>🛡️ Die sichere Alternative: Halbes Kelly</h2>
+                <span class="section-toggle">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="content-inner">
+                    <p>Die Lösung: Nutze nur einen <strong>Bruchteil</strong> von dem, was Kelly vorschlägt!</p>
+
+                    <div class="success-box">
+                        <h3>✅ Die "Fraktionierte Kelly-Strategie"</h3>
+                        <p>Anstatt 100% des Kelly-Ergebnisses zu verwenden, nimmst du nur:</p>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>50% = "Half Kelly"</strong> (beliebteste Variante)</li>
+                            <li><strong>25% = "Quarter Kelly"</strong> (sehr konservativ)</li>
+                            <li><strong>10% = "Ultra-Safe Kelly"</strong> (für Anfänger)</li>
+                        </ul>
+                    </div>
+
+                    <div class="analogy-box">
+                        <h3>🚗 Die Autobahn-Analogie</h3>
+                        <p>Kelly ist wie ein Geschwindigkeitsmesser:</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>Full Kelly:</strong> Rast mit 200 km/h auf der Autobahn</li>
+                            <li><strong>Half Kelly:</strong> Fährst entspannte 100 km/h</li>
+                            <li><strong>Ergebnis:</strong> Du kommst nur etwas später an, aber viel sicherer!</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <h3>🏆 Warum Half Kelly so beliebt ist:</h3>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>75% der potenziellen Rendite</strong> - aber nur 50% des Risikos</li>
+                            <li><strong>Viel glattere Kapitalentwicklung</strong> - weniger Achterbahn</li>
+                            <li><strong>Schutz vor Schätzfehlern</strong> - doppelte Sicherheitsmarge</li>
+                            <li><strong>Besserer Schlaf</strong> - weniger Stress, bessere Entscheidungen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zusammenfassung -->
+        <div class="section" data-section="5">
+            <div class="section-header" onclick="toggleSection(5)">
+                <h2>🎓 Zusammenfassung & nächste Schritte</h2>
+                <span class="section-toggle">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="content-inner">
+                    <div class="success-box">
+                        <h3>🏆 Herzlichen Glückwunsch! Du hast das Kelly-Kriterium gemeistert!</h3>
+                        <p>Du weißt jetzt mehr über Risikomanagement als 95% aller Trader. Das ist dein entscheidender Vorteil!</p>
+                    </div>
+
+                    <h3>📋 Die wichtigsten Erkenntnisse:</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                        <div class="example-box">
+                            <h4>🎯 Kelly ist ein Werkzeug</h4>
+                            <p>Es berechnet die theoretische Obergrenze für dein Risiko - nicht den Betrag, den du setzen MUSST.</p>
+                        </div>
+                        
+                        <div class="danger-box">
+                            <h4>⚠️ Full Kelly ist gefährlich</h4>
+                            <p>100% der Kelly-Empfehlung führt zu extremen Schwankungen, die psychisch nicht durchhaltbar sind.</p>
+                        </div>
+                        
+                        <div class="success-box">
+                            <h4>🛡️ Sicherheit geht vor</h4>
+                            <p>Half Kelly oder Quarter Kelly bietet fast die gleiche Rendite bei viel weniger Risiko und Stress.</p>
+                        </div>
+                    </div>
+
+                    <div class="analogy-box">
+                        <h3>🚀 Deine nächsten Schritte:</h3>
+                        <ol style="margin-left: 20px;">
+                            <li><strong>Analysiere deine bisherigen Trades:</strong> Berechne deine echte Gewinnrate und dein durchschnittliches Gewinn-Verlust-Verhältnis</li>
+                            <li><strong>Starte konservativ:</strong> Beginne mit Quarter Kelly (25%) und taste dich langsam vor</li>
+                            <li><strong>Dokumentiere alles:</strong> Führe ein Trading-Journal und überprüfe deine Kelly-Berechnungen regelmäßig</li>
+                            <li><strong>Bleibe flexibel:</strong> Passe deine Position Size an, wenn sich deine Performance ändert</li>
+                        </ol>
+                    </div>
+
+                    <div class="success-box">
+                        <h3>🎯 Praktische Umsetzung:</h3>
+                        <p><strong>Beispiel für einen 10.000€ Account:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Kelly berechnet 20% → Full Kelly wäre 2.000€ Risiko</li>
+                            <li>Half Kelly (empfohlen) → 1.000€ Risiko pro Trade</li>
+                            <li>Quarter Kelly (konservativ) → 500€ Risiko pro Trade</li>
+                        </ul>
+                        <p><strong>Denk daran:</strong> Das ist das RISIKO, nicht die Position Size!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- Navigation -->
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="/modules" class="nav-button">← Zurück zur Modulübersicht</a>
+            <a href="#" class="nav-button" style="margin-left: 20px;">Nächstes Modul →</a>
+        </div>
+    </div>
+
+    <script>
+        // Globale Variablen
+        let currentSection = 0;
+        let growthChart;
+
+        // FUNKTIONIERENDER SIMULATOR CODE (aus Kelly_Simulator.html)
+        const winProbSlider = document.getElementById('winProb');
+        const winLossRatioSlider = document.getElementById('winLossRatio');
+        const winProbValueEl = document.getElementById('winProbValue');
+        const winLossRatioValueEl = document.getElementById('winLossRatioValue');
+        const kellyValueEl = document.getElementById('kellyValue');
+        const kellyInterpretationEl = document.getElementById('kellyInterpretation');
+        const chartCanvas = document.getElementById('growthChart');
+
+        function calculateKelly(W, R) {
+            if (R <= 0) return 0;
+            return W - ((1 - W) / R);
+        }
+
+        function runSimulation(initialCapital, winProb, winLossRatio, betFraction, numTrades) {
+            let capital = initialCapital;
+            const history = [initialCapital];
+
+            if(betFraction <= 0) {
+                 return Array(numTrades + 1).fill(initialCapital);
+            }
+
+            for (let i = 0; i < numTrades; i++) {
+                const isWin = Math.random() < winProb;
+                const betSize = capital * betFraction;
+
+                if (isWin) {
+                    capital += betSize * winLossRatio;
+                } else {
+                    capital -= betSize;
+                }
+
+                if (capital <= 0) {
+                    capital = 0;
+                }
+                history.push(capital);
+            }
+            return history;
+        }
+
+        function updateUI() {
+            const W = parseFloat(winProbSlider.value) / 100;
+            const R = parseFloat(winLossRatioSlider.value);
+
+            winProbValueEl.textContent = `${(W * 100).toFixed(0)}%`;
+            winLossRatioValueEl.textContent = R.toFixed(2);
+
+            const kellyFraction = calculateKelly(W, R);
+            const kellyPercent = kellyFraction > 0 ? kellyFraction * 100 : 0;
+            
+            kellyValueEl.textContent = `${kellyPercent.toFixed(2)}%`;
+
+            if (kellyFraction <= 0) {
+                kellyInterpretationEl.textContent = 'Ihre Strategie hat keinen positiven Erwartungswert. Nicht handeln.';
+                kellyValueEl.style.color = '#dc2626';
+                kellyValueEl.style.background = 'none';
+                kellyValueEl.style.webkitBackgroundClip = 'unset';
+                kellyValueEl.style.webkitTextFillColor = 'unset';
+            } else {
+                kellyInterpretationEl.textContent = `Optimalerweise sollten Sie ${kellyPercent.toFixed(2)}% Ihres Kapitals pro Trade riskieren.`;
+                kellyValueEl.style.background = 'linear-gradient(45deg, #b8860b, #daa520)';
+                kellyValueEl.style.webkitBackgroundClip = 'text';
+                kellyValueEl.style.webkitTextFillColor = 'transparent';
+                kellyValueEl.style.backgroundClip = 'text';
+            }
+            
+            updateChart(W, R, kellyFraction);
+        }
+        
+        function updateChart(W, R, kellyFraction) {
+            const initialCapital = 10000;
+            const numTrades = 100;
+
+            const halfKellyFraction = kellyFraction > 0 ? kellyFraction * 0.5 : 0;
+            const fullKellyFraction = kellyFraction > 0 ? kellyFraction : 0;
+            const overKellyFraction = kellyFraction > 0 ? kellyFraction * 1.5 : 0.05;
+
+            const halfKellyData = runSimulation(initialCapital, W, R, halfKellyFraction, numTrades);
+            const fullKellyData = runSimulation(initialCapital, W, R, fullKellyFraction, numTrades);
+            const overKellyData = runSimulation(initialCapital, W, R, overKellyFraction, numTrades);
+            
+            growthChart.data.labels = Array.from({ length: numTrades + 1 }, (_, i) => i);
+            growthChart.data.datasets[0].data = halfKellyData;
+            growthChart.data.datasets[1].data = fullKellyData;
+            growthChart.data.datasets[2].data = overKellyData;
+            growthChart.update();
+        }
+
+        function initializeChart() {
+            const ctx = chartCanvas.getContext('2d');
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Half Kelly (K * 0.5)',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Full Kelly (K * 1.0)',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.1,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Overbetting (K * 1.5)',
+                            data: [],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                               text: 'Anzahl der Trades'
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                            title: {
+                                display: true,
+                            text: 'Kapitalentwicklung über 100 simulierte Trades',
+                                font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            toggleSection(1); // Erstes Section automatisch öffnen
+            
+            // Initialisiere Simulator
+            if (typeof Chart !== 'undefined') {
+                initializeChart();
+                winProbSlider.addEventListener('input', updateUI);
+                winLossRatioSlider.addEventListener('input', updateUI);
+                updateUI();
+            } else {
+                console.error('Chart.js nicht verfügbar');
+            }
+        });
+
+        // Section Toggle
+        function toggleSection(sectionNumber) {
+            const section = document.querySelector(`.section[data-section="${sectionNumber}"]`);
+            const isExpanded = section.classList.contains('expanded');
+
+            if (!isExpanded) {
+                section.classList.add('expanded');
+                currentSection = Math.max(currentSection, sectionNumber);
+                updateProgress();
+            } else {
+                section.classList.remove('expanded');
+            }
+        }
+
+        // Progress Update
+        function updateProgress() {
+            const totalSections = 5;
+            const progress = (currentSection / totalSections) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = Math.round(progress) + '% abgeschlossen';
+        }
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+</body>
+</html>

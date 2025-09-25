@@ -1,0 +1,1028 @@
+{% extends "base.html" %}
+
+{% block title %}What I Learned About Investing from Darwin - Didis Trading Academy{% endblock %}
+
+{% block header_title %}🧬 What I Learned About Investing from Darwin{% endblock %}
+{% block header_subtitle %}Evolutionsbiologie trifft auf Finanzstrategie - Pulak Prasads revolutionärer Ansatz{% endblock %}
+
+{% block content %}
+
+<!-- Hero-Bereich mit Video -->
+<div class="card">
+    <div style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; padding: 3rem; border-radius: 15px; margin-bottom: 2rem; text-align: center;">
+        <h1 style="color: white; margin: 0 0 1rem 0; font-size: 2.2em;">🧬 What I Learned About Investing from Darwin</h1>
+        <p style="font-size: 1.2em; margin: 0 0 2rem 0; opacity: 0.9;">
+            Entdecke Pulak Prasads revolutionären Ansatz: Evolutionsbiologie trifft auf Finanzstrategie
+        </p>
+        
+        <!-- Video Embed - Prominent platziert -->
+        <div style="max-width: 800px; margin: 0 auto; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 15px; backdrop-filter: blur(10px);">
+            <h3 style="color: white; margin: 0 0 1.5rem 0;">🎥 Pulak Prasad erklärt seinen Ansatz</h3>
+            <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; border-radius: 10px; overflow: hidden;">
+                <iframe 
+                    src="https://www.youtube.com/embed/fw06Cdo5tKU" 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p style="color: white; margin: 1rem 0 0 0; font-size: 0.9em; opacity: 0.8;">
+                💡 <strong>Tipp:</strong> Schaue dir das Video zuerst an, um die Grundlagen zu verstehen, bevor du mit dem interaktiven Lernmodul beginnst.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Fortschritts-Tracking -->
+<div class="card" id="progress-section">
+    <h2 style="text-align: center; color: #1a1a1a; margin-bottom: 1.5rem;">📊 Dein Lernfortschritt</h2>
+    <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <span style="font-weight: 600;">Fortschritt:</span>
+            <span id="progress-text">0%</span>
+        </div>
+        <div style="background: #f0f0f0; height: 20px; border-radius: 10px; overflow: hidden;">
+            <div id="progress-bar" style="background: linear-gradient(90deg, #b8860b 0%, #daa520 100%); height: 100%; width: 0%; transition: width 0.3s ease; border-radius: 10px;"></div>
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.9em; color: #666;">
+            <span id="completed-sections">0</span> von 8 Abschnitten abgeschlossen
+        </div>
+    </div>
+</div>
+
+<!-- Kernkonzepte - Progressive Disclosure -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section1')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>🧠 I. Kernkonzepte und Prinzipien</span>
+            <span class="toggle-arrow" id="arrow1" style="font-size: 1.5em; transition: transform 0.3s ease;">▼</span>
+        </h2>
+    </div>
+    
+    <div id="section1" class="section-content" style="display: none;">
+        <!-- Typ-1 vs Typ-2 Fehler -->
+        <div class="concept-highlight" style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #b8860b;">
+            <h3 style="color: #1a1a1a; margin-top: 0;">⚠️ A. Vermeidung von Fehlern - Der Schlüssel zum Erfolg</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #e53e3e;">
+                    <h4 style="color: #e53e3e; margin-top: 0;">❌ Typ-1-Fehler (Error of Commission)</h4>
+                    <p><strong>Definition:</strong> Eine schlechte Investition tätigen, weil man sie fälschlicherweise für gut hält</p>
+                    <p><strong>Konsequenz:</strong> Kapitalverlust und verpasste profitable Chancen</p>
+                    <div style="background: #fee; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>🚨 Prasads Priorität:</strong> Diese Fehler unbedingt minimieren - sie bedrohen das Portfolio existenziell!
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #d69e2e;">
+                    <h4 style="color: #d69e2e; margin-top: 0;">⚠️ Typ-2-Fehler (Error of Omission)</h4>
+                    <p><strong>Definition:</strong> Eine gute Investitionsmöglichkeit übersehen</p>
+                    <p><strong>Konsequenz:</strong> Verpasste Gewinne, aber kein Kapitalverlust</p>
+                    <div style="background: #fff8e1; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <strong>💡 Prasads Sicht:</strong> Weniger kritisch, da das vorhandene Kapital geschützt bleibt
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem; border-left: 4px solid #38a169;">
+                <h4 style="color: #38a169; margin-top: 0;">🛡️ Strategien zur Minimierung von Typ-1-Fehlern:</h4>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li><strong>Gründliche Recherche:</strong> Fundamentalanalyse von Finanzdaten, Branchentrends und Wettbewerbsposition</li>
+                    <li><strong>Diversifikation:</strong> Begrenzt die Auswirkungen einzelner Fehler auf das Gesamtportfolio</li>
+                    <li><strong>Klare Kriterien:</strong> Investition nur bei Übereinstimmung der Fundamentaldaten mit der Strategie</li>
+                    <li><strong>Risikomanagement:</strong> Stop-Loss-Orders zur Begrenzung potenzieller Verluste</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ROCE Erklärung -->
+        <div class="concept-highlight" style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #38a169;">
+            <h3 style="color: #155724; margin-top: 0;">📊 B. Die Bedeutung von ROCE (Return on Capital Employed)</h3>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #155724; margin-top: 0;">🔍 Was ist ROCE?</h4>
+                <p style="font-size: 1.1em; line-height: 1.6;">
+                    <strong>ROCE = EBIT / Eingesetztes Kapital</strong><br>
+                    Ein Effizienzmaß, das angibt, wie effektiv ein Unternehmen Kapital einsetzt, um Gewinne zu erzielen.
+                </p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #b8860b; margin-top: 0;">🎯 Nalanda Capitals Benchmark</h4>
+                    <div style="background: #f4e97b; padding: 1rem; border-radius: 8px; text-align: center; margin-bottom: 1rem;">
+                        <strong style="font-size: 1.3em; color: #1a1a1a;">≥ 20% ROCE</strong><br>
+                        <small>über 5+ aufeinanderfolgende Jahre</small>
+                    </div>
+                    <p>vs. durchschnittliche ROCE indischer Unternehmen: <strong>8-12%</strong></p>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #155724; margin-top: 0;">💎 Qualitätsindikatoren</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Außergewöhnliches Management:</strong> Effiziente Kapitalallokation</li>
+                        <li><strong>Wettbewerbsvorteil:</strong> Preissetzungsmacht, Kostenvorteile</li>
+                        <li><strong>Cashflow-Generation:</strong> Mehr Flexibilität für Wachstum</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Langfristiger Ansatz -->
+        <div class="concept-highlight" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #1976d2;">
+            <h3 style="color: #0d47a1; margin-top: 0;">⏳ C. Langfristiger Ansatz und Geduld ("Very Lazy Investing")</h3>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+                <h4 style="color: #1976d2; margin-top: 0;">🎯 Nalanda Capitals Philosophie</h4>
+                <div style="background: #f4e97b; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                    <strong style="font-size: 1.2em; color: #1a1a1a;">"Permanente Eigentümer, nicht spekulative Investoren"</strong>
+                </div>
+                <p style="font-size: 1.1em; color: #0d47a1;"><strong>Ideale Haltedauer: "Für immer"</strong></p>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #1976d2; margin-top: 0;">🧘 Prinzipien der Geduld</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Marktrauschen ignorieren:</strong> Kurzfristige Schwankungen sind irrelevant</li>
+                        <li><strong>Zinseszinseffekt nutzen:</strong> Wahre Vorteile nur über längere Zeiträume</li>
+                        <li><strong>Opportunistisches Kaufen:</strong> Geduld für Marktabschwünge</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #e53e3e; margin-top: 0;">🚪 Verkaufskriterien (nur 3!)</h4>
+                    <ol style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Governance-Probleme:</strong> Rückgang der Standards</li>
+                        <li><strong>Kapitalallokation:</strong> Eklatant falsche Entscheidungen</li>
+                        <li><strong>Geschäftsschaden:</strong> Irreparabler Schaden am Business</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div style="background: #f4e97b; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem; text-align: center;">
+                <h4 style="color: #1a1a1a; margin-top: 0;">💡 "Don't be lazy, be very lazy"</h4>
+                <p style="color: #1a1a1a; font-size: 1.1em; margin: 0;">
+                    Aktives Handeln ist oft schädlich für die Performance - besonders bei hochwertigen Unternehmen, die ihren Charakter nicht grundlegend ändern.
+                </p>
+            </div>
+        </div>
+        
+        <!-- Praktisches Beispiel: ROCE-Screening -->
+        <div class="concept-highlight" style="background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #ff9800;">
+            <h3 style="color: #e65100; margin-top: 0;">🔍 Praktisches Beispiel: Wie finde ich investierbare Value-Aktien mit ROCE über 20%?</h3>
+            
+            <p style="font-size: 1.1em; line-height: 1.6; color: #bf360c; margin-bottom: 1.5rem;">
+                Theorie ist gut, aber wie setzt man Prasads ROCE-Kriterien in der Praxis um? Hier lernst du Schritt für Schritt, 
+                wie du hochqualitative Unternehmen mit einer ROCE über 20% findest und bewertest.
+            </p>
+            
+            <!-- Video Embed für praktisches Beispiel -->
+            <div style="background: rgba(255,255,255,0.9); padding: 2rem; border-radius: 12px; margin: 1.5rem 0;">
+                <h4 style="color: #e65100; margin: 0 0 1.5rem 0; text-align: center;">🎥 Schritt-für-Schritt Anleitung: ROCE-Screening in der Praxis</h4>
+                <div style="position: relative; width: 100%; height: 0; padding-bottom: 56.25%; border-radius: 10px; overflow: hidden;">
+                    <iframe 
+                        src="https://www.youtube.com/embed/uLSlccfNzBU" 
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <p style="color: #666; margin: 1rem 0 0 0; font-size: 0.9em; text-align: center;">
+                    💡 Dieses Video zeigt dir konkrete Tools und Methoden, um ROCE-starke Unternehmen zu identifizieren
+                </p>
+            </div>
+            
+            <!-- Praktische Schritte -->
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                <h4 style="color: #e65100; margin-top: 0;">📋 Deine 7-Schritte ROCE-Screening Checkliste</h4>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1rem;">
+                    <div>
+                        <h5 style="color: #ff9800; margin: 0 0 1rem 0;">🔍 Screening-Phase</h5>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Schritt 1:</strong> Nutze Finanz-Screener (Yahoo Finance, Morningstar, etc.)</li>
+                            <li><strong>Schritt 2:</strong> Filtere nach ROCE ≥ 20% über 5+ Jahre</li>
+                            <li><strong>Schritt 3:</strong> Prüfe Konsistenz der ROCE-Entwicklung</li>
+                            <li><strong>Schritt 4:</strong> Eliminiere zyklische Branchen (außer bei Zyklustiefs)</li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h5 style="color: #ff9800; margin: 0 0 1rem 0;">⚖️ Bewertungs-Phase</h5>
+                        <ul style="margin-left: 20px; line-height: 1.8;">
+                            <li><strong>Schritt 5:</strong> Analysiere die Bilanzstärke (niedrige Verschuldung)</li>
+                            <li><strong>Schritt 6:</strong> Bewerte das Management und Governance</li>
+                            <li><strong>Schritt 7:</strong> Bestimme fairen Wert und Sicherheitsmarge</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: #fff3e0; padding: 1rem; border-radius: 8px; margin-top: 1.5rem; border: 1px solid #ffcc02;">
+                    <h5 style="color: #e65100; margin: 0 0 0.5rem 0;">⚠️ Prasads Warnung: Qualität vor Quantität!</h5>
+                    <p style="color: #bf360c; margin: 0; font-size: 0.95em;">
+                        "Lieber 10 außergewöhnliche Unternehmen gründlich analysieren als 100 mittelmäßige oberflächlich screenen. 
+                        Ein einziger Typ-1-Fehler kann Jahre des Fortschritts zunichtemachen."
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Tools und Ressourcen -->
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                <h4 style="color: #e65100; margin-top: 0;">🛠️ Empfohlene Tools für ROCE-Analyse</h4>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <strong style="color: #ff9800;">📊 Screener</strong><br>
+                        <small>Yahoo Finance, Morningstar, Finviz</small>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <strong style="color: #ff9800;">📈 Analyse</strong><br>
+                        <small>Annual Reports, 10-K Filings</small>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <strong style="color: #ff9800;">🔍 Vertiefung</strong><br>
+                        <small>Company Websites, Investor Relations</small>
+                    </div>
+                    <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; text-align: center;">
+                        <strong style="color: #ff9800;">📋 Tracking</strong><br>
+                        <small>Excel, Portfolio-Software</small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Beispiel-Unternehmen -->
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-top: 1.5rem;">
+                <h4 style="color: #e65100; margin-top: 0;">🏆 Beispiele für historisch starke ROCE-Performer</h4>
+                <p style="color: #666; font-size: 0.9em; margin-bottom: 1rem;">
+                    <em>Hinweis: Diese sind nur historische Beispiele, keine Kaufempfehlungen!</em>
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                    <div style="background: #e8f5e8; padding: 1rem; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <strong style="color: #2e7d32;">🛡️ Defensive Qualität</strong><br>
+                        <small>Konsumgüter, Pharma, Software</small><br>
+                        <small style="color: #666;">Beispiel: Nestlé, Microsoft, Coca-Cola</small>
+                    </div>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; border-left: 4px solid #2196f3;">
+                        <strong style="color: #1565c0;">💎 Nischenchampions</strong><br>
+                        <small>Spezialisierte B2B-Unternehmen</small><br>
+                        <small style="color: #666;">Beispiel: ASML, Hermès, LVMH</small>
+                    </div>
+                    <div style="background: #fff3e0; padding: 1rem; border-radius: 8px; border-left: 4px solid #ff9800;">
+                        <strong style="color: #e65100;">⚡ Plattform-Geschäfte</strong><br>
+                        <small>Netzwerkeffekte, hohe Margen</small><br>
+                        <small style="color: #666;">Beispiel: Visa, Mastercard, Alphabet</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section1'); toggleSection('section2')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Kernkonzepte verstanden - Weiter zu Historischen Daten
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Historische Daten und Muster -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section2')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>📈 II. Historische Daten und Konvergente Muster</span>
+            <span class="toggle-arrow" id="arrow2" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section2" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #f57c00;">
+            <h3 style="color: #e65100; margin-top: 0;">🔍 D. Analyse historischer Daten (Konvergente Muster)</h3>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #f57c00; margin-top: 0;">📚 Vergangenheit als Kontext</h4>
+                <p style="font-size: 1.1em; line-height: 1.6;">
+                    Die Vergangenheit garantiert keine zukünftigen Ergebnisse, aber sie bietet wertvollen Kontext für:
+                </p>
+                <ul style="margin-left: 20px; line-height: 1.8;">
+                    <li>Verständnis von Geschäftswachstum</li>
+                    <li>Bewältigung von Herausforderungen</li>
+                    <li>Muster der Wertschöpfung</li>
+                </ul>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #e53e3e;">
+                    <h4 style="color: #e53e3e; margin-top: 0;">❌ Prasads Kritik an DCF-Modellen</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Unzuverlässige Zukunftsprognosen:</strong> Selbst kurzfristige Cashflows schwer vorhersagbar</li>
+                        <li><strong>Sensitivität:</strong> Kleine Änderungen → drastisch unterschiedliche Bewertungen</li>
+                        <li><strong>Fazit:</strong> Eher Ratespiel als wissenschaftliche Methode</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px; border: 2px solid #38a169;">
+                    <h4 style="color: #38a169; margin-top: 0;">✅ Investieren in Geschäftsvorlagen</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Wiederkehrende Muster:</strong> Erfolgreiche "Geschäftsvorlagen" identifizieren</li>
+                        <li><strong>Übertragbarkeit:</strong> Was in einer Region funktioniert, funktioniert oft auch anderswo</li>
+                        <li><strong>Fokus auf Umfeld:</strong> Investition in Unternehmen = Investition in deren Branche</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: #f4e97b; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #1a1a1a; margin-top: 0;">🎯 Erfolgsrezept: Fokus führt zum Erfolg</h4>
+                <p style="color: #1a1a1a; font-size: 1.1em; margin: 0;">
+                    Unternehmen, die sich auf ein einziges Produkt oder eng verwandte Angebote konzentrieren, 
+                    übertreffen tendenziell diversifizierte Konglomerate.
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section2'); toggleSection('section3')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Historische Muster verstanden - Weiter zu Risikomanagement
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Risikomanagement -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section3')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>🛡️ III. Risikomanagement und Bilanzstärke</span>
+            <span class="toggle-arrow" id="arrow3" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section3" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #38a169;">
+            <h3 style="color: #155724; margin-top: 0;">🛡️ E. Risikomanagement und Bilanzstärke</h3>
+            
+            <div style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+                <h4 style="color: #155724; margin-top: 0;">🎯 Prasads Prioritäten-Reihenfolge</h4>
+                <div style="display: flex; justify-content: space-around; align-items: center; margin: 1rem 0;">
+                    <div style="background: #e53e3e; color: white; padding: 1rem; border-radius: 10px; font-weight: 600;">1. RISIKO</div>
+                    <div style="font-size: 2em; color: #666;">→</div>
+                    <div style="background: #f57c00; color: white; padding: 1rem; border-radius: 10px; font-weight: 600;">2. QUALITÄT</div>
+                    <div style="font-size: 2em; color: #666;">→</div>
+                    <div style="background: #38a169; color: white; padding: 1rem; border-radius: 10px; font-weight: 600;">3. BEWERTUNG</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #38a169; margin-top: 0;">💪 Starke Bilanz</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Niedrige/keine Verschuldung:</strong> Maximale Kapitalsicherheit</li>
+                        <li><strong>Überschüssige Barmittel:</strong> Flexibilität in Krisen</li>
+                        <li><strong>Konservative Finanzierung:</strong> Auch wenn langsameres Wachstum</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 1.5rem; border-radius: 10px;">
+                    <h4 style="color: #1976d2; margin-top: 0;">🏰 Robustheit eines Unternehmens</h4>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>Lange Geschichte hoher ROCE</li>
+                        <li>Fragmentierte Kunden-/Lieferantenbasis</li>
+                        <li>Finanzielle Stärke (keine Schulden)</li>
+                        <li>Wettbewerbsvorteile</li>
+                        <li>Stabiles Management</li>
+                        <li>Sich langsam ändernde Branche</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: #fff3cd; padding: 1.5rem; border-radius: 10px; border: 1px solid #ffeaa7;">
+                <h4 style="color: #856404; margin-top: 0;">⚠️ Vermeidung schnelllebiger Branchen</h4>
+                <p style="color: #856404; font-size: 1.1em; margin: 0;">
+                    Prasad meidet Branchen wie Technologie und Biotech, da die Zukunft dort zu unvorhersehbar ist 
+                    und das Risiko von Typ-1-Fehlern erhöht.
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section3'); toggleSection('section4')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Risikomanagement verstanden - Weiter zu Investor vs. Trader
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Investor vs Trader -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section4')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>🦌 IV. Investor vs. Trader - Verschiedene Welten</span>
+            <span class="toggle-arrow" id="arrow4" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section4" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem; border-left: 5px solid #9c27b0;">
+            <h3 style="color: #4a148c; margin-top: 0;">🦌 F. Unterscheidung zwischen Investieren und Trading</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 1.5rem 0;">
+                <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; border: 3px solid #9c27b0;">
+                    <div style="font-size: 4em; margin-bottom: 1rem;">🦌</div>
+                    <h4 style="color: #4a148c; margin-top: 0;">INVESTOR - "Das scheue Reh"</h4>
+                    <ul style="text-align: left; margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Geduldig:</strong> Wartet auf die richtige Gelegenheit</li>
+                        <li><strong>Langfristig:</strong> Denkt in Jahren und Jahrzehnten</li>
+                        <li><strong>Qualitätsfokus:</strong> Sucht außergewöhnliche Unternehmen</li>
+                        <li><strong>Fundamentalbasiert:</strong> Analysiert Geschäftsmodelle</li>
+                        <li><strong>Risikoavers:</strong> Kapitalsicherheit hat Priorität</li>
+                    </ul>
+                </div>
+                
+                <div style="background: white; padding: 2rem; border-radius: 15px; text-align: center; border: 3px solid #f57c00;">
+                    <div style="font-size: 4em; margin-bottom: 1rem;">🏹</div>
+                    <h4 style="color: #e65100; margin-top: 0;">TRADER - "Der Jäger"</h4>
+                    <ul style="text-align: left; margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Aktiv:</strong> Verfolgt kurzfristige Bewegungen</li>
+                        <li><strong>Kurzfristig:</strong> Denkt in Tagen oder Wochen</li>
+                        <li><strong>Momentum-fokus:</strong> Nutzt Preisbewegungen</li>
+                        <li><strong>Technisch orientiert:</strong> Charts und Indikatoren</li>
+                        <li><strong>Spekulativ:</strong> Höhere Risiken für höhere Renditen</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div style="background: #f4e97b; padding: 1.5rem; border-radius: 10px; text-align: center;">
+                <h4 style="color: #1a1a1a; margin-top: 0;">🎯 Prasads Botschaft</h4>
+                <p style="color: #1a1a1a; font-size: 1.2em; margin: 0;">
+                    <strong>"Sei ein geduldiges Reh, kein hastiger Jäger"</strong><br>
+                    <small>Beide Ansätze haben ihre Berechtigung, aber sie basieren auf völlig unterschiedlichen Kriterien und Zeitrahmen.</small>
+                </p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section4'); toggleSection('section5')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Unterschiede verstanden - Weiter zum Quiz
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Interaktives Quiz -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section5')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>🧠 V. Interaktives Wissensquiz</span>
+            <span class="toggle-arrow" id="arrow5" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section5" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+            <h3 style="color: #0d47a1; text-align: center; margin-top: 0;">🧠 Teste dein Verständnis von Darwins Investing-Prinzipien</h3>
+            
+            <!-- Quiz Frage 1 -->
+            <div class="quiz-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #1a1a1a;">1. Was ist der Hauptunterschied zwischen Typ-1 und Typ-2 Fehlern?</h4>
+                <div style="margin: 1rem 0;">
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q1', 'wrong')">
+                        <input type="radio" name="q1" style="margin-right: 10px;"> Typ-1 Fehler sind teurer als Typ-2 Fehler
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q1', 'correct')">
+                        <input type="radio" name="q1" style="margin-right: 10px;"> Typ-1 Fehler führen zu Kapitalverlust, Typ-2 zu verpassten Chancen
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q1', 'wrong')">
+                        <input type="radio" name="q1" style="margin-right: 10px;"> Es gibt keinen wesentlichen Unterschied
+                    </label>
+                </div>
+                <div class="answer-feedback" id="feedback-q1" style="display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem;"></div>
+            </div>
+            
+            <!-- Quiz Frage 2 -->
+            <div class="quiz-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #1a1a1a;">2. Was ist Nalanda Capitals Benchmark für eine akzeptable ROCE?</h4>
+                <div style="margin: 1rem 0;">
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q2', 'wrong')">
+                        <input type="radio" name="q2" style="margin-right: 10px;"> 10% oder mehr
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q2', 'wrong')">
+                        <input type="radio" name="q2" style="margin-right: 10px;"> 15% über 3 Jahre
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q2', 'correct')">
+                        <input type="radio" name="q2" style="margin-right: 10px;"> 20% oder mehr über 5+ Jahre
+                    </label>
+                </div>
+                <div class="answer-feedback" id="feedback-q2" style="display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem;"></div>
+            </div>
+            
+            <!-- Quiz Frage 3 -->
+            <div class="quiz-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #1a1a1a;">3. Wann verkauft Nalanda Capital eine Aktie?</h4>
+                <div style="margin: 1rem 0;">
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q3', 'wrong')">
+                        <input type="radio" name="q3" style="margin-right: 10px;"> Bei 20% Gewinn
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q3', 'correct')">
+                        <input type="radio" name="q3" style="margin-right: 10px;"> Nur bei Governance-Problemen, falscher Kapitalallokation oder irreparablem Geschäftsschaden
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q3', 'wrong')">
+                        <input type="radio" name="q3" style="margin-right: 10px;"> Bei kurzfristigen Marktabschwüngen
+                    </label>
+                </div>
+                <div class="answer-feedback" id="feedback-q3" style="display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem;"></div>
+            </div>
+            
+            <!-- Quiz Frage 4 -->
+            <div class="quiz-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #1a1a1a;">4. Warum kritisiert Prasad DCF-Modelle?</h4>
+                <div style="margin: 1rem 0;">
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q4', 'wrong')">
+                        <input type="radio" name="q4" style="margin-right: 10px;"> Sie sind zu kompliziert
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q4', 'correct')">
+                        <input type="radio" name="q4" style="margin-right: 10px;"> Sie basieren auf unzuverlässigen Zukunftsprognosen und sind zu sensitiv
+                    </label>
+                    <label style="display: block; margin: 0.5rem 0; cursor: pointer; padding: 0.5rem; border-radius: 5px;" onclick="selectAnswer(this, 'q4', 'wrong')">
+                        <input type="radio" name="q4" style="margin-right: 10px;"> Sie berücksichtigen keine Dividenden
+                    </label>
+                </div>
+                <div class="answer-feedback" id="feedback-q4" style="display: none; padding: 1rem; border-radius: 8px; margin-top: 1rem;"></div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button onclick="checkAllAnswers(); markSectionComplete('section5'); toggleSection('section6')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                    ✅ Quiz abgeschlossen - Weiter zu Essay-Fragen
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Essay-Fragen -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section6')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>✍️ VI. Vertiefende Essay-Fragen</span>
+            <span class="toggle-arrow" id="arrow6" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section6" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+            <h3 style="color: #e65100; text-align: center; margin-top: 0;">✍️ Vertiefende Essay-Fragen</h3>
+            <p style="text-align: center; color: #bf360c; font-size: 1.1em;">
+                Diese Fragen helfen dir, die Konzepte zu durchdenken und zu verinnerlichen. 
+                Nimm dir Zeit für eine durchdachte Antwort.
+            </p>
+            
+            <div class="essay-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #e65100;">1. Prasads Fehler-Minimierung</h4>
+                <p>Diskutieren Sie, wie Pulak Prasads Betonung der Minimierung von Typ-1-Fehlern seine gesamte Anlagestrategie prägt, insbesondere im Hinblick auf die Auswahl von Unternehmen und das Risikomanagement.</p>
+                <textarea placeholder="Ihre Antwort hier..." style="width: 100%; height: 120px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; margin-top: 1rem; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+            
+            <div class="essay-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #e65100;">2. ROCE als Qualitätsindikator</h4>
+                <p>Analysieren Sie die Rolle der historischen ROCE als primäres Screening-Kriterium in Nalanda Capitals Ansatz. Erläutern Sie, warum Prasad diese Kennzahl für so aussagekräftig hält.</p>
+                <textarea placeholder="Ihre Antwort hier..." style="width: 100%; height: 120px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; margin-top: 1rem; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+            
+            <div class="essay-question" style="background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h4 style="color: #e65100;">3. "Very Lazy Investing"</h4>
+                <p>Erläutern Sie Pulak Prasads Konzept des "sehr faulen Investierens" im Vergleich zu den gängigen Praktiken in der Finanzbranche. Welche psychologischen und finanziellen Vorteile ergeben sich aus diesem Ansatz?</p>
+                <textarea placeholder="Ihre Antwort hier..." style="width: 100%; height: 120px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; margin-top: 1rem; font-family: inherit; resize: vertical;"></textarea>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section6'); toggleSection('section7')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Essay-Fragen bearbeitet - Weiter zum Glossar
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Glossar -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section7')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>📖 VII. Glossar der Schlüsselbegriffe</span>
+            <span class="toggle-arrow" id="arrow7" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section7" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%); padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
+            <h3 style="color: #4a148c; text-align: center; margin-top: 0;">📖 Glossar der Schlüsselbegriffe</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;">
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                    <h4 style="color: #e53e3e; margin-top: 0;">Typ-1-Fehler</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Die irrtümliche Annahme, dass eine Investitionsmöglichkeit attraktiv ist, obwohl sie es nicht ist, was zu einer schlechten Investition führt.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #d69e2e;">
+                    <h4 style="color: #d69e2e; margin-top: 0;">Typ-2-Fehler</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Das Übersehen einer potenziell exzellenten Investitionsmöglichkeit, weil sie fälschlicherweise als ungünstig angesehen wird.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <h4 style="color: #38a169; margin-top: 0;">ROCE</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Return on Capital Employed - misst, wie effizient ein Unternehmen Gewinne aus dem eingesetzten Kapital erwirtschaftet (EBIT / Eingesetztes Kapital).</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #1976d2;">
+                    <h4 style="color: #1976d2; margin-top: 0;">Konvergente Muster</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Wiederkehrende, erfolgreiche Geschäftsvorlagen oder Lösungen für ähnliche Probleme, die sich in verschiedenen Unternehmen, Branchen oder geografischen Regionen zeigen.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                    <h4 style="color: #9c27b0; margin-top: 0;">Permanentes Investment</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Eine langfristige Anlagestrategie, bei der ein Investor eine Beteiligung an einem Unternehmen über einen unbegrenzten Zeitraum hält, oft mit dem Wunsch, "für immer" zu halten.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #f57c00;">
+                    <h4 style="color: #f57c00; margin-top: 0;">Zinseszinseffekt</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Das exponentielle Wachstum einer Investition, wenn die Erträge selbst wieder investiert werden und weitere Erträge generieren.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #e91e63;">
+                    <h4 style="color: #e91e63; margin-top: 0;">DCF (Discounted Cash Flow)</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Eine Bewertungsmethode, die den Wert eines Unternehmens auf der Grundlage der Summe seiner zukünftigen, auf den heutigen Tag abgezinsten Cashflows schätzt.</p>
+                </div>
+                
+                <div class="glossary-term" style="background: white; padding: 1rem; border-radius: 8px; border-left: 4px solid #795548;">
+                    <h4 style="color: #795548; margin-top: 0;">Bilanzstärke</h4>
+                    <p style="font-size: 0.9em; margin: 0;">Der finanzielle Zustand eines Unternehmens, der sich durch geringe oder keine Verschuldung und überschüssige Barmittel auszeichnet, was eine hohe Widerstandsfähigkeit und Flexibilität signalisiert.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section7'); toggleSection('section8')" class="btn" style="font-size: 1.1rem; padding: 15px 30px;">
+                ✅ Glossar studiert - Weiter zu Key Takeaways
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Key Takeaways -->
+<div class="card">
+    <div class="section-header" onclick="toggleSection('section8')" style="cursor: pointer; background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem;">
+        <h2 style="color: white; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+            <span>🎯 VIII. Key Takeaways - Das Wichtigste auf einen Blick</span>
+            <span class="toggle-arrow" id="arrow8" style="font-size: 1.5em; transition: transform 0.3s ease;">▶</span>
+        </h2>
+    </div>
+    
+    <div id="section8" class="section-content" style="display: none;">
+        <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #28a745;">
+            <h2 style="text-align: center; color: #155724; margin-bottom: 1.5rem;">🎯 KEY TAKEAWAYS</h2>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>1.</strong> Minimiere Typ-1-Fehler (schlechte Investments) über alles - sie bedrohen das Portfolio existenziell.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>2.</strong> ROCE von 20%+ über 5+ Jahre ist ein starker Qualitätsindikator für außergewöhnliche Unternehmen.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>3.</strong> "Very Lazy Investing" - Geduld und langfristige Haltung nutzen den Zinseszinseffekt optimal.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>4.</strong> Historische Daten bieten wertvollen Kontext - aber keine Zukunftsgarantie. DCF-Modelle sind zu unzuverlässig.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>5.</strong> Konvergente Muster: Erfolgreiche Geschäftsvorlagen wiederholen sich über Branchen und Regionen hinweg.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>6.</strong> Prioritäten-Reihenfolge: Erst Risiko, dann Qualität, zuletzt Bewertung.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>7.</strong> Starke Bilanz mit geringer Verschuldung ist ein Wettbewerbsvorteil in Krisenzeiten.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>8.</strong> Fokussierte Unternehmen übertreffen meist diversifizierte Konglomerate.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>9.</strong> Verkaufen nur bei: Governance-Problemen, falscher Kapitalallokation oder irreparablem Geschäftsschaden.</p>
+            </div>
+            
+            <div class="takeaway" style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #28a745; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>10.</strong> Investoren sind "scheue Rehe" (geduldig), Trader sind "Jäger" (aktiv) - beide haben ihre Berechtigung.</p>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <button onclick="markSectionComplete('section8'); showCompletionCelebration()" class="btn" style="font-size: 1.2rem; padding: 20px 40px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%);">
+                🎉 Modul abgeschlossen!
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Abschluss-Celebration -->
+<div id="completion-celebration" style="display: none;">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 3rem; border-radius: 15px; margin: 2rem 0; text-align: center;">
+        <h2 style="color: white; margin: 0 0 1rem 0; font-size: 2.5em;">🎉 Herzlichen Glückwunsch!</h2>
+        <h3 style="color: white; margin: 0 0 1rem 0;">"What I Learned About Investing from Darwin"</h3>
+        <p style="font-size: 1.3em; margin: 1rem 0;">
+            Du hast erfolgreich Pulak Prasads revolutionären Investmentansatz gemeistert!
+        </p>
+        
+        <div style="background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 10px; margin: 2rem 0; backdrop-filter: blur(10px);">
+            <h4 style="color: white; margin-top: 0;">🏆 Was du gelernt hast:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                <div style="text-align: left;">
+                    <p style="color: white; margin: 0.5rem 0;">✅ Typ-1 vs Typ-2 Fehler</p>
+                    <p style="color: white; margin: 0.5rem 0;">✅ ROCE als Qualitätsmerkmal</p>
+                    <p style="color: white; margin: 0.5rem 0;">✅ "Very Lazy Investing"</p>
+                </div>
+                <div style="text-align: left;">
+                    <p style="color: white; margin: 0.5rem 0;">✅ Konvergente Muster</p>
+                    <p style="color: white; margin: 0.5rem 0;">✅ Risikomanagement</p>
+                    <p style="color: white; margin: 0.5rem 0;">✅ Investor vs. Trader</p>
+                </div>
+            </div>
+        </div>
+        
+        <p style="font-size: 1.1em; margin: 2rem 0;">
+            🚀 Du bist jetzt bereit, diese evolutionsbiologischen Prinzipien in deiner eigenen Investmentstrategie anzuwenden!
+        </p>
+        
+        <div style="margin-top: 2rem;">
+            <a href="{{ url_for('modules') }}" class="btn" style="background: white; color: #667eea; font-size: 1.1rem; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 0 10px;">
+                📚 Weitere Module entdecken
+            </a>
+            <a href="#" onclick="restartModule()" class="btn" style="background: rgba(255,255,255,0.2); color: white; font-size: 1.1rem; padding: 15px 30px; text-decoration: none; border-radius: 8px; display: inline-block; margin: 0 10px;">
+                🔄 Modul wiederholen
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+<script>
+// Progress Tracking
+let completedSections = new Set();
+const totalSections = 8;
+
+// Load progress from localStorage
+function loadProgress() {
+    const saved = localStorage.getItem('darwin-investing-progress');
+    if (saved) {
+        completedSections = new Set(JSON.parse(saved));
+        updateProgressBar();
+    }
+}
+
+// Save progress to localStorage
+function saveProgress() {
+    localStorage.setItem('darwin-investing-progress', JSON.stringify([...completedSections]));
+}
+
+// Update progress bar
+function updateProgressBar() {
+    const progress = (completedSections.size / totalSections) * 100;
+    document.getElementById('progress-bar').style.width = progress + '%';
+    document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+    document.getElementById('completed-sections').textContent = completedSections.size;
+}
+
+// Toggle section visibility
+function toggleSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    const arrow = document.getElementById('arrow' + sectionId.slice(-1));
+    
+    if (section.style.display === 'none' || section.style.display === '') {
+        section.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+        arrow.textContent = '▲';
+    } else {
+        section.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+        arrow.textContent = '▼';
+    }
+}
+
+// Mark section as complete
+function markSectionComplete(sectionId) {
+    completedSections.add(sectionId);
+    updateProgressBar();
+    saveProgress();
+}
+
+// Quiz functionality
+function selectAnswer(element, questionId, correctness) {
+    // Remove previous selections
+    const labels = element.parentNode.querySelectorAll('label');
+    labels.forEach(label => {
+        label.style.backgroundColor = '';
+        label.style.border = '';
+    });
+    
+    // Mark current selection
+    element.style.backgroundColor = correctness === 'correct' ? '#d4edda' : '#f8d7da';
+    element.style.border = correctness === 'correct' ? '2px solid #28a745' : '2px solid #dc3545';
+    
+    // Show feedback
+    const feedback = document.getElementById('feedback-' + questionId);
+    feedback.style.display = 'block';
+    
+    if (correctness === 'correct') {
+        feedback.style.backgroundColor = '#d4edda';
+        feedback.style.color = '#155724';
+        feedback.innerHTML = '✅ <strong>Richtig!</strong> Sehr gut verstanden.';
+    } else {
+        feedback.style.backgroundColor = '#f8d7da';
+        feedback.style.color = '#721c24';
+        feedback.innerHTML = '❌ <strong>Nicht ganz.</strong> Schau nochmal in den entsprechenden Abschnitt.';
+    }
+}
+
+// Check all quiz answers
+function checkAllAnswers() {
+    const questions = ['q1', 'q2', 'q3', 'q4'];
+    let allAnswered = true;
+    
+    questions.forEach(q => {
+        const checked = document.querySelector(`input[name="${q}"]:checked`);
+        if (!checked) {
+            allAnswered = false;
+        }
+    });
+    
+    if (allAnswered) {
+        alert('🎉 Quiz abgeschlossen! Du hast alle Fragen beantwortet.');
+    } else {
+        alert('⚠️ Bitte beantworte alle Fragen, bevor du fortfährst.');
+    }
+}
+
+// Show completion celebration
+function showCompletionCelebration() {
+    document.getElementById('completion-celebration').style.display = 'block';
+    
+    // Scroll to celebration
+    document.getElementById('completion-celebration').scrollIntoView({ 
+        behavior: 'smooth' 
+    });
+    
+    // Confetti effect (if you want to add a library)
+    // confetti();
+}
+
+// Restart module
+function restartModule() {
+    if (confirm('Möchtest du das Modul wirklich zurücksetzen? Dein Fortschritt geht verloren.')) {
+        completedSections.clear();
+        localStorage.removeItem('darwin-investing-progress');
+        updateProgressBar();
+        
+        // Close all sections
+        for (let i = 1; i <= totalSections; i++) {
+            const section = document.getElementById('section' + i);
+            const arrow = document.getElementById('arrow' + i);
+            if (section) {
+                section.style.display = 'none';
+                arrow.style.transform = 'rotate(0deg)';
+                arrow.textContent = '▼';
+            }
+        }
+        
+        // Hide completion celebration
+        document.getElementById('completion-celebration').style.display = 'none';
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadProgress();
+    
+    // Auto-open first section if no progress
+    if (completedSections.size === 0) {
+        toggleSection('section1');
+    }
+});
+
+// Smooth scroll for internal links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+
+<style>
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+    
+    .section-header h2 {
+        font-size: 1.3rem;
+    }
+    
+    .concept-highlight {
+        padding: 1rem !important;
+    }
+    
+    .concept-highlight > div {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+    
+    .quiz-question label {
+        font-size: 0.9rem;
+    }
+    
+    .glossary-term {
+        margin-bottom: 1rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+    
+    /* Video responsive */
+    iframe {
+        height: 250px;
+    }
+}
+
+/* Animation for progress bar */
+#progress-bar {
+    transition: width 0.5s ease-in-out;
+}
+
+/* Hover effects for interactive elements */
+.section-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.quiz-question label:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+    transition: all 0.3s ease;
+}
+
+.glossary-term:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Fade-in animation for sections */
+.section-content {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #daa520 0%, #f4e97b 100%);
+}
+</style>
+
+{% endblock %}

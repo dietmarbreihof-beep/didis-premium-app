@@ -1,0 +1,57 @@
+Hier ist eine Zusammenfassung der Abschrift in deutscher Sprache:
+
+Hauptthema: Der zentrale Punkt der Abschrift ist die absolute Irrelevanz
+des durchschnittlichen Kauf- oder Verkaufspreises für den Erwartungswert
+eines Handels. Viele Händler machen den Fehler, Entscheidungen auf der
+Grundlage ihres Durchschnittspreises zu treffen, was zu suboptimalen und
+verlustbringenden Ergebnissen führt.
+
+Schlüsselargumente und Ideen:
+
+-   Irrelevanz des Durchschnittspreises:
+
+    -   Der Durchschnittspreis eines Händlers ist für den Erwartungswert
+        eines Handels zu 100 % irrelevant.
+    -   In der Gleichung zur Berechnung des Erwartungswertes (Belohnung
+        multipliziert mit der Wahrscheinlichkeit dieses Ergebnisses
+        abzüglich des Risikos multipliziert mit der Wahrscheinlichkeit
+        des Eintritts dieses Ergebnisses) ist der Durchschnittspreis
+        kein Eingabefaktor.
+    -   Der Erwartungswert zu einem bestimmten Zeitpunkt ist völlig
+        unabhängig davon, ob man überhaupt eine Position hält,
+        geschweige denn, wie hoch der Durchschnittspreis ist.
+
+-   Häufige Händlerfehler durch dieses Missverständnis:
+
+    -   Halten einer verlustreichen Position: Händler halten oft an
+        einer Position fest, die sich gegen sie entwickelt hat, mit der
+        Begründung, ihr Durchschnittspreis sei "so gut". Dies führt oft
+        dazu, dass sie Verluste akkumulieren.
+    -   Verkauf am Durchschnittspreis nach Erholung: Ein weiterer Fehler
+        ist das Schließen einer Position, die stark im Minus lag, genau
+        dann, wenn sie sich wieder dem Durchschnittspreis nähert, oft
+        aus Erleichterung, obwohl der Erwartungswert der Position gerade
+        positiv geworden sein könnte.
+    -   Langes Halten einer guten Position: Selbst wenn ein Händler
+        einen guten Einstiegspunkt erwischt, wird dieser oft genutzt, um
+        das Halten einer großen Position über einen längeren Zeitraum zu
+        rechtfertigen, anstatt Gewinne zu realisieren. Dies kann dazu
+        führen, dass der Erwartungswert marginal oder negativ wird und
+        die Gewinne wieder abgegeben werden.
+
+-   Marktagismus und rationale Entscheidungsfindung:
+
+    -   Der Markt ist "agnostisch" gegenüber der Position eines
+        Händlers; er kümmert sich nicht um dessen Einstandspreis.
+    -   Händler sollten ebenfalls versuchen, agnostisch gegenüber ihrer
+        eigenen Position zu sein und Entscheidungen ausschließlich auf
+        der Grundlage dessen zu treffen, was der aktuelle Erwartungswert
+        vorschreibt, nicht auf der Grundlage emotionaler Vorurteile, die
+        durch den Durchschnittspreis hervorgerufen werden.
+
+-   Konsequenzen:
+
+    -   Das Festhalten an dieser konzeptionellen Fehlannahme führt dazu,
+        dass Gewinne und Geld verloren gehen.
+    -   Es ist entscheidend, die eigenen Handels- und Denkprozesse zu
+        überprüfen, um solche Fehler zu identifizieren und zu vermeiden.

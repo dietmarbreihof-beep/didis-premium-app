@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Das Kelly-Kriterium Interaktiv</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: A single-page, narrative flow structure was chosen to guide the user from basic concepts to practical application. It starts with a foundational explanation (Was ist das?), moves to the core formula (Die Formel), allows hands-on exploration (Interaktiver Rechner), visualizes the long-term impact (Wachstumssimulation), and concludes with crucial caveats (Wichtige Überlegungen). This linear, educational path is most effective for a complex financial topic, ensuring the user builds a solid understanding before seeing the results. The key interaction is the central calculator, which drives both the numerical output and the visual chart, creating a direct link between input parameters and their consequences. -->
+    <!-- Visualization & Content Choices: 
+        1. Kelly Formula Components (W, R): Goal: Inform & Explore. Method: Interactive sliders. Interaction: User drags sliders for Win-Rate (W) and Win/Loss-Ratio (R). Justification: Sliders provide an intuitive way to explore a range of inputs and see the immediate effect on the calculated Kelly Percentage. Library: Vanilla JS.
+        2. Long-term Growth: Goal: Compare & Show Change. Method: Line Chart. Interaction: The chart dynamically updates based on the slider inputs from the calculator. It compares different betting fractions (Half Kelly, Full Kelly, Over-betting). Justification: A line chart is the clearest way to visualize and compare portfolio growth over time, powerfully demonstrating the risks of over- and under-betting. Library: Chart.js (Canvas).
+        3. Key Risks & Considerations: Goal: Inform. Method: Styled text cards. Interaction: Static content. Justification: Clear, segmented text is best for conveying important conceptual warnings and practical advice. Library: HTML/Tailwind.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f7f4; 
+            color: #333;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease;
+        }
+        .accent-bg { background-color: #2c3e50; }
+        .accent-text { color: #ffffff; }
+        .highlight-text { color: #3498db; }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #3498db;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #ffffff;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 50vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="accent-bg text-center py-8 shadow-lg">
+        <div class="container mx-auto px-4">
+            <h1 class="text-4xl md:text-5xl font-bold accent-text tracking-tight">Das Kelly-Kriterium Interaktiv</h1>
+            <p class="text-lg accent-text opacity-90 mt-2">Ein Werkzeug zum Verständnis von Risikomanagement und optimaler Positionsgröße</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8 space-y-12">
+
+        <section id="grundlagen" class="card p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Was ist das Kelly-Kriterium?</h2>
+            <p class="text-gray-600 leading-relaxed">
+                Das Kelly-Kriterium ist eine mathematische Formel, die zur Bestimmung der optimalen Größe einer Position oder Wette verwendet wird. Das Ziel ist es, den langfristigen geometrischen Wachstumssatz des eigenen Kapitals zu maximieren. Entwickelt von John L. Kelly Jr., findet es Anwendung in der Finanzwelt und im Glücksspiel, um zu entscheiden, wie viel Prozent des Kapitals für eine einzelne Investition mit positivem Erwartungswert riskiert werden sollte. Es hilft dabei, ein Gleichgewicht zwischen zu aggressivem Handeln (was zum Ruin führen kann) und zu vorsichtigem Handeln (was das Wachstumspotenzial begrenzt) zu finden.
+            </p>
+        </section>
+
+        <section id="formel" class="accent-bg text-white rounded-lg p-6 md:p-8">
+             <h2 class="text-2xl font-bold mb-4">Die Formel</h2>
+            <div class="bg-gray-800 bg-opacity-50 p-6 rounded-md text-center">
+                <p class="text-3xl font-mono tracking-wider">K% = W - ( (1 - W) / R )</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 text-center">
+                <div>
+                    <h3 class="font-bold text-lg">K%</h3>
+                    <p class="text-sm opacity-80">Der optimale Prozentsatz des Kapitals, der riskiert werden sollte.</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg">W</h3>
+                    <p class="text-sm opacity-80">Die Gewinnwahrscheinlichkeit eines Trades (z.B. 0.6 für 60%).</p>
+                </div>
+                <div>
+                    <h3 class="font-bold text-lg">R</h3>
+                    <p class="text-sm opacity-80">Das Chance-Risiko-Verhältnis (durchschnittlicher Gewinn / durchschnittlicher Verlust).</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="rechner" class="card p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-6 text-gray-800">Interaktiver Rechner & Simulation</h2>
+            <p class="text-gray-600 mb-6 leading-relaxed">
+                Passen Sie die Gewinnwahrscheinlichkeit (W) und das Chance-Risiko-Verhältnis (R) an, um den optimalen Kelly-Prozentsatz zu berechnen. Die untenstehende Simulation visualisiert, wie sich Ihr Kapital über eine Reihe von Trades unter verschiedenen Strategien entwickeln könnte, basierend auf Ihren Eingaben.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="lg:col-span-1 space-y-6">
+                    <div>
+                        <label for="winProb" class="block font-medium text-gray-700">Gewinnwahrscheinlichkeit (W): <span id="winProbValue" class="font-bold highlight-text"></span></label>
+                        <input id="winProb" type="range" min="1" max="99" value="60" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                    <div>
+                        <label for="winLossRatio" class="block font-medium text-gray-700">Chance-Risiko-Verhältnis (R): <span id="winLossRatioValue" class="font-bold highlight-text"></span></label>
+                        <input id="winLossRatio" type="range" min="0.1" max="5" value="1.5" step="0.1" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    </div>
+                </div>
+                <div class="lg:col-span-2 card p-6 text-center bg-gray-50 rounded-lg">
+                    <h3 class="text-lg font-semibold text-gray-700">Optimaler Kelly-Einsatz (K%)</h3>
+                    <p id="kellyValue" class="text-5xl font-bold highlight-text my-2">0.00%</p>
+                    <p id="kellyInterpretation" class="text-gray-600 min-h-[40px]"></p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="simulation">
+             <div class="chart-container">
+                <canvas id="growthChart"></canvas>
+            </div>
+        </section>
+
+        <section id="ueberlegungen" class="card p-6 md:p-8">
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">Wichtige Überlegungen</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Unsichere Schätzungen</h3>
+                    <p class="text-gray-600 text-sm">Die größte Herausforderung in der Praxis ist die genaue Schätzung der Gewinnwahrscheinlichkeit (W) und des Chance-Risiko-Verhältnisses (R). Historische Daten sind keine Garantie für zukünftige Ergebnisse. Eine Überschätzung dieser Werte kann zu übermäßigem Risiko führen.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Volatilität und Drawdowns</h3>
+                    <p class="text-gray-600 text-sm">Die volle Kelly-Strategie kann zu extremer Volatilität und tiefen Drawdowns führen, die psychologisch schwer zu ertragen sind. Selbst mit einem positiven Erwartungswert kann es lange Verlustphasen geben.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Das "Half-Kelly" Konzept</h3>
+                    <p class="text-gray-600 text-sm">Viele erfahrene Anwender nutzen nur einen Bruchteil des berechneten Kelly-Wertes (z.B. 50% oder "Half-Kelly"). Dies reduziert die Volatilität und das Ruinrisiko erheblich, während immer noch ein Großteil des Wachstumspotenzials erhalten bleibt, wie die Simulation oft zeigt.</p>
+                </div>
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Kein Allheilmittel</h3>
+                    <p class="text-gray-600 text-sm">Das Kelly-Kriterium ist ein Werkzeug für das Positionsmanagement, keine Handelsstrategie an sich. Es funktioniert nur, wenn die zugrunde liegende Strategie einen positiven Erwartungswert hat (d.h., sie ist profitabel). Es kann eine schlechte Strategie nicht in eine gute verwandeln.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 mt-8 border-t border-gray-200">
+        <p class="text-gray-500">Ein interaktives Lernwerkzeug. Keine Anlageberatung.</p>
+    </footer>
+
+    <script>
+        const winProbSlider = document.getElementById('winProb');
+        const winLossRatioSlider = document.getElementById('winLossRatio');
+        const winProbValueEl = document.getElementById('winProbValue');
+        const winLossRatioValueEl = document.getElementById('winLossRatioValue');
+        const kellyValueEl = document.getElementById('kellyValue');
+        const kellyInterpretationEl = document.getElementById('kellyInterpretation');
+        
+        const chartCanvas = document.getElementById('growthChart');
+        let growthChart;
+
+        function calculateKelly(W, R) {
+            if (R <= 0) return 0;
+            return W - ((1 - W) / R);
+        }
+
+        function runSimulation(initialCapital, winProb, winLossRatio, betFraction, numTrades) {
+            let capital = initialCapital;
+            const history = [initialCapital];
+
+            if(betFraction <= 0) {
+                 return Array(numTrades + 1).fill(initialCapital);
+            }
+
+            for (let i = 0; i < numTrades; i++) {
+                const isWin = Math.random() < winProb;
+                const betSize = capital * betFraction;
+
+                if (isWin) {
+                    capital += betSize * winLossRatio;
+                } else {
+                    capital -= betSize;
+                }
+
+                if (capital <= 0) {
+                    capital = 0;
+                }
+                history.push(capital);
+            }
+            return history;
+        }
+
+        function updateUI() {
+            const W = parseFloat(winProbSlider.value) / 100;
+            const R = parseFloat(winLossRatioSlider.value);
+
+            winProbValueEl.textContent = `${(W * 100).toFixed(0)}%`;
+            winLossRatioValueEl.textContent = R.toFixed(2);
+
+            const kellyFraction = calculateKelly(W, R);
+            const kellyPercent = kellyFraction > 0 ? kellyFraction * 100 : 0;
+            
+            kellyValueEl.textContent = `${kellyPercent.toFixed(2)}%`;
+
+            if (kellyFraction <= 0) {
+                kellyInterpretationEl.textContent = 'Ihre Strategie hat keinen positiven Erwartungswert. Nicht handeln.';
+                kellyValueEl.classList.remove('text-green-600');
+                kellyValueEl.classList.add('text-red-600');
+            } else {
+                kellyInterpretationEl.textContent = `Optimalerweise sollten Sie ${kellyPercent.toFixed(2)}% Ihres Kapitals pro Trade riskieren.`;
+                kellyValueEl.classList.remove('text-red-600');
+                kellyValueEl.classList.add('highlight-text');
+            }
+            
+            updateChart(W, R, kellyFraction);
+        }
+        
+        function updateChart(W, R, kellyFraction) {
+            const initialCapital = 10000;
+            const numTrades = 100;
+
+            const halfKellyFraction = kellyFraction > 0 ? kellyFraction * 0.5 : 0;
+            const fullKellyFraction = kellyFraction > 0 ? kellyFraction : 0;
+            const overKellyFraction = kellyFraction > 0 ? kellyFraction * 1.5 : 0.05;
+
+            const halfKellyData = runSimulation(initialCapital, W, R, halfKellyFraction, numTrades);
+            const fullKellyData = runSimulation(initialCapital, W, R, fullKellyFraction, numTrades);
+            const overKellyData = runSimulation(initialCapital, W, R, overKellyFraction, numTrades);
+            
+            growthChart.data.labels = Array.from({ length: numTrades + 1 }, (_, i) => i);
+            growthChart.data.datasets[0].data = halfKellyData;
+            growthChart.data.datasets[1].data = fullKellyData;
+            growthChart.data.datasets[2].data = overKellyData;
+            growthChart.update();
+        }
+
+        function initializeChart() {
+            const ctx = chartCanvas.getContext('2d');
+            growthChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Half Kelly (K * 0.5)',
+                            data: [],
+                            borderColor: '#2ecc71',
+                            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Full Kelly (K * 1.0)',
+                            data: [],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.1,
+                            pointRadius: 0,
+                        },
+                        {
+                            label: 'Overbetting (K * 1.5)',
+                            data: [],
+                            borderColor: '#e74c3c',
+                            backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.1,
+                            pointRadius: 0,
+                            borderDash: [5, 5]
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return value.toLocaleString('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 });
+                                }
+                            }
+                        },
+                        x: {
+                           title: {
+                               display: true,
+                               text: 'Anzahl der Trades'
+                           }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        title: {
+                            display: true,
+                            text: 'Kapitalentwicklung über 100 simulierte Trades',
+                            font: {
+                                size: 16
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+        
+        winProbSlider.addEventListener('input', updateUI);
+        winLossRatioSlider.addEventListener('input', updateUI);
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeChart();
+            updateUI();
+        });
+
+    </script>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+</body>
+</html>

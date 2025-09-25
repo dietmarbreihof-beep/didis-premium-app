@@ -1,0 +1,402 @@
+{% extends "base.html" %}
+
+{% block title %}Trading-Tools - Didis Premium Trading Academy{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); color: #1a1a1a; padding: 40px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">🛠️</div>
+        <h1 style="color: #1a1a1a; margin-bottom: 15px; font-size: 32px; font-weight: 700;">Trading-Tools</h1>
+        <p style="color: rgba(26, 26, 26, 0.8); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+            Professionelle Trading-Werkzeuge und Kalkulatoren für die praktische Anwendung Ihres Wissens. 
+            Von Risikomanagement bis Portfolio-Optimierung.
+        </p>
+    </div>
+
+    {% if session.get('logged_in') %}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin: 30px 0;">
+            {% for tool in tools %}
+            <div class="tool-card" style="
+                background: white; 
+                border-radius: 12px; 
+                padding: 30px; 
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+                border: 2px solid #f0f0f0;
+                transition: all 0.3s ease;
+                position: relative;
+                {% if not tool.user_has_access %}opacity: 0.7;{% endif %}
+            ">
+                <!-- Status Badge -->
+                <div style="position: absolute; top: 15px; right: 15px;">
+                    {% if tool.user_has_access %}
+                        <span style="background: #38a169; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                            Verfügbar
+                        </span>
+                    {% else %}
+                        <span style="background: #e53e3e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                            Upgrade erforderlich
+                        </span>
+                    {% endif %}
+                </div>
+
+                <!-- Tool Icon -->
+                <div style="font-size: 48px; margin-bottom: 20px; text-align: center;">{{ tool.icon }}</div>
+                
+                <!-- Tool Info -->
+                <h3 style="color: #1a1a1a; margin-bottom: 15px; font-size: 22px; font-weight: 600; text-align: center;">
+                    {{ tool.title }}
+                </h3>
+                
+                <p style="color: #666; margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                    {{ tool.description }}
+                </p>
+
+                <!-- Tool Details -->
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: center;">
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        ⏱️ {{ tool.estimated_time }}
+                    </div>
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        📊 {{ tool.difficulty }}
+                    </div>
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        📁 {{ tool.category }}
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <div style="text-align: center;">
+                    {% if tool.user_has_access %}
+                        <a href="{{ tool.url }}" class="btn" style="
+                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                            color: white; 
+                            border: none; 
+                            font-weight: 600; 
+                            padding: 12px 24px; 
+                            font-size: 16px; 
+                            transition: all 0.3s ease;
+                            text-decoration: none;
+                            display: inline-block;
+                            border-radius: 8px;
+                        ">
+                            Tool öffnen →
+                        </a>
+                    {% else %}
+                        <a href="/upgrade-required?module_slug={{ tool.title|lower|replace(' ', '-') }}" class="btn" style="
+                            background: #e53e3e; 
+                            color: white; 
+                            border: none; 
+                            font-weight: 600; 
+                            padding: 12px 24px; 
+                            font-size: 16px; 
+                            transition: all 0.3s ease;
+                            text-decoration: none;
+                            display: inline-block;
+                            border-radius: 8px;
+                        ">
+                            Upgrade erforderlich
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning" style="margin: 30px 0;">
+            <h3>🔐 Anmeldung erforderlich</h3>
+            <p>Melden Sie sich an, um Zugriff auf unsere professionellen Trading-Tools zu erhalten.</p>
+            <a href="/login" class="btn" style="margin-top: 15px;">Jetzt anmelden</a>
+        </div>
+
+        <!-- Preview für nicht-eingeloggte Benutzer -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 25px; margin: 30px 0; opacity: 0.6;">
+            {% for tool in tools %}
+            <div style="
+                background: white; 
+                border-radius: 12px; 
+                padding: 30px; 
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+                border: 2px solid #f0f0f0;
+                position: relative;
+            ">
+                <!-- Preview Badge -->
+                <div style="position: absolute; top: 15px; right: 15px;">
+                    <span style="background: #d69e2e; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                        Vorschau
+                    </span>
+                </div>
+
+                <!-- Tool Icon -->
+                <div style="font-size: 48px; margin-bottom: 20px; text-align: center;">{{ tool.icon }}</div>
+                
+                <!-- Tool Info -->
+                <h3 style="color: #1a1a1a; margin-bottom: 15px; font-size: 22px; font-weight: 600; text-align: center;">
+                    {{ tool.title }}
+                </h3>
+                
+                <p style="color: #666; margin-bottom: 20px; line-height: 1.6; text-align: center;">
+                    {{ tool.description }}
+                </p>
+
+                <!-- Tool Details -->
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; justify-content: center;">
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        ⏱️ {{ tool.estimated_time }}
+                    </div>
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        📊 {{ tool.difficulty }}
+                    </div>
+                    <div style="background: #f7f7f7; padding: 6px 12px; border-radius: 20px; font-size: 12px; color: #666; font-weight: 500;">
+                        📁 {{ tool.category }}
+                    </div>
+                </div>
+
+                <!-- Disabled Button -->
+                <div style="text-align: center;">
+                    <div style="
+                        background: #ccc; 
+                        color: #666; 
+                        border: none; 
+                        font-weight: 600; 
+                        padding: 12px 24px; 
+                        font-size: 16px; 
+                        border-radius: 8px;
+                        display: inline-block;
+                        cursor: not-allowed;
+                    ">
+                        Anmeldung erforderlich
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<!-- Empfehlungen Sektion -->
+<div class="card">
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">📚</div>
+        <h2 style="color: white; margin-bottom: 15px; font-size: 32px; font-weight: 700;">Empfehlungen</h2>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+            Die besten Tools, Software und Bücher für Ihren Trading-Erfolg. 
+            Handverlesene Empfehlungen aus der Praxis.
+        </p>
+    </div>
+
+    <!-- Software Empfehlungen -->
+    <div style="margin-bottom: 40px;">
+        <h3 style="color: #1a1a1a; margin-bottom: 25px; font-size: 24px; font-weight: 600; display: flex; align-items: center;">
+            <span style="font-size: 32px; margin-right: 15px;">💻</span>
+            Software & Plattformen
+        </h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px;">
+            <!-- Finviz -->
+            <div class="recommendation-card" style="
+                background: white; 
+                border-radius: 12px; 
+                padding: 30px; 
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+                border: 2px solid #f0f0f0;
+                transition: all 0.3s ease;
+                position: relative;
+            ">
+                <!-- Top Pick Badge -->
+                <div style="position: absolute; top: 15px; right: 15px;">
+                    <span style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); color: #1a1a1a; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; box-shadow: 0 2px 10px rgba(218, 165, 32, 0.3);">
+                        🔝 TOP PICK
+                    </span>
+                </div>
+
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-right: 20px;">📊</div>
+                    <div>
+                        <h4 style="color: #1a1a1a; margin: 0 0 5px 0; font-size: 22px; font-weight: 600;">
+                            Finviz.com
+                        </h4>
+                        <p style="color: #666; margin: 0; font-size: 14px;">
+                            Professioneller Stock Screener & Marktanalyse
+                        </p>
+                    </div>
+                </div>
+
+                <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">
+                    <strong>Der ultimative Stock Screener</strong> für technische und fundamentale Analyse. 
+                    Heatmaps, Screener, Charts und Insider-Trading Daten in einem Tool.
+                </p>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px;">
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ Kostenlose Version</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ Heatmaps</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ Screener</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ News Integration</span>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="https://finviz.com/?a=188444271" target="_blank" rel="noopener" class="btn" style="
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        color: white; 
+                        border: none; 
+                        font-weight: 600; 
+                        padding: 12px 24px; 
+                        font-size: 16px; 
+                        transition: all 0.3s ease;
+                        text-decoration: none;
+                        display: inline-block;
+                        border-radius: 8px;
+                    ">
+                        🚀 Finviz besuchen
+                    </a>
+                </div>
+            </div>
+
+            <!-- GuruFocus -->
+            <div class="recommendation-card" style="
+                background: white; 
+                border-radius: 12px; 
+                padding: 30px; 
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+                border: 2px solid #f0f0f0;
+                transition: all 0.3s ease;
+                position: relative;
+            ">
+                <!-- Top Pick Badge -->
+                <div style="position: absolute; top: 15px; right: 15px;">
+                    <span style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); color: #1a1a1a; padding: 6px 15px; border-radius: 20px; font-size: 12px; font-weight: 700; box-shadow: 0 2px 10px rgba(218, 165, 32, 0.3);">
+                        🔝 TOP PICK
+                    </span>
+                </div>
+
+                <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-right: 20px;">🧙‍♂️</div>
+                    <div>
+                        <h4 style="color: #1a1a1a; margin: 0 0 5px 0; font-size: 22px; font-weight: 600;">
+                            GuruFocus
+                        </h4>
+                        <p style="color: #666; margin: 0; font-size: 14px;">
+                            Warren Buffett & Investment-Gurus folgen
+                        </p>
+                    </div>
+                </div>
+
+                <p style="color: #666; margin-bottom: 20px; line-height: 1.6;">
+                    <strong>Folgen Sie den besten Investoren der Welt!</strong> 
+                    Sehen Sie die Portfolios von Warren Buffett, Charlie Munger und anderen Investment-Gurus in Echtzeit.
+                </p>
+
+                <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 25px;">
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ Guru Portfolios</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ 13F Filings</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ Value Investing</span>
+                    <span style="background: #e8f5e8; color: #38a169; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-weight: 600;">✅ DCF Modelle</span>
+                </div>
+
+                <div style="text-align: center;">
+                    <a href="http://www.gurufocus.com/?affid=700807" target="_blank" rel="noopener" class="btn" style="
+                        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                        color: white; 
+                        border: none; 
+                        font-weight: 600; 
+                        padding: 12px 24px; 
+                        font-size: 16px; 
+                        transition: all 0.3s ease;
+                        text-decoration: none;
+                        display: inline-block;
+                        border-radius: 8px;
+                    ">
+                        🧙‍♂️ GuruFocus besuchen
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buch Empfehlungen -->
+    <div style="margin-bottom: 40px;">
+        <h3 style="color: #1a1a1a; margin-bottom: 25px; font-size: 24px; font-weight: 600; display: flex; align-items: center;">
+            <span style="font-size: 32px; margin-right: 15px;">📚</span>
+            Buch-Empfehlungen
+        </h3>
+        
+        <div style="background: #f8f9fa; padding: 30px; border-radius: 12px; text-align: center; border: 2px dashed #ddd;">
+            <div style="font-size: 48px; margin-bottom: 20px;">📖</div>
+            <h4 style="color: #666; margin-bottom: 15px; font-size: 20px;">Buch-Empfehlungen folgen bald</h4>
+            <p style="color: #999; line-height: 1.6;">
+                Wir stellen gerade unsere besten Buchempfehlungen für Trading und Investing zusammen. 
+                Diese werden in Kürze hier verfügbar sein.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Zusätzliche Informationen -->
+<div class="card">
+    <h2 style="color: #1a1a1a; margin-bottom: 20px;">💡 Über unsere Trading-Tools</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #667eea;">
+            <h4 style="color: #667eea; margin-bottom: 15px;">🎯 Praxisorientiert</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Alle Tools sind darauf ausgelegt, Ihnen bei echten Trading-Entscheidungen zu helfen. 
+                Von der Positionsgrößenberechnung bis zur Portfolio-Allokation.
+            </p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #38a169;">
+            <h4 style="color: #38a169; margin-bottom: 15px;">📊 Datenbasiert</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Unsere Tools verwenden bewährte mathematische Modelle und Algorithmen, 
+                die von professionellen Tradern weltweit eingesetzt werden.
+            </p>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #daa520;">
+            <h4 style="color: #daa520; margin-bottom: 15px;">🚀 Benutzerfreundlich</h4>
+            <p style="color: #666; line-height: 1.6;">
+                Komplexe Berechnungen werden einfach und verständlich präsentiert. 
+                Perfekt für Einsteiger und Profis gleichermaßen.
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+.tool-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #daa520;
+}
+
+.recommendation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #daa520;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 768px) {
+    .card {
+        margin: 15px;
+        padding: 20px;
+    }
+    
+    .tool-card {
+        padding: 20px !important;
+    }
+    
+    h1 {
+        font-size: 24px !important;
+    }
+}
+</style>
+
+<!-- Einheitliche Navigation -->
+{% include '_navigation.html' %}
+
+{% endblock %}
+

@@ -1,0 +1,1057 @@
+{% extends "base.html" %}
+
+{% block title %}Menü-Struktur Verwaltung - Didis Trading Academy{% endblock %}
+
+{% block header_title %}🗂️ Menü-Struktur Verwaltung{% endblock %}
+{% block header_subtitle %}Verwalte die 3-Ebenen-Hierarchie deiner Lernmodule{% endblock %}
+
+{% block content %}
+<!-- Statistiken Dashboard -->
+<div class="card">
+    <h2>📊 Übersicht</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_categories }}</div>
+            <div>Hauptkategorien</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_subcategories }}</div>
+            <div>Unterkategorien</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.total_modules }}</div>
+            <div>Gesamt Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.published_modules }}</div>
+            <div>Veröffentlicht</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ stats.lead_magnets }}</div>
+            <div>Lead-Magnete</div>
+        </div>
+    </div>
+</div>
+
+<!-- Schnell-Aktionen -->
+<div class="card">
+    <h2>⚡ Schnell-Aktionen - NEUE FUNKTIONEN AKTIVIERT! 🎉</h2>
+    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #28a745;">
+        <strong>✅ Alle Admin-Funktionen sind jetzt verfügbar!</strong><br>
+        Sie können Module veröffentlichen, Lead-Magnete umschalten, Bulk-Operationen durchführen und vieles mehr.
+    </div>
+    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <button class="btn" onclick="showAddCategoryModal()">
+            ➕ Hauptkategorie hinzufügen
+        </button>
+        <button class="btn secondary" onclick="showBulkOperations()">
+            🔧 Bulk-Operationen
+        </button>
+        <button class="btn secondary" onclick="exportStructure()">
+            📤 Struktur exportieren
+        </button>
+        <button class="btn secondary" onclick="toggleSortMode()">
+            🔀 Sortieren-Modus
+        </button>
+        <button class="btn secondary" onclick="selectAllModules()">
+            ☑️ Alle Module auswählen
+        </button>
+        <button class="btn secondary" onclick="deselectAllModules()">
+            ☐ Alle abwählen
+        </button>
+    </div>
+</div>
+
+<!-- Bulk-Operations Panel (versteckt) -->
+<div id="bulkOperationsPanel" class="card" style="display: none;">
+    <h2>🔧 Bulk-Operationen</h2>
+    <div id="selectedCount" style="margin-bottom: 15px; font-weight: bold; color: #3b82f6;">
+        0 Module ausgewählt
+    </div>
+    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn-small" onclick="bulkAction('publish')" disabled id="bulkPublish">
+            📢 Veröffentlichen
+        </button>
+        <button class="btn-small" onclick="bulkAction('unpublish')" disabled id="bulkUnpublish">
+            📝 Unveröffentlicht
+        </button>
+        <button class="btn-small" onclick="bulkAction('lead_magnet')" disabled id="bulkLeadMagnet">
+            🧲 Lead-Magnet
+        </button>
+        <button class="btn-small" onclick="bulkAction('not_lead_magnet')" disabled id="bulkNotLeadMagnet">
+            ❌ Nicht Lead-Magnet
+        </button>
+        <button class="btn-small danger" onclick="bulkAction('delete')" disabled id="bulkDelete">
+            🗑️ Löschen
+        </button>
+    </div>
+</div>
+
+<!-- Anleitung -->
+<div class="card">
+    <h2>📋 So nutzen Sie die Admin-Funktionen:</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <h4>📢 Module veröffentlichen/unveröffentlichen</h4>
+            <p>Klicken Sie auf die <strong>📢/📝 Buttons</strong> bei jedem Modul</p>
+        </div>
+        <div style="background: #d1ecf1; padding: 15px; border-radius: 8px; border-left: 4px solid #17a2b8;">
+            <h4>🧲 Lead-Magnet Status</h4>
+            <p>Klicken Sie auf die <strong>🧲/🔓 Buttons</strong> bei jedem Modul</p>
+        </div>
+        <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #28a745;">
+            <h4>✅ Kategorien aktivieren/deaktivieren</h4>
+            <p>Klicken Sie auf die <strong>✅/❌ Buttons</strong> bei Kategorien</p>
+        </div>
+        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; border-left: 4px solid #dc3545;">
+            <h4>🗑️ Löschen</h4>
+            <p>Klicken Sie auf die <strong>🗑️ Buttons</strong> um Items zu löschen</p>
+        </div>
+        <div style="background: #e2e3e5; padding: 15px; border-radius: 8px; border-left: 4px solid #6c757d;">
+            <h4>☑️ Bulk-Operationen</h4>
+            <p>Wählen Sie Module aus und nutzen Sie <strong>Bulk-Aktionen</strong></p>
+        </div>
+        <div style="background: #cce5ff; padding: 15px; border-radius: 8px; border-left: 4px solid #007bff;">
+            <h4>➕ Hinzufügen</h4>
+            <p>Nutzen Sie die <strong>➕ Buttons</strong> um neue Items zu erstellen</p>
+        </div>
+    </div>
+</div>
+
+<!-- Menü-Struktur -->
+<div class="card">
+    <h2>🗂️ Hierarchische Struktur</h2>
+    
+    <div id="menu-structure">
+        {% for category in categories %}
+        <div class="category-container" data-category-id="{{ category.id }}">
+            <div class="category-header" onclick="toggleCategory({{ category.id }})">
+                <span class="category-icon">{{ category.icon }}</span>
+                <span class="category-name">{{ category.name }}</span>
+                <span class="category-stats">
+                    ({{ category.subcategories|length }} Unterkategorien, 
+                     {{ category.modules|length }} Module)
+                </span>
+                <div class="category-actions">
+                    <button class="btn-small" onclick="editCategory({{ category.id }}); event.stopPropagation();">✏️</button>
+                    <button class="btn-small" onclick="addSubcategory({{ category.id }}); event.stopPropagation();">➕ Sub</button>
+                    <button class="btn-small" onclick="addModule({{ category.id }}, null); event.stopPropagation();">➕ Modul</button>
+                    <button class="btn-small" onclick="toggleCategoryStatus({{ category.id }}); event.stopPropagation();" 
+                            title="{% if category.is_active %}Deaktivieren{% else %}Aktivieren{% endif %}">
+                        {% if category.is_active %}✅{% else %}❌{% endif %}
+                    </button>
+                    <button class="btn-small danger" onclick="deleteItem('category', {{ category.id }}); event.stopPropagation();">🗑️</button>
+                </div>
+            </div>
+            
+            <div class="category-content" id="category-{{ category.id }}" style="display: none;">
+                <!-- Unterkategorien -->
+                {% for subcategory in category.subcategories %}
+                <div class="subcategory-container" data-subcategory-id="{{ subcategory.id }}">
+                    <div class="subcategory-header" onclick="toggleSubcategory({{ subcategory.id }})">
+                        <span class="subcategory-icon">{{ subcategory.icon }}</span>
+                        <span class="subcategory-name">{{ subcategory.name }}</span>
+                        <span class="subcategory-stats">({{ subcategory.modules|length }} Module)</span>
+                        <div class="subcategory-actions">
+                            <button class="btn-small" onclick="editSubcategory({{ subcategory.id }}); event.stopPropagation();">✏️</button>
+                            <button class="btn-small" onclick="addModule({{ category.id }}, {{ subcategory.id }}); event.stopPropagation();">➕ Modul</button>
+                            <button class="btn-small" onclick="toggleSubcategoryStatus({{ subcategory.id }}); event.stopPropagation();"
+                                    title="{% if subcategory.is_active %}Deaktivieren{% else %}Aktivieren{% endif %}">
+                                {% if subcategory.is_active %}✅{% else %}❌{% endif %}
+                            </button>
+                            <button class="btn-small danger" onclick="deleteItem('subcategory', {{ subcategory.id }}); event.stopPropagation();">🗑️</button>
+                        </div>
+                    </div>
+                    
+                    <div class="subcategory-content" id="subcategory-{{ subcategory.id }}" style="display: none;">
+                        <!-- Module in dieser Unterkategorie -->
+                        {% for module in subcategory.modules|sort(attribute='sort_order') %}
+                        <div class="module-container" data-module-id="{{ module.id }}">
+                            <div class="module-header">
+                                <input type="checkbox" class="module-checkbox" value="{{ module.id }}" onchange="updateSelectedCount()">
+                                <span class="module-icon">{{ module.icon }}</span>
+                                <span class="module-title">{{ module.title }}</span>
+                                <div class="module-badges">
+                                    {% if module.is_published %}
+                                    <span class="badge success">📢 Veröffentlicht</span>
+                                    {% else %}
+                                    <span class="badge warning">📝 Entwurf</span>
+                                    {% endif %}
+                                    
+                                    {% if module.is_lead_magnet %}
+                                    <span class="badge lead-magnet">🧲 Lead-Magnet</span>
+                                    {% endif %}
+                                    
+                                    <span class="badge level">{{ module.difficulty_level }}</span>
+                                    <span class="badge duration">{{ module.estimated_duration }}min</span>
+                                </div>
+                                <div class="module-actions">
+                                    <button class="btn-small" onclick="editModule({{ module.id }}); event.stopPropagation();">✏️</button>
+                                    <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'published'); event.stopPropagation();"
+                                            title="{% if module.is_published %}Unveröffentlicht{% else %}Veröffentlichen{% endif %}">
+                                        {% if module.is_published %}📢{% else %}📝{% endif %}
+                                    </button>
+                                    <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'lead_magnet'); event.stopPropagation();"
+                                            title="{% if module.is_lead_magnet %}Lead-Magnet entfernen{% else %}Lead-Magnet{% endif %}">
+                                        {% if module.is_lead_magnet %}🧲{% else %}🔓{% endif %}
+                                    </button>
+                                    <button class="btn-small" onclick="moveModule({{ module.id }}, 'up'); event.stopPropagation();" title="Nach oben">⬆️</button>
+                                    <button class="btn-small" onclick="moveModule({{ module.id }}, 'down'); event.stopPropagation();" title="Nach unten">⬇️</button>
+                                    <button class="btn-small danger" onclick="deleteItem('module', {{ module.id }}); event.stopPropagation();">🗑️</button>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Module direkt in der Kategorie (ohne Unterkategorie) -->
+                {% for module in category.modules %}
+                {% if not module.subcategory_id %}
+                <div class="module-container" data-module-id="{{ module.id }}">
+                    <div class="module-header">
+                        <input type="checkbox" class="module-checkbox" value="{{ module.id }}" onchange="updateSelectedCount()">
+                        <span class="module-icon">{{ module.icon }}</span>
+                        <span class="module-title">{{ module.title }}</span>
+                        <div class="module-badges">
+                            {% if module.is_published %}
+                            <span class="badge success">📢 Veröffentlicht</span>
+                            {% else %}
+                            <span class="badge warning">📝 Entwurf</span>
+                            {% endif %}
+                            
+                            {% if module.is_lead_magnet %}
+                            <span class="badge lead-magnet">🧲 Lead-Magnet</span>
+                            {% endif %}
+                            
+                            <span class="badge level">{{ module.difficulty_level }}</span>
+                            <span class="badge duration">{{ module.estimated_duration }}min</span>
+                        </div>
+                        <div class="module-actions">
+                            <button class="btn-small" onclick="editModule({{ module.id }}); event.stopPropagation();">✏️</button>
+                            <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'published'); event.stopPropagation();"
+                                    title="{% if module.is_published %}Unveröffentlicht{% else %}Veröffentlichen{% endif %}">
+                                {% if module.is_published %}📢{% else %}📝{% endif %}
+                            </button>
+                            <button class="btn-small" onclick="toggleModuleStatus({{ module.id }}, 'lead_magnet'); event.stopPropagation();"
+                                    title="{% if module.is_lead_magnet %}Lead-Magnet entfernen{% else %}Lead-Magnet{% endif %}">
+                                {% if module.is_lead_magnet %}🧲{% else %}🔓{% endif %}
+                            </button>
+                            <button class="btn-small" onclick="moveModule({{ module.id }}, 'up'); event.stopPropagation();" title="Nach oben">⬆️</button>
+                            <button class="btn-small" onclick="moveModule({{ module.id }}, 'down'); event.stopPropagation();" title="Nach unten">⬇️</button>
+                            <button class="btn-small danger" onclick="deleteItem('module', {{ module.id }}); event.stopPropagation();">🗑️</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div id="addCategoryModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('addCategoryModal')">&times;</span>
+        <h2>➕ Neue Hauptkategorie</h2>
+        <form method="POST" action="{{ url_for('admin_menu.add_category') }}">
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="category_name">Name *</label>
+                        <input type="text" id="category_name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category_icon">Icon</label>
+                        <input type="text" id="category_icon" name="icon" value="📊">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="category_description">Beschreibung</label>
+                        <textarea id="category_description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="category_sort_order">Sortierreihenfolge</label>
+                        <input type="number" id="category_sort_order" name="sort_order" value="100">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn secondary" onclick="closeModal('addCategoryModal')">Abbrechen</button>
+                <button type="submit" class="btn">Erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Module Modal -->
+<div id="addModuleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal('addModuleModal')">&times;</span>
+        <h2>➕ Neues Modul</h2>
+        <form method="POST" action="{{ url_for('admin_menu.add_module') }}">
+            <input type="hidden" id="module_category_id" name="category_id">
+            <input type="hidden" id="module_subcategory_id" name="subcategory_id">
+            
+            <div class="form-section">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="module_title">Titel *</label>
+                        <input type="text" id="module_title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="module_icon">Icon</label>
+                        <input type="text" id="module_icon" name="icon" value="📚">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="module_description">Beschreibung</label>
+                        <textarea id="module_description" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="module_difficulty">Schwierigkeitsgrad</label>
+                        <select id="module_difficulty" name="difficulty_level">
+                            <option value="Anfänger">Anfänger</option>
+                            <option value="Fortgeschritten">Fortgeschritten</option>
+                            <option value="Experte">Experte</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="module_duration">Geschätzte Dauer (Minuten)</label>
+                        <input type="number" id="module_duration" name="estimated_duration" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label for="module_content_type">Content-Typ</label>
+                        <select id="module_content_type" name="content_type">
+                            <option value="html_template">HTML-Template</option>
+                            <option value="external_url">Externe URL</option>
+                        </select>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="module_content">Content-Pfad/URL</label>
+                        <input type="text" id="module_content" name="content_path">
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Zugriffssteuerung</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="leadMagnetCheckbox" name="is_lead_magnet" onchange="toggleSubscriptionLevels()">
+                            Lead-Magnet (kostenlos für alle)
+                        </label>
+                    </div>
+                    <div id="subscriptionLevels">
+                        <div class="form-group">
+                            <label>Erforderliche Subscription-Levels:</label>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 10px;">
+                                <label><input type="checkbox" name="required_subscription_levels" value="basic"> Basic</label>
+                                <label><input type="checkbox" name="required_subscription_levels" value="premium"> Premium</label>
+                                <label><input type="checkbox" name="required_subscription_levels" value="elite"> Elite</label>
+                                <label><input type="checkbox" name="required_subscription_levels" value="masterclass"> Masterclass</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn secondary" onclick="closeModal('addModuleModal')">Abbrechen</button>
+                <button type="submit" class="btn">Erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+/* CSS Variables für konsistente Farben */
+:root {
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --success: #10b981;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --glass-bg: rgba(255, 255, 255, 0.25);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --gold-classic: #ffd700;
+    --gold-dark: #b8860b;
+}
+
+/* Card Styling */
+.card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card h2 {
+    margin: 0 0 1.5rem 0;
+    color: #2d3748;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+/* Category/Subcategory/Module Styling */
+.category-container, .subcategory-container, .module-container {
+    margin: 1rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.category-header, .subcategory-header, .module-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.category-header:hover, .subcategory-header:hover, .module-header:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateX(5px);
+}
+
+.category-content, .subcategory-content {
+    padding: 20px 0 0 40px;
+}
+
+.subcategory-container {
+    margin-left: 20px;
+}
+
+.subcategory-content {
+    padding-left: 60px;
+}
+
+.module-container {
+    margin-left: 20px;
+}
+
+/* Icons und Text */
+.category-icon, .subcategory-icon, .module-icon {
+    font-size: 1.5rem;
+    min-width: 30px;
+    text-align: center;
+}
+
+.category-name, .subcategory-name, .module-title {
+    font-weight: 600;
+    color: #2d3748;
+    flex: 1;
+}
+
+.category-stats, .subcategory-stats {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Actions */
+.category-actions, .subcategory-actions, .module-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.btn-small {
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: #4b5563;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    border: 1px solid var(--glass-border);
+}
+
+.btn-small:hover {
+    background: rgba(255, 255, 255, 0.6);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-small.danger {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.btn-small.danger:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Badges */
+.module-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.badge.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.badge.warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge.lead-magnet {
+    background: rgba(139, 92, 246, 0.1);
+    color: #7c3aed;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.badge.level, .badge.duration {
+    background: rgba(107, 114, 128, 0.1);
+    color: #374151;
+    border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+/* Buttons */
+.btn {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn.secondary {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    color: #2d3748;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn.secondary:hover {
+    background: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 800px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.close:hover {
+    color: #000;
+}
+
+/* Form Styling */
+.form-section {
+    margin: 1.5rem 0;
+    padding: 1.5rem;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-header, .subcategory-header, .module-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .category-actions, .subcategory-actions, .module-actions {
+        width: 100%;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .modal-content {
+        margin: 5% auto;
+        padding: 25px;
+        width: 95%;
+    }
+    
+    .subcategory-container {
+        margin-left: 15px;
+    }
+    
+    .subcategory-content {
+        padding: 15px 0 0 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .category-header, .subcategory-header {
+        padding: 15px;
+    }
+    
+    .module-header {
+        padding: 12px 15px;
+    }
+    
+    .modal-content {
+        padding: 20px;
+    }
+    
+    .form-section {
+        padding: 20px;
+    }
+}
+
+/* Loading Animation */
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
+
+.loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200px 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-gradient);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-gradient);
+}
+</style>
+
+<script>
+// Globale Variablen
+let sortMode = false;
+
+// Toggle Functions
+function toggleCategory(categoryId) {
+    const content = document.getElementById('category-' + categoryId);
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+}
+
+function toggleSubcategory(subcategoryId) {
+    const content = document.getElementById('subcategory-' + subcategoryId);
+    content.style.display = content.style.display === 'none' ? 'block' : 'none';
+}
+
+// Modal Functions
+function showAddCategoryModal() {
+    document.getElementById('addCategoryModal').style.display = 'block';
+}
+
+function addSubcategory(categoryId) {
+    const name = prompt('Name der Unterkategorie:');
+    if (name) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '{{ url_for("admin_menu.add_subcategory") }}';
+        
+        const categoryField = document.createElement('input');
+        categoryField.type = 'hidden';
+        categoryField.name = 'category_id';
+        categoryField.value = categoryId;
+        
+        const nameField = document.createElement('input');
+        nameField.type = 'hidden';
+        nameField.name = 'name';
+        nameField.value = name;
+        
+        form.appendChild(categoryField);
+        form.appendChild(nameField);
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function addModule(categoryId, subcategoryId) {
+    document.getElementById('module_category_id').value = categoryId;
+    document.getElementById('module_subcategory_id').value = subcategoryId || '';
+    document.getElementById('addModuleModal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+function toggleSubscriptionLevels() {
+    const checkbox = document.getElementById('leadMagnetCheckbox');
+    const levels = document.getElementById('subscriptionLevels');
+    levels.style.display = checkbox.checked ? 'none' : 'block';
+}
+
+// Status Toggle Functions
+function toggleModuleStatus(moduleId, statusType) {
+    const endpoint = statusType === 'published' ? 'toggle-published' : 'toggle-lead-magnet';
+    fetch(`/admin/${endpoint}/${moduleId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Fehler: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ein Fehler ist aufgetreten');
+        });
+}
+
+function toggleCategoryStatus(categoryId) {
+    fetch(`/admin/toggle-category/${categoryId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Fehler: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ein Fehler ist aufgetreten');
+        });
+}
+
+function toggleSubcategoryStatus(subcategoryId) {
+    fetch(`/admin/toggle-subcategory/${subcategoryId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Fehler: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ein Fehler ist aufgetreten');
+        });
+}
+
+// Delete Function
+function deleteItem(type, id) {
+    if (confirm(`Sind Sie sicher, dass Sie dieses ${type} löschen möchten?`)) {
+        fetch('/admin/delete-item', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                type: type,
+                id: id
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Fehler: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Ein Fehler ist aufgetreten');
+        });
+    }
+}
+
+// Move Module Functions
+function moveModule(moduleId, direction) {
+    // Vereinfachte Implementierung - in der echten App würde man die Sortierreihenfolge aktualisieren
+    alert(`Modul ${moduleId} nach ${direction === 'up' ? 'oben' : 'unten'} bewegen - Feature in Entwicklung`);
+}
+
+// Bulk Operations
+function updateSelectedCount() {
+    const checkboxes = document.querySelectorAll('.module-checkbox:checked');
+    const count = checkboxes.length;
+    document.getElementById('selectedCount').textContent = `${count} Module ausgewählt`;
+    
+    // Enable/disable bulk action buttons
+    const buttons = ['bulkPublish', 'bulkUnpublish', 'bulkLeadMagnet', 'bulkNotLeadMagnet', 'bulkDelete'];
+    buttons.forEach(buttonId => {
+        const button = document.getElementById(buttonId);
+        button.disabled = count === 0;
+    });
+}
+
+function selectAllModules() {
+    const checkboxes = document.querySelectorAll('.module-checkbox');
+    checkboxes.forEach(checkbox => checkbox.checked = true);
+    updateSelectedCount();
+}
+
+function deselectAllModules() {
+    const checkboxes = document.querySelectorAll('.module-checkbox');
+    checkboxes.forEach(checkbox => checkbox.checked = false);
+    updateSelectedCount();
+}
+
+function showBulkOperations() {
+    const panel = document.getElementById('bulkOperationsPanel');
+    panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+}
+
+function bulkAction(action) {
+    const checkboxes = document.querySelectorAll('.module-checkbox:checked');
+    const moduleIds = Array.from(checkboxes).map(cb => parseInt(cb.value));
+    
+    if (moduleIds.length === 0) {
+        alert('Bitte wählen Sie mindestens ein Modul aus');
+        return;
+    }
+    
+    if (action === 'delete' && !confirm(`Sind Sie sicher, dass Sie ${moduleIds.length} Module löschen möchten?`)) {
+        return;
+    }
+    
+    fetch('/admin/bulk-action', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            action: action,
+            type: 'module',
+            ids: moduleIds
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert('Fehler: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Ein Fehler ist aufgetreten');
+    });
+}
+
+// Export Function
+function exportStructure() {
+    fetch('{{ url_for("admin_menu.export_structure") }}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const blob = new Blob([JSON.stringify(data.structure, null, 2)], {type: 'application/json'});
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'didis-academy-menu-structure.json';
+                a.click();
+            }
+        });
+}
+
+// Sort Mode Toggle
+function toggleSortMode() {
+    sortMode = !sortMode;
+    const button = event.target;
+    button.textContent = sortMode ? '🔀 Sortieren beenden' : '🔀 Sortieren-Modus';
+    
+    // Hier würde man Drag & Drop Funktionalität implementieren
+    alert('Sortieren-Modus: ' + (sortMode ? 'aktiviert' : 'deaktiviert') + ' - Drag & Drop in Entwicklung');
+}
+
+// Edit Functions (Placeholder)
+function editCategory(id) {
+    alert('Kategorie bearbeiten - Feature in Entwicklung');
+}
+
+function editSubcategory(id) {
+    alert('Unterkategorie bearbeiten - Feature in Entwicklung');
+}
+
+function editModule(id) {
+    alert('Modul bearbeiten - Feature in Entwicklung');
+}
+
+// Modal-Schließung bei Klick außerhalb
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+}
+
+// Tastatur-Shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => modal.style.display = 'none');
+    }
+});
+
+// Initialize
+document.addEventListener('DOMContentLoaded', function() {
+    updateSelectedCount();
+});
+</script>
+{% endblock %}

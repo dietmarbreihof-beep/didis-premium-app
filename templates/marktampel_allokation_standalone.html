@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marktampel & Allokation - Didis Premium Trading Academy</title>
+    
+    <!-- Import Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        
+        body {
+            background: #f7f7f7;
+            line-height: 1.6;
+            font-size: 1.05em;
+            min-height: 100vh;
+        }
+        
+        .container-fluid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Header mit Primär-Verlauf */
+        .main-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 11, 0.1) 100%);
+            pointer-events: none;
+        }
+        
+        .main-header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .main-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Glasmorphismus Metric Cards */
+        .metric-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #daa520;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-left-color: #b8860b;
+        }
+        
+        .metric-card strong {
+            color: #1a1a1a;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* Regime Cards mit Gold-Akzenten */
+        .regime-card {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 10px 0;
+            border: 2px solid #e5e7eb;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .regime-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .regime-preferred { 
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+            border-color: #38a169;
+            border-left: 4px solid #38a169;
+        }
+        
+        .regime-avoid { 
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(229, 62, 62, 0.05) 100%);
+            border-color: #e53e3e;
+            border-left: 4px solid #e53e3e;
+        }
+        
+        .regime-neutral { 
+            background: linear-gradient(135deg, rgba(214, 158, 46, 0.1) 0%, rgba(214, 158, 46, 0.05) 100%);
+            border-color: #d69e2e;
+            border-left: 4px solid #d69e2e;
+        }
+        
+        .regime-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .regime-card strong {
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 1.1em;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        /* Portfolio Slider mit Gold-Design */
+        .portfolio-slider {
+            margin: 15px 0;
+            background: white;
+            padding: 18px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(218, 165, 32, 0.1);
+        }
+        
+        .portfolio-slider label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+            font-size: 1.1em;
+        }
+        
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .slider-container input[type="range"] {
+            flex: 1;
+            height: 8px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #f4e97b 0%, #daa520 50%, #b8860b 100%);
+            outline: none;
+            appearance: none;
+            cursor: pointer;
+            max-width: calc(100% - 80px); /* Platz für Value-Box reservieren */
+        }
+        
+        .slider-container input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .slider-container input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .slider-value {
+            min-width: 65px;
+            width: 65px;
+            font-weight: 700;
+            color: #b8860b;
+            font-size: 1.05em;
+            text-align: center;
+            background: rgba(218, 165, 32, 0.1);
+            padding: 6px 8px;
+            border-radius: 8px;
+            flex-shrink: 0; /* Verhindert Schrumpfen */
+            border: 1px solid rgba(218, 165, 32, 0.2);
+        }
+        
+        #portfolio-chart {
+            width: 100%;
+            height: 450px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+        
+        /* Alert Boxen mit Gold-Design */
+        .alert {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .alert-error {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(229, 62, 62, 0.05) 100%);
+            border: 1px solid rgba(229, 62, 62, 0.2);
+            color: #e53e3e;
+        }
+        
+        .alert-error::before {
+            background: #e53e3e;
+        }
+        
+        .alert-success {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+            border: 1px solid rgba(56, 161, 105, 0.2);
+            color: #38a169;
+        }
+        
+        .alert-success::before {
+            background: #38a169;
+        }
+        
+        .alert-info {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(218, 165, 32, 0.05) 100%);
+            border: 1px solid rgba(218, 165, 32, 0.2);
+            color: #b8860b;
+        }
+        
+        .alert-info::before {
+            background: #daa520;
+        }
+        
+        
+        /* Sidebar mit Premium-Design */
+        .sidebar-stats {
+            background: linear-gradient(135deg, #ffffff 0%, rgba(244, 233, 123, 0.1) 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(218, 165, 32, 0.1);
+        }
+        
+        .sidebar-stats h4, .sidebar-stats h5 {
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        /* Content Cards */
+        .content-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(218, 165, 32, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .content-card h2, .content-card h4 {
+            color: #1a1a1a;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        /* Form Controls */
+        .form-control, select {
+            border: 2px solid rgba(218, 165, 32, 0.2);
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+            width: 100%;
+        }
+        
+        .form-control:focus, select:focus {
+            border-color: #daa520;
+            box-shadow: 0 0 0 3px rgba(218, 165, 32, 0.1);
+            outline: none;
+        }
+        
+        /* Bootstrap-ähnliche Grid */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        
+        .col-md-3, .col-md-4, .col-md-8, .col-md-9 {
+            padding: 0 15px;
+        }
+        
+        .col-md-3 { flex: 0 0 25%; max-width: 25%; }
+        .col-md-4 { flex: 0 0 33.333333%; max-width: 33.333333%; }
+        .col-md-8 { flex: 0 0 66.666667%; max-width: 66.666667%; }
+        .col-md-9 { flex: 0 0 75%; max-width: 75%; }
+        
+        /* Navigation Link */
+        .nav-link {
+            color: #1a1a1a;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 20px;
+            background: rgba(218, 165, 32, 0.1);
+            border: 1px solid rgba(218, 165, 32, 0.2);
+        }
+        
+        .nav-link:hover {
+            background: rgba(218, 165, 32, 0.2);
+            color: #b8860b;
+            text-decoration: none;
+        }
+        
+        /* Sector Performance Table Styles */
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        #sector-performance-table {
+            margin: 0;
+            border: none;
+            background: white;
+        }
+        
+        #sector-performance-table th {
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+            border: none;
+        }
+        
+        #sector-performance-table td {
+            padding: 12px 15px;
+            border: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            font-weight: 500;
+            vertical-align: middle;
+        }
+        
+        #sector-performance-table tr:hover {
+            background: rgba(218, 165, 32, 0.05);
+        }
+        
+        .performance-positive {
+            color: #38a169;
+            font-weight: 600;
+        }
+        
+        .performance-negative {
+            color: #e53e3e;
+            font-weight: 600;
+        }
+        
+        .performance-neutral {
+            color: #d69e2e;
+            font-weight: 600;
+        }
+        
+        .sector-symbol {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: #1a1a1a;
+            background: rgba(218, 165, 32, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Risk Shield Styles */
+        .risk-shield {
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border: 3px solid;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .risk-shield::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background: linear-gradient(45deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+            pointer-events: none;
+        }
+        
+        .risk-shield-on {
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+            border-color: #047857;
+            color: white;
+        }
+        
+        .risk-shield-off {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+            border-color: #b91c1c;
+            color: white;
+        }
+        
+        .risk-shield h3 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin: 0 0 15px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+        
+        .risk-shield p {
+            font-size: 1.2em;
+            margin: 10px 0;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .risk-shield .risk-explanation {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            backdrop-filter: blur(10px);
+        }
+        
+        .risk-shield .recommended-sectors {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .risk-shield .recommended-sectors strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .sector-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .sector-tag {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-header {
+                padding: 30px 20px;
+            }
+            
+            .main-header h1 {
+                font-size: 2.2em;
+            }
+            
+            .portfolio-slider {
+                padding: 15px;
+            }
+            
+            .slider-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .slider-value {
+                align-self: center;
+            }
+            
+            /* Mobile table adjustments */
+            #sector-performance-table {
+                font-size: 14px;
+            }
+            
+            #sector-performance-table th,
+            #sector-performance-table td {
+                padding: 8px 10px;
+            }
+            
+            .sector-symbol {
+                font-size: 12px;
+                padding: 2px 6px;
+            }
+            
+            /* Mobile Risk Shield adjustments */
+            .risk-shield {
+                padding: 20px 15px;
+                margin: 20px 0;
+            }
+            
+            .risk-shield h3 {
+                font-size: 2em;
+                letter-spacing: 1px;
+            }
+            
+            .risk-shield p {
+                font-size: 1.1em;
+            }
+            
+            .sector-tags {
+                gap: 6px;
+            }
+            
+            .sector-tag {
+                font-size: 12px;
+                padding: 4px 8px;
+            }
+            
+            .col-md-3, .col-md-4, .col-md-8, .col-md-9 {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .row {
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation zurück -->
+    <div class="container-fluid" style="padding-top: 20px;">
+        <a href="/modules" class="nav-link">← Zurück zu den Modulen</a>
+    </div>
+
+    <div class="container-fluid">
+        <!-- Main Header -->
+        <div class="main-header">
+            <h1>📈 Marktampel & Allokation</h1>
+            <p>Professionelle Trading-Analyse & Portfolio-Management</p>
+        </div>
+
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
+                <h4>🧭 Navigation</h4>
+                <hr style="border-color: rgba(218, 165, 32, 0.3); margin: 20px 0;">
+                
+                <!-- Quick Stats -->
+                <div class="sidebar-stats">
+                    <h5>📊 Quick Stats</h5>
+                    <div class="row">
+                        <div style="width: 50%; padding: 5px;">
+                            <div class="metric-card">
+                                <strong>S&P 500</strong><br>
+                                <span style="color: #38a169; font-weight: 600;">4,150 (+1.2%)</span>
+                            </div>
+                        </div>
+                        <div style="width: 50%; padding: 5px;">
+                            <div class="metric-card">
+                                <strong>VIX</strong><br>
+                                <span style="color: #e53e3e; font-weight: 600;">18.5 (-0.8%)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9">
+                <!-- Portfolio Content -->
+                <div id="portfolio-content">
+                    <div class="content-card">
+                        <h2>0.1 Marktampel & Allokation</h2>
+                        <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 30px;">
+                            Optimieren Sie Ihr Portfolio basierend auf verschiedenen Marktregimen und maximieren Sie Ihre Rendite bei kontrolliertem Risiko.
+                        </p>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Portfolio Input -->
+                        <div class="col-md-4">
+                            <div class="content-card">
+                                <h4>🎯 Portfolio Allocation</h4>
+                                
+                                <div class="portfolio-slider">
+                                    <label for="cash">💰 Cash (%)</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="cash" min="0" max="100" value="0" oninput="updatePortfolio()">
+                                        <span class="slider-value" id="cash-value">0%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-slider">
+                                    <label for="sp500">📈 S&P 500 ETF (%)</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="sp500" min="0" max="100" value="60" oninput="updatePortfolio()">
+                                        <span class="slider-value" id="sp500-value">60%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-slider">
+                                    <label for="gold">🏆 Gold (%)</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="gold" min="0" max="100" value="30" oninput="updatePortfolio()">
+                                        <span class="slider-value" id="gold-value">30%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="portfolio-slider">
+                                    <label for="bitcoin">₿ Bitcoin (%)</label>
+                                    <div class="slider-container">
+                                        <input type="range" id="bitcoin" min="0" max="100" value="10" oninput="updatePortfolio()">
+                                        <span class="slider-value" id="bitcoin-value">10%</span>
+                                    </div>
+                                </div>
+                                
+                                <div id="portfolio-alert"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Portfolio Visualization -->
+                        <div class="col-md-8">
+                            <div class="content-card">
+                                <h4>📊 Market Regime Analysis</h4>
+                                <p style="color: #6b7280; margin-bottom: 20px;">
+                                    Wählen Sie das aktuelle Marktregime aus, um die optimale Asset-Allokation zu ermitteln.
+                                </p>
+                                
+                                <select id="regime-select" class="form-control" onchange="updateRegimeAnalysis()" style="margin-bottom: 30px;">
+                                    <option value="Goldilocks">🌟 Goldilocks - Ideale Bedingungen</option>
+                                    <option value="Reflation">🚀 Reflation - Wirtschaftswachstum</option>
+                                    <option value="Inflation">🔥 Inflation - Steigende Preise</option>
+                                    <option value="Deflation">❄️ Deflation - Fallende Preise</option>
+                                    <option value="RiskOn">📈 Risk On - Goldilocks/Reflation</option>
+                                    <option value="RiskOff">📉 Risk Off - Inflation/Deflation</option>
+                                </select>
+                                
+                                <div id="portfolio-chart"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Risk Shield -->
+                    <div id="risk-shield" class="risk-shield" style="display: none;">
+                        <h3 id="risk-shield-title">🛡️ RISK ON</h3>
+                        <p id="risk-shield-subtitle">Goldilocks & Reflation Regime</p>
+                        
+                        <div class="risk-explanation">
+                            <p id="risk-shield-explanation">
+                                In Risk-On-Phasen sind Investoren risikobereit und suchen nach höheren Renditen. 
+                                Wachstumsaktien, zyklische Sektoren und risikoreichere Assets performen besser.
+                            </p>
+                        </div>
+                        
+                        <div class="recommended-sectors">
+                            <strong>📈 Empfohlene Sektoren & Strategien:</strong>
+                            <div class="sector-tags" id="recommended-sector-tags">
+                                <span class="sector-tag">High Beta</span>
+                                <span class="sector-tag">Growth Stocks</span>
+                                <span class="sector-tag">Consumer Discretionary</span>
+                                <span class="sector-tag">Communication Services</span>
+                                <span class="sector-tag">Small Caps</span>
+                                <span class="sector-tag">Momentum</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Sector Performance Table -->
+                    <div class="content-card">
+                        <h4>📊 Sector Performance by Market Regime</h4>
+                        <p style="color: #6b7280; margin-bottom: 30px;">
+                            Kumulative Performance verschiedener Sektoren und ETFs nach Marktregimen. Die Tabelle zeigt nur die Werte für das ausgewählte Regime.
+                        </p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="sector-performance-table">
+                                <thead>
+                                    <tr>
+                                        <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Symbol</th>
+                                        <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Sector</th>
+                                        <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;" id="regime-column-header">GOLDILOCKS</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sector-table-body">
+                                    <!-- Wird durch JavaScript gefüllt -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Regime Analysis -->
+                    <div class="content-card">
+                        <h4 id="regime-title">🎯 Goldilocks Regime Analysis</h4>
+                        <p style="color: #6b7280; margin-bottom: 30px;">
+                            Diese Analyse zeigt Ihnen, welche Asset-Klassen in dem gewählten Marktregime bevorzugt, neutral oder gemieden werden sollten.
+                        </p>
+                        <div class="row" id="regime-indicators">
+                            <!-- Wird durch JavaScript gefüllt -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Portfolio Management
+        let portfolioData = {
+            cash: 0,
+            sp500: 60,
+            gold: 30,
+            bitcoin: 10
+        };
+
+        // Sector Performance Data (% of Cumulative Performance by Market Regime)
+        const sectorPerformanceData = {
+            "SPY": { sector: "S&P 500", goldilocks: 62, reflation: 43, inflation: 1, deflation: -6, riskon: 105, riskoff: -5 },
+            "XLC": { sector: "Communication Services", goldilocks: 219, reflation: 102, inflation: -165, deflation: -56, riskon: 321, riskoff: -221 },
+            "XLY": { sector: "Consumer Discretionary", goldilocks: 68, reflation: 39, inflation: -12, deflation: 4, riskon: 108, riskoff: -8 },
+            "XLP": { sector: "Consumer Staples", goldilocks: 45, reflation: 34, inflation: 16, deflation: 5, riskon: 79, riskoff: 21 },
+            "XLE": { sector: "Energy", goldilocks: 95, reflation: 44, inflation: 33, deflation: -72, riskon: 139, riskoff: -39 },
+            "XLF": { sector: "Financials", goldilocks: 89, reflation: 54, inflation: 4, deflation: -47, riskon: 143, riskoff: -43 },
+            "XLV": { sector: "Health Care", goldilocks: 36, reflation: 23, inflation: 19, deflation: 22, riskon: 60, riskoff: 40 },
+            "XLI": { sector: "Industrials", goldilocks: 68, reflation: 46, inflation: 3, deflation: -17, riskon: 114, riskoff: -14 },
+            "XLK": { sector: "Information Technology", goldilocks: 43, reflation: 42, inflation: -1, deflation: 16, riskon: 85, riskoff: 15 },
+            "XLB": { sector: "Materials", goldilocks: 99, reflation: 30, inflation: -2, deflation: -27, riskon: 129, riskoff: -29 },
+            "XLRE": { sector: "Real Estate", goldilocks: 110, reflation: 30, inflation: 25, deflation: -65, riskon: 140, riskoff: -40 },
+            "XLU": { sector: "Utilities", goldilocks: 58, reflation: 16, inflation: 37, deflation: -11, riskon: 73, riskoff: 27 },
+            "SPHD": { sector: "Dividend Compounders", goldilocks: 54, reflation: 30, inflation: 9, deflation: 7, riskon: 84, riskoff: 16 },
+            "IWF": { sector: "Growth", goldilocks: 60, reflation: 48, inflation: -7, deflation: -1, riskon: 108, riskoff: -8 },
+            "SPHB": { sector: "High Beta", goldilocks: 114, reflation: 29, inflation: -14, deflation: -30, riskon: 143, riskoff: -43 },
+            "IWB": { sector: "Large Caps", goldilocks: 42, reflation: 34, inflation: 25, deflation: -1, riskon: 77, riskoff: 23 },
+            "SPLV": { sector: "Low Beta", goldilocks: 66, reflation: 45, inflation: 0, deflation: -11, riskon: 111, riskoff: -11 },
+            "QQQ": { sector: "Mega Cap Growth", goldilocks: 47, reflation: 43, inflation: -1, deflation: 12, riskon: 89, riskoff: 11 },
+            "IWR": { sector: "Mid Caps", goldilocks: 78, reflation: 39, inflation: 3, deflation: -19, riskon: 117, riskoff: -17 },
+            "MTUM": { sector: "Momentum", goldilocks: 62, reflation: 34, inflation: 2, deflation: 3, riskon: 95, riskoff: 5 },
+            "QUAL": { sector: "Quality", goldilocks: 47, reflation: 42, inflation: -4, deflation: 15, riskon: 89, riskoff: 11 },
+            "IWM": { sector: "Small Caps", goldilocks: 102, reflation: 46, inflation: 2, deflation: -50, riskon: 149, riskoff: -49 },
+            "IWD": { sector: "Value", goldilocks: 86, reflation: 41, inflation: 10, deflation: -37, riskon: 127, riskoff: -27 }
+        };
+
+        // Regime Data
+        const regimeData = {
+            "Goldilocks": {
+                "Asset-Typ": { status: "preferred", value: "Risk Assets" },
+                "Beta": { status: "preferred", value: "High Beta" },
+                "Style": { status: "preferred", value: "Growth" },
+                "Regional": { status: "preferred", value: "US" },
+                "Currencies": { status: "preferred", value: "Gold" }
+            },
+            "Inflation": {
+                "Asset-Typ": { status: "avoid", value: "Risk Assets" },
+                "Beta": { status: "avoid", value: "High Beta" },
+                "Style": { status: "neutral", value: "Value" },
+                "Regional": { status: "preferred", value: "US" },
+                "Currencies": { status: "neutral", value: "US Dollar" }
+            },
+            "Reflation": {
+                "Asset-Typ": { status: "preferred", value: "Risk Assets" },
+                "Beta": { status: "preferred", value: "High Beta" },
+                "Style": { status: "neutral", value: "Value" },
+                "Regional": { status: "preferred", value: "Emerging Markets" },
+                "Currencies": { status: "avoid", value: "US Dollar" }
+            },
+            "Deflation": {
+                "Asset-Typ": { status: "avoid", value: "Risk Assets" },
+                "Beta": { status: "avoid", value: "High Beta" },
+                "Style": { status: "neutral", value: "Quality" },
+                "Regional": { status: "preferred", value: "US" },
+                "Currencies": { status: "preferred", value: "US Dollar" }
+            },
+            "RiskOn": {
+                "Asset-Typ": { status: "preferred", value: "Risk Assets" },
+                "Beta": { status: "preferred", value: "High Beta" },
+                "Style": { status: "preferred", value: "Growth & Value" },
+                "Regional": { status: "preferred", value: "US & EM" },
+                "Currencies": { status: "neutral", value: "Mixed" }
+            },
+            "RiskOff": {
+                "Asset-Typ": { status: "avoid", value: "Risk Assets" },
+                "Beta": { status: "avoid", value: "High Beta" },
+                "Style": { status: "neutral", value: "Quality & Value" },
+                "Regional": { status: "preferred", value: "US" },
+                "Currencies": { status: "neutral", value: "US Dollar" }
+            }
+        };
+
+
+        function updatePortfolio() {
+            // Get current values
+            portfolioData.cash = parseInt(document.getElementById('cash').value);
+            portfolioData.sp500 = parseInt(document.getElementById('sp500').value);
+            portfolioData.gold = parseInt(document.getElementById('gold').value);
+            portfolioData.bitcoin = parseInt(document.getElementById('bitcoin').value);
+            
+            // Update display values
+            document.getElementById('cash-value').textContent = portfolioData.cash + '%';
+            document.getElementById('sp500-value').textContent = portfolioData.sp500 + '%';
+            document.getElementById('gold-value').textContent = portfolioData.gold + '%';
+            document.getElementById('bitcoin-value').textContent = portfolioData.bitcoin + '%';
+            
+            // Check total
+            const total = portfolioData.cash + portfolioData.sp500 + portfolioData.gold + portfolioData.bitcoin;
+            const alertDiv = document.getElementById('portfolio-alert');
+            
+            if (total !== 100) {
+                alertDiv.innerHTML = `<div class="alert alert-error">Total must equal 100%. Current: ${total}%</div>`;
+            } else {
+                alertDiv.innerHTML = `<div class="alert alert-success">✅ Portfolio balanced!</div>`;
+                updateChart();
+            }
+        }
+
+        function updateChart() {
+            const data = [{
+                values: [portfolioData.cash, portfolioData.sp500, portfolioData.gold, portfolioData.bitcoin],
+                labels: ['Cash', 'S&P 500', 'Gold', 'Bitcoin'],
+                type: 'pie',
+                marker: {
+                    colors: ['#94a3b8', '#10b981', '#f59e0b', '#f97316']
+                },
+                textinfo: 'label+percent',
+                textposition: 'outside',
+                textfont: {
+                    size: 14,
+                    family: 'Inter'
+                }
+            }];
+            
+            const layout = {
+                title: {
+                    text: 'Portfolio Allocation',
+                    font: { 
+                        size: 18, 
+                        family: 'Inter',
+                        color: '#1a1a1a',
+                        weight: 600
+                    }
+                },
+                font: { 
+                    size: 14,
+                    family: 'Inter'
+                },
+                showlegend: true,
+                legend: {
+                    orientation: "v",
+                    x: 1,
+                    y: 1,
+                    font: { family: 'Inter' }
+                },
+                margin: { t: 50, b: 50, l: 50, r: 120 },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            };
+            
+            const config = {
+                responsive: true,
+                displayModeBar: false
+            };
+            
+            Plotly.newPlot('portfolio-chart', data, layout, config);
+        }
+
+        function updateRegimeAnalysis() {
+            const selectedRegime = document.getElementById('regime-select').value;
+            const regimeTitle = document.getElementById('regime-title');
+            const regimeIndicators = document.getElementById('regime-indicators');
+            
+            regimeTitle.textContent = `🎯 ${selectedRegime} Regime Analysis`;
+            
+            const currentRegime = regimeData[selectedRegime] || regimeData["Goldilocks"];
+            
+            let html = '';
+            Object.entries(currentRegime).forEach(([category, data]) => {
+                const statusClass = `regime-${data.status}`;
+                html += `
+                    <div class="col-md-4" style="margin-bottom: 15px;">
+                        <div class="regime-card ${statusClass}">
+                            <strong>${category}</strong><br>
+                            ${data.value}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            regimeIndicators.innerHTML = html;
+            
+            // Update Risk Shield
+            updateRiskShield(selectedRegime);
+            
+            // Update sector performance table
+            updateSectorTable(selectedRegime);
+        }
+
+        function updateRiskShield(selectedRegime) {
+            const riskShield = document.getElementById('risk-shield');
+            const riskShieldTitle = document.getElementById('risk-shield-title');
+            const riskShieldSubtitle = document.getElementById('risk-shield-subtitle');
+            const riskShieldExplanation = document.getElementById('risk-shield-explanation');
+            const recommendedSectorTags = document.getElementById('recommended-sector-tags');
+            
+            // Bestimme ob Risk On oder Risk Off basierend auf Regime
+            const isRiskOn = selectedRegime === 'Goldilocks' || selectedRegime === 'Reflation';
+            const isRiskOff = selectedRegime === 'Inflation' || selectedRegime === 'Deflation';
+            
+            if (isRiskOn || isRiskOff) {
+                riskShield.style.display = 'block';
+                
+                if (isRiskOn) {
+                    // Risk On Konfiguration mit verschiedenen Grüntönen
+                    if (selectedRegime === 'Reflation') {
+                        // Helleres Grün für Reflation mit dunkleren inneren Elementen für besseren Kontrast
+                        riskShield.className = 'risk-shield risk-shield-on-light';
+                        riskShield.style.background = 'linear-gradient(135deg, #16a34a 0%, #22c55e 100%)';
+                        riskShield.style.borderColor = '#15803d';
+                        riskShield.style.color = 'white'; // Weiße Schriftfarbe für Reflation beibehalten
+                        
+                        // Dunklere innere Bereiche für besseren Kontrast bei hellem Grün
+                        const riskExplanation = riskShield.querySelector('.risk-explanation');
+                        const recommendedSectors = riskShield.querySelector('.recommended-sectors');
+                        if (riskExplanation) {
+                            riskExplanation.style.background = 'rgba(0, 0, 0, 0.3)';
+                        }
+                        if (recommendedSectors) {
+                            recommendedSectors.style.background = 'rgba(0, 0, 0, 0.25)';
+                        }
+                    } else {
+                        // Standard Grün für Goldilocks mit dunkel-goldener Schrift
+                        riskShield.className = 'risk-shield risk-shield-on';
+                        riskShield.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
+                        riskShield.style.borderColor = '#047857';
+                        riskShield.style.color = '#b8860b'; // Dunkel-goldene Schriftfarbe für besseren Kontrast
+                        
+                        // Standard helle innere Bereiche für dunkles Grün
+                        const riskExplanation = riskShield.querySelector('.risk-explanation');
+                        const recommendedSectors = riskShield.querySelector('.recommended-sectors');
+                        if (riskExplanation) {
+                            riskExplanation.style.background = 'rgba(255, 255, 255, 0.15)';
+                        }
+                        if (recommendedSectors) {
+                            recommendedSectors.style.background = 'rgba(255, 255, 255, 0.2)';
+                        }
+                    }
+                    
+                    riskShieldTitle.textContent = '🚀 RISK ON';
+                    riskShieldSubtitle.textContent = `${selectedRegime} Regime - Risikobereitschaft hoch`;
+                    riskShieldExplanation.textContent = 'In Risk-On-Phasen sind Investoren risikobereit und suchen nach höheren Renditen. Wachstumsaktien, zyklische Sektoren und risikoreichere Assets performen besser.';
+                    
+                    // Risk On empfohlene Sektoren mit angepassten Tag-Farben
+                    const sectorTagsStyle = selectedRegime === 'Reflation' ? 
+                        'style="background: rgba(0, 0, 0, 0.4); color: white;"' : 
+                        'style="background: rgba(255, 255, 255, 0.3); color: #b8860b;"'; // Dunkel-goldene Schrift für besseren Kontrast
+                    
+                    recommendedSectorTags.innerHTML = `
+                        <span class="sector-tag" ${sectorTagsStyle}>High Beta</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Growth Stocks</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Consumer Discretionary</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Communication Services</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Small Caps</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Momentum</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Technology</span>
+                        <span class="sector-tag" ${sectorTagsStyle}>Emerging Markets</span>
+                    `;
+                } else {
+                    // Risk Off Konfiguration
+                    riskShield.className = 'risk-shield risk-shield-off';
+                    riskShield.style.background = 'linear-gradient(135deg, #dc2626 0%, #ef4444 100%)';
+                    riskShield.style.borderColor = '#b91c1c';
+                    
+                    // Standard helle innere Bereiche für dunkles Rot
+                    const riskExplanation = riskShield.querySelector('.risk-explanation');
+                    const recommendedSectors = riskShield.querySelector('.recommended-sectors');
+                    if (riskExplanation) {
+                        riskExplanation.style.background = 'rgba(255, 255, 255, 0.15)';
+                    }
+                    if (recommendedSectors) {
+                        recommendedSectors.style.background = 'rgba(255, 255, 255, 0.2)';
+                    }
+                    
+                    riskShieldTitle.textContent = '🛡️ RISK OFF';
+                    riskShieldSubtitle.textContent = `${selectedRegime} Regime - Sicherheit bevorzugt`;
+                    riskShieldExplanation.textContent = 'In Risk-Off-Phasen suchen Investoren Sicherheit und Kapitalerhalt. Defensive Sektoren, Staatsanleihen und qualitativ hochwertige Assets sind bevorzugt.';
+                    
+                    // Risk Off empfohlene Sektoren mit konsistenten Tag-Farben
+                    recommendedSectorTags.innerHTML = `
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Low Beta</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Quality Stocks</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Consumer Staples</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Health Care</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Utilities</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Dividend Stocks</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Government Bonds</span>
+                        <span class="sector-tag" style="background: rgba(255, 255, 255, 0.3); color: white;">Gold</span>
+                    `;
+                }
+            } else {
+                // Für RiskOn/RiskOff Optionen oder andere
+                riskShield.style.display = 'none';
+            }
+        }
+
+        function updateSectorTable(selectedRegime) {
+            const tableBody = document.getElementById('sector-table-body');
+            const columnHeader = document.getElementById('regime-column-header');
+            
+            // Update column header
+            columnHeader.textContent = selectedRegime.toUpperCase().replace('RISKON', 'RISK ON').replace('RISKOFF', 'RISK OFF');
+            
+            // Get the regime key for data access
+            const regimeKey = selectedRegime.toLowerCase();
+            
+            // Sort sectors by performance for selected regime
+            const sortedSectors = Object.entries(sectorPerformanceData).sort((a, b) => {
+                const aValue = a[1][regimeKey] || 0;
+                const bValue = b[1][regimeKey] || 0;
+                return bValue - aValue; // Sort descending
+            });
+            
+            let html = '';
+            sortedSectors.forEach(([symbol, data]) => {
+                const performanceValue = data[regimeKey] || 0;
+                
+                // Bedingte Formatierung wie im Screenshot
+                let backgroundColor = '';
+                let textColor = 'white';
+                let fontWeight = '600';
+                
+                if (performanceValue >= 100) {
+                    backgroundColor = '#22c55e'; // Dunkelgrün
+                } else if (performanceValue >= 50) {
+                    backgroundColor = '#16a34a'; // Grün
+                } else if (performanceValue >= 20) {
+                    backgroundColor = '#65a30d'; // Hellgrün
+                } else if (performanceValue >= 0) {
+                    backgroundColor = '#84cc16'; // Sehr hellgrün
+                    textColor = '#1a1a1a';
+                } else if (performanceValue >= -20) {
+                    backgroundColor = '#f59e0b'; // Orange
+                    textColor = '#1a1a1a';
+                } else if (performanceValue >= -50) {
+                    backgroundColor = '#ea580c'; // Rot-Orange
+                } else {
+                    backgroundColor = '#dc2626'; // Dunkelrot
+                }
+                
+                const formattedValue = performanceValue > 0 ? `+${performanceValue}%` : `${performanceValue}%`;
+                
+                html += `
+                    <tr>
+                        <td><span class="sector-symbol">${symbol}</span></td>
+                        <td>${data.sector}</td>
+                        <td style="background-color: ${backgroundColor}; color: ${textColor}; font-weight: ${fontWeight}; text-align: center;">${formattedValue}</td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html;
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePortfolio();
+            updateRegimeAnalysis();
+            // Initialize sector table with default regime
+            updateSectorTable('Goldilocks');
+        });
+    </script>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+</body>
+</html>

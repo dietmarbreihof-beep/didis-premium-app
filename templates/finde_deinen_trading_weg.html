@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finde deinen eigenen Trading-Weg - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f4e97b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Statistik Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #f4e97b;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            background: #e5e5e5;
+            border-radius: 25px;
+            height: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0.3;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Concept Highlight Boxes */
+        .concept-highlight {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 5px solid #b8860b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #1a1a1a;
+        }
+
+        .concept-highlight h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        /* Success Boxes */
+        .success-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 5px solid #38a169;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #155724;
+        }
+
+        .success-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #38a169;
+        }
+
+        /* Diversity Boxes */
+        .diversity-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #1565c0;
+        }
+
+        .diversity-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #2196f3;
+        }
+
+        /* Personal Edge Boxes */
+        .edge-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-left: 5px solid #9c27b0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #4a148c;
+        }
+
+        .edge-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #9c27b0;
+        }
+
+        /* Wisdom Boxes */
+        .wisdom-box {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #f4e97b;
+        }
+
+        .wisdom-box h4 {
+            color: #f4e97b;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Interactive Elements */
+        .next-button {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+            min-width: 250px;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .next-button:active {
+            transform: translateY(0);
+        }
+
+        /* Trader Types Grid */
+        .trader-types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .trader-type-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .trader-type-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .trader-type-card.quant {
+            border-left-color: #2196f3;
+        }
+
+        .trader-type-card.discretionary {
+            border-left-color: #ff9800;
+        }
+
+        .trader-type-card.programmer {
+            border-left-color: #4caf50;
+        }
+
+        .trader-type-card.arbitrage {
+            border-left-color: #9c27b0;
+        }
+
+        .trader-type-icon {
+            font-size: 2.5em;
+            margin-bottom: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid #28a745;
+        }
+
+        .key-takeaways h3 {
+            text-align: center;
+            color: #155724;
+            margin-bottom: 1.5rem;
+            font-size: 1.5em;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-title {
+                font-size: 2em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+
+            .trader-types-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Completion Celebration */
+        .completion-celebration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .completion-celebration h2 {
+            margin-bottom: 1rem;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid #2196f3;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1565c0;
+            font-size: 16px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover {
+            border-color: #2196f3;
+            background: #f5f5f5;
+            transform: translateY(-1px);
+        }
+
+        .quiz-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .section#quizSection {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Footer Navigation */
+        .footer-navigation {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 3rem 0 2rem 0;
+            text-align: center;
+        }
+
+        .footer-nav-title {
+            color: #f4e97b;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-nav-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .footer-nav-button {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .footer-nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .footer-nav-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">🌟 Finde deinen eigenen Trading-Weg</h1>
+                <p class="hero-subtitle">Warum es nicht den einen richtigen Ansatz gibt</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Verschiedene erfolgreiche Wege</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">1</span>
+                        <span class="stat-label">Weg der zu DIR passt</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">0</span>
+                        <span class="stat-label">Universelle Methoden</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2 class="progress-title">📊 Lernfortschritt</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 von 5 Schritten abgeschlossen</div>
+            </div>
+        </div>
+
+        <!-- Schritt 1: Inspiration durch Vielfalt -->
+        <div class="section" id="step1">
+            <div class="section-title">
+                <div class="section-icon">📚</div>
+                <span>Schritt 1: Inspiration durch Vielfalt</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>💡 Der Funke der Erkenntnis</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Meine Reise in das Trading wurde durch Jack Schwagers <strong>"Market Wizards"</strong> Serie entfacht. 
+                Diese Bücher zeigten mir verschiedene erfolgreiche Ansätze auf - ein wahres Kaleidoskop des Erfolgs.
+                </p>
+            </div>
+
+            <div class="diversity-box">
+                <h4>🎭 Die Vielfalt der Market Wizards</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Was die Market Wizards so faszinierend macht:
+                </p>
+                <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Fortgeschrittene Statistik:</strong> Mathematische Modelle und Datenanalyse</li>
+                    <li><strong>Programmierung:</strong> Algorithmen und automatisierte Systeme</li>
+                    <li><strong>Psychologie:</strong> Marktpsychologie und Behavioral Finance</li>
+                    <li><strong>Reine Intuition:</strong> Bauchgefühl und Erfahrung</li>
+                    <li><strong>Technische Analyse:</strong> Charts und Indikatoren</li>
+                    <li><strong>Fundamentalanalyse:</strong> Unternehmensbewertung</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>🌈 Die wichtigste Erkenntnis</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Erfolg ist durch <strong>diverse Strategien, Fähigkeiten und Perspektiven</strong> erreichbar. 
+                Es gibt nicht nur einen Weg zum Gipfel - es gibt viele verschiedene Pfade.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(2)">✅ Verstanden - Weiter zur Kernlektion</button>
+        </div>
+
+        <!-- Schritt 2: Keine universelle Methodik -->
+        <div class="section" id="step2">
+            <div class="section-title">
+                <div class="section-icon">🚫</div>
+                <span>Schritt 2: Keine universelle Methodik</span>
+            </div>
+            
+            <div class="wisdom-box">
+                <h4>💎 Die entscheidende Lektion</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                <strong>Keine einzige Trading-Methode funktioniert für jeden.</strong> 
+                Was für einen Trader effektiv ist, mag für einen anderen nicht ideal sein.
+                </p>
+            </div>
+
+            <div class="diversity-box">
+                <h4>🌍 Die Trading-Welt umarmt Vielfalt</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Die Trading-Welt beherbergt eine breite Palette von Teilnehmern:
+                </p>
+                
+                <div class="trader-types-grid">
+                    <div class="trader-type-card quant">
+                        <div class="trader-type-icon">🧮</div>
+                        <h4 style="color: #2196f3;">Quants</h4>
+                        <p>Mathematische Modelle, statistische Arbitrage, quantitative Analyse</p>
+                    </div>
+                    
+                    <div class="trader-type-card discretionary">
+                        <div class="trader-type-icon">🧠</div>
+                        <h4 style="color: #ff9800;">Discretionary Trader</h4>
+                        <p>Intuition, Erfahrung, subjektive Markteinschätzung</p>
+                    </div>
+                    
+                    <div class="trader-type-card programmer">
+                        <div class="trader-type-icon">💻</div>
+                        <h4 style="color: #4caf50;">Programmierer</h4>
+                        <p>Algorithmic Trading, automatisierte Systeme, Backtesting</p>
+                    </div>
+                    
+                    <div class="trader-type-card arbitrage">
+                        <div class="trader-type-icon">⚖️</div>
+                        <h4 style="color: #9c27b0;">Arbitrageure</h4>
+                        <p>Preisunterschiede ausnutzen, risikolose Gewinne</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🤝 Verschiedene Wege, gleiches Ziel</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Alle diese verschiedenen Trader-Typen können erfolgreich sein - 
+                jeder mit seinem eigenen Ansatz, seinen eigenen Stärken und seiner eigenen Perspektive.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(3)">✅ Vielfalt verstanden - Weiter zur eigenen Edge</button>
+        </div>
+
+        <!-- Schritt 3: Finde deine eigene Edge -->
+        <div class="section" id="step3">
+            <div class="section-title">
+                <div class="section-icon">🎯</div>
+                <span>Schritt 3: Finde deine eigene Edge</span>
+            </div>
+            
+            <div class="edge-box">
+                <h4>🔍 Was ist deine einzigartige Edge?</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Erfolg im Trading bedeutet zu entdecken, <strong>was am besten für dich funktioniert</strong>. 
+                Es geht darum, deine persönlichen Stärken zu identifizieren und zu nutzen.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🏆 Bewährte Methodik vs. Offener Geist</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Didi hat eine <strong>bewährte Methodik entwickelt</strong> und sie erfolgreich anderen beigebracht. 
+                Aber er betont: Das invalidiert nicht andere Strategien oder Sichtweisen.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>💭 Meinungsverschiedenheiten sind normal</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Meinungsverschiedenheiten im Trading spiegeln oft <strong>einzigartige Stile</strong> wider, 
+                anstatt dass eine Person definitiv richtig oder falsch liegt.
+                </p>
+                <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0; color: #4a148c;">
+                    <p style="font-weight: 600;">Beispiele für verschiedene Edges:</p>
+                    <p>• <strong>Analytische Edge:</strong> Überlegene Datenanalyse</p>
+                    <p>• <strong>Psychologische Edge:</strong> Emotionale Kontrolle</p>
+                    <p>• <strong>Technologische Edge:</strong> Bessere Tools/Systeme</p>
+                    <p>• <strong>Informations-Edge:</strong> Schnellerer Zugang zu Daten</p>
+                    <p>• <strong>Zeitliche Edge:</strong> Mehr Zeit für Analyse</p>
+                </div>
+            </div>
+
+            <div class="wisdom-box">
+                <h4>🌟 Deine Stärken identifizieren</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Frage dich: Was sind deine natürlichen Talente? Wo liegen deine Interessen? 
+                Welche Fähigkeiten hast du bereits entwickelt? <strong>Das ist dein Ausgangspunkt.</strong>
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(4)">✅ Edge-Konzept verstanden - Weiter zum personalisierten Ansatz</button>
+        </div>
+
+        <!-- Schritt 4: Personalisierter Ansatz ist der Schlüssel -->
+        <div class="section" id="step4">
+            <div class="section-title">
+                <div class="section-icon">🗝️</div>
+                <span>Schritt 4: Personalisierter Ansatz ist der Schlüssel</span>
+            </div>
+            
+            <div class="wisdom-box">
+                <h4>👔 Trading ist nicht "One-Size-Fits-All"</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Trading ist kein "Einheitsgröße-für-alle" Unterfangen. 
+                Das Ziel ist es, deine <strong>einzigartigen Stärken und Präferenzen</strong> zu identifizieren.
+                </p>
+            </div>
+
+            <div class="edge-box">
+                <h4>🎨 Entwickle eine Strategie, die zu dir passt</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Eine erfolgreiche Trading-Strategie sollte:
+                </p>
+                <ul style="margin-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Zu deiner Persönlichkeit passen:</strong> Bist du geduldig oder ungeduldig?</li>
+                    <li><strong>Deine Stärken nutzen:</strong> Analytisch, intuitiv, technisch?</li>
+                    <li><strong>Deine Zeit respektieren:</strong> Vollzeit oder nebenbei?</li>
+                    <li><strong>Dein Risikoprofil berücksichtigen:</strong> Konservativ oder aggressiv?</li>
+                    <li><strong>Deine Ressourcen nutzen:</strong> Kapital, Tools, Wissen</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>✨ Authentizität führt zum Erfolg</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Eine Strategie, die <strong>authentisch zu dir passt</strong>, ist nachhaltiger und erfolgreicher 
+                als eine, die du nur kopierst, weil sie bei anderen funktioniert hat.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🔄 Evolution ist erlaubt</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Dein Trading-Stil kann sich entwickeln. Was heute passt, muss nicht für immer so bleiben. 
+                <strong>Flexibilität und Anpassungsfähigkeit</strong> sind wichtige Eigenschaften.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(5)">✅ Personalisierung verstanden - Weiter zum Lernansatz</button>
+        </div>
+
+        <!-- Schritt 5: Mit offenem Geist lernen -->
+        <div class="section" id="step5">
+            <div class="section-title">
+                <div class="section-icon">🧠</div>
+                <span>Schritt 5: Mit offenem Geist lernen</span>
+            </div>
+            
+            <div class="success-box">
+                <h4>📚 Von Erfahrenen lernen</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Es ist wichtig, von erfahrenen Tradern zu lernen und ihre Lehren <strong>tiefgehend zu verstehen</strong>. 
+                Nimm dir die Zeit, verschiedene Ansätze zu studieren und zu durchdringen. 
+                Ich habe sicher ein Dutzend Mentoren und noch mehr Bücher studiert. Z.B. Stanley Druckenmiller, Peter Lynch, Bruce Kovner, Ray Dalio, Jim Simons, Dan Zanger uvm.
+                </p>
+            </div>
+
+            <div class="wisdom-box">
+                <h4>🎯 Aber triff deine eigenen Entscheidungen</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Letztendlich sollten Trader ihre eigenen <strong>informierten Entscheidungen</strong> darüber treffen, 
+                was für ihre persönliche Trading-Reise am sinnvollsten ist.
+                </p>
+            </div>
+
+            <div class="edge-box">
+                <h4>⚖️ Balance zwischen Lernen und Eigenständigkeit</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Der optimale Lernansatz kombiniert:
+                </p>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; color: #4a148c;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                        <div>
+                            <p style="font-weight: 600; color: #9c27b0; margin-bottom: 0.5rem;">📖 Lernen von anderen:</p>
+                            <p>• Bewährte Strategien studieren</p>
+                            <p>• Mentoren und Bücher nutzen</p>
+                            <p>• Verschiedene Ansätze verstehen</p>
+                            <p>• Fehler anderer analysieren</p>
+                        </div>
+                        <div>
+                            <p style="font-weight: 600; color: #9c27b0; margin-bottom: 0.5rem;">🎯 Eigene Entscheidungen:</p>
+                            <p>• Kritisch hinterfragen</p>
+                            <p>• An eigene Situation anpassen</p>
+                            <p>• Eigene Erfahrungen machen</p>
+                            <p>• Persönlichen Stil entwickeln</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🌱 Kontinuierliche Entwicklung</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Trading ist eine <strong>lebenslange Lernreise</strong>. Bleibe offen für neue Ideen, 
+                aber filtere sie durch deine eigenen Erfahrungen und Ziele.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="startQuiz()">🧠 Bereit für das Abschlussquiz</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="section" id="quizSection" style="display: none;">
+            <div class="section-title">
+                <div class="section-icon">🧠</div>
+                <span>Abschlussquiz: Finde deinen eigenen Trading-Weg</span>
+            </div>
+            
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 1:</strong> Was war die Inspiration für die Vielfalt der Trading-Ansätze?
+                </div>
+                <div class="quiz-options" id="quiz1">
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Ein einzelner erfolgreicher Trader</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 1)">Jack Schwagers "Market Wizards" Serie</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Akademische Studien</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Trading-Software</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 2:</strong> Welche Aussage über Trading-Methoden ist richtig?
+                </div>
+                <div class="quiz-options" id="quiz2">
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">Es gibt eine beste Methode für alle</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 2)">Keine einzige Methode funktioniert für jeden</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">Nur mathematische Ansätze funktionieren</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">Intuition ist immer besser als Analyse</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 3:</strong> Was sind Beispiele für verschiedene Trader-Typen?
+                </div>
+                <div class="quiz-options" id="quiz3">
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">Nur Daytrader und Swingtrader</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 3)">Quants, Discretionary Trader, Programmierer, Arbitrageure</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">Nur Anfänger und Profis</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">Nur technische und fundamentale Analysten</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 4:</strong> Was bedeutet es, deine eigene Edge zu finden?
+                </div>
+                <div class="quiz-options" id="quiz4">
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">Die profitabelste Strategie kopieren</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 4)">Deine persönlichen Stärken identifizieren und nutzen</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">Immer gegen den Markt handeln</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">Nur auf Glück setzen</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 5:</strong> Was ist ein Discretionary Trader?
+                </div>
+                <div class="quiz-options" id="quiz5">
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Ein Trader der nur Algorithmen verwendet</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 5)">Ein Trader der auf Intuition, Erfahrung und subjektive Markteinschätzung setzt</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Ein Trader der nur mathematische Modelle nutzt</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Ein Trader der nur Arbitrage betreibt</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 6:</strong> Wie solltest du von erfahrenen Tradern lernen?
+                </div>
+                <div class="quiz-options" id="quiz6">
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Alles blindlings kopieren</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Nur einen Mentor haben</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 6)">Tiefgehend verstehen, aber eigene informierte Entscheidungen treffen</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Alle Ratschläge ignorieren</div>
+                </div>
+            </div>
+
+            <button class="next-button" onclick="showQuizResults()" id="showResultsBtn" style="display: none;">📊 Quiz-Ergebnisse anzeigen</button>
+            
+            <div id="quizResults" style="display: none;">
+                <div class="success-box">
+                    <h4>🎯 Quiz-Ergebnis</h4>
+                    <p id="scoreText" style="font-size: 18px; font-weight: 600;"></p>
+                    <p id="feedbackText" style="font-size: 16px; margin-top: 1rem;"></p>
+                </div>
+                <button class="next-button" onclick="completeModule()">🎉 Weiter zu den Key Takeaways</button>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways" id="keyTakeaways" style="display: none;">
+            <h3>📋 KEY TAKEAWAYS</h3>
+            
+            <div class="takeaway-item">
+                <strong>1.</strong> Es gibt keinen einzigen "richtigen" Weg zum Trading-Erfolg.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>2.</strong> Die "Market Wizards" zeigen die Vielfalt erfolgreicher Ansätze auf.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>3.</strong> Was für einen Trader funktioniert, muss nicht für alle funktionieren.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>4.</strong> Die Trading-Welt umarmt Vielfalt: Quants, Discretionary Trader, Programmierer, Arbitrageure.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>5.</strong> Erfolg bedeutet, deine einzigartige Edge zu finden und zu nutzen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>6.</strong> Meinungsverschiedenheiten spiegeln oft verschiedene Stile wider, nicht richtig vs. falsch.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>7.</strong> Trading ist nicht "One-Size-Fits-All" - Personalisierung ist der Schlüssel.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>8.</strong> Identifiziere deine Stärken, Präferenzen und Ressourcen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>9.</strong> Lerne von erfahrenen Tradern, aber triff deine eigenen informierten Entscheidungen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>10.</strong> Authentizität und kontinuierliche Entwicklung führen zu nachhaltigem Erfolg.
+            </div>
+        </div>
+
+        <!-- Completion Celebration -->
+        <div class="completion-celebration" id="completionCelebration" style="display: none;">
+            <h2>🎉 Herzlichen Glückwunsch!</h2>
+            <h3>Finde deinen eigenen Trading-Weg erfolgreich abgeschlossen</h3>
+            <p style="font-size: 18px; margin: 1rem 0;">
+                du hast die wichtigste Erkenntnis gemacht: Es gibt viele Wege zum Erfolg!
+            </p>
+            <p style="font-size: 16px;">
+                Jetzt liegt es an dir, deinen einzigartigen Weg zu finden und zu gehen.
+            </p>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="footer-navigation">
+            <div class="footer-nav-title">🧭 Schnellnavigation</div>
+            <div class="footer-nav-buttons">
+                <a href="/" class="footer-nav-button">
+                    🏠 Startseite
+                </a>
+                <a href="/modules" class="footer-nav-button">
+                    📚 Alle Module
+                </a>
+                <a href="/module/magic-line" class="footer-nav-button">
+                    🎯 Magic Line
+                </a>
+                <a href="/modules" class="footer-nav-button">
+                    🚀 Zur Hauptapp
+                </a>
+            </div>
+        </div>
+
+        <!-- Reset Button -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <button class="reset-button" onclick="resetModule()">🔄 Modul zurücksetzen</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let quizAnswered = [false, false, false, false, false, false];
+        let quizCorrect = [false, false, false, false, false, false];
+        
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const percentage = (currentStep / 5) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = `${currentStep} von 5 Schritten abgeschlossen`;
+        }
+        
+        function showStep(step) {
+            // Hide current step
+            const currentSection = document.getElementById(`step${currentStep}`);
+            if (currentSection) {
+                currentSection.style.opacity = '0.3';
+                currentSection.style.transform = 'translateY(20px)';
+            }
+            
+            // Show new step
+            setTimeout(() => {
+                const newSection = document.getElementById(`step${step}`);
+                if (newSection) {
+                    newSection.classList.add('visible');
+                    newSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                currentStep = step;
+                updateProgress();
+            }, 300);
+        }
+        
+        function startQuiz() {
+            currentStep = 5;
+            updateProgress();
+            
+            // Show quiz
+            const quizSection = document.getElementById('quizSection');
+            quizSection.style.display = 'block';
+            quizSection.classList.add('visible');
+            quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function selectOption(element, isCorrect, questionNumber) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+            
+            // Remove previous selections
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selection
+            element.classList.add('selected');
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                // Show correct answer
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Update tracking
+            const questionIndex = questionNumber - 1;
+            quizAnswered[questionIndex] = true;
+            quizCorrect[questionIndex] = isCorrect;
+            
+            // Check if all questions answered
+            if (quizAnswered.every(answered => answered)) {
+                setTimeout(() => {
+                    document.getElementById('showResultsBtn').style.display = 'block';
+                }, 500);
+            }
+        }
+        
+        function showQuizResults() {
+            const correctCount = quizCorrect.filter(correct => correct).length;
+            const totalQuestions = quizCorrect.length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            
+            document.getElementById('scoreText').textContent = 
+                `Du hast ${correctCount} von ${totalQuestions} Fragen richtig beantwortet (${percentage}%)`;
+            
+            let feedback = '';
+            if (percentage >= 80) {
+                feedback = '🎉 Ausgezeichnet! Du verstehst die Vielfalt der Trading-Ansätze perfekt. Bereit für deinen eigenen Weg!';
+            } else if (percentage >= 60) {
+                feedback = '👍 Gut gemacht! Du hast die Grundkonzepte verstanden. Vertiefe dein Wissen für noch bessere Ergebnisse.';
+            } else {
+                feedback = '📖 Lies das Modul nochmal durch. Die Vielfalt der Trading-Ansätze zu verstehen ist fundamental für deinen Erfolg.';
+            }
+            
+            document.getElementById('feedbackText').textContent = feedback;
+            document.getElementById('quizResults').style.display = 'block';
+        }
+        
+        function completeModule() {
+            // Show key takeaways and completion
+            document.getElementById('keyTakeaways').style.display = 'block';
+            document.getElementById('completionCelebration').style.display = 'block';
+            document.getElementById('completionCelebration').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function resetModule() {
+            currentStep = 1;
+            quizAnswered = [false, false, false, false, false, false];
+            quizCorrect = [false, false, false, false, false, false];
+            
+            // Hide all sections except first
+            for (let i = 2; i <= 5; i++) {
+                const section = document.getElementById(`step${i}`);
+                if (section) {
+                    section.classList.remove('visible');
+                }
+            }
+            
+            // Hide quiz and completion elements
+            const quizSection = document.getElementById('quizSection');
+            quizSection.style.display = 'none';
+            quizSection.classList.remove('visible');
+            document.getElementById('keyTakeaways').style.display = 'none';
+            document.getElementById('completionCelebration').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('showResultsBtn').style.display = 'none';
+            
+            // Reset quiz selections
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Show first step
+            const firstSection = document.getElementById('step1');
+            firstSection.classList.add('visible');
+            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            updateProgress();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('step1').classList.add('visible');
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Menü-Struktur{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="mb-4">🗂️ Menü-Struktur Management</h1>
+            
+            <!-- Statistiken -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Kategorien</h5>
+                            <h3>{{ stats.total_categories }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Unterkategorien</h5>
+                            <h3>{{ stats.total_subcategories }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Module</h5>
+                            <h3>{{ stats.total_modules }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body">
+                            <h5 class="card-title">Lead Magnete</h5>
+                            <h3>{{ stats.lead_magnets }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Kategorien Übersicht -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📁 Kategorien & Module</h5>
+                </div>
+                <div class="card-body">
+                    {% for category in categories %}
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <h6 class="mb-0">
+                                {{ category.icon }} {{ category.name }}
+                                <span class="badge bg-secondary float-end">{{ category.modules|length }} Module</span>
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            {% if category.description %}
+                            <p class="text-muted mb-3">{{ category.description }}</p>
+                            {% endif %}
+                            
+                            <!-- Unterkategorien -->
+                            {% if category.subcategories %}
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <h6>📂 Unterkategorien:</h6>
+                                    {% for subcategory in category.subcategories %}
+                                    <span class="badge bg-info me-2 mb-2">
+                                        {{ subcategory.icon }} {{ subcategory.name }}
+                                        ({{ subcategory.modules|length }})
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Module in dieser Kategorie -->
+                            {% if category.modules %}
+                            <div class="row">
+                                {% for module in category.modules %}
+                                <div class="col-md-6 col-lg-4 mb-2">
+                                    <div class="card border">
+                                        <div class="card-body p-2">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div>
+                                                    <h6 class="card-title mb-1">{{ module.icon }} {{ module.title }}</h6>
+                                                    <small class="text-muted">{{ module.description[:50] }}{% if module.description|length > 50 %}...{% endif %}</small>
+                                                </div>
+                                                <div class="text-end">
+                                                    {% if module.is_published %}
+                                                    <span class="badge bg-success">✅</span>
+                                                    {% else %}
+                                                    <span class="badge bg-danger">❌</span>
+                                                    {% endif %}
+                                                    {% if module.is_lead_magnet %}
+                                                    <span class="badge bg-warning">🎯</span>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="mt-2">
+                                                {% if module.content_type == 'streamlit' %}
+                                                <span class="badge bg-primary">📊 Streamlit</span>
+                                                {% elif module.content_type == 'html' %}
+                                                <span class="badge bg-success">📄 HTML</span>
+                                                {% endif %}
+                                                
+                                                {% if module.required_subscription_levels %}
+                                                {% for level in module.required_subscription_levels %}
+                                                <span class="badge bg-warning">{{ level }}</span>
+                                                {% endfor %}
+                                                {% else %}
+                                                <span class="badge bg-success">Kostenlos</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i> Keine Module in dieser Kategorie.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Menü-Struktur JSON (für Entwickler) -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0">🔧 Menü-Struktur JSON</h5>
+                </div>
+                <div class="card-body">
+                    <pre class="bg-light p-3 rounded"><code>{{ menu_structure|tojson(indent=2) }}</code></pre>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">⚡ Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <a href="{{ url_for('admin_modules') }}" class="btn btn-outline-primary btn-lg w-100">
+                                        📚 Module verwalten
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="{{ url_for('modules') }}" class="btn btn-outline-success btn-lg w-100">
+                                        👁️ Module anzeigen
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <a href="{{ url_for('home') }}" class="btn btn-outline-info btn-lg w-100">
+                                        🏠 Zur Hauptseite
+                                    </a>
+                                </div>
+                                <div class="col-md-3">
+                                    <button class="btn btn-outline-secondary btn-lg w-100" onclick="location.reload()">
+                                        🔄 Aktualisieren
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+}
+
+.badge {
+    font-size: 0.75em;
+}
+
+pre {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.card.border {
+    border: 1px solid #dee2e6 !important;
+}
+
+.card.border:hover {
+    border-color: #007bff !important;
+}
+</style>
+{% endblock %}

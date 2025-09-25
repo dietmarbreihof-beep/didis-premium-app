@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expected Value (EV) - Trading Konzepte - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-section h3 {
+            font-size: 1.4em;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+
+        .hero-section p {
+            font-size: 1.1em;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Navigation */
+        .module-nav {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        .nav-tab {
+            padding: 0.8rem 1.5rem;
+            background: #f7f7f7;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #2d2d2d;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: #e8e8e8;
+            transform: translateY(-2px);
+        }
+
+        /* Content Sections */
+        .content-section {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #b8860b, #daa520);
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        /* Highlight Boxes */
+        .concept-highlight {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            color: #1a1a1a;
+            border-left: 5px solid #b8860b;
+        }
+
+        .example-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #38a169;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #d69e2e;
+        }
+
+        .key-insight {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #daa520;
+        }
+
+        .formula-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #b8860b;
+            margin: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .formula-box h3 {
+            color: #b8860b;
+            margin-bottom: 1rem;
+        }
+
+        .formula {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin: 1rem 0;
+        }
+
+        /* Calculator Styles */
+        .calculator-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .calculator-input {
+            background: #f7f7f7;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .calculator-input:focus-within {
+            border-color: #b8860b;
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2d2d2d;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #b8860b;
+        }
+
+        .calc-button {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .calc-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .result-display {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #e8e8e8;
+            text-align: center;
+        }
+
+        .result-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 1rem 0;
+        }
+
+        .result-positive {
+            color: #38a169;
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        }
+
+        .result-negative {
+            color: #e53e3e;
+            background: linear-gradient(135deg, #ffeaea 0%, #fed7d7 100%);
+        }
+
+        .result-neutral {
+            color: #2d2d2d;
+            background: #f7f7f7;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Tables */
+        .strategy-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .strategy-table th {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .strategy-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .strategy-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .strategy-table tr:hover {
+            background: linear-gradient(135deg, #f4e97b 0%, rgba(218, 165, 32, 0.1) 100%);
+        }
+
+        /* Key Takeaways */
+        .takeaway-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #38a169;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .takeaway-item strong {
+            color: #38a169;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: #e8e8e8;
+            border-radius: 10px;
+            padding: 3px;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #b8860b, #daa520);
+            height: 20px;
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-section {
+                padding: 2rem 1rem;
+            }
+            
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+            
+            .calculator-section {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .nav-tabs {
+                gap: 0.3rem;
+            }
+            
+            .nav-tab {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Interactive Elements */
+        .scenario-card {
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .scenario-card:hover {
+            border-color: #b8860b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .scenario-card.selected {
+            border-color: #b8860b;
+            background: linear-gradient(135deg, #f4e97b 0%, rgba(218, 165, 32, 0.1) 100%);
+        }
+
+        .quiz-question {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .quiz-options {
+            margin-top: 1rem;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #b8860b;
+            background: #f4e97b;
+        }
+
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #e8f5e8;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #ffeaea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1>📊 Expected Value (EV)</h1>
+                <h3>Das fundamentale Konzept für rationale Trading-Entscheidungen</h3>
+                <p>Lerne, wie du mit dem Erwartungswert objektive, profitable Entscheidungen triffst und Trading-Mythen überwindest</p>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width: 12.5%;">
+                Schritt 1/8
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="module-nav">
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showSection('definition', 1)">1️⃣ EV Definition</button>
+                <button class="nav-tab" onclick="showSection('calculator', 2)">2️⃣ EV-Rechner</button>
+                <button class="nav-tab" onclick="showSection('example', 3)">3️⃣ Praxisbeispiel</button>
+                <button class="nav-tab" onclick="showSection('simulation', 4)">4️⃣ Simulation</button>
+                <button class="nav-tab" onclick="showSection('myths', 5)">5️⃣ Mythen widerlegt</button>
+                <button class="nav-tab" onclick="showSection('application', 6)">6️⃣ Anwendung</button>
+                <button class="nav-tab" onclick="showSection('reflection', 7)">7️⃣ Reflexion</button>
+                <button class="nav-tab" onclick="showSection('takeaways', 8)">8️⃣ Key Takeaways</button>
+            </div>
+        </div>
+
+        <!-- Section 1: EV Definition -->
+        <div id="definition" class="content-section active">
+            <h2 class="section-title">🎯 Was ist der Expected Value (EV)?</h2>
+            
+            <div class="concept-highlight">
+                <h4>💡 Definition</h4>
+                <p style="font-size: 18px; line-height: 1.6;">
+                    Der <strong>Expected Value (Erwartungswert)</strong> ist der durchschnittliche Ausgang eines Trades 
+                    oder einer Reihe von Trades. Er berücksichtigt sowohl die <strong>Wahrscheinlichkeit</strong> 
+                    verschiedener Ergebnisse als auch die <strong>potenziellen Gewinne oder Verluste</strong> über die Zeit.
+                </p>
+            </div>
+
+            <div class="formula-box">
+                <h3>📐 Die EV-Formel</h3>
+                <div class="formula">
+                    EV = (Gewinn × P(Gewinn)) - (Verlust × P(Verlust))
+                </div>
+                <p style="font-size: 16px; color: #2d2d2d; margin-top: 1rem;">
+                    Wobei P(Gewinn) = Wahrscheinlichkeit eines Gewinns<br>
+                    und P(Verlust) = Wahrscheinlichkeit eines Verlusts
+                </p>
+            </div>
+
+            <div class="key-insight">
+                <h4>🔑 Warum ist EV so wichtig?</h4>
+                <ul style="margin-top: 1rem;">
+                    <li>📊 <strong>Objektiver Maßstab:</strong> Überwindet Emotionen und Vorurteile</li>
+                    <li>💰 <strong>Rationale Entscheidungen:</strong> Zeigt langfristige Profitabilität</li>
+                    <li>🎯 <strong>Kapital-Allokation:</strong> Investiere dort, wo EV am höchsten ist</li>
+                    <li>🧠 <strong>Mentale Stärke:</strong> Hilft, nach Verlusten im Spiel zu bleiben</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Section 2: EV Calculator -->
+        <div id="calculator" class="content-section">
+            <h2 class="section-title">🔢 EV-Rechner</h2>
+            
+            <div class="calculator-section">
+                <div class="calculator-input">
+                    <h4 style="margin-bottom: 1rem; color: #1a1a1a;">📈 Trade-Parameter eingeben</h4>
+                    
+                    <div class="input-group">
+                        <label for="profitAmount">💰 Gewinn bei Erfolg ($)</label>
+                        <input type="number" id="profitAmount" value="8" min="0.01" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="profitProb">📊 Wahrscheinlichkeit Gewinn (%)</label>
+                        <input type="range" id="profitProb" value="75" min="1" max="99" oninput="updateProbability()">
+                        <span id="profitProbValue">75%</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="lossAmount">📉 Verlust bei Misserfolg ($)</label>
+                        <input type="number" id="lossAmount" value="14" min="0.01" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>📉 Wahrscheinlichkeit Verlust:</label>
+                        <span id="lossProbValue" style="font-weight: 600; color: #e53e3e;">25%</span>
+                    </div>
+                    
+                    <button class="calc-button" onclick="calculateEV()">🚀 EV berechnen</button>
+                </div>
+                
+                <div class="result-display" id="resultDisplay">
+                    <h4 style="margin-bottom: 1rem;">📊 EV-Berechnung</h4>
+                    <div id="evResult" class="result-value result-neutral">$2.50</div>
+                    <div id="evInterpretation">
+                        <p>Dieser Trade hat einen <strong>positiven Erwartungswert</strong>. Du solltest ihn jedes Mal eingehen!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="evChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Section 3: Practical Example -->
+        <div id="example" class="content-section">
+            <h2 class="section-title">📊 Praxisbeispiel: Der $8 Gewinn vs $14 Verlust Trade</h2>
+            
+            <div class="example-box">
+                <h4>🎯 Trade-Szenario</h4>
+                <ul style="font-size: 16px; line-height: 1.8; margin-top: 1rem;">
+                    <li><strong>Bei Erfolg:</strong> $8 Gewinn (75% Wahrscheinlichkeit)</li>
+                    <li><strong>Bei Misserfolg:</strong> $14 Verlust (25% Wahrscheinlichkeit)</li>
+                    <li><strong>Expected Value:</strong> $2.50</li>
+                </ul>
+            </div>
+
+            <div class="key-insight">
+                <h4>🤔 Die Überraschung</h4>
+                <p>Trotz größerer absoluter Verluste als Gewinne ist dies ein <strong>guter Trade</strong>! 
+                Der positive EV von $2.50 bedeutet, dass du langfristig profitabel bist, wenn du diesen 
+                Trade jedes Mal eingehst.</p>
+            </div>
+
+            <div class="scenario-card" onclick="toggleScenario('scenario1')">
+                <h4>💡 Gedankenexperiment: 100 solcher Trades</h4>
+                <div id="scenario1" style="display: none; margin-top: 1rem;">
+                    <p><strong>Erwartete Ergebnisse:</strong></p>
+                    <ul>
+                        <li>75 Gewinn-Trades: 75 × $8 = $600</li>
+                        <li>25 Verlust-Trades: 25 × $14 = $350</li>
+                        <li><strong>Net-Gewinn: $600 - $350 = $250</strong></li>
+                        <li><strong>Durchschnitt pro Trade: $250 ÷ 100 = $2.50</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Simulation -->
+        <div id="simulation" class="content-section">
+            <h2 class="section-title">🎲 Monte Carlo Simulation: EV in Action</h2>
+            
+            <div class="calculator-section">
+                <div class="calculator-input">
+                    <h4>🎯 Simulationsparameter</h4>
+                    
+                    <div class="input-group">
+                        <label for="numTrades">🔢 Anzahl Trades</label>
+                        <select id="numTrades">
+                            <option value="10">10 Trades</option>
+                            <option value="50">50 Trades</option>
+                            <option value="100" selected>100 Trades</option>
+                            <option value="500">500 Trades</option>
+                            <option value="1000">1000 Trades</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="simProfit">💰 Gewinn pro Trade ($)</label>
+                        <input type="number" id="simProfit" value="8" min="0.01" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="simLoss">📉 Verlust pro Trade ($)</label>
+                        <input type="number" id="simLoss" value="14" min="0.01" step="0.1">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="simWinRate">📈 Gewinnrate (%)</label>
+                        <input type="range" id="simWinRate" value="75" min="10" max="90" oninput="updateSimWinRate()">
+                        <span id="simWinRateValue">75%</span>
+                    </div>
+                    
+                    <button class="calc-button" onclick="runSimulation()">🚀 Simulation starten</button>
+                </div>
+                
+                <div id="simulationResults" class="result-display" style="display: none;">
+                    <h4>📊 Simulationsergebnisse</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0;">
+                        <div>
+                            <div class="result-value" id="actualPnL" style="font-size: 1.5rem;">$0</div>
+                            <small>Tatsächlicher Gewinn</small>
+                        </div>
+                        <div>
+                            <div class="result-value" id="theoreticalPnL" style="font-size: 1.5rem;">$0</div>
+                            <small>Theoretischer EV</small>
+                        </div>
+                        <div>
+                            <div class="result-value" id="difference" style="font-size: 1.5rem;">$0</div>
+                            <small>Differenz</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <canvas id="simulationChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Section 5: Trading Myths -->
+        <div id="myths" class="content-section">
+            <h2 class="section-title">🔍 Trading-Mythen widerlegt</h2>
+            
+            <div class="warning-box">
+                <h4>❌ Gängige Trading-Mythen</h4>
+                <p>Viele Trader glauben an falsche Regeln, die sie vom Erfolg abhalten.</p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>Mythos #1: "Du brauchst ein 3:1 Gewinn-Verlust-Verhältnis"</h4>
+                <p><strong>❌ Falsch!</strong> Das Gewinn-Verlust-Verhältnis allein ist nicht entscheidend.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+                <div class="example-box">
+                    <h5>💡 Strategie A: 3:1 Verhältnis</h5>
+                    <ul style="margin-top: 1rem;">
+                        <li>Gewinn: $30 (30% Chance)</li>
+                        <li>Verlust: $10 (70% Chance)</li>
+                        <li><strong>EV = (30×0.3) - (10×0.7) = $2</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="example-box">
+                    <h5>💡 Strategie B: 1:2 Verhältnis</h5>
+                    <ul style="margin-top: 1rem;">
+                        <li>Gewinn: $10 (80% Chance)</li>
+                        <li>Verlust: $20 (20% Chance)</li>
+                        <li><strong>EV = (10×0.8) - (20×0.2) = $4</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <h4>🔑 Wichtige Erkenntnis</h4>
+                <p>Strategie B hat ein "schlechteres" Verhältnis (1:2), aber einen <strong>höheren EV ($4 vs $2)</strong>. 
+                Der Erwartungswert ist wichtiger als das Verhältnis!</p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>Mythos #2: "Du brauchst eine hohe Gewinnrate"</h4>
+                <p><strong>❌ Falsch!</strong> Auch niedrige Gewinnraten können profitabel sein.</p>
+            </div>
+
+            <table class="strategy-table">
+                <thead>
+                    <tr>
+                        <th>Strategie</th>
+                        <th>Gewinnrate</th>
+                        <th>Avg. Gewinn</th>
+                        <th>Avg. Verlust</th>
+                        <th>Expected Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Scalping</td>
+                        <td>60%</td>
+                        <td>$5</td>
+                        <td>$8</td>
+                        <td style="color: #38a169; font-weight: bold;">$1.80</td>
+                    </tr>
+                    <tr>
+                        <td>Swing Trading</td>
+                        <td>45%</td>
+                        <td>$25</td>
+                        <td>$15</td>
+                        <td style="color: #38a169; font-weight: bold;">$3.00</td>
+                    </tr>
+                    <tr>
+                        <td>Momentum</td>
+                        <td>35%</td>
+                        <td>$50</td>
+                        <td>$20</td>
+                        <td style="color: #38a169; font-weight: bold;">$4.50</td>
+                    </tr>
+                    <tr>
+                        <td>Mean Reversion</td>
+                        <td>70%</td>
+                        <td>$10</td>
+                        <td>$18</td>
+                        <td style="color: #38a169; font-weight: bold;">$1.60</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="example-box">
+                <p><strong>Beispiel:</strong> Mit $100 Gewinn und $25 Verlust ist bereits ab 
+                <strong>21% Gewinnrate</strong> ein positiver EV möglich!</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Practical Application -->
+        <div id="application" class="content-section">
+            <h2 class="section-title">🎯 Praktische Anwendung im Trading</h2>
+            
+            <div class="key-insight">
+                <h4>💡 EV ist der objektive Maßstab</h4>
+                <p>Der Expected Value überwindet Emotionen, limitierende Überzeugungen und Vorurteile. 
+                Er hilft dir, <strong>rationale Entscheidungen</strong> zu treffen.</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin: 2rem 0;">
+                <div class="example-box">
+                    <h4>✅ Was erfolgreiche Trader tun:</h4>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li><strong>Kapital-Allokation:</strong> Mehr Kapital in Trades mit höherem EV</li>
+                        <li><strong>Emotionen kontrollieren:</strong> EV-Denken hilft nach Verlusten</li>
+                        <li><strong>Langfristig denken:</strong> Wie ein Baseballspieler schwingen</li>
+                        <li><strong>Reflexion:</strong> War der EV korrekt eingeschätzt?</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>❌ Was erfolglose Trader tun:</h4>
+                    <ul style="margin-top: 1rem; line-height: 1.8;">
+                        <li><strong>Emotionale Entscheidungen:</strong> Angst und Gier steuern</li>
+                        <li><strong>Mythen folgen:</strong> "3:1 Verhältnis ist Pflicht"</li>
+                        <li><strong>Nicht reflektieren:</strong> Keine EV-Analyse nach Trades</li>
+                        <li><strong>Inkonsistenz:</strong> Verschiedene Regeln je nach Gefühl</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>⚾ Die Baseball-Analogie</h4>
+                <p>Ein Baseballspieler schwingt bei einer guten Chance auf einen Grand Slam, auch wenn er manchmal 
+                ausscheidet. Er weiß: Langfristig ist der Expected Value positiv. Genau so sollten Trader denken!</p>
+            </div>
+        </div>
+
+        <!-- Section 7: Reflection Questions -->
+        <div id="reflection" class="content-section">
+            <h2 class="section-title">🤔 Reflexionsfragen nach jedem Trade</h2>
+            
+            <div class="concept-highlight">
+                <h4>🎭 Abgleich: Tatsächlicher vs. wahrgenommener EV</h4>
+                <p>Emotionen können das Urteilsvermögen trüben. Reflektiere nach jedem Trade:</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>🎯 War der EV wie erwartet?</h4>
+                <p>Prüfe, ob deine Einschätzung der Wahrscheinlichkeiten und Gewinn/Verlust-Verhältnisse korrekt war.</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>📈 War er besser als erwartet? (Habe ich zu wenig investiert?)</h4>
+                <p>Wenn der EV höher war als gedacht, hast du möglicherweise eine Gelegenheit verpasst, mehr Kapital zu allokieren.</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>📉 War er schlechter? (Habe ich Nuancen übersehen?)</h4>
+                <p>Analysiere, welche Faktoren du bei der EV-Berechnung nicht berücksichtigt hast.</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>🎲 Oder war der EV gut, aber es hat einfach nicht funktioniert?</h4>
+                <p>Manchmal verlierst du trotz positivem EV. Das ist normal und kein Grund, die Strategie zu ändern!</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>🧠 Welche Emotionen haben meine Einschätzung beeinflusst?</h4>
+                <p>Angst, Gier oder Overconfidence können die EV-Berechnung verzerren.</p>
+            </div>
+
+            <div class="quiz-question">
+                <h4>📊 Wie kann ich die EV-Schätzung beim nächsten Mal verbessern?</h4>
+                <p>Kontinuierliche Verbesserung der EV-Einschätzung ist der Schlüssel zum langfristigen Erfolg.</p>
+            </div>
+        </div>
+
+        <!-- Section 8: Key Takeaways -->
+        <div id="takeaways" class="content-section">
+            <h2 class="section-title">🎓 Key Takeaways</h2>
+            
+            <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #38a169;">
+                <h3 style="text-align: center; color: #155724; margin-bottom: 1.5rem;">📋 WICHTIGSTE ERKENNTNISSE</h3>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>1.</strong> Der Expected Value ist der durchschnittliche Ausgang einer Serie von Trades</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>2.</strong> EV = (Gewinn × P(Gewinn)) - (Verlust × P(Verlust))</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>3.</strong> Ein 3:1 Gewinn-Verlust-Verhältnis ist NICHT erforderlich für Erfolg</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>4.</strong> Jede Gewinnrate kann erfolgreich sein, solange der EV positiv ist</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>5.</strong> EV ist der objektive Maßstab, der Emotionen überwindet</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>6.</strong> Allokiere mehr Kapital dort, wo der EV am höchsten ist</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>7.</strong> Reflektiere nach Trades: War der EV korrekt eingeschätzt?</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>8.</strong> EV-Denken führt zu strategischeren, weniger emotionalen Entscheidungen</p>
+            </div>
+
+            <div class="takeaway-item">
+                <p><strong>9.</strong> Verstehe EV, um mental im Spiel zu bleiben, auch nach Verlusten</p>
+            </div>
+
+            <div class="key-insight" style="margin-top: 2rem;">
+                <h4>🎊 Glückwunsch!</h4>
+                <p>Du hast erfolgreich das Expected Value Konzept gemeistert! Du kannst jetzt objektive, 
+                rationale Trading-Entscheidungen treffen und Trading-Mythen überwinden.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSection = 1;
+        const totalSections = 8;
+
+        function showSection(sectionId, sectionNumber) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            // Update progress
+            currentSection = sectionNumber;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progress = (currentSection / totalSections) * 100;
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = `Schritt ${currentSection}/${totalSections}`;
+        }
+
+        function updateProbability() {
+            const profitProb = document.getElementById('profitProb').value;
+            const lossProb = 100 - profitProb;
+            
+            document.getElementById('profitProbValue').textContent = profitProb + '%';
+            document.getElementById('lossProbValue').textContent = lossProb + '%';
+            
+            calculateEV();
+        }
+
+        function calculateEV() {
+            const profitAmount = parseFloat(document.getElementById('profitAmount').value);
+            const profitProb = parseFloat(document.getElementById('profitProb').value) / 100;
+            const lossAmount = parseFloat(document.getElementById('lossAmount').value);
+            const lossProb = 1 - profitProb;
+            
+            const ev = (profitAmount * profitProb) - (lossAmount * lossProb);
+            
+            const resultElement = document.getElementById('evResult');
+            const interpretationElement = document.getElementById('evInterpretation');
+            const displayElement = document.getElementById('resultDisplay');
+            
+            resultElement.textContent = '$' + ev.toFixed(2);
+            
+            if (ev > 0) {
+                resultElement.className = 'result-value result-positive';
+                displayElement.className = 'result-display result-positive';
+                interpretationElement.innerHTML = '<p>✅ <strong>Positiver EV!</strong> Dieser Trade hat einen positiven Erwartungswert. Du solltest ihn jedes Mal eingehen!</p>';
+            } else if (ev < 0) {
+                resultElement.className = 'result-value result-negative';
+                displayElement.className = 'result-display result-negative';
+                interpretationElement.innerHTML = '<p>❌ <strong>Negativer EV!</strong> Dieser Trade hat einen negativen Erwartungswert. Vermeide ihn!</p>';
+            } else {
+                resultElement.className = 'result-value result-neutral';
+                displayElement.className = 'result-display result-neutral';
+                interpretationElement.innerHTML = '<p>⚖️ <strong>Neutraler EV</strong> Break-Even Trade</p>';
+            }
+
+            updateEVChart(profitAmount, profitProb * 100, lossAmount, lossProb * 100, ev);
+        }
+
+        function updateEVChart(profit, profitProb, loss, lossProb, ev) {
+            const ctx = document.getElementById('evChart').getContext('2d');
+            
+            if (window.evChart) {
+                window.evChart.destroy();
+            }
+
+            window.evChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Gewinn-Beitrag', 'Verlust-Beitrag', 'Net EV'],
+                    datasets: [{
+                        data: [profit * (profitProb / 100), -(loss * (lossProb / 100)), ev],
+                        backgroundColor: ['#38a169', '#e53e3e', ev > 0 ? '#b8860b' : '#e53e3e'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'EV-Komponenten Analyse'
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Dollar ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateSimWinRate() {
+            const winRate = document.getElementById('simWinRate').value;
+            document.getElementById('simWinRateValue').textContent = winRate + '%';
+        }
+
+        function runSimulation() {
+            const numTrades = parseInt(document.getElementById('numTrades').value);
+            const profit = parseFloat(document.getElementById('simProfit').value);
+            const loss = parseFloat(document.getElementById('simLoss').value);
+            const winRate = parseFloat(document.getElementById('simWinRate').value) / 100;
+            
+            const expectedValue = (profit * winRate) - (loss * (1 - winRate));
+            
+            // Simulate trades
+            const tradeResults = [];
+            const cumulativePnL = [];
+            let totalPnL = 0;
+            
+            for (let i = 0; i < numTrades; i++) {
+                const isWin = Math.random() < winRate;
+                const result = isWin ? profit : -loss;
+                tradeResults.push(result);
+                totalPnL += result;
+                cumulativePnL.push(totalPnL);
+            }
+            
+            const theoreticalPnL = numTrades * expectedValue;
+            const difference = totalPnL - theoreticalPnL;
+            
+            // Update results display
+            document.getElementById('actualPnL').textContent = '$' + totalPnL.toFixed(2);
+            document.getElementById('theoreticalPnL').textContent = '$' + theoreticalPnL.toFixed(2);
+            document.getElementById('difference').textContent = '$' + difference.toFixed(2);
+            
+            document.getElementById('simulationResults').style.display = 'block';
+            
+            updateSimulationChart(cumulativePnL, numTrades, expectedValue);
+        }
+
+        function updateSimulationChart(cumulativePnL, numTrades, expectedValue) {
+            const ctx = document.getElementById('simulationChart').getContext('2d');
+            
+            if (window.simulationChart) {
+                window.simulationChart.destroy();
+            }
+
+            const tradeNumbers = Array.from({length: numTrades}, (_, i) => i + 1);
+            const theoreticalLine = tradeNumbers.map(i => i * expectedValue);
+
+            window.simulationChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: tradeNumbers,
+                    datasets: [{
+                        label: 'Tatsächlicher PnL',
+                        data: cumulativePnL,
+                        borderColor: '#b8860b',
+                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.1
+                    }, {
+                        label: 'Theoretischer EV',
+                        data: theoreticalLine,
+                        borderColor: '#38a169',
+                        backgroundColor: 'transparent',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Simulation: ${numTrades} Trades`
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Trade Nummer'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Kumulativer PnL ($)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function toggleScenario(scenarioId) {
+            const scenario = document.getElementById(scenarioId);
+            scenario.style.display = scenario.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateEV();
+            updateProbability();
+        });
+    </script>
+</body>
+</html>
+

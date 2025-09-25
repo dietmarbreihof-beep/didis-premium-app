@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Registrierung - Didis Premium Trading Academy{% endblock %}
+
+{% block header_title %}📝 Registrierung{% endblock %}
+{% block header_subtitle %}Erstellen Sie Ihr kostenloses Konto für Zugriff auf Premium-Inhalte{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>📝 Neues Konto erstellen</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'error' if category == 'error' else 'success' if category == 'success' else 'warning' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form action="{{ url_for('register') }}" method="post">
+        <div class="grid-2">
+            <div class="form-group">
+                <label for="first_name" class="form-label">👤 Vorname</label>
+                <input type="text" 
+                       id="first_name" 
+                       name="first_name" 
+                       class="form-input"
+                       placeholder="Max">
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name" class="form-label">👤 Nachname</label>
+                <input type="text" 
+                       id="last_name" 
+                       name="last_name" 
+                       class="form-input"
+                       placeholder="Mustermann">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="email" class="form-label">📧 E-Mail-Adresse</label>
+            <input type="email" 
+                   id="email" 
+                   name="email" 
+                   class="form-input"
+                   placeholder="max@example.com"
+                   required>
+        </div>
+        
+        <div class="form-group">
+            <label for="username" class="form-label">🏷️ Benutzername</label>
+            <input type="text" 
+                   id="username" 
+                   name="username" 
+                   class="form-input"
+                   placeholder="maxmustermann"
+                   required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password" class="form-label">🔒 Passwort</label>
+            <input type="password" 
+                   id="password" 
+                   name="password" 
+                   class="form-input"
+                   placeholder="Mindestens 8 Zeichen"
+                   required>
+            <small style="color: #666;">Mindestens 8 Zeichen für bessere Sicherheit</small>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn">🚀 Konto erstellen</button>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin-top: 30px;">
+        <p>Bereits ein Konto? <a href="{{ url_for('login') }}">Hier anmelden</a></p>
+    </div>
+</div>
+
+<div class="card">
+    <h2>🎯 Was Sie nach der Registrierung erhalten</h2>
+    <div class="grid-2" style="margin: 20px 0;">
+        <div>
+            <h4>🆓 Kostenlose Inhalte</h4>
+            <p>Sofortiger Zugriff auf unsere Lead-Magnet Module und Grundlagen.</p>
+        </div>
+        
+        <div>
+            <h4>📊 Trading-Dashboard</h4>
+            <p>Persönliches Dashboard mit Fortschritts-Tracking.</p>
+        </div>
+        
+        <div>
+            <h4>🎓 Premium-Upgrade</h4>
+            <p>Einfacher Upgrade-Pfad zu unseren Premium-Strategien.</p>
+        </div>
+        
+        <div>
+            <h4>🛡️ Sicher & Privat</h4>
+            <p>Ihre Daten werden sicher gespeichert und niemals weitergegeben.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

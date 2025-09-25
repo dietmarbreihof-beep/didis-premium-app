@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Die Wahrheit über die Lernkurve - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f4e97b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Statistik Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: #f4e97b;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            background: #e5e5e5;
+            border-radius: 25px;
+            height: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.8s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 600;
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        /* Section Styles */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0.3;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .section#quizSection {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        /* Concept Highlight Boxes */
+        .concept-highlight {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 5px solid #b8860b;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #1a1a1a;
+        }
+
+        .concept-highlight h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            font-size: 1.2em;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border-left: 5px solid #e53e3e;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #c62828;
+        }
+
+        .warning-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #e53e3e;
+        }
+
+        /* Success Boxes */
+        .success-box {
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+            border-left: 5px solid #38a169;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #155724;
+        }
+
+        .success-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #38a169;
+        }
+
+        /* Elite Boxes */
+        .elite-box {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 5px solid #f4e97b;
+        }
+
+        .elite-box h4 {
+            color: #f4e97b;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        /* Reality Check Boxes */
+        .reality-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 5px solid #ff9800;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            color: #e65100;
+        }
+
+        .reality-box h4 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ff9800;
+        }
+
+        /* Interactive Elements */
+        .next-button {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+            min-width: 250px;
+        }
+
+        .next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.3);
+        }
+
+        .next-button:active {
+            transform: translateY(0);
+        }
+
+        /* Quote Styles */
+        .quote-box {
+            background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);
+            border-left: 5px solid #3f51b5;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+            color: #1a237e;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 3em;
+            color: #3f51b5;
+            opacity: 0.3;
+            float: left;
+            line-height: 1;
+            margin-right: 0.5rem;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border: 2px solid #28a745;
+        }
+
+        .key-takeaways h3 {
+            text-align: center;
+            color: #155724;
+            margin-bottom: 1.5rem;
+            font-size: 1.5em;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-left: 4px solid #28a745;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-title {
+                font-size: 2em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        /* Completion Celebration */
+        .completion-celebration {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .completion-celebration h2 {
+            margin-bottom: 1rem;
+        }
+
+        /* Reset Button */
+        .reset-button {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem;
+        }
+
+        .reset-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.3);
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 5px solid #2196f3;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1565c0;
+            font-size: 16px;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .quiz-option:hover {
+            border-color: #2196f3;
+            background: #f5f5f5;
+            transform: translateY(-1px);
+        }
+
+        .quiz-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .quiz-option.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">⚡ Die Wahrheit über die Lernkurve</h1>
+                <p class="hero-subtitle">Warum es keine Abkürzungen zum Trading-Erfolg gibt</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <span class="stat-number">1000s</span>
+                        <span class="stat-label">Stunden Screen Time nötig</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">0%</span>
+                        <span class="stat-label">Magic Bullet Erfolgsrate</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">90%</span>
+                        <span class="stat-label">Scheitern trotz Tools</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-section">
+            <div class="progress-header">
+                <h2 class="progress-title">📊 Lernfortschritt</h2>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-text" id="progressText">0 von 7 Schritten abgeschlossen</div>
+            </div>
+        </div>
+
+        <!-- Schritt 1: Keine Magic Bullet -->
+        <div class="section" id="step1">
+            <div class="section-title">
+                <div class="section-icon">🚫</div>
+                <span>Schritt 1: Es gibt keine Magic Bullet</span>
+            </div>
+            
+            <div class="warning-box">
+                <h4>⚠️ Die harte Realität</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Es gibt <strong>keinen magischen Kurs</strong> oder eine Sofortlösung, die Profitabilität im Trading garantiert. 
+                Erfolg ist nicht automatisch - genau wie das Studieren eines Profi-Athleten dich nicht sofort zum Profi macht.
+                </p>
+            </div>
+
+            <div class="reality-box">
+                <h4>🎭 Die Betrugs-Industrie vs. Top Elite Trader Lance Breitstein's Transparenz</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Hüte dich vor Kursen, die von Personen verkauft werden, die einen einfachen Traum versprechen - 
+                oft dargestellt mit Luxusgegenständen. <strong>Das sind Betrüger.</strong>
+                </p>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; color: #e65100;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">❌ Fake Gurus versprechen:</p>
+                    <p style="margin-bottom: 0.5rem;">• "Trade von überall, nur wenige Klicks am Tag"</p>
+                    <p style="margin-bottom: 0.5rem;">• "Schnelle Reichtümer und finanzielle Unabhängigkeit"</p>
+                    <p style="margin-bottom: 1rem;">• "Minimaler Aufwand für maximale Gewinne"</p>
+                    
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">✅ Didis ehrlicher Ansatz:</p>
+                    <p style="margin-bottom: 0.5rem;">• Startet bewusst mit den Herausforderungen (schlecht für mein Geschäft ;)</p>
+                    <p style="margin-bottom: 0.5rem;">• Informiert über niedrige Erfolgsraten</p>
+                    <p style="margin-bottom: 0.5rem;">• Spricht offen über lange Lernkurven</p>
+                    <p>• Teilt seine eigenen Struggles und Zweifel</p>
+                </div>
+                <p style="font-size: 14px; margin-top: 1rem; font-style: italic;">
+                "Get Rich Quick" Narrative sind die größte Lüge der Trading-Industrie.
+                </p>
+            </div>
+
+            <div class="elite-box">
+                <h4>💎 Elite-Mindset</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Echter Erfolg entsteht durch <strong>tiefes Denken</strong>, kritische Analyse des eigenen Tradings 
+                und die Investition von <strong>tausenden Stunden</strong> in Screen Time und Praxis.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(2)">✅ Verstanden - Weiter zur Realität</button>
+        </div>
+
+        <!-- Schritt 2: Die Realität des Trading-Erfolgs -->
+        <div class="section" id="step2">
+            <div class="section-title">
+                <div class="section-icon">🎯</div>
+                <span>Schritt 2: Die Realität des Trading-Erfolgs</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>🔥 Was echter Erfolg erfordert</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Wahrer Trading-Erfolg erfordert:
+                </p>
+                <ul style="margin: 1rem 0 1rem 2rem; line-height: 1.8;">
+                    <li><strong>Rigor und Disziplin</strong> - Keine Kompromisse bei der Methodik</li>
+                    <li><strong>Emotionale Kontrolle</strong> - Durch Höhen und Tiefen navigieren</li>
+                    <li><strong>Herausfordernde Lernkurve</strong> - Akzeptanz des schwierigen Weges</li>
+                    <li><strong>Tausende Stunden Praxis</strong> - Es gibt keine Abkürzungen</li>
+                </ul>
+            </div>
+
+            <div class="reality-box">
+                <h4>📉 Die unbequeme Wahrheit</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                <strong>Viele werden trotzdem scheitern</strong> - selbst mit den richtigen Tools. 
+                Das unterstreicht die Schwierigkeit dieses Berufes.
+                </p>
+                <div style="background: white; padding: 1rem; border-radius: 8px; margin: 1rem 0; color: #e65100;">
+                    <p style="font-weight: 600;">Statistik der Realität:</p>
+                    <p>• 80% der Trader verlieren Geld</p>
+                    <p>• 15% brechen etwa even</p>
+                    <p>• Nur 5% sind langfristig profitabel</p>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                Trading ist nicht schwer, weil die Konzepte kompliziert sind. 
+                Es ist schwer, weil es <strong>psychologische Perfektion</strong> unter extremem Druck erfordert.
+            </div>
+
+            <button class="next-button" onclick="showStep(3)">✅ Realität akzeptiert - Weiter zum Kursansatz</button>
+        </div>
+
+        <!-- Schritt 3: Zweck und Ansatz dieses Kurses -->
+        <div class="section" id="step3">
+            <div class="section-title">
+                <div class="section-icon">🎓</div>
+                <span>Schritt 3: Zweck und Ansatz dieses Kurses</span>
+            </div>
+            
+            <div class="elite-box">
+                <h4>🎯 Unser Versprechen</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Dieser Kurs verspricht <strong>kein magisches Ergebnis</strong>, sondern zielt darauf ab, 
+                die Zeit und Mühe zu optimieren, die Trader investieren.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🛠️ Was Du bekommen</h4>
+                <ul style="margin: 1rem 0 1rem 2rem; line-height: 1.8;">
+                    <li><strong>Echte Edge-Konzepte</strong> - Nicht nur Theorie, sondern bewährte Strategien</li>
+                    <li><strong>Notwendige Tools</strong> - Um effektive Prozesse und Strategien aufzubauen</li>
+                    <li><strong>Maximierte Erfolgschancen</strong> - Optimierung deines Lernweges</li>
+                    <li><strong>Gewinnpotenzial-Maximierung</strong> - Durch erprobte Methoden</li>
+                </ul>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>💡 Der wahre Wert</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Während wir die exakten Strategien teilen werden, die <strong>signifikante Gewinne</strong> generiert haben, 
+                ist das primäre Ziel, dir beizubringen, <strong>wie du über Trading denkst</strong>.
+                </p>
+            </div>
+
+            <div class="reality-box">
+                <h4>🎨 Trading als Kunst</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Trading ist ein <strong>komplizierter Tanz</strong> aus angemessen dimensionierten Wetten 
+                basierend auf Expected Value. Es ist Wissenschaft UND Kunst zugleich.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(4)">✅ Kursansatz verstanden - Weiter zu den Lernbereichen</button>
+        </div>
+
+        <!-- Schritt 4: Schlüssel-Lernbereiche -->
+        <div class="section" id="step4">
+            <div class="section-title">
+                <div class="section-icon">🔑</div>
+                <span>Schritt 4: Schlüssel-Lernbereiche</span>
+            </div>
+            
+            <div class="concept-highlight">
+                <h4>📚 Was du meistern wirst</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Dieser Kurs deckt die kritischen Bereiche ab, die jeden Elite-Trader definieren:
+                </p>
+            </div>
+
+            <div class="elite-box">
+                <h4>🎲 Expected Value & Bet Sizing</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Verstehe Trading als einen <strong>komplizierten Tanz</strong> aus angemessen dimensionierten Wetten 
+                basierend auf Expected Value. Lerne, wann und wie viel du setzen solltest.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🧠 Marktpsychologie</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Entwickle ein <strong>tiefes Verständnis</strong> der Marktpsychologie. 
+                Verstehe, was andere Trader denken und wie du davon profitieren kannst.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>📊 Technische Analyse - Advanced Level</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Meistere technische Analyse auf einem <strong>fortgeschrittenen Niveau</strong>. 
+                Nicht nur Linien zeichnen, sondern echte Markt-Struktur verstehen.
+                </p>
+            </div>
+
+            <div class="elite-box">
+                <h4>🧩 Meta-Learning & Critical Thinking</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Tauche ein in <strong>Meta-Learning-Tricks</strong>, Prozesse und die Kunst des 
+                kritischen Denkens im Trading. Lerne, wie du lernst.
+                </p>
+            </div>
+
+            <div class="reality-box">
+                <h4>🎯 Das "Warum" und "Wie"</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Du wirst befähigt, diese Konzepte auf dein eigenes Trading anzuwenden, 
+                indem du das <strong>"Warum" und "Wie"</strong> hinter erfolgreichen Praktiken verstehst.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(5)">✅ Lernbereiche verstanden - Weiter zur Zielgruppe</button>
+        </div>
+
+        <!-- Schritt 5: Zielgruppe -->
+        <div class="section" id="step5">
+            <div class="section-title">
+                <div class="section-icon">🎖️</div>
+                <span>Schritt 5: Bist Du bereit für Elite-Level Trading?</span>
+            </div>
+            
+            <div class="elite-box">
+                <h4>🏆 Für wen ist dieser Kurs?</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Dieser Kurs ist für Personen entwickelt, die bereit sind, die <strong>anspruchsvolle Natur</strong> 
+                des professionellen Tradings zu akzeptieren.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>✅ Checkliste: Bist du bereit?</h4>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #1a1a1a; font-weight: 600; margin-bottom: 1rem;">Frage dich ehrlich:</p>
+                    <ul style="color: #333; margin-left: 1.5rem; line-height: 1.8;">
+                        <li>🔥 <strong>Glaubst du wirklich, dass du das Zeug dazu hast?</strong></li>
+                        <li>⏰ <strong>Bist du bereit, die notwendige Zeit zu investieren?</strong></li>
+                        <li>💪 <strong>Kannst du die unvermeidlichen Niederlagen ertragen?</strong></li>
+                        <li>🧠 <strong>Bist du bereit für jahrelange intensive Lernkurve?</strong></li>
+                        <li>📊 <strong>Kannst du emotionslos analytisch denken?</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Ehrliche Selbsteinschätzung</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Wenn du auch nur bei einer Frage gezögert hast, ist professionelles Trading 
+                möglicherweise nicht für dich geeignet. <strong>Das ist völlig in Ordnung.</strong>
+                </p>
+                <p style="font-size: 14px; margin-top: 1rem; font-style: italic;">
+                Es ist besser, ehrlich zu sich selbst zu sein, als Jahre zu verschwenden.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🚀 Für die Auserwählten</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Wenn du alle Fragen mit einem klaren <strong>"JA"</strong> beantwortet hast, 
+                dann bist du bereit für die Reise zum Elite-Trader. Willkommen im Kreis der Wenigen.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="showStep(6)">✅ Ich bin bereit - Weiter zum Zeitaufwand</button>
+        </div>
+
+        <!-- Schritt 6: Der realistische Zeitaufwand -->
+        <div class="section" id="step6">
+            <div class="section-title">
+                <div class="section-icon">⏰</div>
+                <span>Schritt 6: Der realistische Zeitaufwand</span>
+            </div>
+            
+            <div class="warning-box">
+                <h4>🕒 Die harte Zeitwahrheit</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Lass uns über die <strong>realistischen Zeitrahmen</strong> sprechen. 
+                Diese Zahlen sind nicht dazu da, dich zu entmutigen, sondern um dir eine <strong>ehrliche Erwartungshaltung</strong> zu geben.
+                </p>
+            </div>
+
+            <div class="elite-box">
+                <h4>🏆 Lance's Geschichte: Ein Profi-Trader berichtet</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                <strong>Lance</strong> ist einer der besten getesteten Profi-Trader der letzten Zeit. 
+                Seine Geschichte zeigt die Realität selbst für die Talentiertesten:
+                </p>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #f4e97b; margin-bottom: 0.5rem;"><strong>📊 Lance's Lernkurve:</strong></p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• <strong>Erstes Jahr:</strong> Kein einziger profitabler Monat</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• <strong>Gesamtzeit:</strong> Fast 2 Jahre bis zur Konsistenz</p>
+                    <p style="color: white; margin-bottom: 1rem;">• <strong>Zweifel:</strong> Überlegte andere Jobs wegen langsamem Fortschritt</p>
+                    
+                    <p style="color: #f4e97b; margin-bottom: 0.5rem;"><strong>🎯 Seine Vorteile (die meisten haben das NICHT):</strong></p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Direktes Mentoring von einem Top-Trader</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Team von erfahrenen Profis</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Modernste Technologie und Tools</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• 60+ Stunden pro Woche (inkl. Wochenenden)</p>
+                    <p style="color: white;">• Vollzeit-Fokus ohne andere Verpflichtungen</p>
+                </div>
+                <p style="color: #f4e97b; font-weight: 600; font-size: 16px;">
+                <strong>Die Lektion:</strong> Selbst mit optimalen Bedingungen dauert es Jahre. 
+                Ohne diese Vorteile dauert es deutlich länger.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>⏱️ Zeitaufwand-Realität basierend auf Lance's Erkenntnissen</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1.5rem;">
+                Die Zeit bis zur <strong>konstanten Profitabilität</strong> hängt stark von deinen Ressourcen ab:
+                </p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0;">
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #f44336;">
+                        <h4 style="color: #f44336; margin-bottom: 1rem;">🚫 Ohne Vorteile</h4>
+                        <div style="font-size: 2em; font-weight: 800; color: #f44336; margin-bottom: 0.5rem;">8+ Jahre</div>
+                        <p style="color: #666; font-size: 14px;">Alleinerziehende, Vollzeit-Job, kein Mentor</p>
+                        <p style="color: #333; font-size: 14px; margin-top: 0.5rem;">
+                        <strong>Realität:</strong> Begrenzte Zeit, Ressourcen und Unterstützung
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #ff9800;">
+                        <h4 style="color: #ff9800; margin-bottom: 1rem;">🕐 Halbtags + Mentor</h4>
+                        <div style="font-size: 2em; font-weight: 800; color: #ff9800; margin-bottom: 0.5rem;">4+ Jahre</div>
+                        <p style="color: #666; font-size: 14px;">Bis zu konsistenten positiven Ergebnissen</p>
+                        <p style="color: #333; font-size: 14px; margin-top: 0.5rem;">
+                        <strong>Herausforderung:</strong> Begrenzte Zeit für Screen Time und Übung
+                        </p>
+                    </div>
+                    
+                    <div style="background: white; padding: 1.5rem; border-radius: 12px; border-left: 4px solid #2196f3;">
+                        <h4 style="color: #2196f3; margin-bottom: 1rem;">🕘 Vollzeit + Mentor</h4>
+                        <div style="font-size: 2em; font-weight: 800; color: #2196f3; margin-bottom: 0.5rem;">2 Jahre</div>
+                        <p style="color: #666; font-size: 14px;">Bis zu konstanter Profitabilität (Lance's Szenario)</p>
+                        <p style="color: #333; font-size: 14px; margin-top: 0.5rem;">
+                        <strong>Optimal:</strong> Maximale Lernzeit + professionelle Anleitung
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="reality-box">
+                <h4>📊 Was bedeutet "konstant profitabel"?</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Konstante Profitabilität bedeutet <strong>nicht</strong> jeden Tag Gewinne zu machen:
+                </p>
+                <ul style="margin-left: 1.5rem; line-height: 1.8; color: #e65100;">
+                    <li><strong>Positive Erwartung:</strong> Über Monate hinweg mehr Gewinne als Verluste</li>
+                    <li><strong>Risikomanagement:</strong> Verluste sind begrenzt und kontrolliert</li>
+                    <li><strong>Emotionale Kontrolle:</strong> Keine impulsiven oder rachsüchtigen Trades</li>
+                    <li><strong>Systematischer Ansatz:</strong> Wiederholbarer Prozess mit Edge</li>
+                </ul>
+            </div>
+
+            <div class="elite-box">
+                <h4>🎯 Warum dauert es so lange?</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Trading ist wie das Erlernen eines <strong>hochkomplexen Instruments</strong>:
+                </p>
+                <ul style="color: #f4e97b; margin-left: 1.5rem; line-height: 1.8;">
+                    <li><strong>Technische Fähigkeiten:</strong> Chart-Reading, Pattern-Erkennung, Timing</li>
+                    <li><strong>Psychologische Meisterschaft:</strong> Emotionskontrolle, Disziplin, Geduld</li>
+                    <li><strong>Risikomanagement:</strong> Position Sizing, Stop-Loss, Portfolio-Management</li>
+                    <li><strong>Marktverständnis:</strong> Verschiedene Marktphasen, Volatilität, Korrelationen</li>
+                    <li><strong>System-Entwicklung:</strong> Eigene Edge finden und verfeinern</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Häufige Zeitfallen</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Diese Faktoren können die Lernzeit <strong>drastisch verlängern</strong>:
+                </p>
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; color: #e65100;">
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">🚫 System-Hopping:</p>
+                    <p style="margin-bottom: 1rem;">Ständig neue Strategien ausprobieren statt eine zu meistern</p>
+                    
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">🚫 Unzureichende Vorbereitung:</p>
+                    <p style="margin-bottom: 1rem;">Ohne solide Grundlagen direkt ins Live-Trading springen</p>
+                    
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">🚫 Emotionale Trades:</p>
+                    <p style="margin-bottom: 1rem;">Rache-Trading und Impulshandlungen zerstören Fortschritt</p>
+                    
+                    <p style="font-weight: 600; margin-bottom: 0.5rem;">🚫 Zu großes Risiko:</p>
+                    <p>Große Verluste zwingen zum Neustart der Lernkurve</p>
+                </div>
+            </div>
+
+            <div class="elite-box">
+                <h4>🎯 Didis "Elite III" Mission</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                Didis Kurs <strong>"Elite III"</strong> wurde entwickelt, um die Lernkurve für 
+                Retail-Trader zu verkürzen, die nicht seine umfangreichen Ressourcen haben:
+                </p>
+                <div style="background: rgba(255,255,255,0.1); padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <p style="color: #f4e97b; margin-bottom: 0.5rem;"><strong>🎯 Ziel des Kurses:</strong></p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Den direktesten Weg zum Erfolg bieten</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Die Chancen zu deinen Gunsten verbessern</p>
+                    <p style="color: white; margin-bottom: 1rem;">• Die Lernkurve so weit wie möglich verkürzen</p>
+                    
+                    <p style="color: #f4e97b; margin-bottom: 0.5rem;"><strong>💡 Was du bekommst:</strong></p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Bewährte Strategien ohne jahrelange Experimente</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Strukturierter täglicher Prozess</p>
+                    <p style="color: white; margin-bottom: 0.5rem;">• Mentoring-Prinzipien in Kursform</p>
+                    <p style="color: white;">• Direkte Übertragung von Profi-Erfahrungen</p>
+                </div>
+                <p style="color: #f4e97b; font-weight: 600;">
+                <strong>Wichtig:</strong> Auch mit dem besten Kurs bleibt Trading schwer. 
+                Der Kurs optimiert deine Chancen, eliminiert aber nicht die Grundherausforderungen.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4>🚀 Wie du die Zeit optimierst</h4>
+                <p style="font-size: 16px; line-height: 1.6; margin-bottom: 1rem;">
+                So machst du das Beste aus deiner Lernzeit:
+                </p>
+                <ul style="margin-left: 1.5rem; line-height: 1.8; color: #155724;">
+                    <li><strong>Qualität vor Quantität:</strong> 2 Stunden fokussiert > 8 Stunden abgelenkt</li>
+                    <li><strong>Mentor finden:</strong> Verkürzt die Lernkurve um Jahre</li>
+                    <li><strong>Trading-Journal:</strong> Dokumentiere jeden Trade und lerne aus Fehlern</li>
+                    <li><strong>Backtesting:</strong> Teste Strategien mit historischen Daten</li>
+                    <li><strong>Simulationstrading:</strong> Übe ohne reales Geld-Risiko</li>
+                    <li><strong>Kontinuierliche Bildung:</strong> Bücher, Kurse, Webinare</li>
+                </ul>
+            </div>
+
+            <button class="next-button" onclick="showStep(7)">✅ Zeitaufwand verstanden - Weiter zur Zusammenfassung</button>
+        </div>
+
+        <!-- Schritt 7: Zusammenfassung -->
+        <div class="section" id="step7">
+            <div class="section-title">
+                <div class="section-icon">🎯</div>
+                <span>Schritt 7: Die Wahrheit zusammengefasst</span>
+            </div>
+            
+            <div class="elite-box">
+                <h4>💎 Elite-Trader Mindset</h4>
+                <p style="color: #f4e97b; font-size: 16px; line-height: 1.6;">
+                Elite-Trader werden nicht geboren - sie werden durch <strong>rigorose Disziplin</strong>, 
+                <strong>endlose Praxis</strong> und die <strong>Bereitschaft zu scheitern</strong> geschmiedet.
+                </p>
+            </div>
+
+            <div class="concept-highlight">
+                <h4>🎭 Der Unterschied</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Während 95% der Trader nach schnellen Lösungen suchen, investieren die erfolgreichen 5% 
+                in <strong>fundamentales Verständnis</strong> und <strong>systematische Exzellenz</strong>.
+                </p>
+            </div>
+
+            <div class="reality-box">
+                <h4>⚡ dein Weg startet jetzt</h4>
+                <p style="font-size: 16px; line-height: 1.6;">
+                Jetzt kennst du die Wahrheit. Es gibt keine Abkürzungen, keine Magic Bullets, 
+                keine einfachen Lösungen. Es gibt nur den <strong>harten, aber lohnenden Weg</strong> 
+                zur Trading-Exzellenz.
+                </p>
+            </div>
+
+            <button class="next-button" onclick="startQuiz()">🧠 Bereit für das Abschlussquiz</button>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="section" id="quizSection" style="display: none;">
+            <div class="section-title">
+                <div class="section-icon">🧠</div>
+                <span>Abschlussquiz: Die Wahrheit über die Lernkurve</span>
+            </div>
+            
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 1:</strong> Was ist die Hauptbotschaft über "Magic Bullets" im Trading?
+                </div>
+                <div class="quiz-options" id="quiz1">
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Es gibt geheime Strategien die sofort funktionieren</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 1)">Es gibt keine Magic Bullet oder Sofortlösung für Trading-Erfolg</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Nur teure Kurse bringen wirklichen Erfolg</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 1)">Mit dem richtigen System ist Trading einfach</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 2:</strong> Wie viele Trader scheitern trotz der richtigen Tools?
+                </div>
+                <div class="quiz-options" id="quiz2">
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">50%</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">70%</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 2)">Viele (die meisten)</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 2)">Nur wenige</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 3:</strong> Wie lange dauert es mit Mentor und Vollzeit bis zur konstanten Profitabilität?
+                </div>
+                <div class="quiz-options" id="quiz3">
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">6 Monate</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">1 Jahr</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 3)">2 Jahre</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 3)">5 Jahre</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 4:</strong> Wie lange dauert es mit Mentor aber nur halbtags?
+                </div>
+                <div class="quiz-options" id="quiz4">
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">1 Jahr</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">2 Jahre</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 4)">8 Jahre</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 4)">4+ Jahre</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 5:</strong> Was ist Trading laut dem Kurs?
+                </div>
+                <div class="quiz-options" id="quiz5">
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Ein einfacher Weg zum Geld verdienen</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 5)">Ein komplizierter Tanz aus Expected Value und Bet Sizing</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Nur Glücksspiel</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 5)">Eine Wissenschaft ohne Kunst</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 6:</strong> Was sind häufige Zeitfallen die die Lernkurve verlängern?
+                </div>
+                <div class="quiz-options" id="quiz6">
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Zu viel Backtesting</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 6)">System-Hopping und emotionale Trades</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Zu viel Theorie lernen</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 6)">Trading-Journal führen</div>
+                </div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <strong>Frage 7:</strong> Was bedeutet "konstant profitabel" im Trading?
+                </div>
+                <div class="quiz-options" id="quiz7">
+                    <div class="quiz-option" onclick="selectOption(this, false, 7)">Jeden Tag Gewinne machen</div>
+                    <div class="quiz-option" onclick="selectOption(this, true, 7)">Über Monate hinweg positive Erwartung mit kontrolliertem Risiko</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 7)">Nie Verluste haben</div>
+                    <div class="quiz-option" onclick="selectOption(this, false, 7)">Mindestens 50% Gewinnrate</div>
+                </div>
+            </div>
+
+            <button class="next-button" onclick="showQuizResults()" id="showResultsBtn" style="display: none;">📊 Quiz-Ergebnisse anzeigen</button>
+            
+            <div id="quizResults" style="display: none;">
+                <div class="success-box">
+                    <h4>🎯 Quiz-Ergebnis</h4>
+                    <p id="scoreText" style="font-size: 18px; font-weight: 600;"></p>
+                    <p id="feedbackText" style="font-size: 16px; margin-top: 1rem;"></p>
+                </div>
+                <button class="next-button" onclick="completeModule()">🎉 Weiter zu den Key Takeaways</button>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways" id="keyTakeaways" style="display: none;">
+            <h3>📋 KEY TAKEAWAYS</h3>
+            
+            <div class="takeaway-item">
+                <strong>1.</strong> Es gibt keine Magic Bullet oder Sofortlösung für Trading-Erfolg.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>2.</strong> "Get Rich Quick" Kurse sind Betrug - hüte dich vor Luxus-Versprechen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>3.</strong> Echter Erfolg erfordert tausende Stunden Screen Time und rigorose Disziplin.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>4.</strong> Viele werden trotz der richtigen Tools scheitern - Trading ist extrem schwierig.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>5.</strong> Der Kurs optimiert deine Lernzeit, garantiert aber keine magischen Ergebnisse.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>6.</strong> Trading ist ein komplizierter Tanz aus Expected Value und Bet Sizing.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>7.</strong> Marktpsychologie und technische Analyse auf Elite-Level sind entscheidend.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>8.</strong> Lance (Elite-Profi) brauchte fast 2 Jahre trotz optimaler Bedingungen - das zeigt die wahre Schwierigkeit.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>9.</strong> Transparenz über Herausforderungen ist wichtiger als Marketing-Versprechen.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>10.</strong> Ohne Mentor, bei begrenzter Zeit oder anderen Verpflichtungen kann es 4+ Jahre dauern.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>11.</strong> Didis "Elite III" zielt darauf ab, die Lernkurve zu verkürzen, nicht zu eliminieren.
+            </div>
+            
+            <div class="takeaway-item">
+                <strong>12.</strong> Elite-Trader werden durch Disziplin, Praxis und Bereitschaft zu scheitern geschmiedet.
+            </div>
+        </div>
+
+        <!-- Completion Celebration -->
+        <div class="completion-celebration" id="completionCelebration" style="display: none;">
+            <h2>🎉 Herzlichen Glückwunsch!</h2>
+            <h3>Die Wahrheit über die Lernkurve erfolgreich abgeschlossen</h3>
+            <p style="font-size: 18px; margin: 1rem 0;">
+                Du hast den ersten und wichtigsten Schritt gemacht: Die Wahrheit zu akzeptieren.
+            </p>
+            <p style="font-size: 16px;">
+                Jetzt beginnt die echte Arbeit. Bist du bereit für Elite-Level Trading?
+            </p>
+        </div>
+
+        <!-- Reset Button -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <button class="reset-button" onclick="resetModule()">🔄 Modul zurücksetzen</button>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let quizAnswered = [false, false, false, false, false, false, false];
+        let quizCorrect = [false, false, false, false, false, false, false];
+        
+        function updateProgress() {
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            const percentage = (currentStep / 7) * 100;
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = `${currentStep} von 7 Schritten abgeschlossen`;
+        }
+        
+        function showStep(step) {
+            // Hide current step
+            const currentSection = document.getElementById(`step${currentStep}`);
+            if (currentSection) {
+                currentSection.style.opacity = '0.3';
+                currentSection.style.transform = 'translateY(20px)';
+            }
+            
+            // Show new step
+            setTimeout(() => {
+                const newSection = document.getElementById(`step${step}`);
+                if (newSection) {
+                    newSection.classList.add('visible');
+                    newSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                
+                currentStep = step;
+                updateProgress();
+            }, 300);
+        }
+        
+        function startQuiz() {
+            currentStep = 7;
+            updateProgress();
+            
+            // Show quiz
+            const quizSection = document.getElementById('quizSection');
+            quizSection.style.display = 'block';
+            quizSection.classList.add('visible');
+            quizSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function selectOption(element, isCorrect, questionNumber) {
+            const parent = element.parentElement;
+            const options = parent.querySelectorAll('.quiz-option');
+            
+            // Remove previous selections
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Mark selection
+            element.classList.add('selected');
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                // Show correct answer
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+            
+            // Update tracking
+            const questionIndex = questionNumber - 1;
+            quizAnswered[questionIndex] = true;
+            quizCorrect[questionIndex] = isCorrect;
+            
+            // Check if all questions answered
+            if (quizAnswered.every(answered => answered)) {
+                setTimeout(() => {
+                    document.getElementById('showResultsBtn').style.display = 'block';
+                }, 500);
+            }
+        }
+        
+        function showQuizResults() {
+            const correctCount = quizCorrect.filter(correct => correct).length;
+            const totalQuestions = quizCorrect.length;
+            const percentage = Math.round((correctCount / totalQuestions) * 100);
+            
+            document.getElementById('scoreText').textContent = 
+                `Du hast ${correctCount} von ${totalQuestions} Fragen richtig beantwortet (${percentage}%)`;
+            
+            let feedback = '';
+            if (percentage >= 85) {
+                feedback = '🎉 Ausgezeichnet! Du hast die harten Wahrheiten des Trading wirklich verstanden. Du bist bereit für die Elite-Reise!';
+            } else if (percentage >= 70) {
+                feedback = '👍 Gut gemacht! Du verstehst die Grundlagen. Lies das Modul nochmal durch für noch tieferes Verständnis.';
+            } else if (percentage >= 50) {
+                feedback = '📖 Solide Basis, aber es gibt noch Lücken. Wiederhole die Schlüsselkonzepte für besseres Verständnis.';
+            } else {
+                feedback = '🔄 Bitte lies das Modul nochmal aufmerksam durch. Diese Wahrheiten sind fundamental für deinen Trading-Erfolg.';
+            }
+            
+            document.getElementById('feedbackText').textContent = feedback;
+            document.getElementById('quizResults').style.display = 'block';
+        }
+        
+        function completeModule() {
+            // Show key takeaways and completion
+            document.getElementById('keyTakeaways').style.display = 'block';
+            document.getElementById('completionCelebration').style.display = 'block';
+            document.getElementById('completionCelebration').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function resetModule() {
+            currentStep = 1;
+            quizAnswered = [false, false, false, false, false, false, false];
+            quizCorrect = [false, false, false, false, false, false, false];
+            
+            // Hide all sections except first
+            for (let i = 2; i <= 7; i++) {
+                const section = document.getElementById(`step${i}`);
+                if (section) {
+                    section.classList.remove('visible');
+                }
+            }
+            
+            // Hide quiz and completion elements
+            const quizSection = document.getElementById('quizSection');
+            quizSection.style.display = 'none';
+            quizSection.classList.remove('visible');
+            document.getElementById('keyTakeaways').style.display = 'none';
+            document.getElementById('completionCelebration').style.display = 'none';
+            document.getElementById('quizResults').style.display = 'none';
+            document.getElementById('showResultsBtn').style.display = 'none';
+            
+            // Reset quiz selections
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Show first step
+            const firstSection = document.getElementById('step1');
+            firstSection.classList.add('visible');
+            firstSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            updateProgress();
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('step1').classList.add('visible');
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

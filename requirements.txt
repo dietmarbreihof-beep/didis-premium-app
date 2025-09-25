@@ -1,0 +1,35 @@
+# Production Requirements für Didis Trading Academy
+# Basiert auf requirements_extended.txt aber production-optimiert
+
+# Core Flask
+Flask==3.0.0
+Flask-SQLAlchemy==3.1.1
+Werkzeug==3.0.1
+
+# Database
+SQLAlchemy==2.0.23
+
+# Email Support
+Flask-Mail==0.9.1
+
+# HTTP Requests
+requests==2.31.0
+
+# Template Engine  
+Jinja2==3.1.2
+MarkupSafe>=2.1.3
+
+# Environment Configuration
+python-dotenv==1.0.0
+
+# Production Server (für Deployment)
+gunicorn==21.2.0
+
+# Security (für Produktion)
+cryptography>=41.0.0
+
+# Database Driver (für PostgreSQL in Produktion)
+# psycopg2-binary==2.9.7  # Auskommentiert - nur für PostgreSQL nötig
+
+# Monitoring (optional für Produktion)
+# sentry-sdk[flask]==1.38.0  # Auskommentiert - für Error Tracking

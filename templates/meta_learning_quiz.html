@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta-Learning: Die Wissenschaft des effektiven Lernens - Elite System III</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ffffff, #f4e97b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            font-weight: 400;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .elite-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-top: 1rem;
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            border-left: 4px solid #daa520;
+            padding-left: 1rem;
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            color: #1a1a1a;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+            position: relative;
+            font-style: italic;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .quote-section::before {
+            content: '"';
+            font-size: 4em;
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            opacity: 0.3;
+        }
+
+        .key-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .key-point {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid #059669;
+        }
+
+        .key-point h4 {
+            color: #155724;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .key-point p {
+            color: #155724;
+            font-size: 1.05em;
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+
+        .quiz-title {
+            font-size: 2em;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, #f4e97b, #daa520);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .quiz-question {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .quiz-question.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .answer-option {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .answer-option:hover {
+            background: rgba(218, 165, 32, 0.2);
+            border-color: #daa520;
+        }
+
+        .answer-option.selected {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            border-color: #f4e97b;
+        }
+
+        .answer-option.correct {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-color: #10b981;
+        }
+
+        .answer-option.incorrect {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border-color: #ef4444;
+        }
+
+        .quiz-button {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1rem 0.5rem 0 0;
+        }
+
+        .quiz-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+        }
+
+        .quiz-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .quiz-progress {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .quiz-progress-bar {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .quiz-score {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 2rem 0;
+            padding: 1rem;
+            border-radius: 12px;
+            display: none;
+        }
+
+        .quiz-score.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .score-excellent {
+            background: linear-gradient(135deg, #059669, #10b981);
+        }
+
+        .score-good {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+        }
+
+        .score-needs-improvement {
+            background: linear-gradient(135deg, #d69e2e, #f59e0b);
+            color: #1a1a1a;
+        }
+
+        /* Navigation */
+        .nav-links {
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-links a {
+            color: #b8860b;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: linear-gradient(135deg, #daa520, #f4e97b);
+            color: #1a1a1a;
+            transform: translateY(-2px);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .content-card {
+                padding: 1.5rem;
+            }
+
+            .key-points {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">🧠 Meta-Learning Masterclass</h1>
+                <p class="hero-subtitle">Die Wissenschaft des effektiven Lernens im Trading</p>
+                <p style="font-size: 1.1em; opacity: 0.8;">Wie Lance Breitstein vom struggling Trader zum #1 Trader bei Trillium wurde</p>
+                <div class="elite-badge">🏆 Elite - System III</div>
+            </div>
+        </div>
+
+        <!-- Introduction -->
+        <div class="content-card">
+            <div class="section-title">🎯 Die Entscheidung, die alles veränderte</div>
+            <p style="font-size: 1.1em; margin-bottom: 1rem;">
+                Lance Breitstein machte nach seinem ersten erfolglosen Jahr als Trader eine entscheidende Erkenntnis: 
+                <strong>Es war nicht seine Trading-Strategie, die ihn zurückhielt - es war sein Lernprozess.</strong>
+            </p>
+            
+            <div class="quote-section">
+                Ich glaube wirklich, dass Meta-Learning - die Wissenschaft des effektiveren Lernens - das war, 
+                was meine Karriere rettete, als ich Schwierigkeiten hatte.
+            </div>
+
+            <p style="font-size: 1.1em;">
+                Statt weiter ineffektiv zu kämpfen, nahm Lance eine mentale Auszeit und stellte sich drei 
+                fundamentale Fragen, die sein Trading-Schicksal für immer veränderten.
+            </p>
+        </div>
+
+        <!-- Die drei Schlüsselfragen -->
+        <div class="content-card">
+            <div class="section-title">❓ Die drei Schlüsselfragen des Meta-Learning</div>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>🤑 Frage #1: Was sind die einfachsten Wege, Geld zu verdienen?</h4>
+                    <p>Fokus auf die profitabelsten Gelegenheiten mit dem besten Risiko-Rendite-Verhältnis.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>⚡ Frage #2: Wie studiere ich diese Gelegenheiten am schnellsten und effektivsten?</h4>
+                    <p>Optimierung der Lernmethoden für maximale Effizienz und Wissensretention.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🔄 Frage #3: Wie baue ich einen täglichen Prozess auf, der all diese Aktionen beinhaltet?</h4>
+                    <p>Systematisierung und Automatisierung der erfolgreichen Gewohnheiten.</p>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 1.5rem; border-radius: 12px; margin-top: 2rem; border-left: 4px solid #d69e2e;">
+                <h4 style="color: #856404; margin-bottom: 0.5rem;">💡 Lance's Erkenntnis</h4>
+                <p style="color: #856404; font-size: 1.05em;">
+                    "Diese strategische Entscheidung veränderte wirklich mein Schicksal. Ich glaube, meine 
+                    kontinuierliche Optimierung dieser Fragen ist das, was mich zum Nummer-1-Trader bei Trillium katapultierte."
+                    Meine Lernmethoden habe ich selbst über mehrere Jahrzehnte optimiert und angepasst. Zettelkastenprinzip mit Obsidian-App, Atomic Habits, Die Macht der Gewohnheit, AI-Tools, etc.                </p>
+            </div>
+        </div>
+
+        <!-- Der Compound-Effekt des Lernens -->
+        <div class="content-card">
+            <div class="section-title">📈 Der Compound-Effekt des Lernens</div>
+            
+            <p style="font-size: 1.1em; margin-bottom: 1.5rem;">
+                Wie James Clear in "Atomic Habits" betont: <strong>Dein Startpunkt ist weniger wichtig als 
+                die Geschwindigkeit deiner Verbesserung und die Länge deiner Runway.</strong>
+            </p>
+
+            <div style="background: linear-gradient(135deg, #e3f2fd, #bbdefb); padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <h4 style="color: #0d47a1; text-align: center; margin-bottom: 1rem;">🧮 Die Mathematik des Erfolgs</h4>
+                <p style="color: #0d47a1; text-align: center; font-size: 1.1em;">
+                    <strong>Deine Fähigkeiten = Anzahl der Stunden × Effektivität dieser Stunden</strong>
+                </p>
+            </div>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>📊 Normale Verbesserungsrate</h4>
+                    <p>Lineares Wachstum wie die meisten Menschen - langsam und vorhersagbar.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🚀 Optimierte Verbesserungsrate</h4>
+                    <p>Exponentielles Wachstum durch Meta-Learning - der Compound-Effekt wirkt!</p>
+                </div>
+            </div>
+
+            <div class="quote-section">
+                Der Schlüssel ist, dass Verbesserung sich zusammensetzt. Selbst eine winzig schnellere 
+                Rate über den Verlauf einer Trading-Karriere kann den Unterschied zwischen Erfolg und Scheitern ausmachen.
+            </div>
+        </div>
+
+        <!-- Die Macht des Prozesses -->
+        <div class="content-card">
+            <div class="section-title">⚙️ Warum der Prozess wichtiger ist als die Strategie</div>
+            
+            <p style="font-size: 1.1em; margin-bottom: 1.5rem;">
+                Lance's revolutionäre Erkenntnis: <strong>Es waren nicht seine Trading-Strategien, die so anders 
+                oder besser waren - es war sein Verbesserungsprozess, der so verfeinert war, dass er sich 
+                schneller verbessern und entwickeln konnte.</strong>
+            </p>
+
+            <div style="background: linear-gradient(135deg, #fce4ec, #f8bbd9); padding: 2rem; border-radius: 15px; margin: 2rem 0;">
+                <h4 style="color: #880e4f; margin-bottom: 1rem;">🎯 Lance's Mentoring-Geheimnis</h4>
+                <p style="color: #880e4f; font-size: 1.1em;">
+                    "Wann immer ich anfange, einen Trader zu mentorieren, beginnt es immer mit dem Prozess. 
+                    Menschen denken, ich erzähle Unsinn, wenn ich das sage, aber es ist wahr. Selbst wenn ich 
+                    professionelle Trader mentoriere, beginnt es immer noch mit der Verbesserung ihres Prozesses."
+                </p>
+            </div>
+
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>❌ Ineffektive Lernstrategien vermeiden</h4>
+                    <p>Meta-Learning reduziert die Zeit, die mit unproduktiven Methoden verschwendet wird, erheblich.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🎯 Fokus auf das, was funktioniert</h4>
+                    <p>Eine Stunde klarer, zielgerichteter Arbeit ist besser als drei Stunden gedankenloses Durchgehen.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📚 Verkürzte Lernkurve</h4>
+                    <p>Du erreichst neue Höhen, wenn du Zeit in die Perfektionierung deines Lernprozesses investierst.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Quiz Section -->
+        <div class="quiz-section">
+            <h2 class="quiz-title">🧠 Meta-Learning Wissenstest</h2>
+            <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1em;">
+                Teste dein Verständnis der Meta-Learning-Prinzipien von Lance Breitstein
+            </p>
+            
+            <div class="quiz-progress">
+                <div class="quiz-progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Question 1 -->
+            <div class="quiz-question active" id="question1">
+                <div class="question-text">
+                    🤔 Was war Lance's entscheidende Erkenntnis nach seinem ersten erfolglosen Trading-Jahr?
+                </div>
+                <div class="answer-option" data-question="1" data-answer="A">
+                    A) Er brauchte eine bessere Trading-Strategie
+                </div>
+                <div class="answer-option" data-question="1" data-answer="B">
+                    B) Er musste mehr Kapital investieren
+                </div>
+                <div class="answer-option" data-question="1" data-answer="C" data-correct="true">
+                    C) Sein Lernprozess war das Problem, nicht seine Strategie
+                </div>
+                <div class="answer-option" data-question="1" data-answer="D">
+                    D) Er sollte das Trading aufgeben
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-question" id="question2">
+                <div class="question-text">
+                    ⚡ Welche der drei Schlüsselfragen ist NICHT Teil von Lance's Meta-Learning-Ansatz?
+                </div>
+                <div class="answer-option" data-question="2" data-answer="A">
+                    A) Was sind die einfachsten Wege, Geld zu verdienen?
+                </div>
+                <div class="answer-option" data-question="2" data-answer="B" data-correct="true">
+                    B) Welche Aktien werden morgen steigen?
+                </div>
+                <div class="answer-option" data-question="2" data-answer="C">
+                    C) Wie studiere ich Gelegenheiten am effektivsten?
+                </div>
+                <div class="answer-option" data-question="2" data-answer="D">
+                    D) Wie baue ich einen täglichen Prozess auf?
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-question" id="question3">
+                <div class="question-text">
+                    📈 Nach James Clear's "Atomic Habits" - was ist wichtiger als der Startpunkt?
+                </div>
+                <div class="answer-option" data-question="3" data-answer="A">
+                    A) Die Menge des verfügbaren Kapitals
+                </div>
+                <div class="answer-option" data-question="3" data-answer="B" data-correct="true">
+                    B) Die Geschwindigkeit der Verbesserung und die Länge der Runway
+                </div>
+                <div class="answer-option" data-question="3" data-answer="C">
+                    C) Die Anzahl der Trading-Bücher, die man gelesen hat
+                </div>
+                <div class="answer-option" data-question="3" data-answer="D">
+                    D) Die Komplexität der Trading-Strategien
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-question" id="question4">
+                <div class="question-text">
+                    🧮 Wie definiert Lance die Formel für Trading-Fähigkeiten?
+                </div>
+                <div class="answer-option" data-question="4" data-answer="A">
+                    A) Fähigkeiten = Talent × Glück
+                </div>
+                <div class="answer-option" data-question="4" data-answer="B" data-correct="true">
+                    B) Fähigkeiten = Anzahl der Stunden × Effektivität dieser Stunden
+                </div>
+                <div class="answer-option" data-question="4" data-answer="C">
+                    A) Fähigkeiten = Kapital × Risiko
+                </div>
+                <div class="answer-option" data-question="4" data-answer="D">
+                    D) Fähigkeiten = Strategien × Marktkenntnis
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="quiz-question" id="question5">
+                <div class="question-text">
+                    🎯 Was ist Lance's wichtigste Erkenntnis über effektives Lernen?
+                </div>
+                <div class="answer-option" data-question="5" data-answer="A">
+                    A) Mehr Stunden bedeuten automatisch bessere Ergebnisse
+                </div>
+                <div class="answer-option" data-question="5" data-answer="B" data-correct="true">
+                    B) Eine Stunde klarer, zielgerichteter Arbeit ist besser als drei Stunden gedankenloses Durchgehen
+                </div>
+                <div class="answer-option" data-question="5" data-answer="C">
+                    C) Man sollte alle verfügbaren Trading-Strategien gleichzeitig lernen
+                </div>
+                <div class="answer-option" data-question="5" data-answer="D">
+                    D) Theorie ist wichtiger als Praxis
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="quiz-question" id="question6">
+                <div class="question-text">
+                    🚀 Was machte Lance zum #1 Trader bei Trillium?
+                </div>
+                <div class="answer-option" data-question="6" data-answer="A">
+                    A) Seine überlegenen Trading-Strategien
+                </div>
+                <div class="answer-option" data-question="6" data-answer="B">
+                    B) Sein großes Startkapital
+                </div>
+                <div class="answer-option" data-question="6" data-answer="C" data-correct="true">
+                    C) Sein verfeinerter Verbesserungsprozess, der ihm half, schneller zu lernen
+                </div>
+                <div class="answer-option" data-question="6" data-answer="D">
+                    D) Seine natürliche Begabung für Zahlen
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="quiz-question" id="question7">
+                <div class="question-text">
+                    ⚙️ Womit beginnt Lance immer, wenn er Trader mentoriert?
+                </div>
+                <div class="answer-option" data-question="7" data-answer="A">
+                    A) Mit den neuesten Trading-Strategien
+                </div>
+                <div class="answer-option" data-question="7" data-answer="B" data-correct="true">
+                    B) Mit der Verbesserung ihres Lernprozesses
+                </div>
+                <div class="answer-option" data-question="7" data-answer="C">
+                    C) Mit der Analyse ihrer vergangenen Trades
+                </div>
+                <div class="answer-option" data-question="7" data-answer="D">
+                    D) Mit der Erhöhung ihrer Positionsgrößen
+                </div>
+            </div>
+
+            <!-- Quiz Controls -->
+            <div style="text-align: center; margin-top: 2rem;">
+                <button class="quiz-button" id="nextBtn" onclick="nextQuestion()" style="display: none;">
+                    Nächste Frage ➡️
+                </button>
+                <button class="quiz-button" id="finishBtn" onclick="finishQuiz()" style="display: none;">
+                    Quiz beenden 🏁
+                </button>
+                <button class="quiz-button" id="restartBtn" onclick="restartQuiz()" style="display: none;">
+                    Quiz wiederholen 🔄
+                </button>
+            </div>
+
+            <!-- Quiz Score -->
+            <div class="quiz-score" id="quizScore">
+                <!-- Score will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="content-card">
+            <div class="section-title">🎯 Key Takeaways: Meta-Learning Essentials</div>
+            
+            <div class="key-points">
+                <div class="key-point">
+                    <h4>🧠 Meta-Learning rettet Karrieren</h4>
+                    <p>Die Wissenschaft des effektiven Lernens kann den Unterschied zwischen Erfolg und Scheitern ausmachen.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>❓ Die drei Schlüsselfragen</h4>
+                    <p>Fokussieren Sie sich auf: einfachste Geld-Wege, effektivste Lernmethoden, tägliche Prozesse.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>📈 Verbesserung komponiert sich</h4>
+                    <p>Selbst kleine Verbesserungen in der Lernrate führen über Zeit zu exponentiellen Ergebnissen.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>⚙️ Prozess schlägt Strategie</h4>
+                    <p>Ein verfeinerter Lernprozess ist wichtiger als die perfekte Trading-Strategie.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🎯 Qualität über Quantität</h4>
+                    <p>Eine Stunde fokussierter Arbeit ist wertvoller als drei Stunden gedankenloses Üben.</p>
+                </div>
+                
+                <div class="key-point">
+                    <h4>🚀 Kontinuierliche Optimierung</h4>
+                    <p>Ständige Verbesserung des Lernprozesses führt zu überlegenen langfristigen Ergebnissen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-links">
+            <a href="/">🏠 Startseite</a>
+            <a href="/modules">📚 Alle Module</a>
+            <a href="/magic-line">🎯 Magic Line</a>
+            <a href="https://didis-trading-club.streamlit.app/" target="_blank" rel="noopener noreferrer">🚀 Zur Hauptapp</a>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #1a1a1a; margin-bottom: 1rem;">🏆 Elite - System III</h3>
+            <p style="color: #666; margin-bottom: 0.5rem;"><em>🧠 Metalearning & The Process</em></p>
+            <p style="color: #666; font-size: 1.1em;"><strong>Didis Premium Trading Academy</strong></p>
+            <p style="color: #666;">📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung | 🎓 Meta-Learning Masterclass</p>
+        </div>
+    </div>
+
+    <script>
+        let currentQuestion = 1;
+        let totalQuestions = 7;
+        let score = 0;
+        let answers = {};
+
+        function selectAnswer(element) {
+            // Remove selection from other options in the same question
+            const questionNum = element.dataset.question;
+            const questionOptions = document.querySelectorAll(`[data-question="${questionNum}"]`);
+            questionOptions.forEach(option => option.classList.remove('selected'));
+            
+            // Select this option
+            element.classList.add('selected');
+            
+            // Store the answer
+            answers[questionNum] = {
+                answer: element.dataset.answer,
+                correct: element.dataset.correct === 'true'
+            };
+            
+            // Show next button
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+
+        function nextQuestion() {
+            // Hide current question
+            document.getElementById(`question${currentQuestion}`).classList.remove('active');
+            
+            currentQuestion++;
+            
+            if (currentQuestion <= totalQuestions) {
+                // Show next question
+                document.getElementById(`question${currentQuestion}`).classList.add('active');
+                document.getElementById('nextBtn').style.display = 'none';
+                
+                // Update progress bar
+                const progress = (currentQuestion - 1) / totalQuestions * 100;
+                document.getElementById('progressBar').style.width = progress + '%';
+            }
+            
+            if (currentQuestion === totalQuestions) {
+                document.getElementById('nextBtn').textContent = 'Letzte Frage ➡️';
+            }
+            
+            if (currentQuestion > totalQuestions) {
+                document.getElementById('finishBtn').style.display = 'inline-block';
+                document.getElementById('nextBtn').style.display = 'none';
+            }
+        }
+
+        function finishQuiz() {
+            // Calculate score
+            score = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (answers[i] && answers[i].correct) {
+                    score++;
+                }
+            }
+            
+            // Update progress bar to 100%
+            document.getElementById('progressBar').style.width = '100%';
+            
+            // Show results
+            showResults();
+            
+            // Hide finish button, show restart button
+            document.getElementById('finishBtn').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'inline-block';
+            
+            // Show correct/incorrect answers
+            highlightAnswers();
+        }
+
+        function showResults() {
+            const scoreElement = document.getElementById('quizScore');
+            const percentage = Math.round((score / totalQuestions) * 100);
+            
+            let scoreClass = '';
+            let message = '';
+            let emoji = '';
+            
+            if (percentage >= 85) {
+                scoreClass = 'score-excellent';
+                message = 'Exzellent! Du hast die Meta-Learning-Prinzipien perfekt verstanden!';
+                emoji = '🏆';
+            } else if (percentage >= 70) {
+                scoreClass = 'score-good';
+                message = 'Gut gemacht! Du verstehst die wichtigsten Konzepte.';
+                emoji = '👍';
+            } else {
+                scoreClass = 'score-needs-improvement';
+                message = 'Noch Raum für Verbesserung. Lies das Material nochmal durch.';
+                emoji = '📚';
+            }
+            
+            scoreElement.innerHTML = `
+                <div style="font-size: 3em; margin-bottom: 0.5rem;">${emoji}</div>
+                <div style="font-size: 1.8em; font-weight: 700; margin-bottom: 1rem;">
+                    ${score}/${totalQuestions} Punkte (${percentage}%)
+                </div>
+                <div style="font-size: 1.2em;">${message}</div>
+            `;
+            
+            scoreElement.className = `quiz-score show ${scoreClass}`;
+        }
+
+        function highlightAnswers() {
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionOptions = document.querySelectorAll(`[data-question="${i}"]`);
+                questionOptions.forEach(option => {
+                    if (option.dataset.correct === 'true') {
+                        option.classList.add('correct');
+                    } else if (option.classList.contains('selected')) {
+                        option.classList.add('incorrect');
+                    }
+                });
+            }
+        }
+
+        function restartQuiz() {
+            // Reset variables
+            currentQuestion = 1;
+            score = 0;
+            answers = {};
+            
+            // Hide all questions
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`question${i}`).classList.remove('active');
+                
+                // Reset answer options
+                const questionOptions = document.querySelectorAll(`[data-question="${i}"]`);
+                questionOptions.forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+            }
+            
+            // Show first question
+            document.getElementById('question1').classList.add('active');
+            
+            // Reset buttons
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('nextBtn').textContent = 'Nächste Frage ➡️';
+            document.getElementById('finishBtn').style.display = 'none';
+            document.getElementById('restartBtn').style.display = 'none';
+            
+            // Reset progress bar
+            document.getElementById('progressBar').style.width = '0%';
+            
+            // Hide score
+            document.getElementById('quizScore').classList.remove('show');
+        }
+
+        // Add click event listeners to all answer options
+        document.addEventListener('DOMContentLoaded', function() {
+            const answerOptions = document.querySelectorAll('.answer-option');
+            answerOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    selectAnswer(this);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

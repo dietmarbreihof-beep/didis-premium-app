@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Didis Premium Trading Academy{% endblock %}
+
+{% block header_title %}🔑 Anmeldung{% endblock %}
+{% block header_subtitle %}Melde dich an für Zugriff auf deine Premium-Module{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2>🔑 Anmeldung</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ 'error' if category == 'error' else 'success' if category == 'success' else 'warning' }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    
+    <form action="{{ url_for('login') }}" method="post">
+        <div class="form-group">
+            <label for="email_or_username" class="form-label">📧 E-Mail oder Benutzername</label>
+            <input type="text" 
+                   id="email_or_username" 
+                   name="email_or_username" 
+                   class="form-input"
+                   placeholder="max@example.com oder admin, didi, premium"
+                   required>
+        </div>
+        
+        <div class="form-group">
+            <label for="password" class="form-label">🔒 Passwort</label>
+            <input type="password" 
+                   id="password" 
+                   name="password" 
+                   class="form-input"
+                   placeholder="Gleiches wie Benutzername"
+                   required>
+        </div>
+        
+        <div class="form-group">
+            <button type="submit" class="btn">🚀 Anmelden</button>
+        </div>
+    </form>
+    
+    <div style="text-align: center; margin: 30px 0;">
+        <p>Noch kein Konto? <a href="{{ url_for('register') }}">Hier registrieren</a></p>
+    </div>
+    
+    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
+        <h3>🎯 Demo-Accounts</h3>
+        <p>Für schnelle Tests:</p>
+        
+        <div class="grid-2" style="margin: 20px 0;">
+            <div style="text-align: center;">
+                <strong>admin/admin</strong>
+                <br><span style="color: #666; font-size: 0.9rem;">Elite + Admin-Rechte</span>
+            </div>
+            
+            <div style="text-align: center;">
+                <strong>didi/didi</strong>
+                <br><span style="color: #666; font-size: 0.9rem;">Elite + Admin-Rechte</span>
+            </div>
+            
+            <div style="text-align: center;">
+                <strong>premium/premium</strong>
+                <br><span style="color: #666; font-size: 0.9rem;">Premium-Zugang</span>
+            </div>
+            
+            <div style="text-align: center;">
+                <strong>test/test</strong>
+                <br><span style="color: #666; font-size: 0.9rem;">Test-User</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <p><strong>Oder direkt:</strong></p>
+            <a href="{{ url_for('demo_login', type='premium') }}" class="btn">🎯 Demo Premium</a>
+            <a href="{{ url_for('demo_login', type='elite') }}" class="btn" style="background: linear-gradient(135deg, #6f42c1, #e83e8c);">👑 Demo Elite</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2>💎 Warum Didis Premium Academy?</h2>
+    <div class="grid-2" style="margin: 20px 0;">
+        <div>
+            <h4>🎯 30+ Jahre Erfahrung</h4>
+            <p>Profitiere von meiner jahrzehntelangen Börsenerfahrung und bewährten Strategien.</p>
+        </div>
+        
+        <div>
+            <h4>⏰ Zeitersparnis</h4>
+            <p>Statt 2 Stunden täglich nur noch 5-30 Minuten für deine Trades.</p>
+        </div>
+        
+        <div>
+            <h4>📈 Bewiesene Erfolge</h4>
+            <p>ROOT +3000%, SMCI +1000%, CELH, QXO und viele weitere Super-Stocks.</p>
+        </div>
+        
+        <div>
+            <h4>🛡️ Risikomanagement</h4>
+            <p>Lerne, wie du dein Kapital schützt und Verluste minimierst.</p>
+        </div>
+    </div>
+    
+    <div class="text-center" style="margin: 30px 0;">
+        <p><strong>Noch Fragen? Schau dir meine 5-Sterne Bewertungen an:</strong></p>
+        <a href="https://de.trustpilot.com/review/didis-charts.com" target="_blank" class="btn secondary">
+            ⭐ TrustPilot Bewertungen
+        </a>
+    </div>
+</div>
+{% endblock %}

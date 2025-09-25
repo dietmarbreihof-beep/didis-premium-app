@@ -1,0 +1,654 @@
+{% extends "base.html" %}
+
+{% block title %}Streamlit-Module Import - Didis Trading Academy{% endblock %}
+
+{% block header_title %}🔄 Streamlit-Module Integration{% endblock %}
+{% block header_subtitle %}Importiere deine bestehenden 40 Streamlit-Module in das neue Flask-System{% endblock %}
+
+{% block content %}
+<!-- Import-Status -->
+<div class="card">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+        <div id="importStats" style="display: contents;">
+            <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;" id="totalModules">0</div>
+                <div>Zu importierende Module</div>
+            </div>
+            <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;" id="importedModules">0</div>
+                <div>Erfolgreich importiert</div>
+            </div>
+            <div style="background: linear-gradient(135deg, var(--warning), #d69e2e); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 2rem; font-weight: bold;" id="errorCount">0</div>
+                <div>Fehler</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Import-Methoden -->
+<div class="card">
+    <h2>📥 Import-Optionen</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        
+        <!-- Option 1: Beispiel-Module laden -->
+        <div class="import-option">
+            <h3>🎯 Demo-Module laden</h3>
+            <p>Lade 5 vorgefertigte Beispiel-Module zum Testen</p>
+            <button class="btn" onclick="loadExampleModules()">
+                📋 Beispiel-Module laden
+            </button>
+        </div>
+        
+        <!-- Option 2: JSON-Import -->
+        <div class="import-option">
+            <h3>📄 JSON-Datei Import</h3>
+            <p>Importiere Module aus einer JSON-Datei</p>
+            <input type="file" id="jsonFileInput" accept=".json" style="margin: 10px 0;">
+            <button class="btn secondary" onclick="importFromJSON()">
+                📤 JSON importieren
+            </button>
+        </div>
+        
+        <!-- Option 3: Manueller Input -->
+        <div class="import-option">
+            <h3>✏️ Manuell hinzufügen</h3>
+            <p>Füge einzelne Module manuell hinzu</p>
+            <button class="btn secondary" onclick="showManualInput()">
+                ➕ Modul hinzufügen
+            </button>
+        </div>
+        
+    </div>
+</div>
+
+<!-- Module-Liste -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>📋 Module-Liste</h2>
+        <div>
+            <button class="btn" onclick="startBatchImport()" id="batchImportBtn" disabled>
+                🚀 Alle importieren
+            </button>
+            <button class="btn secondary" onclick="clearModuleList()">
+                🗑️ Liste leeren
+            </button>
+        </div>
+    </div>
+    
+    <div id="modulesList">
+        <div class="empty-state">
+            <span style="font-size: 3rem; opacity: 0.3;">📦</span>
+            <h3>Keine Module geladen</h3>
+            <p>Wähle eine Import-Option oben aus, um Module zu laden.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Import-Fortschritt -->
+<div class="card" id="importProgress" style="display: none;">
+    <h2>⚡ Import-Fortschritt</h2>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progressText">Warte auf Start...</div>
+    </div>
+    
+    <div id="importLogs" class="import-logs"></div>
+</div>
+
+<!-- Manueller Input Modal -->
+<div id="manualInputModal" class="modal">
+    <div class="modal-content large">
+        <h3>➕ Modul manuell hinzufügen</h3>
+        <form id="manualModuleForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Titel *</label>
+                    <input type="text" name="title" class="form-input" placeholder="z.B. RSI-Indikator Masterclass" required onchange="updateSuggestions()">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Icon</label>
+                    <input type="text" name="icon" class="form-input" placeholder="📊" value="🎯">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Beschreibung *</label>
+                    <textarea name="description" class="form-input" rows="3" placeholder="Beschreibung des Moduls..." required onchange="updateSuggestions()"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Streamlit-URL</label>
+                    <input type="url" name="streamlit_url" class="form-input" placeholder="https://didis-trading-club.streamlit.app/...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dauer (Min)</label>
+                    <input type="number" name="duration" class="form-input" value="45" min="5" max="300">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schwierigkeit</label>
+                    <select name="difficulty" class="form-select">
+                        <option value="beginner">Anfänger</option>
+                        <option value="intermediate" selected>Fortgeschritten</option>
+                        <option value="advanced">Experte</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-section" id="aiSuggestions" style="display: none;">
+                <h4>🤖 AI-Vorschläge</h4>
+                <div class="suggestion-grid">
+                    <div>
+                        <strong>Kategorie:</strong> <span id="suggestedCategory">-</span>
+                    </div>
+                    <div>
+                        <strong>Unterkategorie:</strong> <span id="suggestedSubcategory">-</span>
+                    </div>
+                    <div>
+                        <strong>Subscription:</strong> <span id="suggestedSubscription">-</span>
+                    </div>
+                    <div>
+                        <strong>Slug:</strong> <span id="suggestedSlug">-</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <label>
+                    <input type="checkbox" name="is_lead_magnet"> 
+                    Lead-Magnet (kostenlos zugänglich)
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                <button type="button" class="btn secondary" onclick="closeModal('manualInputModal')">Abbrechen</button>
+                <button type="button" class="btn" onclick="addManualModule()">Zur Liste hinzufügen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.import-option {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.import-option:hover {
+    border-color: var(--gold-classic);
+    box-shadow: 0 4px 12px rgba(218, 165, 32, 0.1);
+}
+
+.import-option h3 {
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.module-item {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: white;
+    transition: all 0.3s ease;
+}
+
+.module-item:hover {
+    border-color: var(--gold-classic);
+    box-shadow: 0 2px 8px rgba(218, 165, 32, 0.1);
+}
+
+.module-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.module-info h4 {
+    margin: 0 0 5px 0;
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.module-meta {
+    display: flex;
+    gap: 15px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+.module-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-small {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-small:hover {
+    border-color: var(--gold-classic);
+    background: var(--gold-light);
+}
+
+.btn-small.danger {
+    border-color: var(--error);
+    color: var(--error);
+}
+
+.btn-small.danger:hover {
+    background: var(--error);
+    color: white;
+}
+
+.progress-container {
+    margin: 20px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--success), #34d399);
+    transition: width 0.3s ease;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.3) 50%, transparent 60%);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-text {
+    text-align: center;
+    margin-top: 10px;
+    font-weight: 600;
+}
+
+.import-logs {
+    max-height: 300px;
+    overflow-y: auto;
+    background: #f8f9fa;
+    border-radius: 6px;
+    padding: 15px;
+    font-family: monospace;
+    font-size: 0.85rem;
+    margin-top: 20px;
+}
+
+.log-entry {
+    margin-bottom: 5px;
+    padding: 2px 0;
+}
+
+.log-success {
+    color: var(--success);
+}
+
+.log-error {
+    color: var(--error);
+}
+
+.log-info {
+    color: #666;
+}
+
+.suggestion-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+}
+
+.modal-content.large {
+    background: white;
+    margin: 2% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-grid .full-width {
+    grid-column: 1 / -1;
+}
+
+.form-section {
+    margin: 25px 0;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--gold-classic);
+}
+
+@media (max-width: 768px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .suggestion-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+let modulesList = [];
+let isImporting = false;
+
+function loadExampleModules() {
+    fetch('/admin/load-example-modules')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                modulesList = data.modules;
+                renderModulesList();
+                updateStats();
+            }
+        });
+}
+
+function importFromJSON() {
+    const fileInput = document.getElementById('jsonFileInput');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Bitte wähle eine JSON-Datei aus.');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const jsonData = JSON.parse(e.target.result);
+            modulesList = Array.isArray(jsonData) ? jsonData : [jsonData];
+            renderModulesList();
+            updateStats();
+        } catch (error) {
+            alert('Ungültige JSON-Datei: ' + error.message);
+        }
+    };
+    reader.readAsText(file);
+}
+
+function showManualInput() {
+    document.getElementById('manualInputModal').style.display = 'block';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+    // Form reset
+    if (modalId === 'manualInputModal') {
+        document.getElementById('manualModuleForm').reset();
+        document.getElementById('aiSuggestions').style.display = 'none';
+    }
+}
+
+function updateSuggestions() {
+    const form = document.getElementById('manualModuleForm');
+    const formData = new FormData(form);
+    const title = formData.get('title');
+    const description = formData.get('description');
+    
+    if (!title) return;
+    
+    fetch('/admin/suggest-categories', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            title: title,
+            description: description || ''
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('suggestedCategory').textContent = data.suggested_category || 'Nicht erkannt';
+        document.getElementById('suggestedSubcategory').textContent = data.suggested_subcategory || 'Direkt unter Kategorie';
+        document.getElementById('suggestedSubscription').textContent = data.suggested_subscription.join(', ') || 'Free';
+        document.getElementById('suggestedSlug').textContent = data.suggested_slug || 'auto-generated';
+        document.getElementById('aiSuggestions').style.display = 'block';
+    });
+}
+
+function addManualModule() {
+    const form = document.getElementById('manualModuleForm');
+    const formData = new FormData(form);
+    
+    const module = {
+        title: formData.get('title'),
+        description: formData.get('description'),
+        icon: formData.get('icon') || '🎯',
+        streamlit_url: formData.get('streamlit_url'),
+        duration: parseInt(formData.get('duration')) || 45,
+        difficulty: formData.get('difficulty'),
+        is_lead_magnet: formData.get('is_lead_magnet') === 'on'
+    };
+    
+    if (!module.title || !module.description) {
+        alert('Titel und Beschreibung sind erforderlich.');
+        return;
+    }
+    
+    modulesList.push(module);
+    renderModulesList();
+    updateStats();
+    closeModal('manualInputModal');
+}
+
+function renderModulesList() {
+    const container = document.getElementById('modulesList');
+    
+    if (modulesList.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <span style="font-size: 3rem; opacity: 0.3;">📦</span>
+                <h3>Keine Module geladen</h3>
+                <p>Wähle eine Import-Option oben aus, um Module zu laden.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = modulesList.map((module, index) => `
+        <div class="module-item">
+            <div class="module-header">
+                <div class="module-info">
+                    <h4>
+                        ${module.icon} ${module.title}
+                        ${module.is_lead_magnet ? '<span style="background: #8b5cf6; color: white; padding: 2px 8px; border-radius: 12px; font-size: 0.7rem; margin-left: 10px;">LEAD-MAGNET</span>' : ''}
+                    </h4>
+                    <p style="color: #666; margin: 5px 0;">${module.description}</p>
+                    <div class="module-meta">
+                        <span>⏱️ ${module.duration} Min</span>
+                        <span>📊 ${module.difficulty}</span>
+                        ${module.streamlit_url ? '<span>🔗 Streamlit-URL</span>' : ''}
+                    </div>
+                </div>
+                <div class="module-actions">
+                    <button class="btn-small" onclick="editModule(${index})">✏️ Bearbeiten</button>
+                    <button class="btn-small danger" onclick="removeModule(${index})">🗑️ Entfernen</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function removeModule(index) {
+    if (confirm('Modul aus der Liste entfernen?')) {
+        modulesList.splice(index, 1);
+        renderModulesList();
+        updateStats();
+    }
+}
+
+function clearModuleList() {
+    if (confirm('Alle Module aus der Liste entfernen?')) {
+        modulesList = [];
+        renderModulesList();
+        updateStats();
+    }
+}
+
+function updateStats() {
+    document.getElementById('totalModules').textContent = modulesList.length;
+    document.getElementById('batchImportBtn').disabled = modulesList.length === 0 || isImporting;
+}
+
+function startBatchImport() {
+    if (modulesList.length === 0 || isImporting) return;
+    
+    if (!confirm(`${modulesList.length} Module importieren?`)) return;
+    
+    isImporting = true;
+    document.getElementById('importProgress').style.display = 'block';
+    document.getElementById('batchImportBtn').disabled = true;
+    
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    const importLogs = document.getElementById('importLogs');
+    
+    progressText.textContent = 'Import startet...';
+    importLogs.innerHTML = '';
+    
+    fetch('/admin/batch-create-modules', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            modules: modulesList
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            progressFill.style.width = '100%';
+            progressText.textContent = `✅ Import abgeschlossen: ${data.created} Module erstellt`;
+            
+            // Erfolgreiche Module anzeigen
+            data.modules.forEach(module => {
+                addLogEntry(`✅ ${module.title} → ${module.category}/${module.subcategory}`, 'success');
+            });
+            
+            // Fehler anzeigen
+            data.errors.forEach(error => {
+                addLogEntry(`❌ ${error}`, 'error');
+            });
+            
+            document.getElementById('importedModules').textContent = data.created;
+            document.getElementById('errorCount').textContent = data.errors.length;
+            
+            setTimeout(() => {
+                alert(`Import abgeschlossen!\n${data.created} Module erfolgreich erstellt\n${data.errors.length} Fehler`);
+                if (data.created > 0) {
+                    window.location.href = '/admin/menu-structure';
+                }
+            }, 1000);
+        } else {
+            progressText.textContent = '❌ Import fehlgeschlagen';
+            addLogEntry(`❌ Fehler: ${data.error}`, 'error');
+        }
+    })
+    .catch(error => {
+        progressText.textContent = '❌ Import fehlgeschlagen';
+        addLogEntry(`❌ Netzwerkfehler: ${error.message}`, 'error');
+    })
+    .finally(() => {
+        isImporting = false;
+        document.getElementById('batchImportBtn').disabled = modulesList.length === 0;
+    });
+}
+
+function addLogEntry(message, type = 'info') {
+    const importLogs = document.getElementById('importLogs');
+    const entry = document.createElement('div');
+    entry.className = `log-entry log-${type}`;
+    entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+    importLogs.appendChild(entry);
+    importLogs.scrollTop = importLogs.scrollHeight;
+}
+
+// Modal-Schließung bei Klick außerhalb
+window.onclick = function(event) {
+    const modals = document.querySelectorAll('.modal');
+    modals.forEach(modal => {
+        if (event.target === modal) {
+            closeModal(modal.id);
+        }
+    });
+}
+
+// Tastatur-Shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => closeModal(modal.id));
+    }
+});
+
+// Init
+document.addEventListener('DOMContentLoaded', function() {
+    updateStats();
+});
+</script>
+{% endblock %}
