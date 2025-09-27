@@ -178,8 +178,8 @@
                     <div class="method-card" data-method="btfd" style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e0e0e0; cursor: pointer; transition: all 0.3s ease;">
                         <h5 style="color: #10b981; margin-bottom: 10px;">#BTFD (Buy The F***ing Dip)</h5>
                         <p style="color: #666; font-size: 14px; line-height: 1.5;">
-                            <strong>Wann:</strong> Reflation-Regime, niedriger VIX, technische Support-Level<br>
-                            <strong>Ziel:</strong> Schnelle Rebounds nach Pullbacks kaufen<br>
+                            <strong>Wann:</strong> Goldilocks/Reflation-Regime, erhöhter VIX, technische Support-Level<br>
+                            <strong>Ziel:</strong> Schnelle Rebounds nach Pullbacks insbesondere Climactic Buy Setupskaufen<br>
                             <strong>Risk:</strong> Mittel - Stop-Loss unter Support
                         </p>
                     </div>
@@ -197,8 +197,8 @@
                         <h5 style="color: #8b5cf6; margin-bottom: 10px;">#Fokusaktie System</h5>
                         <p style="color: #666; font-size: 14px; line-height: 1.5;">
                             <strong>Wann:</strong> Einzelaktie aus Scanner-Liste<br>
-                            <strong>Ziel:</strong> Konzentration auf 1-3 beste Setups<br>
-                            <strong>Risk:</strong> Hoch - Konzentration, aber bessere Kontrolle
+                            <strong>Ziel:</strong> Konzentration auf  3-5 beste Setups<br>
+                            <strong>Risk:</strong> Geringer, da Charakteristik der Aktie bekannt somitbessere Kontrolle
                         </p>
                     </div>
                 </div>
@@ -246,11 +246,11 @@
                 </div>
 
                 <div class="criteria-checklist">
-                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Auswahlkriterien prüfen:</h5>
+                    <h5 style="color: #1a1a1a; margin-bottom: 15px;">✅ Beispiele fürAuswahlkriterien:</h5>
                     <div class="checkbox-item" style="margin-bottom: 10px;">
                         <input type="checkbox" id="atr-check" style="margin-right: 10px;">
                         <label for="atr-check" style="color: #666;">
-                            <strong>Average True Range (ATR)</strong> ausreichende Breite für profitable Trades
+                            <strong>Average True Range (ATR)</strong> ausreichende Breite für profitable Trades. Spanne für Daytrade ausreichend?
                         </label>
                     </div>
                     <div class="checkbox-item" style="margin-bottom: 10px;">
@@ -262,7 +262,7 @@
                     <div class="checkbox-item" style="margin-bottom: 10px;">
                         <input type="checkbox" id="trend-check" style="margin-right: 10px;">
                         <label for="trend-check" style="color: #666;">
-                            <strong>Trend-Struktur</strong> intakt - höhere Hochs und höhere Tiefs
+                            <strong>Trend-Struktur</strong> intakt - höhere Hochs und höhere Tiefs bei Trendfolge/Schienenplay?
                         </label>
                     </div>
                 </div>
@@ -573,7 +573,7 @@
                     <div class="checkbox-item" style="margin-bottom: 10px;">
                         <input type="checkbox" id="volume-profile" style="margin-right: 10px;">
                         <label for="volume-profile" style="color: #666;">
-                            <strong>Volume Profile</strong> für Widerstandszonen analysiert
+                            <strong>Volume Profile / Call Wall / hR / VWAP</strong> für Widerstandszonen analysiert
                         </label>
                     </div>
                     <div class="checkbox-item" style="margin-bottom: 10px;">
@@ -797,7 +797,7 @@
                         </label>
                     </div>
                     <div class="checkbox-item" style="margin-bottom: 10px;">
-                        <input type="checkbox" id="tradesync-update" style="margin-right: 10px;">
+                        <input type="checkbox" id="EdgeWonk-update" style="margin-right: 10px;">
                         <label for="tradesync-update" style="color: #666;">
                             <strong>TradeSync aktualisiert:</strong> P&L und Statistiken eingetragen
                         </label>
@@ -862,7 +862,7 @@
             <h4 style="color: #ef4444; margin-bottom: 15px;">⚖️ Risk First, Profit Second</h4>
             <p style="color: #666; line-height: 1.6;">
                 Bestimmen Sie immer zuerst das Risiko, dann die Position Size. Die CRV-5-Regel schützt vor 
-                schlechten Trades: Verwerfen Sie jedes Setup mit weniger als 1:5 Risk/Reward.
+                schlechten Trades: Verwerfen Sie jedes Setup mit weniger als 1:5 Risk/Reward. Hinweis: Elite-Trader gehen nicht nach dem CRV sondern nach dem Expected Value. Welches in einem anderen Modul erklärt wird.      
             </p>
         </div>
         
@@ -917,7 +917,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let methodInfo = '';
             switch(method) {
                 case 'btfd':
-                    methodInfo = '<strong>#BTFD (Buy The F***ing Dip)</strong><br>Ideal für Reflation-Regime mit niedrigem VIX. Kaufe technische Support-Level.';
+                    methodInfo = '<strong>#BTFD (Buy The F***ing Dip)</strong><br>Ideal für Goldilocks/Reflation-Regime mit niedrigem VIX. Kaufe technische Support-Level.';
                     break;
                 case 'confluence':
                     methodInfo = '<strong>#Confluence Trading</strong><br>Mehrere technische Signale kombinieren für höhere Trefferquote.';
