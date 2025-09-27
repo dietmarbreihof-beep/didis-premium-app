@@ -49,9 +49,10 @@
         <p>Noch kein Konto? <a href="{{ url_for('register') }}">Hier registrieren</a></p>
     </div>
     
+    {% if session.get('logged_in') and session.get('user', {}).get('username') in ['admin', 'didi'] %}
     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 30px;">
-        <h3>🎯 Demo-Accounts</h3>
-        <p>Für schnelle Tests:</p>
+        <h3>🎯 Demo-Accounts <span style="color: #dc3545; font-size: 0.8rem;">(Admin-Bereich)</span></h3>
+        <p>Für schnelle Tests und Entwicklung:</p>
         
         <div class="grid-2" style="margin: 20px 0;">
             <div style="text-align: center;">
@@ -81,6 +82,7 @@
             <a href="{{ url_for('demo_login', type='elite') }}" class="btn" style="background: linear-gradient(135deg, #6f42c1, #e83e8c);">👑 Demo Elite</a>
         </div>
     </div>
+    {% endif %}
 </div>
 
 <div class="card">
