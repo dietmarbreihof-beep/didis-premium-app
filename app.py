@@ -290,6 +290,9 @@ def home():
         if not LearningModule.query.first():
             init_demo_modules()
         
+        # Auto-sync: Check if local modules need to be synced to Railway
+        sync_modules_from_local()
+        
         # Lead-Magnete für nicht-eingeloggte User
         if not session.get('logged_in'):
             try:
@@ -2252,6 +2255,169 @@ def init_demo_modules():
     
     db.session.commit()
     print("✅ Demo-Module erfolgreich erstellt!")
+
+def sync_modules_from_local():
+    """🔄 Auto-Sync: Synchronisiert lokale Module-Strukturen mit Railway-Datenbank
+    
+    WICHTIG: Füge hier neue Kategorien/Module hinzu, damit sie automatisch online übertragen werden!
+    """
+    try:
+        # 🔧 HIER LOKALE KATEGORIEN DEFINIEREN - Werden automatisch zu Railway synced!
+        local_categories = [
+            {
+                'name': '0. Grundlagen',
+                'slug': 'grundlagen', 
+                'icon': '🎓',
+                'description': 'Fundamentale Konzepte und Frameworks für erfolgreiches Trading und Investieren',
+                'sort_order': 0
+            },
+            {
+                'name': '1. Trading-Grundlagen',
+                'slug': 'trading-grundlagen',
+                'icon': '📊', 
+                'description': 'Grundlegende Trading-Konzepte und -Strategien',
+                'sort_order': 1
+            },
+            {
+                'name': '2. Technische Analyse',
+                'slug': 'technische-analyse',
+                'icon': '📈',
+                'description': 'Chartanalyse und technische Indikatoren', 
+                'sort_order': 2
+            },
+            {
+                'name': '3. Fundamentalanalyse',
+                'slug': 'fundamentalanalyse',
+                'icon': '💼',
+                'description': 'Unternehmensbewertung und fundamentale Analyse',
+                'sort_order': 3
+            },
+            {
+                'name': '4. Trading-Psychologie', 
+                'slug': 'trading-psychologie',
+                'icon': '🧠',
+                'description': 'Mentale Aspekte des Tradings und Emotionskontrolle',
+                'sort_order': 4
+            },
+            {
+                'name': '5. Elite - System III',
+                'slug': 'elite-system-iii', 
+                'icon': '👑',
+                'description': 'Professionelle Trading-Systeme für Elite-Trader - System III Methodologie',
+                'sort_order': 5
+            }
+            # 🆕 NEUE KATEGORIEN HIER HINZUFÜGEN → Automatisch online!
+        ]
+        
+        # 🔧 HIER LOKALE MODULE DEFINIEREN - Werden automatisch zu Railway synced!
+        local_modules = [
+            {
+                'title': 'Trading-Playbook System III',
+                'slug': 'trading-playbook-system-iii',
+                'category_slug': 'elite-system-iii',
+                'subcategory_name': '5.1 Trade-Vorbereitung',
+                'description': 'Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.',
+                'icon': '📋',
+                'template_file': 'trading_playbook_system_iii.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['elite'],
+                'estimated_duration': 60,
+                'difficulty_level': 'expert', 
+                'sort_order': 1
+            },
+            {
+                'title': 'Magic Line Strategie',
+                'slug': 'magic-line',
+                'category_slug': 'technische-analyse',
+                'subcategory_name': '2.1 Chart-Patterns', 
+                'description': 'Meistere die Kunst des perfekten Ein- und Ausstiegs - Didis bewährte Verkaufssignale',
+                'icon': '🎯',
+                'template_file': 'magic_line.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 120,
+                'difficulty_level': 'advanced',
+                'sort_order': 1
+            }
+            # 🆕 NEUE MODULE HIER HINZUFÜGEN → Automatisch online!
+        ]
+        
+        synced_categories = 0
+        synced_modules = 0
+        
+        # Kategorien synchronisieren
+        for cat_data in local_categories:
+            existing_cat = ModuleCategory.query.filter_by(slug=cat_data['slug']).first()
+            if not existing_cat:
+                new_category = ModuleCategory(
+                    name=cat_data['name'],
+                    slug=cat_data['slug'],
+                    icon=cat_data['icon'],
+                    description=cat_data['description'],
+                    sort_order=cat_data['sort_order']
+                )
+                db.session.add(new_category)
+                synced_categories += 1
+                print(f"🆕 Auto-synced new category: {cat_data['name']}")
+        
+        if synced_categories > 0:
+            db.session.commit()
+        
+        # Module synchronisieren
+        for mod_data in local_modules:
+            existing_mod = LearningModule.query.filter_by(slug=mod_data['slug']).first()
+            if not existing_mod:
+                # Kategorie finden
+                category = ModuleCategory.query.filter_by(slug=mod_data['category_slug']).first()
+                if category:
+                    # Subcategory finden oder erstellen
+                    subcategory = None
+                    if mod_data.get('subcategory_name'):
+                        subcategory_slug = mod_data['subcategory_name'].lower().replace(' ', '-').replace('.', '')
+                        subcategory = ModuleSubcategory.query.filter_by(
+                            category_id=category.id,
+                            slug=subcategory_slug
+                        ).first()
+                        
+                        if not subcategory:
+                            subcategory = ModuleSubcategory(
+                                category_id=category.id,
+                                name=mod_data['subcategory_name'],
+                                slug=subcategory_slug,
+                                icon=mod_data.get('icon', '📄'),
+                                sort_order=1
+                            )
+                            db.session.add(subcategory)
+                            db.session.flush()
+                    
+                    new_module = LearningModule(
+                        category_id=category.id,
+                        subcategory_id=subcategory.id if subcategory else None,
+                        title=mod_data['title'],
+                        slug=mod_data['slug'],
+                        description=mod_data['description'],
+                        icon=mod_data['icon'],
+                        template_file=mod_data.get('template_file'),
+                        content_type=mod_data.get('content_type', 'html'),
+                        is_published=True,
+                        required_subscription_levels=mod_data.get('required_subscription_levels', ['premium', 'elite']),
+                        estimated_duration=mod_data.get('estimated_duration', 60),
+                        difficulty_level=mod_data.get('difficulty_level', 'intermediate'),
+                        sort_order=mod_data.get('sort_order', 1)
+                    )
+                    db.session.add(new_module)
+                    synced_modules += 1
+                    print(f"🆕 Auto-synced new module: {mod_data['title']}")
+        
+        if synced_modules > 0:
+            db.session.commit()
+        
+        if synced_categories > 0 or synced_modules > 0:
+            print(f"🔄 Auto-Sync completed: {synced_categories} categories, {synced_modules} modules synced to Railway")
+            
+    except Exception as e:
+        print(f"❌ Auto-sync error: {str(e)}")
+        db.session.rollback()
 
 # === ERROR HANDLERS ===
 

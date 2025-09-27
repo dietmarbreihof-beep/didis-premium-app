@@ -620,3 +620,73 @@ git push origin main
 
 **💡 Diese Deployment-Guidelines sind das Fundament für skalierbare, professionelle Entwicklung der Trading Academy!**
 
+---
+
+## 🔄 **AUTO-SYNC: Lokale Änderungen automatisch online übertragen**
+
+### **Problem gelöst:** 
+Lokale Kategorien/Module-Änderungen werden **automatisch zu Railway synchronisiert**!
+
+### **🔧 So funktioniert es:**
+
+#### **Neue Kategorien hinzufügen:**
+```python
+# In app.py → sync_modules_from_local() → local_categories:
+{
+    'name': '6. Deine Neue Kategorie',
+    'slug': 'neue-kategorie',
+    'icon': '🆕', 
+    'description': 'Beschreibung der neuen Kategorie',
+    'sort_order': 6
+}
+# → Git Push → Automatisch online in Railway! 🚀
+```
+
+#### **Neue Module hinzufügen:**
+```python
+# In app.py → sync_modules_from_local() → local_modules:
+{
+    'title': 'Dein Neues Modul',
+    'slug': 'neues-modul',
+    'category_slug': 'neue-kategorie',
+    'subcategory_name': '6.1 Unterbereich', 
+    'description': 'Modulbeschreibung',
+    'icon': '📚',
+    'template_file': 'neues_modul.html',
+    'content_type': 'html',
+    'required_subscription_levels': ['premium', 'elite'],
+    'estimated_duration': 90,
+    'difficulty_level': 'intermediate',
+    'sort_order': 1
+}
+# → Git Push → Automatisch online in Railway! 🚀
+```
+
+### **⚡ Auto-Sync Workflow:**
+1. **Lokal:** Kategorie/Modul zu `sync_modules_from_local()` hinzufügen
+2. **Git:** `git add app.py && git commit -m "✨ New category/module" && git push`
+3. **Railway:** Erkennt Push, deployed automatisch (2-3 Min)
+4. **Auto-Sync:** `sync_modules_from_local()` läuft bei jedem Home-Page-Besuch
+5. **Erfolg:** Neue Kategorien/Module automatisch online! 🎉
+
+### **🎯 Vorteile:**
+- ✅ **Keine manuellen Datenbankänderungen** mehr nötig
+- ✅ **Lokale und Online-Struktur** immer synchron
+- ✅ **Ein zentraler Punkt** für alle Module-Definitionen
+- ✅ **Automatische Subcategory-Erstellung**
+- ✅ **Fehlerbehandlung** und Rollback bei Problemen
+
+### **📋 Sync-Status prüfen:**
+Railway-Logs zeigen Auto-Sync-Aktivität:
+```
+🆕 Auto-synced new category: 6. Deine Neue Kategorie
+🆕 Auto-synced new module: Dein Neues Modul
+🔄 Auto-Sync completed: 1 categories, 1 modules synced to Railway
+```
+
+### **🔧 Admin-Tools:**
+- `/admin/init-demo-data` - Standard-Sync
+- `/admin/force-reload-modules` - Kompletter Reset + Sync
+
+**Mit diesem System sind lokale Änderungen AUTOMATISCH online - keine manuellen Schritte mehr nötig!** 🚀
+
