@@ -942,8 +942,16 @@ function updateProgress() {
 }
 
 function completeStep(step) {
-    // Hide current step
-    document.getElementById('step-' + step).style.display = 'none';
+    // Hide current step's button (mark as completed)
+    document.getElementById('step-' + step + '-btn').style.display = 'none';
+    
+    // Add checkmark to completed step
+    const stepHeader = document.querySelector('#step-' + step + ' h2 span');
+    if (stepHeader) {
+        stepHeader.innerHTML = '✅';
+        stepHeader.style.background = 'linear-gradient(135deg, #10b981 0%, #38a169 100%)';
+        stepHeader.style.color = 'white';
+    }
     
     // Update progress
     completedSteps = step;
@@ -953,9 +961,20 @@ function completeStep(step) {
     if (step < totalSteps) {
         document.getElementById('step-' + (step + 1)).style.display = 'block';
         currentStep = step + 1;
+        
+        // Smooth scroll to next step
+        document.getElementById('step-' + (step + 1)).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
     } else {
         // Show completion section
         document.getElementById('completion-section').style.display = 'block';
+        document.getElementById('completion-section').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+        
         // Celebration effect
         setTimeout(() => {
             if (typeof confetti !== 'undefined') {
