@@ -364,3 +364,259 @@ def modul_name():
 
 Soll ich Ihnen bei der Implementierung einer sicheren Benutzerverwaltung helfen? Ich kann konkrete Code-Beispiele für die kritischen Bereiche erstellen.
 
+---
+
+# 🚀 **DEPLOYMENT & VERSION-CONTROL GUIDELINES**
+
+## 📋 **GitHub Repository Setup & Maintenance**
+
+### **Repository-Struktur (ETABLIERT):**
+```
+didis-premium-app/
+├── 📄 README.md              # Vollständige Projektdokumentation  
+├── 📄 .gitignore            # Git-Ignore-Regeln (Flask/Python)
+├── 📄 requirements.txt       # Production Dependencies
+├── 📄 DEPLOYMENT.md          # Deployment-Anleitung
+├── 📄 railway.toml           # Railway-Konfiguration
+├── 📄 Procfile               # Railway Build-Prozess
+├── 📄 Dockerfile             # Container-Config (Backup)
+├── 🐍 app.py                 # Haupt-Flask-App
+├── 🗃️ database.py            # Datenbankmodelle
+├── 📁 templates/             # Jinja2-Templates
+└── 📁 instance/             # Lokale Datenbank (NOT in Git!)
+```
+
+### **Git-Workflow für neue Features:**
+```bash
+# Für jede neue Seite/Modul:
+git checkout -b feature/[modul-name]
+# ... Entwicklung ...
+git add .
+git commit -m "✨ feat: [Beschreibung]"
+git push origin feature/[modul-name]
+# Dann: Pull Request auf GitHub erstellen
+```
+
+---
+
+## 🚂 **Railway Deployment Best Practices**
+
+### **Live-URL:** 
+- **Production:** `https://didis-premium-app-production.up.railway.app`
+- **Auto-Deploy:** Jeder `git push origin main` triggert neues Deployment
+- **Deploy-Zeit:** 2-3 Minuten
+
+### **Deployment-Prozess (ETABLIERT):**
+```bash
+# Lokale Änderungen → Online in 3 Schritten:
+git add .
+git commit -m "🎯 [Typ]: [Beschreibung]"
+git push origin main
+# → Railway deployed automatisch in 2-3 Minuten
+```
+
+### **Railway-Konfiguration (NICHT ÄNDERN):**
+- ✅ **Procfile-basierter Build** (kein Docker)
+- ✅ **Health-Check deaktiviert** (Standard HTTP-Monitoring)  
+- ✅ **Umgebungsvariablen** korrekt konfiguriert
+- ✅ **Auto-Database-Initialization** implementiert
+
+### **Umgebungsvariablen auf Railway:**
+```bash
+SECRET_KEY=7d4d3f37df3b0452613b16c0447e297940404096f902019aa321140716a912ea
+DATABASE_URL=sqlite:///didis_academy.db
+FLASK_ENV=production
+FLASK_DEBUG=False
+SESSION_COOKIE_SECURE=True
+```
+
+---
+
+## 📝 **NEUE SEITEN/MODULE ENTWICKELN**
+
+### **Commit-Message Konventionen:**
+```bash
+✨ feat: Neues Trading-Modul hinzugefügt
+🔧 fix: Progressive Disclosure repariert  
+🎨 style: Design-System Updates
+📚 docs: README aktualisiert
+🔒 security: CSRF-Schutz implementiert
+⚡ perf: Performance-Verbesserungen
+🧪 test: Tests hinzugefügt
+```
+
+### **Template-Entwicklung Guidelines:**
+
+#### **Neue Lernmodule (templates/[module-name].html):**
+```html
+{% extends "base.html" %}
+
+{% block title %}[Modul-Name] - Didis Premium Trading Academy{% endblock %}
+
+{% block content %}
+<!-- IMMER diese Struktur verwenden: -->
+
+<!-- 1. Hero Section mit Gold-Gradient -->
+<div style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); ...">
+
+<!-- 2. Progress Tracking für interaktive Module -->
+<div id="progress-container" style="background: white; ...">
+
+<!-- 3. Hauptcontent mit card-Klasse -->
+<div class="card">
+    <!-- Progressive Disclosure Pattern wenn anwendbar -->
+</div>
+
+<!-- 4. Key Takeaways Section -->
+<div class="card" style="margin-top: 30px;">
+    <h2>💡 Key Takeaways: [Modul-Name]</h2>
+</div>
+
+<!-- 5. Navigation Include -->
+{% include '_navigation.html' %}
+
+{% endblock %}
+```
+
+#### **Design-System Standards (PFLICHT):**
+```css
+/* Farbpalette - IMMER verwenden: */
+--primary-dark: #1a1a1a
+--secondary-dark: #2d2d2d  
+--gold-dark: #b8860b
+--gold-classic: #daa520
+--gold-light: #f4e97b
+--success: #38a169
+--warning: #d69e2e
+--error: #e53e3e
+
+/* Layout Standards: */
+max-width: 1200px (zentriert)
+border-radius: 12px (einheitlich)
+box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1)
+padding: 20px (Standard), 40px (größere Bereiche)
+transition: 0.3s ease (alle Animationen)
+```
+
+#### **Progressive Disclosure Pattern:**
+```javascript
+// Für interaktive Module IMMER verwenden:
+let currentStep = 1;
+const totalSteps = [ANZAHL];
+
+function completeStep(step) {
+    // Button ausblenden, Checkmark hinzufügen
+    document.getElementById('step-' + step + '-btn').style.display = 'none';
+    
+    // Nächsten Schritt freischalten
+    if (step < totalSteps) {
+        document.getElementById('step-' + (step + 1)).style.display = 'block';
+    }
+    
+    // Progress aktualisieren
+    updateProgress();
+}
+```
+
+---
+
+## ⚠️ **KRITISCHE DEPLOYMENT-REGELN**
+
+### **VOR jedem Push PRÜFEN:**
+- [ ] Lokale Tests durchgeführt (`python app.py`)
+- [ ] Keine Debug-Prints oder `console.log()` im Code
+- [ ] Deutsche "Du"-Anrede in allen neuen Texten
+- [ ] Gold-Design-System korrekt implementiert
+- [ ] Responsive Design getestet (Mobile-first)
+- [ ] Progressive Disclosure funktioniert (falls anwendbar)
+
+### **NACH jedem Deployment TESTEN:**
+- [ ] Railway-URL laden: `https://didis-premium-app-production.up.railway.app`
+- [ ] Login als Admin: `admin` / `admin`
+- [ ] Neue Seite/Feature testen
+- [ ] Mobile-Ansicht prüfen
+- [ ] Keine 500-Fehler oder JavaScript-Errors
+
+### **Database-Änderungen (VORSICHT):**
+```python
+# Bei Model-Änderungen IMMER Migration berücksichtigen:
+# 1. Lokale Migration testen
+# 2. Railway wird Database automatisch re-initialisieren
+# 3. BACKUP vor größeren DB-Änderungen erstellen
+```
+
+---
+
+## 🔄 **DEVELOPMENT WORKFLOW**
+
+### **Lokale Entwicklung:**
+```bash
+# 1. Virtual Environment aktivieren
+venv\Scripts\activate  # Windows
+
+# 2. Dependencies installieren (falls neue)
+pip install -r requirements.txt
+
+# 3. Lokale App starten
+python app.py
+# → http://localhost:5000
+
+# 4. Änderungen testen, dann deployen
+```
+
+### **Feature-Integration:**
+1. **Lokale Tests** → funktioniert?
+2. **Git Commit** → saubere Message
+3. **Git Push** → Railway Auto-Deploy  
+4. **Online Tests** → Railway-URL prüfen
+5. **Dokumentation** → README.md updaten falls nötig
+
+### **Hotfixes (für kritische Bugs):**
+```bash
+# Direkter Push zu main (nur für Hotfixes):
+git add .
+git commit -m "🚨 hotfix: [Kritischer Bug Fix]"
+git push origin main
+# → Sofortige Railway-Aktualisierung
+```
+
+---
+
+## 📊 **MONITORING & MAINTENANCE**
+
+### **Railway-Logs überwachen:**
+- **Build-Logs:** Zeigen Deployment-Probleme
+- **Runtime-Logs:** Zeigen App-Fehler
+- **Health-Status:** Service-Verfügbarkeit
+
+### **Performance-Metriken:**
+- **Load-Zeit:** < 3 Sekunden für alle Seiten
+- **Mobile-Performance:** Responsive Design getestet
+- **Railway-Limits:** Keine Überschreitung der kostenlosen Grenzen
+
+### **Backup-Strategie:**
+- **GitHub:** Vollständige Code-Historie
+- **Railway:** Automatische Container-Backups  
+- **Database:** SQLite wird bei jedem Deployment neu initialisiert
+
+---
+
+## 🎯 **QUALITY GATES für neue Features**
+
+### **Vor Merge/Deploy:**
+1. ✅ **Funktionalität:** Feature funktioniert lokal einwandfrei
+2. ✅ **Design:** Gold-Design-System korrekt implementiert
+3. ✅ **UX:** Deutsche "Du"-Anrede, benutzerfreundlich
+4. ✅ **Mobile:** Responsive Design auf verschiedenen Größen
+5. ✅ **Performance:** Keine spürbaren Verzögerungen
+6. ✅ **Security:** Keine neuen Sicherheitslücken eingeführt
+7. ✅ **Documentation:** Neue Features in README dokumentiert
+
+### **Nach Deployment:**
+1. ✅ **Smoke Test:** Grundfunktionen der App testen
+2. ✅ **Integration:** Neue Features mit bestehenden kompatibel  
+3. ✅ **Error Monitoring:** Keine neuen 500-Fehler in Railway-Logs
+4. ✅ **User Journey:** Admin-Login → Neue Features → Logout
+
+**💡 Diese Deployment-Guidelines sind das Fundament für skalierbare, professionelle Entwicklung der Trading Academy!**
+
