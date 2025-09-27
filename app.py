@@ -286,6 +286,10 @@ def home():
         # Ensure database is initialized
         db.create_all()
         
+        # Initialize demo modules if database is empty
+        if not LearningModule.query.first():
+            init_demo_modules()
+        
         # Lead-Magnete für nicht-eingeloggte User
         if not session.get('logged_in'):
             try:
@@ -463,6 +467,31 @@ def logout():
     session.clear()
     flash('Du wurdest erfolgreich abgemeldet.', 'success')
     return redirect(url_for('home'))
+
+@app.route('/admin/init-demo-data')
+def admin_init_demo_data():
+    """Admin-Only: Initialize demo modules and data"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Nur Admins können Demo-Daten initialisieren.', 'error')
+        return redirect(url_for('login'))
+    
+    try:
+        # Force database initialization
+        db.create_all()
+        
+        # Initialize demo modules
+        result = init_demo_modules()
+        
+        if result:
+            flash('✅ Demo-Module erfolgreich erstellt!', 'success')
+        else:
+            flash('ℹ️ Demo-Module sind bereits vorhanden.', 'info')
+            
+        return redirect(url_for('modules_overview'))
+        
+    except Exception as e:
+        flash(f'❌ Fehler bei Demo-Daten-Initialisierung: {str(e)}', 'error')
+        return redirect(url_for('home'))
 
 @app.route('/demo-login')
 def demo_login():
