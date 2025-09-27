@@ -259,6 +259,26 @@ def inject_menu():
 
 # === ROUTES ===
 
+# Health Check Endpoint für Railway
+@app.route('/health')
+def health_check():
+    """Health check endpoint für Deployment-Monitoring"""
+    try:
+        # Prüfe Datenbank-Verbindung
+        db.session.execute('SELECT 1')
+        return jsonify({
+            'status': 'healthy',
+            'timestamp': datetime.utcnow().isoformat(),
+            'service': 'Didis Premium Trading Academy',
+            'version': '1.0.0'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }), 500
+
 @app.route('/')
 def home():
     """Startseite mit verfügbaren Modulen"""
