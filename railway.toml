@@ -1,8 +1,4 @@
-[build]
-builder = "PROCFILE"
-
 [deploy]
 healthcheckPath = "/health"
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
-startCommand = "gunicorn --bind 0.0.0.0:$PORT --workers 2 app:app"
