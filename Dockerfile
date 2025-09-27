@@ -24,9 +24,7 @@ USER app
 # Port expose
 EXPOSE 5000
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:5000/health')" || exit 1
+# Railway handles health checks automatically via HTTP requests
 
 # App starten - Railway injection für $PORT
 CMD sh -c "gunicorn --bind 0.0.0.0:${PORT:-5000} --workers 2 app:app"
