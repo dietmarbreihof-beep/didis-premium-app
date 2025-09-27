@@ -835,8 +835,8 @@
     </div>
 </div>
 
-<!-- Key Takeaways -->
-<div class="card" style="margin-top: 30px;">
+<!-- Key Takeaways - Nur nach Abschluss aller Schritte sichtbar -->
+<div id="key-takeaways" class="card" style="margin-top: 30px; display: none;">
     <h2 style="color: #1a1a1a; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
         <span>💡</span> Key Takeaways: Trading-Playbook System III
     </h2>
@@ -970,6 +970,10 @@ function completeStep(step) {
     } else {
         // Show completion section
         document.getElementById('completion-section').style.display = 'block';
+        
+        // Show Key Takeaways after completion
+        document.getElementById('key-takeaways').style.display = 'block';
+        
         document.getElementById('completion-section').scrollIntoView({
             behavior: 'smooth',
             block: 'start'
