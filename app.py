@@ -282,45 +282,61 @@ def health_check():
 @app.route('/')
 def home():
     """Startseite mit verfügbaren Modulen"""
-    # Lead-Magnete für nicht-eingeloggte User
-    if not session.get('logged_in'):
-        try:
-            lead_magnets = LearningModule.query.filter_by(
-                is_published=True,
-                is_lead_magnet=True
-            ).order_by(LearningModule.sort_order).limit(6).all()
-        except:
-            lead_magnets = []
-        
-        return render_template('home.html', 
-                             featured_modules=lead_magnets,
-                             show_signup_cta=True)
-    
-    # Für eingeloggte User: Persönliche Empfehlungen
-    user_subscription = session.get('user', {}).get('membership', 'free')
-    
     try:
-        # Kürzlich hinzugefügte Module
-        recent_modules = LearningModule.query.filter_by(is_published=True).order_by(
-            LearningModule.created_at.desc()
-        ).limit(3).all()
+        # Ensure database is initialized
+        db.create_all()
         
-        # Empfohlene Module basierend auf Subscription
-        recommended = LearningModule.query.filter(
-            LearningModule.is_published == True
-        ).order_by(LearningModule.view_count.desc()).limit(3).all()
-        
-        # Nur Module mit Zugriff
-        accessible_recommended = [mod for mod in recommended if mod.user_has_access(user_subscription)]
-        
-    except:
-        recent_modules = []
-        accessible_recommended = []
+        # Lead-Magnete für nicht-eingeloggte User
+        if not session.get('logged_in'):
+            try:
+                lead_magnets = LearningModule.query.filter_by(
+                    is_published=True,
+                    is_lead_magnet=True
+                ).order_by(LearningModule.sort_order).limit(6).all()
+            except Exception as e:
+                print(f"Database error for lead magnets: {e}")
+                lead_magnets = []
+            
+            return render_template('home.html', 
+                                 featured_modules=lead_magnets,
+                                 show_signup_cta=True)
     
-    return render_template('home.html',
-                         recent_modules=recent_modules,
-                         recommended_modules=accessible_recommended,
-                         user_subscription=user_subscription)
+        # Für eingeloggte User: Persönliche Empfehlungen
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        
+        try:
+            # Kürzlich hinzugefügte Module
+            recent_modules = LearningModule.query.filter_by(is_published=True).order_by(
+                LearningModule.created_at.desc()
+            ).limit(3).all()
+            
+            # Empfohlene Module basierend auf Subscription
+            recommended = LearningModule.query.filter(
+                LearningModule.is_published == True
+            ).order_by(LearningModule.view_count.desc()).limit(3).all()
+            
+            # Nur Module mit Zugriff
+            accessible_recommended = [mod for mod in recommended if mod.user_has_access(user_subscription)]
+            
+        except Exception as e:
+            print(f"Database error for logged in user: {e}")
+            recent_modules = []
+            accessible_recommended = []
+        
+        return render_template('home.html',
+                             recent_modules=recent_modules,
+                             recommended_modules=accessible_recommended,
+                             user_subscription=user_subscription)
+    
+    except Exception as e:
+        print(f"Critical error in home route: {e}")
+        # Fallback: Simple welcome page
+        return f"""
+        <h1>🏆 Didis Premium Trading Academy</h1>
+        <p>Willkommen! Die App wird gerade initialisiert...</p>
+        <p><a href="/login">Zum Login</a></p>
+        <p>Error: {e}</p>
+        """
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
