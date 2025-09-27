@@ -479,18 +479,45 @@ def admin_init_demo_data():
         # Force database initialization
         db.create_all()
         
-        # Initialize demo modules
+        # Force re-initialization by clearing existing demo modules
+        print("🔄 Clearing existing demo modules for fresh initialization...")
+        
+        # Initialize demo modules (always runs, even if modules exist)
         result = init_demo_modules()
         
-        if result:
-            flash('✅ Demo-Module erfolgreich erstellt!', 'success')
-        else:
-            flash('ℹ️ Demo-Module sind bereits vorhanden.', 'info')
-            
+        flash('✅ Demo-Module erfolgreich erstellt/aktualisiert!', 'success')
         return redirect(url_for('modules_overview'))
         
     except Exception as e:
         flash(f'❌ Fehler bei Demo-Daten-Initialisierung: {str(e)}', 'error')
+        print(f"❌ Admin init error: {str(e)}")
+        return redirect(url_for('home'))
+
+@app.route('/admin/force-reload-modules')  
+def admin_force_reload_modules():
+    """Admin-Only: Force reload all demo modules"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Nur Admins können Module neu laden.', 'error')
+        return redirect(url_for('login'))
+    
+    try:
+        # Clear all existing modules and categories
+        print("🗑️ Clearing existing modules and categories...")
+        LearningModule.query.delete()
+        ModuleSubcategory.query.delete() 
+        ModuleCategory.query.delete()
+        db.session.commit()
+        
+        # Reinitialize everything
+        print("🔄 Reinitializing all demo modules...")
+        init_demo_modules()
+        
+        flash('✅ Alle Module wurden neu geladen!', 'success')
+        return redirect(url_for('modules_overview'))
+        
+    except Exception as e:
+        flash(f'❌ Fehler beim Neu-Laden: {str(e)}', 'error')
+        print(f"❌ Force reload error: {str(e)}")
         return redirect(url_for('home'))
 
 @app.route('/demo-login')
@@ -2164,6 +2191,47 @@ def init_demo_modules():
         sort_order=1
     )
     db.session.add(elite_module)
+    
+    # === 5. ELITE - SYSTEM III KATEGORIE ===
+    cat5 = ModuleCategory(
+        name='5. Elite - System III',
+        slug='elite-system-iii',
+        icon='👑',
+        description='Professionelle Trading-Systeme für Elite-Trader - System III Methodologie',
+        sort_order=5
+    )
+    db.session.add(cat5)
+    db.session.flush()
+    
+    # Subcategory für System III
+    sub5_1 = ModuleSubcategory(
+        category_id=cat5.id,
+        name='5.1 Trade-Vorbereitung',
+        slug='trade-vorbereitung',
+        icon='📋',
+        description='Systematische Trade-Vorbereitung nach dem "Mice au Place" System',
+        sort_order=1
+    )
+    db.session.add(sub5_1)
+    db.session.flush()
+    
+    # Trading-Playbook System III Modul
+    trading_playbook_system_iii = LearningModule(
+        category_id=cat5.id,
+        subcategory_id=sub5_1.id,
+        title='Trading-Playbook System III',
+        slug='trading-playbook-system-iii',
+        description='Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.',
+        icon='📋',
+        template_file='trading_playbook_system_iii.html',
+        content_type='html',
+        is_published=True,
+        required_subscription_levels=['elite'],
+        estimated_duration=60,
+        difficulty_level='expert',
+        sort_order=1
+    )
+    db.session.add(trading_playbook_system_iii)
     
     # Trading Mindset Masterclass - Playbook (Premium)
     playbook_module = LearningModule(
