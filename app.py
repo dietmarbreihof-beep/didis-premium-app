@@ -113,6 +113,7 @@ class ModuleSubcategory(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('module_categories.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     slug = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
     icon = db.Column(db.String(20), default="📋")
     sort_order = db.Column(db.Integer, default=100)
     is_active = db.Column(db.Boolean, default=True)
@@ -125,6 +126,7 @@ class ModuleSubcategory(db.Model):
             'id': self.id,
             'name': self.name,
             'slug': self.slug,
+            'description': self.description,
             'icon': self.icon,
             'sort_order': self.sort_order,
             'modules': [mod.to_dict() for mod in self.modules if mod.is_published]
