@@ -828,6 +828,80 @@ def ev_calculator():
     
     return render_template('ev_calculator.html')
 
+@app.route('/Screenshots/<filename>')
+def serve_screenshots(filename):
+    """Serve screenshot files from templates/Screenshots directory"""
+    return send_from_directory('templates/Screenshots', filename)
+
+@app.route('/boersencrash-maerz-2025')
+def boersencrash_maerz_2025():
+    """Börsencrash März 2025 - Crash-Beispiel Modul aus Grundlagen"""
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='boersencrash-maerz-2025').first()
+    except:
+        pass
+    
+    # Falls kein Modul in DB, erstelle ein temporäres für Template-Kompatibilität
+    if not module:
+        from types import SimpleNamespace
+        module = SimpleNamespace(
+            title='Börsencrash März 2025',
+            description='Die Vorboten eines historischen Crashs - Eine Fallstudie der dramatischen Ereignisse',
+            slug='boersencrash-maerz-2025',
+            icon='📉',
+            estimated_duration=25,
+            difficulty='Grundlagen',
+            subscription_requirement='free',  # Für alle verfügbar als Grundlagen-Beispiel
+            view_count=1,
+            id=999  # Temporäre ID
+        )
+    
+    # Zugriff prüfen (Crash-Beispiel ist für alle verfügbar als Grundlagen-Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and hasattr(module, 'id') and module.id != 999:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen (nur für echte DB-Module)
+    if hasattr(module, 'id') and module.id != 999:
+        try:
+            real_module = LearningModule.query.get(module.id)
+            if real_module:
+                real_module.view_count += 1
+                db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if hasattr(module, 'id') and module.id != 999 else (None, None)
+    
+    return render_template('boersencrash_maerz_2025.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/playbook')
 def playbook():
     """Trading Mindset Masterclass - Playbook Modul"""
@@ -1749,11 +1823,6 @@ def api_modules_search():
 
 # === STATIC FILE ROUTES ===
 
-@app.route('/templates/Screenshots/<filename>')
-def serve_screenshots(filename):
-    """Serve screenshot files from templates/Screenshots directory"""
-    screenshots_dir = os.path.join(app.root_path, 'templates', 'Screenshots')
-    return send_from_directory(screenshots_dir, filename)
 
 # === MIGRATION FUNCTIONS ===
 
