@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Trading-Playbook System III - Didis Premium Trading Academy{% endblock %}
+{% block title %}Trading-Playbook BeispielI - Didis Elite Trading Academy{% endblock %}
 
 {% block content %}
 <div class="card">
@@ -123,7 +123,7 @@
                                 <div style="background: #1a1a1a; padding: 15px; border-radius: 8px; position: relative;">
                                     <!-- Echter MEDP Chart Screenshot -->
                                     <div style="position: relative; border-radius: 6px; overflow: hidden;">
-                                        <img src="/templates/Screenshots/MEDP_Setup.jpg" alt="MEDP 2H Chart - Support Level Analysis" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 6px;">
+                                        <img src="{{ url_for('static', filename='screenshots/MEDP_Setup.jpg') }}" alt="MEDP 2H Chart - Support Level Analysis" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; border-radius: 6px;">
                                         
                                         <!-- Chart Annotations Overlay -->
                                         <div style="position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 6px; font-size: 12px; color: white; border: 1px solid #b8860b;">
@@ -342,7 +342,7 @@
                         
                         <!-- MEDP Chart mit Overlays -->
                         <div style="position: relative; border-radius: 6px; overflow: hidden; background: #000;">
-                            <img src="/templates/Screenshots/MEDP_Setup.jpg" alt="MEDP 2H Chart - Detaillierte Support Level Analyse" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 6px;">
+                            <img src="{{ url_for('static', filename='screenshots/MEDP_2H_Chart_18-09-2025-3_PT.png') }}" alt="MEDP 2H Chart - Detaillierte Support Level Analyse mit Profit Target" style="width: 100%; height: auto; max-height: 400px; object-fit: contain; border-radius: 6px;">
                             
                             <!-- Detaillierte Chart Annotations -->
                             <div style="position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.9); padding: 15px; border-radius: 8px; font-size: 13px; color: white; border: 2px solid #b8860b; min-width: 200px;">

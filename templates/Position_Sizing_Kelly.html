@@ -764,7 +764,7 @@
                             <!-- Screenshot der echten Trading-Statistik -->
                             <div style="text-align: center; margin: 25px 0; padding: 20px; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border: 2px solid #0891b2;">
                                 <h5 style="color: #0891b2; font-weight: 600; margin-bottom: 15px;">📸 Echte Trading-Statistik von David:</h5>
-                                <img src="Screenshots/Trading_Statstik_David.jpg" 
+                                <img src="{{ url_for('static', filename='screenshots/Trading_Statstik_David.jpg') }}" 
                                      alt="David's Trading Statistik - 145 Trades, 68.97% Win Rate, CRV 1.57" 
                                      style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); cursor: pointer;"
                                      onclick="this.style.transform = this.style.transform === 'scale(1.5)' ? 'scale(1)' : 'scale(1.5)'; this.style.transition = 'transform 0.3s ease';"
