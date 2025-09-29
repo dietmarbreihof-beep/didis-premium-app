@@ -1819,6 +1819,9 @@ def auto_register_modules():
         print("🔍 AUTO-REGISTRIERUNG GESTARTET")
         print("=" * 50)
         
+        # Debug-Info für Flash-Messages
+        flash('🔍 Auto-Registrierung gestartet...', 'info')
+        
         # Alle HTML-Dateien finden (außer System-Templates)
         excluded_patterns = [
             'base.html', 'home.html', 'login.html', 'register.html',
@@ -1837,6 +1840,7 @@ def auto_register_modules():
             html_files.append(html_file)
         
         print(f"📄 Gefundene HTML-Templates: {len(html_files)}")
+        flash(f'📄 {len(html_files)} HTML-Templates gefunden', 'info')
         
         for html_file in html_files:
             try:
@@ -1895,7 +1899,111 @@ def auto_register_modules():
         flash(f'❌ Fehler bei automatischer Registrierung: {str(e)}', 'error')
         print(f"💥 Hauptfehler: {str(e)}")
     
-    return redirect(url_for('admin_menu_structure'))
+        return redirect(url_for('admin_menu_structure'))
+
+@app.route('/admin/register-missing-modules')
+def register_missing_modules():
+    """🚀 Registriert die wichtigsten fehlenden Module direkt"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        # Wichtige Module die oft fehlen
+        critical_modules = [
+            {
+                'title': 'Tirone Levels und Quadrant Lines',
+                'slug': 'tirone-quadrant-lines',
+                'template_file': 'tirone_quadrant_lines.html',
+                'description': 'Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen',
+                'category_slug': 'technische-analyse',
+                'icon': '📊',
+                'duration': 75,
+                'difficulty': 'intermediate'
+            },
+            {
+                'title': 'Expected Value Calculator',
+                'slug': 'expected-value-calc',
+                'template_file': 'ev_calculator.html',
+                'description': 'Interaktiver Expected Value Rechner für Trading-Entscheidungen',
+                'category_slug': 'risikomanagement',
+                'icon': '🧮',
+                'duration': 45,
+                'difficulty': 'intermediate'
+            },
+            {
+                'title': 'Trading Tools Collection',
+                'slug': 'trading-tools-collection',
+                'template_file': 'trading_tools.html',
+                'description': 'Sammlung professioneller Trading-Werkzeuge und Kalkulatoren',
+                'category_slug': 'technische-analyse',
+                'icon': '🛠️',
+                'duration': 30,
+                'difficulty': 'beginner'
+            },
+            {
+                'title': 'Börsencrash März 2025 Analyse',
+                'slug': 'boersencrash-maerz-2025',
+                'template_file': 'boersencrash_maerz_2025.html',
+                'description': 'Detaillierte Analyse des Börsencrashs vom März 2025',
+                'category_slug': 'fundamentalanalyse',
+                'icon': '💥',
+                'duration': 60,
+                'difficulty': 'advanced'
+            }
+        ]
+        
+        registered_count = 0
+        
+        for module_data in critical_modules:
+            # Prüfen ob bereits existiert
+            existing = LearningModule.query.filter_by(slug=module_data['slug']).first()
+            if existing:
+                flash(f'⚠️ {module_data["title"]} bereits vorhanden', 'warning')
+                continue
+            
+            # Template-Datei prüfen
+            import os
+            template_path = os.path.join('templates', module_data['template_file'])
+            if not os.path.exists(template_path):
+                flash(f'❌ Template nicht gefunden: {module_data["template_file"]}', 'error')
+                continue
+            
+            # Kategorie finden
+            category = ModuleCategory.query.filter_by(slug=module_data['category_slug']).first()
+            if not category:
+                flash(f'❌ Kategorie nicht gefunden: {module_data["category_slug"]}', 'error')
+                continue
+            
+            # Modul erstellen
+            module = LearningModule(
+                category_id=category.id,
+                title=module_data['title'],
+                slug=module_data['slug'],
+                description=module_data['description'],
+                icon=module_data['icon'],
+                template_file=module_data['template_file'],
+                content_type='html',
+                is_published=True,
+                is_lead_magnet=False,
+                required_subscription_levels=['premium', 'elite'],
+                estimated_duration=module_data['duration'],
+                difficulty_level=module_data['difficulty'],
+                sort_order=100 + registered_count
+            )
+            
+            db.session.add(module)
+            registered_count += 1
+            flash(f'✅ REGISTRIERT: {module_data["title"]}', 'success')
+        
+        db.session.commit()
+        flash(f'🎉 {registered_count} kritische Module erfolgreich registriert!', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_modules'))
 
 def extract_module_metadata(html_file):
     """Extrahiert Meta-Informationen aus HTML-Template"""

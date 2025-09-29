@@ -46,6 +46,12 @@
         <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, var(--success), #047857);">
             🚀 Module auto-registrieren
         </button>
+        <a href="{{ url_for('register_missing_modules') }}" 
+           class="btn" 
+           style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white;"
+           onclick="return confirm('🚨 Kritische fehlende Module registrieren?\n\nDies fügt wichtige Module wie Tirone Levels, EV Calculator etc. hinzu.')">
+            🚨 Fehlende Module reparieren
+        </a>
         <button class="btn secondary" onclick="toggleBulkMode()">
             ☑️ Bulk-Auswahl
         </button>
