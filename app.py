@@ -1766,12 +1766,34 @@ def admin_init_database():
             except Exception as e:
                 flash(f'⚠️ User-Tabelle Problem: {str(e)}', 'warning')
             
-            # Module Status
+            # Module Status prüfen und ggf. initialisieren
             try:
                 module_count = LearningModule.query.count()
-                flash(f'📚 Module in Database: {module_count}', 'info')
+                category_count = ModuleCategory.query.count()
+                
+                flash(f'📚 Aktuelle Database: {module_count} Module, {category_count} Kategorien', 'info')
+                
+                # Wenn keine Module da sind, Demo-Module erstellen
+                if module_count == 0 or category_count == 0:
+                    print("🚀 EMERGENCY: Erstelle Demo-Module...")
+                    init_demo_modules()
+                    
+                    # Neu zählen nach Initialisierung
+                    new_module_count = LearningModule.query.count()
+                    new_category_count = ModuleCategory.query.count()
+                    
+                    flash(f'🎉 WIEDERHERGESTELLT: {new_module_count} Module, {new_category_count} Kategorien erstellt!', 'success')
+                else:
+                    flash('✅ Database bereits mit Modulen gefüllt - keine Aktion nötig', 'success')
+                    
             except Exception as e:
-                flash(f'⚠️ Module-Tabelle Problem: {str(e)}', 'warning')
+                flash(f'⚠️ Module-Wiederherstellung Problem: {str(e)}', 'warning')
+                # Trotzdem versuchen Demo-Module zu erstellen
+                try:
+                    init_demo_modules()
+                    flash('🔄 Demo-Module als Fallback erstellt', 'info')
+                except Exception as inner_e:
+                    flash(f'❌ Demo-Module Fallback fehlgeschlagen: {str(inner_e)}', 'error')
                 
     except Exception as e:
         flash(f'❌ Database-Fehler: {str(e)}', 'error')
