@@ -40,6 +40,9 @@
         <button class="btn" onclick="showAddSubcategoryModal()">
             ➕ Unterkategorie hinzufügen
         </button>
+        <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, var(--success), #047857);">
+            🚀 Module auto-registrieren
+        </button>
         <button class="btn secondary" onclick="toggleBulkMode()">
             ☑️ Bulk-Auswahl
         </button>
@@ -1309,6 +1312,34 @@ let sortModeActive = false;
 let currentView = 'hierarchy';
 
 // Initialize page
+// Auto-Register Modules Function
+function autoRegisterModules() {
+    if (!confirm('🚀 Alle neuen HTML-Templates automatisch registrieren?\n\nDies erkennt alle Template-Dateien im templates/ Ordner und registriert sie als Module. Die Module sind zunächst unveröffentlicht und können dann im Admin-Panel angepasst werden.')) {
+        return;
+    }
+    
+    showNotification('🔍 Scanne Templates und registriere Module...', 'info');
+    
+    // Button deaktivieren während der Verarbeitung
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = '⏳ Registriere...';
+    
+    fetch('/admin/auto-register-modules', {
+        method: 'GET'
+    })
+    .then(response => response.text())
+    .then(html => {
+        // Seite neu laden um Flash-Messages zu zeigen
+        window.location.reload();
+    })
+    .catch(error => {
+        showNotification(`❌ Auto-Registrierung fehlgeschlagen: ${error.message}`, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '🚀 Module auto-registrieren';
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     initializeDragAndDrop();
     initializeExpandableElements();

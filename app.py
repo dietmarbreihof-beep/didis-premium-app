@@ -1778,6 +1778,310 @@ def admin_init_database():
     
     return redirect(url_for('admin_modules'))
 
+@app.route('/admin/auto-register-modules')
+def auto_register_modules():
+    """🚀 Automatische Registrierung neuer HTML-Templates"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        from pathlib import Path
+        import re
+        
+        templates_dir = Path("templates")
+        registered_count = 0
+        updated_count = 0
+        errors = []
+        
+        print("🔍 AUTO-REGISTRIERUNG GESTARTET")
+        print("=" * 50)
+        
+        # Alle HTML-Dateien finden (außer System-Templates)
+        excluded_patterns = [
+            'base.html', 'home.html', 'login.html', 'register.html',
+            'modules_overview.html', 'upgrade_required.html', 'module_default.html',
+            '_navigation.html', 'Banner5.html'
+        ]
+        
+        excluded_dirs = ['admin', 'auth', 'errors', 'account', 'templates']
+        
+        html_files = []
+        for html_file in templates_dir.glob("*.html"):
+            if any(pattern in html_file.name for pattern in excluded_patterns):
+                continue
+            if any(excluded_dir in str(html_file) for excluded_dir in excluded_dirs):
+                continue
+            html_files.append(html_file)
+        
+        print(f"📄 Gefundene HTML-Templates: {len(html_files)}")
+        
+        for html_file in html_files:
+            try:
+                print(f"\n🔍 Analysiere: {html_file.name}")
+                
+                # Prüfen ob bereits registriert
+                existing_module = LearningModule.query.filter_by(
+                    template_file=html_file.name
+                ).first()
+                
+                if existing_module:
+                    print(f"✅ Bereits registriert: {existing_module.title}")
+                    continue
+                
+                # Meta-Daten aus HTML extrahieren
+                module_info = extract_module_metadata(html_file)
+                
+                # Kategorie finden oder erstellen
+                category = find_or_create_category_for_module(module_info['category'])
+                
+                # Neues Modul erstellen
+                create_auto_module(html_file, module_info, category)
+                registered_count += 1
+                
+                print(f"✅ REGISTRIERT: {module_info['title']}")
+                
+            except Exception as e:
+                error_msg = f"Fehler bei {html_file.name}: {str(e)}"
+                errors.append(error_msg)
+                print(f"❌ {error_msg}")
+        
+        db.session.commit()
+        
+        # Flash-Nachricht für Frontend
+        if registered_count > 0:
+            flash(f'✅ {registered_count} neue Module automatisch registriert! Bitte Details im Admin-Panel anpassen.', 'success')
+        elif len(html_files) == 0:
+            flash('📄 Keine HTML-Templates gefunden.', 'info')
+        else:
+            flash('📋 Alle verfügbaren Module bereits registriert.', 'info')
+        
+        if errors:
+            flash(f'⚠️ {len(errors)} Fehler bei der Registrierung. Details in der Konsole.', 'warning')
+        
+        print("\n" + "=" * 50)
+        print("📊 ZUSAMMENFASSUNG")
+        print("=" * 50)
+        print(f"✅ Neue Module: {registered_count}")
+        print(f"❌ Fehler: {len(errors)}")
+        print("🎯 Nächste Schritte:")
+        print("   1. Admin-Panel öffnen")
+        print("   2. Module-Details anpassen")
+        print("   3. Module veröffentlichen")
+        
+    except Exception as e:
+        flash(f'❌ Fehler bei automatischer Registrierung: {str(e)}', 'error')
+        print(f"💥 Hauptfehler: {str(e)}")
+    
+    return redirect(url_for('admin_menu_structure'))
+
+def extract_module_metadata(html_file):
+    """Extrahiert Meta-Informationen aus HTML-Template"""
+    import re
+    try:
+        with open(html_file, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        # Standard-Defaults
+        info = {
+            'title': generate_title_from_filename(html_file.stem),
+            'description': f'Interaktives Lernmodul: {generate_title_from_filename(html_file.stem)}',
+            'icon': '📊',
+            'category': 'technische-analyse',
+            'difficulty': 'intermediate',
+            'duration': 60,
+            'is_premium': True
+        }
+        
+        # Title aus HTML <title> Tag extrahieren
+        title_match = re.search(r'<title[^>]*>(.*?)</title>', content, re.IGNORECASE | re.DOTALL)
+        if title_match:
+            title_text = title_match.group(1).strip()
+            if " - " in title_text:
+                info['title'] = title_text.split(" - ")[0].strip()
+            else:
+                info['title'] = title_text
+        
+        # Description aus Meta-Tags extrahieren
+        desc_match = re.search(r'<meta[^>]*name=["\']description["\'][^>]*content=["\']([^"\']+)["\']', content, re.IGNORECASE)
+        if desc_match:
+            info['description'] = desc_match.group(1).strip()
+        
+        # Hero-Subtitle als Fallback für Description
+        hero_match = re.search(r'class=["\']hero-subtitle["\'][^>]*>(.*?)</[^>]+>', content, re.IGNORECASE | re.DOTALL)
+        if hero_match and not desc_match:
+            hero_text = re.sub(r'<[^>]+>', '', hero_match.group(1)).strip()
+            if hero_text and len(hero_text) > 10:
+                info['description'] = hero_text
+        
+        # Kategorie aus Dateiname ableiten
+        filename_lower = html_file.stem.lower()
+        category_mapping = {
+            'expected_value': {'category': 'trading-konzepte', 'icon': '📊'},
+            'tirone': {'category': 'technische-analyse', 'icon': '📈'},
+            'quadrant': {'category': 'technische-analyse', 'icon': '📈'},
+            'risk': {'category': 'risikomanagement', 'icon': '⚠️'},
+            'risiko': {'category': 'risikomanagement', 'icon': '⚠️'},
+            'psychology': {'category': 'trading-psychologie', 'icon': '🧠'},
+            'psychologie': {'category': 'trading-psychologie', 'icon': '🧠'},
+            'fundamental': {'category': 'fundamentalanalyse', 'icon': '📋'},
+            'bridgewater': {'category': 'grundlagen', 'icon': '🏛️'},
+            'quadranten': {'category': 'grundlagen', 'icon': '🏛️'},
+            'kelly': {'category': 'risikomanagement', 'icon': '⚖️'},
+            'position': {'category': 'risikomanagement', 'icon': '⚖️'},
+            'sizing': {'category': 'risikomanagement', 'icon': '⚖️'},
+            'magic_line': {'category': 'technische-analyse', 'icon': '🎯'},
+            'playbook': {'category': 'trading-strategien', 'icon': '📚'},
+            'darwin': {'category': 'trading-philosophie', 'icon': '🧬'},
+            'marktampel': {'category': 'risikomanagement', 'icon': '🚦'}
+        }
+        
+        for keyword, mapping in category_mapping.items():
+            if keyword in filename_lower:
+                info['category'] = mapping['category']
+                info['icon'] = mapping['icon']
+                break
+        
+        # Duration aus HTML-Kommentaren extrahieren
+        duration_match = re.search(r'<!-- duration: (\d+) -->', content, re.IGNORECASE)
+        if duration_match:
+            info['duration'] = int(duration_match.group(1))
+        elif 'complete' in filename_lower or 'masterclass' in filename_lower:
+            info['duration'] = 120
+        elif 'basic' in filename_lower or 'intro' in filename_lower:
+            info['duration'] = 45
+        
+        # Lead-Magnet Detection
+        if any(keyword in filename_lower for keyword in ['lead', 'magnet', 'free', 'basic', 'intro']):
+            info['is_premium'] = False
+        
+        # Difficulty aus Dateiname
+        if 'basic' in filename_lower or 'intro' in filename_lower:
+            info['difficulty'] = 'beginner'
+        elif 'advanced' in filename_lower or 'masterclass' in filename_lower or 'complete' in filename_lower:
+            info['difficulty'] = 'advanced'
+        
+        return info
+        
+    except Exception as e:
+        print(f"⚠️ Fehler beim Extrahieren der Meta-Daten von {html_file.name}: {str(e)}")
+        return {
+            'title': generate_title_from_filename(html_file.stem),
+            'description': f'Automatisch erkanntes Modul: {html_file.stem}',
+            'icon': '📄',
+            'category': 'technische-analyse',
+            'difficulty': 'intermediate',
+            'duration': 60,
+            'is_premium': True
+        }
+
+def generate_title_from_filename(filename):
+    """Generiert schönen Titel aus Dateiname"""
+    title = filename.replace('_', ' ').replace('-', ' ')
+    
+    # Spezielle Ersetzungen
+    replacements = {
+        'expected value': 'Expected Value (EV)',
+        'tirone quadrant lines': 'Tirone Levels & Quadrant Lines',
+        'magic line': 'Magic Line Strategie',
+        'bridgewater quadranten': 'Bridgewater Quadranten',
+        'kelly simulator': 'Kelly-Kriterium Simulator',
+        'position sizing kelly': 'Position Sizing mit Kelly',
+        'trading playbook': 'Trading Playbook',
+        'darwin investing': 'Darwin Investing Philosophie',
+        'marktampel allokation': 'Marktampel & Asset Allokation',
+        'daily report card': 'Daily Trading Report Card',
+        'meta learning': 'Meta-Learning für Trader'
+    }
+    
+    title_lower = title.lower()
+    for key, value in replacements.items():
+        if key in title_lower:
+            return value
+    
+    # Standard Title Case
+    return title.title()
+
+def find_or_create_category_for_module(category_slug):
+    """Findet oder erstellt Kategorie für Modul"""
+    category = ModuleCategory.query.filter_by(slug=category_slug).first()
+    
+    if category:
+        return category
+    
+    # Neue Kategorie erstellen
+    category_definitions = {
+        'technische-analyse': {'name': '2. Technische Analyse', 'icon': '📈', 'order': 2},
+        'fundamentalanalyse': {'name': '1. Fundamentalanalyse', 'icon': '📋', 'order': 1},
+        'trading-psychologie': {'name': '4. Trading Psychologie', 'icon': '🧠', 'order': 4},
+        'risikomanagement': {'name': '3. Risikomanagement', 'icon': '⚠️', 'order': 3},
+        'trading-konzepte': {'name': '5. Trading Konzepte', 'icon': '🎯', 'order': 5},
+        'grundlagen': {'name': '0. Grundlagen', 'icon': '🏛️', 'order': 0},
+        'trading-strategien': {'name': '6. Trading Strategien', 'icon': '📚', 'order': 6},
+        'trading-philosophie': {'name': '7. Trading Philosophie', 'icon': '🧬', 'order': 7}
+    }
+    
+    cat_def = category_definitions.get(category_slug, {
+        'name': category_slug.replace('-', ' ').title(),
+        'icon': '📊',
+        'order': 99
+    })
+    
+    category = ModuleCategory(
+        name=cat_def['name'],
+        slug=category_slug,
+        icon=cat_def['icon'],
+        description=f'Module der Kategorie {cat_def["name"]}',
+        sort_order=cat_def['order']
+    )
+    
+    db.session.add(category)
+    db.session.flush()
+    
+    print(f"✨ Neue Kategorie erstellt: {cat_def['name']}")
+    return category
+
+def create_auto_module(html_file, module_info, category):
+    """Erstellt automatisch registriertes Modul"""
+    # Slug generieren
+    slug = html_file.stem.lower().replace('_', '-')
+    
+    # Slug-Eindeutigkeit prüfen
+    counter = 1
+    original_slug = slug
+    while LearningModule.query.filter_by(slug=slug).first():
+        slug = f"{original_slug}-{counter}"
+        counter += 1
+    
+    # Sort-Order bestimmen
+    max_order = db.session.query(db.func.max(LearningModule.sort_order)).filter_by(
+        category_id=category.id,
+        subcategory_id=None
+    ).scalar() or 0
+    
+    # Subscription Levels
+    required_levels = [] if not module_info['is_premium'] else ['premium', 'elite']
+    
+    module = LearningModule(
+        category_id=category.id,
+        subcategory_id=None,
+        title=module_info['title'],
+        slug=slug,
+        description=module_info['description'],
+        icon=module_info['icon'],
+        template_file=html_file.name,
+        content_type='html',
+        is_published=False,  # Standardmäßig unveröffentlicht für Review
+        is_lead_magnet=not module_info['is_premium'],
+        required_subscription_levels=required_levels,
+        estimated_duration=module_info['duration'],
+        difficulty_level=module_info['difficulty'],
+        sort_order=max_order + 1
+    )
+    
+    db.session.add(module)
+    return module
+
 @app.route('/admin/export-structure')
 def export_structure():
     """Exportiere die komplette Menüstruktur als JSON"""
