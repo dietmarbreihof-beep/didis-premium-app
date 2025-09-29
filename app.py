@@ -1559,7 +1559,7 @@ def add_category():
     """Neue Hauptkategorie hinzufügen"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('admin_menu_structure'))
+        return redirect(url_for('admin_modules'))
     
     try:
         name = request.form.get('name')
@@ -1568,7 +1568,7 @@ def add_category():
         
         if not name:
             flash('Name ist erforderlich.', 'error')
-            return redirect(url_for('admin_menu_structure'))
+            return redirect(url_for('admin_modules'))
         
         # Slug generieren
         slug = name.lower().replace(' ', '-').replace('.', '').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
@@ -1593,14 +1593,14 @@ def add_category():
         db.session.rollback()
         flash(f'Fehler beim Erstellen der Kategorie: {str(e)}', 'error')
     
-    return redirect(url_for('admin_menu_structure'))
+    return redirect(url_for('admin_modules'))
 
 @app.route('/admin/add-subcategory', methods=['POST'])
 def add_subcategory():
     """Neue Unterkategorie hinzufügen"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('admin_menu_structure'))
+        return redirect(url_for('admin_modules'))
     
     try:
         category_id = request.form.get('category_id')
@@ -1609,7 +1609,7 @@ def add_subcategory():
         
         if not category_id or not name:
             flash('Kategorie und Name sind erforderlich.', 'error')
-            return redirect(url_for('admin_menu_structure'))
+            return redirect(url_for('admin_modules'))
         
         # Slug generieren
         slug = name.lower().replace(' ', '-').replace('.', '').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
@@ -1634,14 +1634,14 @@ def add_subcategory():
         db.session.rollback()
         flash(f'Fehler beim Erstellen der Unterkategorie: {str(e)}', 'error')
     
-    return redirect(url_for('admin_menu_structure'))
+    return redirect(url_for('admin_modules'))
 
 @app.route('/admin/add-module', methods=['POST'])
 def add_module():
     """Neues Modul hinzufügen"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('admin_menu_structure'))
+        return redirect(url_for('admin_modules'))
     
     try:
         # Formulardaten extrahieren
@@ -1671,7 +1671,7 @@ def add_module():
         
         if not category_id or not title or not description:
             flash('Kategorie, Titel und Beschreibung sind erforderlich.', 'error')
-            return redirect(url_for('admin_menu_structure'))
+            return redirect(url_for('admin_modules'))
         
         # Slug generieren
         slug = title.lower().replace(' ', '-').replace('.', '').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
@@ -1711,7 +1711,7 @@ def add_module():
         db.session.rollback()
         flash(f'Fehler beim Erstellen des Moduls: {str(e)}', 'error')
     
-    return redirect(url_for('admin_menu_structure'))
+    return redirect(url_for('admin_modules'))
 
 
 @app.route('/admin/update-marktampel')
@@ -1899,7 +1899,7 @@ def auto_register_modules():
         flash(f'❌ Fehler bei automatischer Registrierung: {str(e)}', 'error')
         print(f"💥 Hauptfehler: {str(e)}")
     
-        return redirect(url_for('admin_menu_structure'))
+    return redirect(url_for('admin_modules'))
 
 @app.route('/admin/register-missing-modules')
 def register_missing_modules():
@@ -2002,6 +2002,64 @@ def register_missing_modules():
     except Exception as e:
         db.session.rollback()
         flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_modules'))
+
+@app.route('/admin/fix-duplicate-categories')
+def fix_duplicate_categories():
+    """🔧 Behebt doppelte Kategorien in der Datenbank"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        # Doppelte Kategorien finden und zusammenführen
+        categories = ModuleCategory.query.all()
+        category_groups = {}
+        
+        # Kategorien nach Name gruppieren
+        for category in categories:
+            name = category.name
+            if name in category_groups:
+                category_groups[name].append(category)
+            else:
+                category_groups[name] = [category]
+        
+        merged_count = 0
+        deleted_count = 0
+        
+        for name, cat_list in category_groups.items():
+            if len(cat_list) > 1:
+                flash(f'🔍 Doppelte Kategorie gefunden: {name} ({len(cat_list)}x)', 'info')
+                
+                # Erste Kategorie als Master behalten
+                master_category = cat_list[0]
+                
+                # Module von anderen Kategorien zur Master-Kategorie verschieben
+                for duplicate_cat in cat_list[1:]:
+                    modules_to_move = LearningModule.query.filter_by(category_id=duplicate_cat.id).all()
+                    
+                    for module in modules_to_move:
+                        module.category_id = master_category.id
+                        flash(f'📦 Modul verschoben: {module.title} → {master_category.name}', 'info')
+                    
+                    # Doppelte Kategorie löschen
+                    db.session.delete(duplicate_cat)
+                    deleted_count += 1
+                    flash(f'🗑️ Doppelte Kategorie gelöscht: {duplicate_cat.name} (ID: {duplicate_cat.id})', 'warning')
+                
+                merged_count += 1
+        
+        db.session.commit()
+        
+        if merged_count > 0:
+            flash(f'✅ {merged_count} doppelte Kategorien zusammengeführt, {deleted_count} Duplikate entfernt!', 'success')
+        else:
+            flash('✅ Keine doppelten Kategorien gefunden - alles sauber!', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Bereinigen der Kategorien: {str(e)}', 'error')
     
     return redirect(url_for('admin_modules'))
 
