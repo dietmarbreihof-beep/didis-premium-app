@@ -40,6 +40,9 @@
         <button class="btn" onclick="showAddSubcategoryModal()">
             ➕ Unterkategorie hinzufügen
         </button>
+        <button class="btn" onclick="showAddModuleModal()" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
+            📄 Neues Modul hinzufügen
+        </button>
         <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, var(--success), #047857);">
             🚀 Module auto-registrieren
         </button>
@@ -512,6 +515,100 @@
             <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
                 <button type="button" class="btn secondary" onclick="closeModal('addSubcategoryModal')">Abbrechen</button>
                 <button type="submit" class="btn">Unterkategorie erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Add Module Modal -->
+<div id="addModuleModal" class="modal">
+    <div class="modal-content large">
+        <h3>📄 Neues Flask HTML-Modul hinzufügen</h3>
+        <form action="{{ url_for('add_module') }}" method="POST">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">Titel *</label>
+                    <input type="text" name="title" class="form-input" placeholder="z.B. Tirone Levels & Quadrant Lines" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Icon</label>
+                    <input type="text" name="icon" class="form-input" value="📊" placeholder="📊">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">Beschreibung *</label>
+                    <textarea name="description" class="form-input" rows="3" placeholder="Detaillierte Beschreibung des Moduls..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Kategorie *</label>
+                    <select name="category_id" class="form-select" required>
+                        <option value="">Kategorie auswählen</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.icon }} {{ category.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Unterkategorie</label>
+                    <select name="subcategory_id" class="form-select">
+                        <option value="">Direkt unter Hauptkategorie</option>
+                        {% for category in categories %}
+                            {% for subcategory in category.subcategories %}
+                            <option value="{{ subcategory.id }}">{{ category.name }} > {{ subcategory.name }}</option>
+                            {% endfor %}
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Template-Datei *</label>
+                    <input type="text" name="template_file" class="form-input" placeholder="z.B. tirone_quadrant_lines.html" required>
+                    <small style="color: #666; font-size: 0.85em;">Dateiname der HTML-Vorlage im templates/ Ordner</small>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Dauer (Min)</label>
+                    <input type="number" name="estimated_duration" class="form-input" value="60" min="5" max="300">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schwierigkeit</label>
+                    <select name="difficulty_level" class="form-select">
+                        <option value="beginner">Anfänger</option>
+                        <option value="intermediate" selected>Fortgeschritten</option>
+                        <option value="advanced">Experte</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Externe URL (optional)</label>
+                    <input type="url" name="external_url" class="form-input" placeholder="https://... (für externe Links)">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h4>🔒 Zugriffsberechtigung</h4>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin: 10px 0;">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_lead_magnet">
+                        🆓 Lead-Magnet (kostenlos)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="req_premium" checked>
+                        💰 Premium
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="req_elite" checked>
+                        👑 Elite
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_published">
+                    ✅ Sofort veröffentlichen (sonst bleibt es Entwurf)
+                </label>
+            </div>
+            
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 30px;">
+                <button type="button" class="btn secondary" onclick="closeModal('addModuleModal')">Abbrechen</button>
+                <button type="submit" class="btn">Modul erstellen</button>
             </div>
         </form>
     </div>
@@ -1312,6 +1409,11 @@ let sortModeActive = false;
 let currentView = 'hierarchy';
 
 // Initialize page
+// Add Module Modal Function
+function showAddModuleModal() {
+    document.getElementById('addModuleModal').style.display = 'block';
+}
+
 // Auto-Register Modules Function
 function autoRegisterModules() {
     if (!confirm('🚀 Alle neuen HTML-Templates automatisch registrieren?\n\nDies erkennt alle Template-Dateien im templates/ Ordner und registriert sie als Module. Die Module sind zunächst unveröffentlicht und können dann im Admin-Panel angepasst werden.')) {
