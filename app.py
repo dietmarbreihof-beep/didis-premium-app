@@ -1232,6 +1232,73 @@ def bridgewater_quadranten():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/tirone-quadrant-lines')
+def tirone_quadrant_lines():
+    """Tirone Levels & Quadrant Lines Modul"""
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='tirone-quadrant-lines').first()
+    except:
+        pass
+    
+    # Falls kein Modul in DB, erstelle ein temporäres für Template-Kompatibilität
+    if not module:
+        from types import SimpleNamespace
+        module = SimpleNamespace(
+            title='Tirone Levels & Quadrant Lines',
+            description='Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen',
+            slug='tirone-quadrant-lines',
+            icon='📊',
+            estimated_duration=75,
+            difficulty_level='intermediate',
+            view_count=0
+        )
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = session.get('user', {}).get('membership', 'free') if session.get('logged_in') else 'free'
+    
+    # Für Demo-Zwecke: Premium und Elite können zugreifen
+    if user_subscription not in ['premium', 'elite'] and hasattr(module, 'required_subscription_levels'):
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='tirone-quadrant-lines'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in'):
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            if hasattr(module, 'id'):
+                progress = ModuleProgress.query.filter_by(
+                    user_id=str(user_id), 
+                    module_id=module.id
+                ).first()
+                
+                if not progress:
+                    progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                    db.session.add(progress)
+                    db.session.commit()
+                else:
+                    progress.last_accessed = datetime.utcnow()
+                    db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if hasattr(module, 'id'):
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if hasattr(module, 'id') else (None, None)
+    
+    return render_template('tirone_quadrant_lines.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 # === HELPER FUNCTIONS ===
 
 def get_module_navigation(current_module):

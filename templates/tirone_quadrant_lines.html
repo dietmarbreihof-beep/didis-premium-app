@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tirone Levels & Quadrant Lines - TC2000 Indikatoren</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #f4e97b;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .content-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #b8860b, #daa520);
+            border-radius: 2px;
+        }
+
+        /* Accordion Styles */
+        .accordion {
+            margin-bottom: 30px;
+        }
+
+        .accordion-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-item:hover {
+            border-color: #b8860b;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.1);
+        }
+
+        .accordion-header {
+            background: #2d2d2d;
+            color: white;
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            position: relative;
+        }
+
+        .accordion-header:hover {
+            background: #3a3a3a;
+        }
+
+        .accordion-header.active {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+        }
+
+        .accordion-title {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+
+        .accordion-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 1000px;
+        }
+
+        .accordion-body {
+            padding: 30px;
+        }
+
+        /* Calculation Boxes */
+        .calculation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .calc-box {
+            background: linear-gradient(135deg, #f4e97b, #daa520);
+            border-left: 5px solid #b8860b;
+            border-radius: 8px;
+            padding: 25px;
+            position: relative;
+        }
+
+        .calc-title {
+            font-weight: 600;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .calc-formula {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .comparison-table th {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+            padding: 20px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f8f8;
+        }
+
+        .level-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin: 2px;
+        }
+
+        .level-1-3 { background: #e3f2fd; color: #1976d2; }
+        .level-1-2 { background: #f3e5f5; color: #7b1fa2; }
+        .level-2-3 { background: #e8f5e8; color: #388e3c; }
+        .level-25 { background: #fff3e0; color: #f57c00; }
+        .level-50 { background: #f3e5f5; color: #7b1fa2; }
+        .level-75 { background: #e8f5e8; color: #388e3c; }
+
+        /* Practical Examples */
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .example-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #b8860b;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .example-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .example-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .example-scenario {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 3px solid #b8860b;
+        }
+
+        /* Interactive Elements */
+        .interactive-section {
+            background: linear-gradient(135deg, #f7f7f7, #e8e8e8);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        .input-label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #2d2d2d;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #b8860b;
+        }
+
+        .calculate-btn {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .result-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #38a169;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #ffeaa7, #fdcb6e);
+            border-left: 5px solid #d69e2e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+        }
+
+        .warning-title {
+            font-weight: 600;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .hero-title {
+                font-size: 2.2em;
+            }
+
+            .content-section {
+                padding: 25px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .example-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 500;
+            color: #2d2d2d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <h1 class="hero-title">Tirone Levels & Quadrant Lines</h1>
+                <p class="hero-subtitle">Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen</p>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">3</div>
+                        <div class="stat-label">Tirone Level</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Quadrant Lines</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Trading-Möglichkeiten</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-container">
+            <h3 style="margin-bottom: 15px; color: #1a1a1a;">Dein Lernfortschritt</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0% abgeschlossen</div>
+        </div>
+
+        <!-- Tirone Levels Section -->
+        <div class="content-section">
+            <h2 class="section-title">Tirone Levels - Die klassische Drittelung</h2>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Was sind Tirone Levels?</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Tirone Levels sind ein technisches Analysewerkzeug in TC2000, das dir hilft, potenzielle Unterstützungs- und Widerstandsbereiche zu identifizieren. Sie wurden von John Tirone entwickelt und funktionieren ähnlich wie Fibonacci-Retracements, verwenden aber eine andere Berechnungsmethode.</p>
+                            
+                            <div class="warning-box">
+                                <div class="warning-title">💡 Wichtig für dein Trading</div>
+                                <p>Tirone Levels teilen eine Kursbewegung in <strong>drei gleichmäßige Bereiche</strong> auf und sind besonders effektiv für Swing Trading und Position Trading.</p>
+                            </div>
+
+                            <h4>Die drei Hauptlevel:</h4>
+                            <div class="calculation-grid">
+                                <div class="calc-box">
+                                    <div class="calc-title">1/3 Level (33,33%)</div>
+                                    <p>Erstes Drittel der Bewegung - oft starke Unterstützung/Widerstand</p>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">1/2 Level (50%)</div>
+                                    <p>Mittelpunkt der Bewegung - kritische Zone für Trendbestätigung</p>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">2/3 Level (66,67%)</div>
+                                    <p>Zweites Drittel - letzte wichtige Unterstützung vor Trendbruch</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Berechnung in TC2000</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Die Levels werden basierend auf High, Low und Close eines bestimmten Zeitraums berechnet:</p>
+                            
+                            <div class="calculation-grid">
+                                <div class="calc-box">
+                                    <div class="calc-title">Adjusted Midpoint</div>
+                                    <div class="calc-formula">(High + Low + Close) ÷ 3</div>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">1/3 Level</div>
+                                    <div class="calc-formula">Low + (High - Low) × 0.333</div>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">2/3 Level</div>
+                                    <div class="calc-formula">Low + (High - Low) × 0.667</div>
+                                </div>
+                            </div>
+
+                            <div class="interactive-section">
+                                <h4>🧮 Tirone Levels Rechner</h4>
+                                <div class="input-group">
+                                    <label class="input-label">Swing High:</label>
+                                    <input type="number" class="input-field" id="tironeHigh" placeholder="z.B. 150.00" step="0.01">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Swing Low:</label>
+                                    <input type="number" class="input-field" id="tironeLow" placeholder="z.B. 100.00" step="0.01">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Close:</label>
+                                    <input type="number" class="input-field" id="tironeClose" placeholder="z.B. 125.00" step="0.01">
+                                </div>
+                                <button class="calculate-btn" onclick="calculateTironeLevels()">Tirone Levels berechnen</button>
+                                
+                                <div class="result-box" id="tironeResults">
+                                    <h4>Berechnete Tirone Levels:</h4>
+                                    <div id="tironeOutput"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Praktische Anwendung</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="example-grid">
+                                <div class="example-card">
+                                    <div class="example-title">📈 Aufwärtstrends</div>
+                                    <div class="example-scenario">
+                                        <strong>Szenario:</strong> Aktie steigt von 100€ auf 150€
+                                        <br><strong>Anwendung:</strong> Levels fungieren als potenzielle Unterstützungszonen bei Korrekturen
+                                        <br><strong>1/3 Level:</strong> 116,67€ - Erste Unterstützung
+                                        <br><strong>1/2 Level:</strong> 125,00€ - Kritische Unterstützung
+                                        <br><strong>2/3 Level:</strong> 133,33€ - Letzte Unterstützung
+                                    </div>
+                                </div>
+
+                                <div class="example-card">
+                                    <div class="example-title">📉 Abwärtstrends</div>
+                                    <div class="example-scenario">
+                                        <strong>Szenario:</strong> Aktie fällt von 150€ auf 100€
+                                        <br><strong>Anwendung:</strong> Levels dienen als mögliche Widerstandsbereiche bei Erholungen
+                                        <br><strong>1/3 Level:</strong> 116,67€ - Erster Widerstand
+                                        <br><strong>1/2 Level:</strong> 125,00€ - Wichtiger Widerstand
+                                        <br><strong>2/3 Level:</strong> 133,33€ - Starker Widerstand
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h4>In TC2000 verwenden:</h4>
+                            <ol style="margin: 20px 0; padding-left: 20px;">
+                                <li>Gehe zu den Drawing Tools</li>
+                                <li>Wähle "Tirone Levels" aus</li>
+                                <li>Setze den Startpunkt am Swing-Low/High</li>
+                                <li>Ziehe bis zum entsprechenden Swing-High/Low</li>
+                            </ol>
+
+                            <div style="margin: 30px 0; text-align: center;">
+                                <h4 style="margin-bottom: 20px; color: #2d2d2d;">📊 Tirone Levels in der Praxis</h4>
+                                <img src="Screenshots/tirone.png" alt="Tirone Levels Screenshot aus TC2000" 
+                                     style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); border: 2px solid #b8860b;">
+                                <p style="margin-top: 15px; font-style: italic; color: #666; font-size: 0.9em;">
+                                    Beispiel: Tirone Levels angewendet auf einen Aufwärtstrend - die drei Level dienen als Unterstützungszonen bei Korrekturen
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quadrant Lines Section -->
+        <div class="content-section">
+            <h2 class="section-title">Quadrant Lines - Die präzise Viertelung</h2>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Was sind Quadrant Lines?</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Die <strong>Quadrant Lines</strong> sind ein weiteres nützliches technisches Analysewerkzeug in TC2000, das eine Kursbewegung in <strong>vier gleiche Bereiche</strong> (Quadranten) unterteilt.</p>
+                            
+                            <div class="warning-box">
+                                <div class="warning-title">🎯 Vorteil gegenüber Tirone Levels</div>
+                                <p>Quadrant Lines geben dir <strong>mehr Referenzpunkte</strong> und eine <strong>feinere Auflösung</strong> der Kursbereiche für präzisere Trading-Entscheidungen.</p>
+                            </div>
+
+                            <h4>Die vier Level:</h4>
+                            <div class="calculation-grid">
+                                <div class="calc-box">
+                                    <div class="calc-title">25% Level</div>
+                                    <p>Erstes Viertel - oft wichtige psychologische Marke</p>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">50% Level</div>
+                                    <p>Mittelpunkt - kritische Trendlinie (wie bei Tirone)</p>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">75% Level</div>
+                                    <p>Drittes Viertel - letzte wichtige Zone vor Trendbruch</p>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">100% Level</div>
+                                    <p>Vollständige Bewegung - komplette Retracement-Zone</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Berechnung der Quadrant Lines</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <p>Basierend auf dem gewählten High und Low:</p>
+                            
+                            <div class="calculation-grid">
+                                <div class="calc-box">
+                                    <div class="calc-title">25% Line</div>
+                                    <div class="calc-formula">Low + (High - Low) × 0.25</div>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">50% Line</div>
+                                    <div class="calc-formula">Low + (High - Low) × 0.50</div>
+                                </div>
+                                <div class="calc-box">
+                                    <div class="calc-title">75% Line</div>
+                                    <div class="calc-formula">Low + (High - Low) × 0.75</div>
+                                </div>
+                            </div>
+
+                            <div class="interactive-section">
+                                <h4>🧮 Quadrant Lines Rechner</h4>
+                                <div class="input-group">
+                                    <label class="input-label">Swing High:</label>
+                                    <input type="number" class="input-field" id="quadHigh" placeholder="z.B. 150.00" step="0.01">
+                                </div>
+                                <div class="input-group">
+                                    <label class="input-label">Swing Low:</label>
+                                    <input type="number" class="input-field" id="quadLow" placeholder="z.B. 100.00" step="0.01">
+                                </div>
+                                <button class="calculate-btn" onclick="calculateQuadrantLines()">Quadrant Lines berechnen</button>
+                                
+                                <div class="result-box" id="quadResults">
+                                    <h4>Berechnete Quadrant Lines:</h4>
+                                    <div id="quadOutput"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <h3 class="accordion-title">Trading-Anwendungen</h3>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-body">
+                            <div class="example-grid">
+                                <div class="example-card">
+                                    <div class="example-title">📈 Aufwärtstrends</div>
+                                    <div class="example-scenario">
+                                        <strong>25% Level:</strong> Starke Unterstützung bei leichten Korrekturen
+                                        <br><strong>50% Level:</strong> Kritische Unterstützung bei moderaten Pullbacks
+                                        <br><strong>75% Level:</strong> Letzte wichtige Unterstützung vor Trendbruch
+                                        <br><strong>100% Level:</strong> Kompletter Trendbruch bei Erreichen
+                                    </div>
+                                </div>
+
+                                <div class="example-card">
+                                    <div class="example-title">📉 Abwärtstrends</div>
+                                    <div class="example-scenario">
+                                        <strong>25% Level:</strong> Erster Widerstand bei Erholungen
+                                        <br><strong>50% Level:</strong> Wichtiger Widerstand für Trendfortsetzung
+                                        <br><strong>75% Level:</strong> Starker Widerstand bei größeren Rebounds
+                                        <br><strong>100% Level:</strong> Kompletter Trendwechsel bei Überschreitung
+                                    </div>
+                                </div>
+
+                                <div class="example-card">
+                                    <div class="example-title">🎯 Position Sizing</div>
+                                    <div class="example-scenario">
+                                        <strong>Präzise Stopp-Loss Platzierung</strong> an den Leveln
+                                        <br><strong>Gewinnmitnahme-Level</strong> bei Erreichen der Zonen
+                                        <br><strong>Risiko-Management</strong> durch mehr Referenzpunkte
+                                        <br><strong>Entry-Optimierung</strong> bei Rückkehr zu Levels
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Section -->
+        <div class="content-section">
+            <h2 class="section-title">Tirone Levels vs. Quadrant Lines</h2>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Aspekt</th>
+                        <th>Tirone Levels</th>
+                        <th>Quadrant Lines</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Anzahl Level</strong></td>
+                        <td>3 Hauptlevel</td>
+                        <td>4 Level</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Level-Werte</strong></td>
+                        <td>
+                            <span class="level-badge level-1-3">33,33%</span>
+                            <span class="level-badge level-1-2">50%</span>
+                            <span class="level-badge level-2-3">66,67%</span>
+                        </td>
+                        <td>
+                            <span class="level-badge level-25">25%</span>
+                            <span class="level-badge level-50">50%</span>
+                            <span class="level-badge level-75">75%</span>
+                            <span class="level-badge" style="background: #e1f5fe; color: #0277bd;">100%</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Präzision</strong></td>
+                        <td>Gut für grundlegende Analyse</td>
+                        <td>Höhere Präzision durch mehr Level</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anwendungsgebiet</strong></td>
+                        <td>Swing Trading, Trend-Analyse</td>
+                        <td>Präzises Position Trading, Risiko-Management</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Komplexität</strong></td>
+                        <td>Einfacher zu interpretieren</td>
+                        <td>Mehr Information, mehr Aufmerksamkeit nötig</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="warning-box">
+                <div class="warning-title">💡 Empfehlung für dein Trading</div>
+                <p><strong>Kombiniere beide Indikatoren:</strong> Verwende Tirone Levels für die grundlegende Trendanalyse und Quadrant Lines für präzise Entry- und Exit-Punkte. Diese Kombination gibt dir das Beste aus beiden Welten.</p>
+            </div>
+        </div>
+
+        <!-- Practical Trading Tips -->
+        <div class="content-section">
+            <h2 class="section-title">Praktische Trading-Tipps</h2>
+            
+            <div class="example-grid">
+                <div class="example-card">
+                    <div class="example-title">🎯 Entry-Strategien</div>
+                    <div class="example-scenario">
+                        <strong>Pullback-Entry:</strong> Kaufe bei Rückkehr zu 1/3 oder 25% Level
+                        <br><strong>Breakout-Entry:</strong> Kaufe bei Durchbruch des 2/3 oder 75% Level
+                        <br><strong>Bestätigung:</strong> Warte auf Candlestick-Patterns an den Leveln
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-title">🛡️ Stopp-Loss Management</div>
+                    <div class="example-scenario">
+                        <strong>Konservativ:</strong> Stopp-Loss unter dem nächsten Level
+                        <br><strong>Aggressiv:</strong> Stopp-Loss unter dem aktuellen Level
+                        <br><strong>Trailing:</strong> Stopp nach oben ziehen bei Level-Durchbruch
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-title">💰 Gewinnmitnahme</div>
+                    <div class="example-scenario">
+                        <strong>Teilweise:</strong> 1/3 Position bei 1/3 Level schließen
+                        <br><strong>Teilweise:</strong> Weitere 1/3 bei 2/3 Level
+                        <br><strong>Rest:</strong> Letzte Position bei Trendfortsetzung halten
+                    </div>
+                </div>
+
+                <div class="example-card">
+                    <div class="example-title">⚠️ Risiko-Management</div>
+                    <div class="example-scenario">
+                        <strong>Position Size:</strong> Maximal 1-2% Risiko pro Trade
+                        <br><strong>Diversifikation:</strong> Nicht alle Trades in einer Richtung
+                        <br><strong>Marktphasen:</strong> Indikatoren funktionieren besser in Trending-Märkten
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                const item = header.parentElement;
+                const content = item.querySelector('.accordion-content');
+                const isActive = header.classList.contains('active');
+
+                // Close all other accordions
+                document.querySelectorAll('.accordion-header').forEach(h => {
+                    h.classList.remove('active');
+                    h.parentElement.querySelector('.accordion-content').classList.remove('active');
+                });
+
+                // Toggle current accordion
+                if (!isActive) {
+                    header.classList.add('active');
+                    content.classList.add('active');
+                }
+            });
+        });
+
+        // Progress tracking
+        let progress = 0;
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+
+        function updateProgress() {
+            const accordions = document.querySelectorAll('.accordion-header');
+            const activeAccordions = document.querySelectorAll('.accordion-header.active');
+            progress = Math.round((activeAccordions.length / accordions.length) * 100);
+            progressFill.style.width = progress + '%';
+            progressText.textContent = progress + '% abgeschlossen';
+        }
+
+        // Tirone Levels Calculator
+        function calculateTironeLevels() {
+            const high = parseFloat(document.getElementById('tironeHigh').value);
+            const low = parseFloat(document.getElementById('tironeLow').value);
+            const close = parseFloat(document.getElementById('tironeClose').value);
+
+            if (isNaN(high) || isNaN(low) || isNaN(close)) {
+                alert('Bitte alle Felder ausfüllen!');
+                return;
+            }
+
+            const adjustedMidpoint = (high + low + close) / 3;
+            const level1_3 = low + (high - low) * 0.333;
+            const level1_2 = low + (high - low) * 0.5;
+            const level2_3 = low + (high - low) * 0.667;
+
+            const output = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 15px 0;">
+                    <div style="background: #e3f2fd; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #1976d2;">1/3 Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level1_3.toFixed(2)}€</div>
+                    </div>
+                    <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #7b1fa2;">1/2 Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level1_2.toFixed(2)}€</div>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #388e3c;">2/3 Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level2_3.toFixed(2)}€</div>
+                    </div>
+                </div>
+                <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <div style="font-weight: 600; color: #f57c00;">Adjusted Midpoint: ${adjustedMidpoint.toFixed(2)}€</div>
+                </div>
+            `;
+
+            document.getElementById('tironeOutput').innerHTML = output;
+            document.getElementById('tironeResults').classList.add('show');
+            updateProgress();
+        }
+
+        // Quadrant Lines Calculator
+        function calculateQuadrantLines() {
+            const high = parseFloat(document.getElementById('quadHigh').value);
+            const low = parseFloat(document.getElementById('quadLow').value);
+
+            if (isNaN(high) || isNaN(low)) {
+                alert('Bitte alle Felder ausfüllen!');
+                return;
+            }
+
+            const level25 = low + (high - low) * 0.25;
+            const level50 = low + (high - low) * 0.5;
+            const level75 = low + (high - low) * 0.75;
+
+            const output = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 15px 0;">
+                    <div style="background: #fff3e0; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #f57c00;">25% Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level25.toFixed(2)}€</div>
+                    </div>
+                    <div style="background: #f3e5f5; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #7b1fa2;">50% Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level50.toFixed(2)}€</div>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #388e3c;">75% Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${level75.toFixed(2)}€</div>
+                    </div>
+                    <div style="background: #e1f5fe; padding: 15px; border-radius: 8px; text-align: center;">
+                        <div style="font-weight: 600; color: #0277bd;">100% Level</div>
+                        <div style="font-size: 1.2em; font-weight: 700;">${high.toFixed(2)}€</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('quadOutput').innerHTML = output;
+            document.getElementById('quadResults').classList.add('show');
+            updateProgress();
+        }
+
+        // Initialize progress
+        updateProgress();
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Auto-save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('tironeQuadrantProgress', JSON.stringify({
+                progress: progress,
+                timestamp: Date.now()
+            }));
+        }
+
+        // Load saved progress
+        function loadProgress() {
+            const saved = localStorage.getItem('tironeQuadrantProgress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                if (Date.now() - data.timestamp < 7 * 24 * 60 * 60 * 1000) { // 7 days
+                    progress = data.progress;
+                    progressFill.style.width = progress + '%';
+                    progressText.textContent = progress + '% abgeschlossen';
+                }
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProgress();
+            
+            // Save progress when accordions are opened
+            document.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    setTimeout(saveProgress, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

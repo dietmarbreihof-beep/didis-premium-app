@@ -363,6 +363,21 @@
       "difficulty_level": "intermediate",
       "icon": "📊",
       "sort_order": 26
+    },
+    {
+      "title": "Tirone Levels & Quadrant Lines",
+      "slug": "tirone-quadrant-lines",
+      "description": "Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen - Lerne Tirone Levels und Quadrant Lines mit interaktiven Rechnern",
+      "category": "technische-analyse",
+      "subcategory": "indikatoren",
+      "content_type": "html",
+      "template_file": "tirone_quadrant_lines.html",
+      "required_subscription_levels": ["premium", "elite"],
+      "is_lead_magnet": false,
+      "estimated_duration": 75,
+      "difficulty_level": "intermediate",
+      "icon": "📊",
+      "sort_order": 27
     }
   ]
 }
