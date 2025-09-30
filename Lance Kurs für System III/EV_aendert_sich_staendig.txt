@@ -1,0 +1,184 @@
+In this video I'm going to be covering one of the most important advanced topics in trading, the concept that expected value is dynamic.
+
+What do I mean by that?
+
+I mean that expected value is constantly changing.
+
+This is a detail that makes all the difference and is part of what I think took me from great to elite, because every single trade and incorporates this fundamental skill.
+
+Before we dive into trading, let's take a little field trip to the poker table.
+
+Poker is an amazing game to reference because it is so many great analogies to trading that we're about to delve into I play all my ships and.
+
+Balon is going to move all in with ace, queen.
+
+Big blind Phil, Helmuth folds and a call from a Copian quickly not raise enough.
+
+No, I win.
+
+I did, huh I win win.
+
+I do need a double up.
+
+But man, I don't even understand all right.
+
+Ten nine against balance, ace, queen and there's an ace.
+
+John Robert loves the call.
+
+Now Come on no jacks, no sevens and I don't need any more pairs.
+
+Jacks, no sevens and he doesn't need any more pairs.
+
+Juice ball, it's a six, that's the chord.
+
+I'm talking not over yet.
+
+John Robert John Robert He could still hit a seven.
+
+Okopian with a straight draw.
+
+Balan thought it was over.
+
+Bye bye.
+
+Copian thinks he's gonna hit the four outer.
+
+Don't do it to me like that that would be ugly.
+
+Okopian needs a seven for a straight to knock out.
+
+Jean Robin River Cardo is a seven.
+
+So let's dissect the video.
+
+We just watched initially one Player had a two-thirds probability of winning.
+
+And once the flop appeared, what happened?
+
+The odds changed.
+
+It's not static odds throughout the whole poker hand.
+
+So once the flop comes in and with each subsequent card until the river, you need to recalibrate your probability of winning based on the new information in front of you.
+
+When he got the pair of aces, his odds went to a near lock of ninety four percent, but it still wasn't over yet.
+
+What happened when the river hit?
+
+There was a total reversal of the expected outcome and he ended up losing.
+
+Point of this video is to show that throughout an entire hand poker players, like traders, need to constantly adapt to how the odds are unfolding and assess what their next move should be.
+
+The core differentiator between poker and trading is that unlike trading, true odds can be calculated in poker.
+
+There's a finite universe of outcomes.
+
+You know how many outs you have and you know how many cards are left in the deck?
+
+It's very easy to calculate this with experience over time.
+
+Whereas with trading there is an almost infinite spectrum of outcomes that can occur.
+
+The beauty of trading and poker is that they have so many overlapping qualities and concepts a trader can recognize and learn from to name a few.
+
+They both have similar psychology and betting dynamics.
+
+Have you ever seen how tilted Phil Hellmuth gets much like in poker we need to bet way more when the odds are in our favor, yet fold and sit out the majority of the time.
+
+You're constantly acting under uncertainty, constantly reevaluating your position as odds are changing both in trading and in poker, you tend to have the option to bet more, stay the same or even fold.
+
+And you need to constantly be underwriting that decision throughout the play as traders.
+
+We need to be constantly updating our estimates of expected value, because trading is dynamic.
+
+Every single second, every single bar that elapses, We need to be basing our decisions on those changes pivoting back to trading only let's talk about expected value, which, as you know, is a mix of risk, reward and the probabilities.
+
+All three of these variables change for every single detail that elapses.
+
+These nuances that influence the math include the level two box, the chart pattern development, the overall market action, the market environment.
+
+You're trading in and even specifics to your trading strategy.
+
+All of those characteristics influence those three variables.
+
+As a result, your decisions must be constantly changing to reflect what you're seeing.
+
+Let's jump into a simple mean reversion example to help.
+
+This make sense.
+
+All of these numbers are approximated and simplified for explanation sake.
+
+So a stock goes from ten dollars to seven dollars and we buy the right side of the V once it is turned for the move back to the unaffected price of ten dollars which we.
+
+Suspect has maybe a fifty percent chance of occurring versus stopping us out.
+
+Let's say we buy at seven dollars, fifty cents and we are using a prior low of seven dollars as the stop our reward then to dollar ten is two two dollars, fifty cents.
+
+Based on those numbers, our expected value here is two dollars fifty cents times fifty percent minus fifty cents times fifty percent, which equals one dollar.
+
+That's a solid trade at that moment.
+
+In time at the next bar we are at eight dollars, fifty cents.
+
+The expected value is changing as this move progresses now.
+
+The reward is dollar one hundred fifty to dollar ten, and our stop is at six seven dollars fifty cents with the same fifty percent odds of success that gives our expected value math to be one dollar fifty cents times fifty percent minus one dollar times fifty percent, which equals twenty five cents.
+
+Note that, as we have bounced, our expected value has become considerably less, but still positive the implications of that being.
+
+We still want exposure, but perhaps less exposure than we had at the beginning of the move.
+
+Then, as we approach nine dollars fifty cents, we need to again be crunching the math fifty cents is all the reward left.
+
+Yet the risk is now a dollar back to eight dollars fifty cents.
+
+Our simplified expected value math here is fifty cents times fifty percent minus one dollar times fifty percent equals negative twenty five cents.
+
+Anytime we have a negative expected value.
+
+We want no exposure to it.
+
+Never any exceptions.
+
+In other words, the correct time to sell our long position was somewhere between seven and eight, even though it might psychologically feel good to hold the position back to ten dollars and be right often that might be the wrong decision as the expected value no longer favors holding for a full retracement to be clear.
+
+I'm not actually doing super detailed expected value calculations while I'm trading using super specific numbers.
+
+This is all in theory to prove a point.
+
+You can't crunch perfect equations like there are in Poker, because so many of the variables need to be estimated in trading that being said I one hundred percent am estimating calculations like this constantly as I decide to enter and manage trades.
+
+The hardest part of this exercise is so often estimating what your probability spectrum and reward are.
+
+Where do these estimates come from?
+
+And how do you get better at them?
+
+A lot of that comes from experience and back testing recognizing patterns and having a mental database.
+
+All trading comes down to having a more accurate mental estimation of expected value versus the market.
+
+Just like in Poker, certain patterns might start off amazing, but unfold in a matter that ruins it.
+
+Like we saw in the video earlier.
+
+Just because you get aces doesn't mean you're guaranteed to win the hand.
+
+Imagine someone telling you, you had to play through to the end of the hand every time that would be awful advice coming full circle.
+
+Just like Poker's dynamic trading is two.
+
+There are a lot of folks who might argue trades are binary.
+
+They either work or they don't, and that simply isn't true.
+
+Take the time to learn the nuances and what might shift the expected value to the upside or make it worse.
+
+Then constantly have this info at the front of your mind I recognize that this topic is a lot to digest and it's advanced for a reason.
+
+This is one of the rare concepts that comes into play in every single trade you make and is a core fundamental of the experienced trader to dive deeper into such an important topic.
+
+We'll be looking at numerous case studies over time.
+

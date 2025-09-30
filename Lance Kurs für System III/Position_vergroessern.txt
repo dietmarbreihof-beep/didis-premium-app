@@ -1,0 +1,82 @@
+Der Sprecher (Lance) erörtert die optimale Strategie zum Hinzufügen zu
+Handelspositionen, wobei er betont, dass solche Ergänzungen als
+unabhängige Trades basierend auf dem erwarteten Wert behandelt werden
+sollten, anstatt von psychologischem Komfort geleitet zu werden.
+
+Kernbotschaften und Argumente:
+
+-   Grundsatz des erwarteten Wertes: Alle Handelsentscheidungen,
+    einschließlich des Aufstockens von Positionen, müssen auf dem
+    erwarteten Wert basieren.
+
+-   Regel für das Aufstocken von Positionen: Lance fügt nur dann hinzu,
+    wenn die neue Exposition ein unabhängiger Trade wäre, unabhängig von
+    seiner aktuellen Position. Momente mit einem bedeutsamen positiven
+    Erwartungswert sind zeitlich sehr spezifisch.
+
+-   Fehler von Amateur-Tradern:
+
+    -   Amateur-Trader neigen dazu, Positionen aufzustocken, wenn ein
+        Trade bereits erfolgreich ist und Gewinne abwirft. Dies
+        geschieht oft aus Bedauern, nicht mehr Aktien zu einem besseren
+        erwarteten Wert gekauft zu haben, und aus psychologischem
+        Komfort.
+    -   Das Problem ist, dass der erwartete Wert in den meisten Fällen
+        sinkt, während ein Trade zugunsten des Traders läuft.
+    -   Dieses Verhalten verschlechtert den Durchschnittspreis und kann
+        einen ursprünglich guten Trade durch mittelmäßige oder schlechte
+        Hinzufügungen verderben, was oft zu einem vorzeitigen Ausstieg
+        führt.
+
+-   Lance's Ansatz für professionelles Aufstocken:
+
+    -   Er stockt nur dann auf, wenn der Chart ein Setup bietet, das
+        unabhängig von seiner aktuellen Position einen echten Einstieg
+        für sein Handelssystem darstellen würde.
+    -   Beispiele hierfür sind exakte Ausbruchslevels, Durchbrüche
+        früherer Hochs oder schnell nach Eilmeldungen.
+    -   Bei Mean-Reversion-Trades könnte er intra-bar kaufen, wenn der
+        erwartete Wert sehr hoch ist, und dann hinzufügen, wenn der
+        Trend tatsächlich bricht (z. B. Bruch einer Trendlinie oder
+        früherer Hochs), aber nur, wenn der erwartete Wert immer noch
+        extrem günstig ist und er den Trade auch ohne bestehende
+        Position eingegangen wäre.
+
+-   Unabhängige Behandlung von Positionen:
+
+    -   Jede hinzugefügte Position wird vollständig unabhängig als
+        eigener Trade behandelt.
+    -   Eine als Swing-Position gehaltene Größe wird nach den Regeln für
+        Swing-Trades gehandelt, und eine als Scalp hinzugefügte Größe
+        wird nach den Regeln für Scalps gehandelt.
+    -   Dies vereinfacht nachfolgende Entscheidungen, da keine Sorge um
+        den Durchschnittspreis oder den richtigen Stop-Loss besteht;
+        jede Position hat ihre klaren, präzisen Einstiege basierend auf
+        etablierten Strategien.
+
+-   Psychologische Fallstricke: Trader lassen sich oft von der
+    Psychologie beeinflussen (Komfort beim Hinzufügen, Unbehagen beim
+    Ausstieg), anstatt sich auf die objektive Mathematik des erwarteten
+    Wertes zu verlassen.
+
+-   Empfehlung zur Datenanalyse:
+
+    -   Trader sollten Daten über ihre Aufstockungen sammeln (manuell
+        oder mit Software), um den erwarteten Wert dieser Ergänzungen
+        mit dem der ursprünglichen Einstiege zu vergleichen.
+    -   Wenn Aufstockungen Geld verlieren, sollten sie eliminiert und
+        die Strategie überdacht werden.
+    -   Wenn Aufstockungen profitabel, aber deutlich weniger als die
+        ursprünglichen Einstiege sind, sollte mehr Kapital in die
+        ursprünglichen Einstiege verlagert werden, wo der erwartete Wert
+        höher ist.
+
+-   Lance's persönliche Erfahrung: Er entwickelte diese Best Practices
+    durch objektive Analyse seiner eigenen Handelsdaten, nachdem er
+    festgestellt hatte, dass seine eigenen Aufstockungen ursprünglich
+    psychologisch motiviert waren und seine Gesamtperformance
+    belasteten.
+
+-   Fazit: Objektive, detaillierte Datenanalyse ist entscheidend für
+    echtes Wachstum und Fortschritt im Handel, um individuelle, optimale
+    Regeln zu finden.

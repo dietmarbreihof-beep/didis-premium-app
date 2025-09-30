@@ -981,6 +981,17 @@ def trading_tools():
     # Tool-Definitionen mit Status und Zugriffsberechtigung
     tools = [
         {
+            'title': 'Trading-Playbook Grundlagen',
+            'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',
+            'icon': '👑',
+            'url': '/trading-playbook-masterclass',
+            'status': 'available',
+            'required_subscription': ['elite'],
+            'estimated_time': '120 min',
+            'difficulty': 'Expert',
+            'category': 'Elite - System III'
+        },
+        {
             'title': 'Trading-Playbook System III',
             'description': 'Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.',
             'icon': '📋',
@@ -992,18 +1003,7 @@ def trading_tools():
             'category': 'Trade-Vorbereitung'
         },
         {
-            'title': 'Trading-Playbook Masterclass',
-            'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',
-            'icon': '👑',
-            'url': '/trading-playbook-masterclass',
-            'status': 'available',
-            'required_subscription': ['elite'],
-            'estimated_time': '120 min',
-            'difficulty': 'Expert',
-            'category': 'Elite - System III'
-        },
-        {
-            'title': 'Trading-Playbook',
+            'title': 'Das Informations-Paradox',
             'description': 'Warum mehr Informationen nicht die Antwort sind. Entwickle das richtige Trading-Mindset.',
             'icon': '🧠',
             'url': '/playbook',
@@ -1179,7 +1179,7 @@ def trading_playbook_system_iii():
 
 @app.route('/trading-playbook-masterclass')
 def trading_playbook_masterclass():
-    """Trading-Playbook Masterclass - Metalearning & The Process"""
+    """Trading-Playbook Grundlagen - Metalearning & The Process"""
     # Prüfe ob es ein entsprechendes Modul in der DB gibt
     module = None
     try:
@@ -1191,7 +1191,7 @@ def trading_playbook_masterclass():
     if not module:
         from types import SimpleNamespace
         module = SimpleNamespace(
-            title='Trading-Playbook Masterclass - Metalearning & The Process',
+            title='Trading-Playbook Grundlagen - Metalearning & The Process',
             description='Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',
             slug='trading-playbook-masterclass',
             icon='👑',
@@ -2034,7 +2034,7 @@ def register_missing_modules():
                 'difficulty': 'advanced'
             },
             {
-                'title': 'Trading-Playbook Masterclass - Metalearning & The Process',
+                'title': 'Trading-Playbook Grundlagen - Metalearning & The Process',
                 'slug': 'trading-playbook-masterclass',
                 'template_file': 'trading_playbook_masterclass.html',
                 'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',

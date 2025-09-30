@@ -1,0 +1,250 @@
+Having presented the topic of exponential bet sizing in the previous.
+
+Video.
+
+In this one I am going to prove to you the math behind how sizing can make or break your career as a trader ever wondered what's one of the essential skills that separates the elite trader from a novice.
+
+Or an intermediate.
+
+Obviously, it's a confluence of traits, but if any of them stands out to me the most IT is that elite traders are betting big.
+
+When the situation calls for it the best traders that I know all make huge asymmetric bets.
+
+And when that trade shows up, they knock it out of the park in doing so they make up for all the errors in between and just wipe the competition away.
+
+Stan Druckenmiller, one of the most famous investors of all time, puts it nicely.
+
+If you look at all the great investors and they're as different as Warren Buffett, Carl Icon and Ken Langone.
+
+They tend to make very, very concentrated bets.
+
+They see something, they bet it and they bet the ranch.
+
+The mistake ninety eight percent of money managers and individuals make is they feel like they've got to be playing in a bunch of stuff.
+
+If you really see it, put all your eggs in one basket and watch that basket very carefully look I'm not saying you quite want to listen to stand there by putting all your eggs in one basket as a trader, but I think the sentiment is absolutely correct whether it's investor day trader, swing trader.
+
+When the expected value on a bet gets absolutely incredible, the best traders are betting huge and making that trade count and maximizing the opportunity.
+
+When I first started, my trainer made many mistakes and had weaknesses, but he was exceptional at one skill in particular and that was betsizing what bet sizing did for his trading was incredible.
+
+It allowed so much skew so even if he over traded, made some mistakes or even missed opportunities elsewhere.
+
+Everything was made up for and then some in one trade and it was amazing to watch what that did is it allowed him a massive cushion for errors.
+
+What I want to do is walk you through what I like to call a little mathemagic, because so many people can intuitively grasp how important bet sizing is.
+
+The mathematics are kind of wonky when you don't have it right in front of you and a lot of traders don't realize what's going on behind the scenes.
+
+Our human minds are particularly bad at understanding concepts that are nonlinear.
+
+So we're going to take a couple of simple case studies.
+
+We're going to look through what happens mathematically on equally sized bets, what happens mathematically on linearly sized bets.
+
+And then we're going to finally take exponentially size bets where a lot of the magic happens.
+
+Here are the parameters.
+
+We're going to have our A trades, which are our absolute best ones.
+
+We're going to have our B trades, C trades and D trades.
+
+For each of these categories I've made up some stats and roughly approximated what some of these good trades will look like an A trade has a large expected value of about three dollars fifty cents, a B trade has one dollar ten cents and a C trade ten cents and D trade loses twenty cents.
+
+What a lot of people miss and I think is an important concept to recognize is that the A trades by their nature tend to be very, very rare.
+
+Yet D trades are everywhere on each day there's so many tickers moving around and there's so many trades you can make.
+
+But the reality is that edge only occurs in a very small subset of places.
+
+So if you're going to be trading tons and tons of setups, even a professional trader is washing out in the majority of them most trades are C or D trades, where in the aggregate you tend to pretty much break even on those if you were to look at the days, weeks or months and years of a trader's performance, I would guess that probably ninety percent of their trades actually wash out and it's the major outliers that make the bulk of their P and L using the previously mentioned assumptions.
+
+We're going to look at one hundred sample trades.
+
+What we find is that by the nature of D trades being so much.
+
+More common.
+
+If we bet equally and we're taking all of these trades, you're going to end up being a negative expected value trader with a P and L loss of ten dollars sixty cents.
+
+Now for the linearly sized bets, what we were going to do is bet one dollar on the D trades, two dollars on the c's, three dollars on the b's and four dollars on the A trades.
+
+That's just a basic linear bet pattern increasing uniformly with the quality of trade.
+
+This already makes a massive difference in itself, because now look what happens in our A trade.
+
+It's enough to make up for all the rest that results in US.
+
+Despite taking the same exact trades, becoming a profitable trader and and having a net P and L of seven dollars ten cents, I cannot emphasize enough how important that is.
+
+Bet sizing alone took us from being a negative expected value trader to being a positive expected value trader.
+
+These two sample traders are taking all the same trades.
+
+These traders are trading them in the exact same manner, but one trader won't have a career in two years and the other is going to find some success.
+
+Right there, it should already be mic drop and I end.
+
+The video.
+
+But now we are really going to blow your mind what happens if we bet an exponential amount.
+
+So betting exponentially, if we were to take a D trade that would just be one dollar, C trades would be two dollars, B trades would be four dollars, the A trade would be eight dollars.
+
+This simple change has an incredible effect.
+
+Even though I know where this is going, the outcome still always surprises me.
+
+Because this math really is counterintuitive to our brains.
+
+Because that A trade which has such a better expected value and we're putting so much more money on it When you multiply that eight dollars by the three dollars fifty cents, you make aousing twenty eight dollars in that trade alone that twenty eight dollars more than makes up for all the D trades and gives you a hefty cushion on top.
+
+Simply by utilizing exponential bet sizing, you end up as a really strong positive expected value trader with a net P and L of twenty four dollars forty cents.
+
+I want to take this one step further.
+
+What if?
+
+We work on our bet sizing even more to provide additional skew or as I like to call it, exponential betting gone wild.
+
+What if On that D trade we're still going to bet just one dollar, but then on the C trade we're going to bet three dollars and then on the B trade nine dollars and the A trade twenty seven dollars.
+
+This is the same premise, just a little bit more juiced.
+
+What you can see is, when we're betting so big on that a trade, which is twenty seven times the amount of our D trade, we make aousing ninety four dollars fifty cents in expected value P and L on that trade alone.
+
+That might seem crazy.
+
+But for the big elite traders that I know.
+
+That level of SKU is not uncommon at all, it's totally normal for an elite trader to bet twenty x, fifty x, sometimes even one hundred x on their really choice a or a setups compared to the mediocre washout ones that results in this sample trader having a net p and L of one hundred and eight dollars.
+
+Again, I can't stress this enough.
+
+These are all the same trades and the same strategies.
+
+All we're changing is how we're betting across the quality of trade.
+
+Yet the difference is unbelievable.
+
+So what are the implications of this?
+
+There's a couple big ones.
+
+First of all, you might be an unprofitable trader that's struggling, but you might be making the right trades in the aggregate.
+
+The only difference is, you aren't betting properly.
+
+Imagine being a poker player and betting the same on every single hand, you would never stand a chance.
+
+Why is that?
+
+Because in Poker most of the cards you're dealt are not going to win you the hand, right?
+
+It's the same as trading.
+
+If you were to play every single hand and bet one dollar every single time, you're going to be out of chips in no time.
+
+The other thing to keep in mind is adding size to our better plays made up for a lot of mistakes, right?
+
+We heavily weighted the number of mediocre D trades to be ninety six out of the one hundred, which isn't necessarily even an exaggeration for many traders.
+
+But the point is, when you start to skew your betting ToWards the really high expected value trades, you can make up for all the paper cuts you take, especially in a slower market.
+
+What we find is that a lot of traders will still take paper cuts, but when the home run comes, they bet big on it and make it happen.
+
+Exponential sizing is what can take you from good to great and from great to elite.
+
+Everybody I know that is broken into the realms of being an eight figure trader.
+
+They don't do that through hitting singles every day.
+
+Singles in day trading world can only get you so far due to liquidity and number of opportunities.
+
+In order to really hit the big leagues, you need to make those big bets count.
+
+The bigger traders have worked up from linear betting to exponential betting than further skewing it from there.
+
+Now the practical advice on how you can implement this into your own trading.
+
+First you want to add SKU gradually and prudently.
+
+You don't need to and absolutely should not go nuts all at once, Like I said, if you're someone that's betting equally on each trade first.
+
+Try betting linearly, increase your bet as the opportunities get better and better.
+
+If you're someone that already does vary their bet size, see if you can make it more skewed.
+
+Perhaps you can bet less on the D trades and the C trades and perhaps you.
+
+Can push the risk and and some of your A trades more.
+
+Eventually it becomes necessary to also be mindful of too much size skewing the expected value of the trade.
+
+Some trades just don't have the liquidity.
+
+Also if you apply the increased betting irresponsibly, it might skew how you trade the opportunity itself.
+
+What I would recommend is, focus first on sizing up the easy high probability layups your easy money trades.
+
+You want to be very careful of sizing up on the high variance home runs until you have.
+
+The cushion and the experience to weather through some of the downside that can occur.
+
+Focus first on those layups, because those are going to be.
+
+What gives you the confidence and cushion to keep on pushing.
+
+One important caveat to add is, if you're a beginner trader, this might not be the topic for you right now.
+
+A lot of beginner traders need to solely focus on getting reps and building their system.
+
+First you want to do that safely while losing the minimum amount of money possible.
+
+But once you know that you're executing properly and that your system has edge, then it might be time to slowly add SKU to your trading.
+
+Keep in mind the extreme levels of SKU I used in some of those examples.
+
+Those really are for the elite level traders.
+
+Those traders are OK with the variance they're OK if a big trade goes wrong because they've been in drawdowns before and they have the psychology and the mindset to get through them.
+
+One other caveat I add is that the amount you bet is still going to be individualistic.
+
+Your bet sizing still needs to align with your personality and your risk tolerance.
+
+Some people are okay with the home runs.
+
+Some people have life situations or personalities where their trading is always going to be more about hitting the singles.
+
+One counterargument I want to address is this many would argue that it's fine and normal to bet equally on each trade.
+
+In fact, a lot of people have been taught that you should be betting equally on each trade.
+
+But I can't stress this enough.
+
+It is dead wrong and suboptimal if you're able to differentiate the quality of your trades.
+
+If you aren't able to differentiate the quality of your trades, then it is likely worth taking the time to study the nuances of your setups.
+
+There is no way anyone will ever do as well betting equally or even linearly versus the person that is betting exponentially as their expected value gets better.
+
+One other aspect to touch on is that I know what my pocket pairs look like and that has afforded me the ability to bet huge on them.
+
+That skill has given me a career that's far surpassed many others around me.
+
+As Mike Bella Fiori of SMB Capital even tells his traders when the expected value is way in your favor, it's your job to bet big.
+
+In fact, we would even argue that it's too risky not to go big.
+
+You cannot afford to not go big on your best hands.
+
+Why?
+
+Because that means otherwise you're left allocating more risk elsewhere in subpar trades.
+
+It is your job to build the skill set.
+
+If you're trying to become the best trader, you can be as always I will be there providing you with the concept.
+
