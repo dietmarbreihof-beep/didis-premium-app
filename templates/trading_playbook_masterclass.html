@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Trading-Playbook Masterclass - Metalearning & The Process{% endblock %}
+{% block title %}Trading-Playbook Einführung - Metalearning & The Process{% endblock %}
 
 {% block head %}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -292,6 +292,59 @@
             transform: translateY(-2px);
         }
 
+        /* Quiz Styles */
+        .quiz-question {
+            margin-bottom: 2rem;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .quiz-option {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .quiz-option:hover {
+            background: rgba(218, 165, 32, 0.2);
+            border-color: rgba(218, 165, 32, 0.5);
+        }
+
+        .quiz-option.selected {
+            background: rgba(218, 165, 32, 0.3);
+            border-color: #daa520;
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #059669, #10b981);
+            border-color: #059669;
+        }
+
+        .quiz-option.wrong {
+            background: linear-gradient(135deg, #dc2626, #ef4444);
+            border-color: #dc2626;
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 1rem;
+            transform: scale(1.2);
+        }
+
+        .quiz-option label {
+            cursor: pointer;
+            color: white;
+            font-weight: 500;
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             .container {
@@ -308,6 +361,16 @@
 
             .key-points {
                 grid-template-columns: 1fr;
+            }
+
+            .quiz-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .quiz-controls button {
+                width: 100%;
+                max-width: 200px;
             }
         }
     </style>
@@ -336,7 +399,7 @@
             
             <div class="quote-section">
                 Ähnlich einem Quarterback-Spielbuch ist es dein strategischer Leitfaden für effektives Trading. 
-                Das Konzept wurde von Mike Bella Fiori populär gemacht und von Lance perfektioniert.
+                Das Konzept wurde von Mike Bella Fiori populär gemacht und von dem Market Wizard und #1 Trader bei Trillium Lance Breitstein weiter entwickelt.
             </div>
 
             <div class="key-points">
@@ -440,7 +503,7 @@
                 <h4>💡 Lance's Geheimnis: Exponentielles Bet Sizing</h4>
                 <p>
                     Das Verständnis dieser Setup-Nuancen ist entscheidend für das "exponentielle Bet Sizing" - 
-                    du setzt bei A+ Setups mehr Kapital ein als bei C-Setups, um langfristig P&L zu maximieren.
+                    du setzt bei A+ Setups mehr Kapital ein als bei C-Setups, um langfristig P&L zu maximieren. Alle erfahrenen Trader haben ein solches System. Didi setzt große Mengen bei A+ Setups ein, wenn er viel Confluence hat.
                 </p>
             </div>
         </div>
@@ -582,14 +645,139 @@
             </div>
         </div>
 
-        <!-- Navigation -->
-        <div class="nav-links">
-            <a href="/">🏠 Startseite</a>
-            <a href="/modules">📚 Alle Module</a>
-            <a href="/meta-learning-quiz">🧠 Meta-Learning</a>
-            <a href="/magic-line">🎯 Magic Line</a>
-            <a href="https://didis-trading-club.streamlit.app/" target="_blank" rel="noopener noreferrer">🚀 Zur Hauptapp</a>
+        <!-- Trading-Playbook Quiz -->
+        <div class="interactive-section" style="margin-top: 3rem;">
+            <h2 class="interactive-title">🧠 Trading-Playbook Masterclass Quiz</h2>
+            <p style="text-align: center; margin-bottom: 2rem; font-size: 1.1em;">
+                Teste dein Verständnis der Trading-Playbook Konzepte
+            </p>
+            
+            <div id="quiz-container">
+                <div class="quiz-question" id="question-1">
+                    <h4 style="color: #f4e97b; margin-bottom: 1rem;">Frage 1: Was ist das Hauptziel eines Trading-Playbooks?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="1" data-answer="wrong">
+                            <input type="radio" name="q1" id="q1a" value="a">
+                            <label for="q1a">Maximierung des täglichen P&L</label>
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="correct">
+                            <input type="radio" name="q1" id="q1b" value="b">
+                            <label for="q1b">Systematische Dokumentation von Trading-Setups mit klaren Kriterien</label>
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="wrong">
+                            <input type="radio" name="q1" id="q1c" value="c">
+                            <label for="q1c">Sammlung von Trading-Tipps und -Tricks</label>
+                        </div>
+                        <div class="quiz-option" data-question="1" data-answer="wrong">
+                            <input type="radio" name="q1" id="q1d" value="d">
+                            <label for="q1d">Liste aller profitablen Trades</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" id="question-2" style="display: none;">
+                    <h4 style="color: #f4e97b; margin-bottom: 1rem;">Frage 2: Wie sollte der Erfolg eines Trading-Tages gemessen werden?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="2" data-answer="wrong">
+                            <input type="radio" name="q2" id="q2a" value="a">
+                            <label for="q2a">Ausschließlich am erzielten Gewinn</label>
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="correct">
+                            <input type="radio" name="q2" id="q2b" value="b">
+                            <label for="q2b">An der Einhaltung des Systems und der Ausführung der besten Setups</label>
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="wrong">
+                            <input type="radio" name="q2" id="q2c" value="c">
+                            <label for="q2c">An der Anzahl der ausgeführten Trades</label>
+                        </div>
+                        <div class="quiz-option" data-question="2" data-answer="wrong">
+                            <input type="radio" name="q2" id="q2d" value="d">
+                            <label for="q2d">Am Vermeiden von Verlusten</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" id="question-3" style="display: none;">
+                    <h4 style="color: #f4e97b; margin-bottom: 1rem;">Frage 3: Was ist "exponentielles Bet Sizing" nach Lance's Methodik?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="3" data-answer="wrong">
+                            <input type="radio" name="q3" id="q3a" value="a">
+                            <label for="q3a">Bei jedem Trade die gleiche Positionsgröße verwenden</label>
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="correct">
+                            <input type="radio" name="q3" id="q3b" value="b">
+                            <label for="q3b">Bei A+ Setups mehr Kapital einsetzen als bei C-Setups</label>
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="wrong">
+                            <input type="radio" name="q3" id="q3c" value="c">
+                            <label for="q3c">Exponentiell mehr Trades pro Tag ausführen</label>
+                        </div>
+                        <div class="quiz-option" data-question="3" data-answer="wrong">
+                            <input type="radio" name="q3" id="q3d" value="d">
+                            <label for="q3d">Nach Verlusten die Positionsgröße erhöhen</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" id="question-4" style="display: none;">
+                    <h4 style="color: #f4e97b; margin-bottom: 1rem;">Frage 4: Welche Ranking-Kategorien verwendet Lance für Setup-Qualität?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="4" data-answer="wrong">
+                            <input type="radio" name="q4" id="q4a" value="a">
+                            <label for="q4a">Gut, Mittel, Schlecht</label>
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="wrong">
+                            <input type="radio" name="q4" id="q4b" value="b">
+                            <label for="q4b">1 bis 5 Sterne-System</label>
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="correct">
+                            <input type="radio" name="q4" id="q4c" value="c">
+                            <label for="q4c">A+ (Herausragend) bis D (Schwach)</label>
+                        </div>
+                        <div class="quiz-option" data-question="4" data-answer="wrong">
+                            <input type="radio" name="q4" id="q4d" value="d">
+                            <label for="q4d">Hoch, Mittel, Niedrig</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quiz-question" id="question-5" style="display: none;">
+                    <h4 style="color: #f4e97b; margin-bottom: 1rem;">Frage 5: Wer hat das Trading-Playbook-Konzept entwickelt und weiterentwickelt?</h4>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-question="5" data-answer="wrong">
+                            <input type="radio" name="q5" id="q5a" value="a">
+                            <label for="q5a">Warren Buffett und Charlie Munger</label>
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="correct">
+                            <input type="radio" name="q5" id="q5b" value="b">
+                            <label for="q5b">Mike Bella Fiori (populär gemacht) und Lance Breitstein (weiterentwickelt)</label>
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="wrong">
+                            <input type="radio" name="q5" id="q5c" value="c">
+                            <label for="q5c">Jesse Livermore und Richard Wyckoff</label>
+                        </div>
+                        <div class="quiz-option" data-question="5" data-answer="wrong">
+                            <input type="radio" name="q5" id="q5d" value="d">
+                            <label for="q5d">William O'Neil und Mark Minervini</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="quiz-results" style="display: none; text-align: center;">
+                    <h3 style="color: #f4e97b; margin-bottom: 1rem;">🎉 Quiz abgeschlossen!</h3>
+                    <div id="score-display" style="font-size: 1.5em; margin-bottom: 1rem;"></div>
+                    <div id="feedback" style="margin-bottom: 2rem;"></div>
+                    <button onclick="restartQuiz()" style="background: linear-gradient(45deg, #daa520, #f4e97b); color: #1a1a1a; border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; cursor: pointer;">Quiz wiederholen</button>
+                </div>
+            </div>
+
+            <div class="quiz-controls" style="margin-top: 2rem; text-align: center;">
+                <button id="prev-btn" onclick="previousQuestion()" style="background: rgba(255, 255, 255, 0.2); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 10px 20px; border-radius: 8px; margin: 0 10px; cursor: pointer; display: none;">← Zurück</button>
+                <button id="next-btn" onclick="nextQuestion()" style="background: linear-gradient(45deg, #daa520, #f4e97b); color: #1a1a1a; border: none; padding: 10px 20px; border-radius: 8px; margin: 0 10px; cursor: pointer; opacity: 0.5;" disabled>Weiter →</button>
+            </div>
         </div>
+
+        <!-- Navigation wird bereits über _navigation.html eingebunden -->
 
         <!-- Footer -->
         <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: white; border-radius: 15px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
@@ -662,6 +850,228 @@
             if (savedContent) {
                 textarea.value = savedContent;
             }
+        });
+
+        // Quiz Functionality
+        let currentQuestion = 1;
+        let userAnswers = {};
+        let quizStartTime = new Date();
+        const totalQuestions = 5;
+
+        function setupQuiz() {
+            // Add event listeners to quiz options
+            document.querySelectorAll('.quiz-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // Remove selected class from siblings
+                    this.parentNode.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.classList.remove('selected');
+                    });
+                    
+                    // Add selected class
+                    this.classList.add('selected');
+                    
+                    // Store answer
+                    const questionNum = this.dataset.question;
+                    userAnswers[questionNum] = {
+                        answer: radio.value,
+                        correct: this.dataset.answer === 'correct'
+                    };
+                    
+                    // Enable next button
+                    document.getElementById('next-btn').disabled = false;
+                    document.getElementById('next-btn').style.opacity = '1';
+                });
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                // Hide current question
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                
+                currentQuestion++;
+                
+                // Show next question
+                document.getElementById(`question-${currentQuestion}`).style.display = 'block';
+                
+                // Update navigation
+                updateNavigation();
+            } else {
+                // Show results
+                showResults();
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                // Hide current question
+                document.getElementById(`question-${currentQuestion}`).style.display = 'none';
+                
+                currentQuestion--;
+                
+                // Show previous question
+                document.getElementById(`question-${currentQuestion}`).style.display = 'block';
+                
+                // Update navigation
+                updateNavigation();
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            // Show/hide previous button
+            if (currentQuestion > 1) {
+                prevBtn.style.display = 'inline-block';
+            } else {
+                prevBtn.style.display = 'none';
+            }
+            
+            // Update next button text
+            if (currentQuestion === totalQuestions) {
+                nextBtn.textContent = 'Ergebnis anzeigen →';
+            } else {
+                nextBtn.textContent = 'Weiter →';
+            }
+            
+            // Check if current question is answered
+            if (userAnswers[currentQuestion]) {
+                nextBtn.disabled = false;
+                nextBtn.style.opacity = '1';
+                
+                // Re-select the chosen option
+                const selectedOption = document.querySelector(`input[name="q${currentQuestion}"]:checked`);
+                if (selectedOption) {
+                    selectedOption.closest('.quiz-option').classList.add('selected');
+                }
+            } else {
+                nextBtn.disabled = true;
+                nextBtn.style.opacity = '0.5';
+            }
+        }
+
+        function showResults() {
+            // Hide all questions
+            for (let i = 1; i <= totalQuestions; i++) {
+                document.getElementById(`question-${i}`).style.display = 'none';
+            }
+            
+            // Hide navigation
+            document.querySelector('.quiz-controls').style.display = 'none';
+            
+            // Calculate score
+            let correctAnswers = 0;
+            for (let i = 1; i <= totalQuestions; i++) {
+                if (userAnswers[i] && userAnswers[i].correct) {
+                    correctAnswers++;
+                }
+            }
+            
+            const score = Math.round((correctAnswers / totalQuestions) * 100);
+            
+            // Show results
+            const resultsDiv = document.getElementById('quiz-results');
+            const scoreDisplay = document.getElementById('score-display');
+            const feedback = document.getElementById('feedback');
+            
+            scoreDisplay.innerHTML = `${correctAnswers}/${totalQuestions} richtig (${score}%)`;
+            
+            // Feedback based on score
+            let feedbackText = '';
+            let feedbackColor = '';
+            
+            if (score >= 80) {
+                feedbackText = '🏆 Hervorragend! Du hast die Trading-Playbook Konzepte perfekt verstanden. Du bist bereit für die praktische Umsetzung!';
+                feedbackColor = '#059669';
+            } else if (score >= 60) {
+                feedbackText = '👍 Gut gemacht! Du verstehst die Grundlagen. Wiederhole die Masterclass für noch tieferes Verständnis.';
+                feedbackColor = '#d69e2e';
+            } else {
+                feedbackText = '📚 Empfehlung: Gehe die Masterclass noch einmal durch. Die Trading-Playbook Konzepte sind fundamental für deinen Erfolg.';
+                feedbackColor = '#dc2626';
+            }
+            
+            feedback.innerHTML = `<p style="color: ${feedbackColor}; font-size: 1.1em;">${feedbackText}</p>`;
+            
+            // Show detailed answers
+            showDetailedAnswers();
+            
+            resultsDiv.style.display = 'block';
+            
+            // Save result to localStorage
+            const quizData = {
+                score: score,
+                correctAnswers: correctAnswers,
+                totalQuestions: totalQuestions,
+                completedAt: new Date().toISOString(),
+                timeSpent: Math.round((new Date() - quizStartTime) / 1000 / 60) // minutes
+            };
+            localStorage.setItem('playbook_quiz_result', JSON.stringify(quizData));
+        }
+
+        function showDetailedAnswers() {
+            // Show correct/wrong answers for each question
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionDiv = document.getElementById(`question-${i}`);
+                const options = questionDiv.querySelectorAll('.quiz-option');
+                
+                options.forEach(option => {
+                    if (option.dataset.answer === 'correct') {
+                        option.classList.add('correct');
+                    } else if (userAnswers[i] && option.querySelector('input').value === userAnswers[i].answer && !userAnswers[i].correct) {
+                        option.classList.add('wrong');
+                    }
+                });
+                
+                questionDiv.style.display = 'block';
+            }
+        }
+
+        function restartQuiz() {
+            // Reset quiz state
+            currentQuestion = 1;
+            userAnswers = {};
+            quizStartTime = new Date();
+            
+            // Reset UI
+            document.getElementById('quiz-results').style.display = 'none';
+            document.querySelector('.quiz-controls').style.display = 'block';
+            
+            // Reset all questions
+            for (let i = 1; i <= totalQuestions; i++) {
+                const questionDiv = document.getElementById(`question-${i}`);
+                questionDiv.style.display = i === 1 ? 'block' : 'none';
+                
+                // Reset options
+                questionDiv.querySelectorAll('.quiz-option').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'wrong');
+                    option.querySelector('input').checked = false;
+                });
+            }
+            
+            updateNavigation();
+        }
+
+        // Initialize quiz on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code ...
+            
+            // Setup quiz after other initialization
+            setTimeout(() => {
+                setupQuiz();
+                updateNavigation();
+                
+                // Load previous quiz result if exists
+                const savedResult = localStorage.getItem('playbook_quiz_result');
+                if (savedResult) {
+                    const result = JSON.parse(savedResult);
+                    console.log('Previous quiz result:', result);
+                }
+            }, 100);
         });
     </script>
 {% endblock %}
