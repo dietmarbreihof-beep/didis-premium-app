@@ -30,6 +30,95 @@
                     <label for="profitProb">📊 Wahrscheinlichkeit Gewinn (%)</label>
                     <input type="range" id="profitProb" value="75" min="1" max="99" oninput="updateProbability()">
                     <span id="profitProbValue" class="slider-value">75%</span>
+                    <div style="margin-top: 0.5rem;">
+                        <button type="button" class="layer-toggle-btn" onclick="toggleLayerSystem()" id="layerToggleBtn">
+                            🎯 Layer-System aktivieren
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Layer-basiertes Wahrscheinlichkeitssystem -->
+                <div id="layerSystem" class="layer-system" style="display: none;">
+                    <h5 style="color: #1a1a1a; margin: 1.5rem 0 1rem 0; text-align: center;">🎯 Layer-basierte Wahrscheinlichkeits-Berechnung</h5>
+                    
+                    <div class="layer-inputs">
+                        <div class="layer-input-row">
+                            <input type="text" class="layer-name" id="layerName1" placeholder="z.B. Bullish Market-Regime" value="Bullish Market-Regime">
+                            <input type="number" class="layer-prob" id="layerProb1" placeholder="%" min="0" max="50" step="1" value="25" oninput="calculateLayerProbability()">
+                            <span class="layer-unit">%</span>
+                        </div>
+                        
+                        <div class="layer-input-row">
+                            <input type="text" class="layer-name" id="layerName2" placeholder="z.B. Support Level" value="Starker Support Level">
+                            <input type="number" class="layer-prob" id="layerProb2" placeholder="%" min="0" max="50" step="1" value="15" oninput="calculateLayerProbability()">
+                            <span class="layer-unit">%</span>
+                        </div>
+                        
+                        <div class="layer-input-row">
+                            <input type="text" class="layer-name" id="layerName3" placeholder="z.B. Tower Bottom Pattern" value="Tower Bottom Pattern">
+                            <input type="number" class="layer-prob" id="layerProb3" placeholder="%" min="0" max="50" step="1" value="20" oninput="calculateLayerProbability()">
+                            <span class="layer-unit">%</span>
+                        </div>
+                        
+                        <div class="layer-input-row">
+                            <input type="text" class="layer-name" id="layerName4" placeholder="z.B. VWAP Confluence" value="VWAP Confluence">
+                            <input type="number" class="layer-prob" id="layerProb4" placeholder="%" min="0" max="50" step="1" value="10" oninput="calculateLayerProbability()">
+                            <span class="layer-unit">%</span>
+                        </div>
+                        
+                        <div class="layer-input-row">
+                            <input type="text" class="layer-name" id="layerName5" placeholder="z.B. Earnings Beat Expected" value="Positive News Flow">
+                            <input type="number" class="layer-prob" id="layerProb5" placeholder="%" min="0" max="50" step="1" value="15" oninput="calculateLayerProbability()">
+                            <span class="layer-unit">%</span>
+                        </div>
+                    </div>
+
+                    <!-- Layer-Zusammenfassung -->
+                    <div class="layer-summary">
+                        <div class="base-probability">
+                            <label>🎯 Basis-Setup Wahrscheinlichkeit:</label>
+                            <input type="number" id="baseProbability" value="0" min="0" max="95" step="1" oninput="calculateLayerProbability()">
+                            <span>%</span>
+                        </div>
+                        
+                        <div class="probability-explanation">
+                            <h6>💡 Wie funktioniert das Layer-System?</h6>
+                            <div class="explanation-content">
+                                <p><strong>Basis-Setup:</strong> Die Grundwahrscheinlichkeit Ihres Trading-Setups ohne zusätzliche Faktoren (kann 0% sein)</p>
+                                <p><strong>Layer:</strong> Zusätzliche Faktoren, die die Wahrscheinlichkeit erhöhen:</p>
+                                <ul>
+                                    <li><strong>Market-Regime:</strong> Bullish/Bearish Marktphase (+20-40%)</li>
+                                    <li><strong>Technische Levels:</strong> Support/Resistance, VWAP (+5-15%)</li>
+                                    <li><strong>Pattern:</strong> Tower Bottom, Breakouts (+10-25%)</li>
+                                    <li><strong>Katalysatoren:</strong> News, Earnings (+10-30%)</li>
+                                    <li><strong>Timing:</strong> Optimal Entry-Timing (+5-20%)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="layer-calculation" id="layerCalculation">
+                            <div class="calculation-step">
+                                <span class="step-label">Basis-Setup:</span>
+                                <span class="step-value" id="baseValue">0%</span>
+                            </div>
+                            <div class="calculation-step">
+                                <span class="step-label">+ Layer-Bonus:</span>
+                                <span class="step-value" id="layerBonus">+85%</span>
+                            </div>
+                            <div class="calculation-result">
+                                <span class="result-label">Gesamt-Wahrscheinlichkeit:</span>
+                                <span class="result-value" id="totalProbability">85%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aktive Layer Anzeige -->
+                    <div class="active-layers" id="activeLayers">
+                        <h6>🔥 Aktive Layer:</h6>
+                        <div class="layer-badges" id="layerBadges">
+                            <!-- Wird dynamisch befüllt -->
+                        </div>
+                    </div>
                 </div>
                 
                 <div class="input-group">
@@ -601,6 +690,267 @@
         background: linear-gradient(135deg, #f4e97b 0%, rgba(218, 165, 32, 0.1) 100%);
     }
 
+    /* Layer-System Styles */
+    .layer-toggle-btn {
+        background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+        color: white;
+        border: none;
+        padding: 0.6rem 1.2rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+
+    .layer-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(45, 45, 45, 0.3);
+    }
+
+    .layer-toggle-btn.active {
+        background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+    }
+
+    .layer-system {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px solid #b8860b;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-top: 1rem;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .layer-inputs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .layer-input-row {
+        display: grid;
+        grid-template-columns: 2fr 80px 30px;
+        gap: 0.8rem;
+        align-items: center;
+        background: white;
+        padding: 0.8rem;
+        border-radius: 10px;
+        border: 1px solid #e8e8e8;
+        transition: all 0.3s ease;
+    }
+
+    .layer-input-row:hover {
+        border-color: #b8860b;
+        box-shadow: 0 2px 10px rgba(184, 134, 11, 0.1);
+    }
+
+    .layer-name {
+        border: none;
+        background: transparent;
+        font-weight: 600;
+        color: #1a1a1a;
+        font-size: 0.95rem;
+        outline: none;
+    }
+
+    .layer-name::placeholder {
+        color: #999;
+        font-weight: 400;
+    }
+
+    .layer-prob {
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        padding: 0.5rem;
+        text-align: center;
+        font-weight: 600;
+        color: #b8860b;
+        background: #f8f9fa;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .layer-prob:focus {
+        border-color: #b8860b;
+        background: white;
+        box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.1);
+    }
+
+    .layer-unit {
+        color: #666;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .layer-summary {
+        background: white;
+        border-radius: 12px;
+        padding: 1.2rem;
+        margin-bottom: 1rem;
+        border: 2px solid #e8e8e8;
+    }
+
+    .base-probability {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 1rem;
+        justify-content: center;
+    }
+
+    .base-probability label {
+        font-weight: 600;
+        color: #1a1a1a;
+        margin: 0;
+    }
+
+    .base-probability input {
+        width: 80px;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: 600;
+        color: #2d2d2d;
+    }
+
+    .layer-calculation {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+    }
+
+    .calculation-step {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .calculation-result {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 1rem;
+        background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+        border-radius: 8px;
+        margin-top: 0.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .step-label, .result-label {
+        font-weight: 600;
+    }
+
+    .step-value, .result-value {
+        font-weight: 700;
+        font-size: 1.1rem;
+    }
+
+    .active-layers {
+        background: white;
+        border-radius: 12px;
+        padding: 1rem;
+        border: 1px solid #e8e8e8;
+    }
+
+    .active-layers h6 {
+        margin: 0 0 0.8rem 0;
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+
+    .layer-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .layer-badge {
+        background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+        color: white;
+        padding: 0.4rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    .layer-badge.inactive {
+        background: #e8e8e8;
+        color: #666;
+    }
+
+    .probability-explanation {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+        border-left: 4px solid #38a169;
+    }
+
+    .probability-explanation h6 {
+        color: #1a1a1a;
+        margin: 0 0 0.8rem 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .explanation-content p {
+        margin: 0.5rem 0;
+        color: #2d2d2d;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+
+    .explanation-content ul {
+        margin: 0.5rem 0;
+        padding-left: 1.2rem;
+    }
+
+    .explanation-content li {
+        color: #2d2d2d;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 0.3rem 0;
+    }
+
+    .explanation-content strong {
+        color: #1a1a1a;
+        font-weight: 600;
+    }
+
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
         .container {
@@ -623,11 +973,58 @@
         .section-title {
             font-size: 1.5rem;
         }
+
+        /* Layer-System Mobile Anpassungen */
+        .layer-input-row {
+            grid-template-columns: 1fr 60px 25px;
+            gap: 0.5rem;
+            padding: 0.6rem;
+        }
+
+        .layer-name {
+            font-size: 0.9rem;
+        }
+
+        .layer-prob {
+            padding: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        .layer-system {
+            padding: 1rem;
+        }
+
+        .base-probability {
+            flex-direction: column;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .base-probability input {
+            width: 100px;
+        }
+
+        .layer-badges {
+            justify-content: center;
+        }
+
+        .layer-badge {
+            font-size: 0.8rem;
+            padding: 0.3rem 0.6rem;
+        }
+
+        .calculation-step,
+        .calculation-result {
+            padding: 0.6rem 0.8rem;
+            font-size: 0.9rem;
+        }
     }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+    let isLayerSystemActive = false;
+
     function updateProbability() {
         const profitProb = document.getElementById('profitProb').value;
         const lossProb = 100 - profitProb;
@@ -639,6 +1036,107 @@
         // Auto-update position size if values are present
         if (document.getElementById('portfolioSize').value > 0) {
             calculatePositionSize();
+        }
+    }
+
+    function toggleLayerSystem() {
+        const layerSystem = document.getElementById('layerSystem');
+        const toggleBtn = document.getElementById('layerToggleBtn');
+        const profitProbSlider = document.getElementById('profitProb');
+        
+        isLayerSystemActive = !isLayerSystemActive;
+        
+        if (isLayerSystemActive) {
+            layerSystem.style.display = 'block';
+            toggleBtn.textContent = '🎯 Layer-System deaktivieren';
+            toggleBtn.classList.add('active');
+            profitProbSlider.disabled = true;
+            calculateLayerProbability();
+        } else {
+            layerSystem.style.display = 'none';
+            toggleBtn.textContent = '🎯 Layer-System aktivieren';
+            toggleBtn.classList.remove('active');
+            profitProbSlider.disabled = false;
+            updateProbability();
+        }
+    }
+
+    function calculateLayerProbability() {
+        if (!isLayerSystemActive) return;
+        
+        const baseProbability = parseFloat(document.getElementById('baseProbability').value) || 0;
+        let totalLayerBonus = 0;
+        let activeLayers = [];
+        
+        // Sammle alle aktiven Layer
+        for (let i = 1; i <= 5; i++) {
+            const layerName = document.getElementById('layerName' + i).value.trim();
+            const layerProb = parseFloat(document.getElementById('layerProb' + i).value) || 0;
+            
+            if (layerName && layerProb > 0) {
+                totalLayerBonus += layerProb;
+                activeLayers.push({
+                    name: layerName,
+                    probability: layerProb
+                });
+            }
+        }
+        
+        // Berechne Gesamtwahrscheinlichkeit (max 95%)
+        const totalProbability = Math.min(baseProbability + totalLayerBonus, 95);
+        
+        // Update UI
+        document.getElementById('baseValue').textContent = baseProbability + '%';
+        document.getElementById('layerBonus').textContent = '+' + totalLayerBonus + '%';
+        document.getElementById('totalProbability').textContent = totalProbability + '%';
+        
+        // Update Hauptslider
+        document.getElementById('profitProb').value = totalProbability;
+        document.getElementById('profitProbValue').textContent = totalProbability + '%';
+        document.getElementById('lossProbValue').textContent = (100 - totalProbability) + '%';
+        
+        // Update Layer-Badges
+        updateLayerBadges(activeLayers);
+        
+        // Trigger EV calculation
+        calculateEV();
+        
+        // Auto-update position size if values are present
+        if (document.getElementById('portfolioSize').value > 0) {
+            calculatePositionSize();
+        }
+    }
+
+    function updateLayerBadges(activeLayers) {
+        const badgesContainer = document.getElementById('layerBadges');
+        badgesContainer.innerHTML = '';
+        
+        if (activeLayers.length === 0) {
+            badgesContainer.innerHTML = '<span style="color: #666; font-style: italic;">Keine aktiven Layer</span>';
+            return;
+        }
+        
+        activeLayers.forEach(layer => {
+            const badge = document.createElement('div');
+            badge.className = 'layer-badge';
+            badge.innerHTML = `
+                <span>${layer.name}</span>
+                <strong>+${layer.probability}%</strong>
+            `;
+            badgesContainer.appendChild(badge);
+        });
+        
+        // Füge Gesamt-Badge hinzu
+        const totalBonus = activeLayers.reduce((sum, layer) => sum + layer.probability, 0);
+        if (totalBonus > 0) {
+            const totalBadge = document.createElement('div');
+            totalBadge.className = 'layer-badge';
+            totalBadge.style.background = 'linear-gradient(135deg, #38a169 0%, #2d7a3e 100%)';
+            totalBadge.innerHTML = `
+                <span>🎯 Gesamt-Bonus</span>
+                <strong>+${totalBonus}%</strong>
+            `;
+            badgesContainer.appendChild(totalBadge);
         }
     }
 

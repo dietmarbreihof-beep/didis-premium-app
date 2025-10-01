@@ -485,7 +485,7 @@ def admin_init_demo_data():
         db.create_all()
         
         # Force re-initialization by clearing existing demo modules
-        print("🔄 Clearing existing demo modules for fresh initialization...")
+        print("[INFO] Clearing existing demo modules for fresh initialization...")
         
         # Initialize demo modules (always runs, even if modules exist)
         result = init_demo_modules()
@@ -495,7 +495,7 @@ def admin_init_demo_data():
         
     except Exception as e:
         flash(f'❌ Fehler bei Demo-Daten-Initialisierung: {str(e)}', 'error')
-        print(f"❌ Admin init error: {str(e)}")
+        print(f"[ERROR] Admin init error: {str(e)}")
         return redirect(url_for('home'))
 
 @app.route('/admin/force-reload-modules')  
@@ -507,14 +507,14 @@ def admin_force_reload_modules():
     
     try:
         # Clear all existing modules and categories
-        print("🗑️ Clearing existing modules and categories...")
+        print("[INFO] Clearing existing modules and categories...")
         LearningModule.query.delete()
         ModuleSubcategory.query.delete() 
         ModuleCategory.query.delete()
         db.session.commit()
         
         # Reinitialize everything
-        print("🔄 Reinitializing all demo modules...")
+        print("[INFO] Reinitializing all demo modules...")
         init_demo_modules()
         
         flash('✅ Alle Module wurden neu geladen!', 'success')
@@ -522,7 +522,7 @@ def admin_force_reload_modules():
         
     except Exception as e:
         flash(f'❌ Fehler beim Neu-Laden: {str(e)}', 'error')
-        print(f"❌ Force reload error: {str(e)}")
+        print(f"[ERROR] Force reload error: {str(e)}")
         return redirect(url_for('home'))
 
 @app.route('/demo-login')
@@ -1857,7 +1857,7 @@ def admin_init_database():
                 
                 # Wenn keine Module da sind, Demo-Module erstellen
                 if module_count == 0 or category_count == 0:
-                    print("🚀 EMERGENCY: Erstelle Demo-Module...")
+                    print("[EMERGENCY] Erstelle Demo-Module...")
                     init_demo_modules()
                     
                     # Neu zählen nach Initialisierung
@@ -1934,7 +1934,7 @@ def auto_register_modules():
                 ).first()
                 
                 if existing_module:
-                    print(f"✅ Bereits registriert: {existing_module.title}")
+                    print(f"[OK] Bereits registriert: {existing_module.title}")
                     continue
                 
                 # Meta-Daten aus HTML extrahieren
@@ -1947,12 +1947,12 @@ def auto_register_modules():
                 create_auto_module(html_file, module_info, category)
                 registered_count += 1
                 
-                print(f"✅ REGISTRIERT: {module_info['title']}")
+                print(f"[OK] REGISTRIERT: {module_info['title']}")
                 
             except Exception as e:
                 error_msg = f"Fehler bei {html_file.name}: {str(e)}"
                 errors.append(error_msg)
-                print(f"❌ {error_msg}")
+                print(f"[ERROR] {error_msg}")
         
         db.session.commit()
         
@@ -1968,11 +1968,11 @@ def auto_register_modules():
             flash(f'⚠️ {len(errors)} Fehler bei der Registrierung. Details in der Konsole.', 'warning')
         
         print("\n" + "=" * 50)
-        print("📊 ZUSAMMENFASSUNG")
+        print("[SUMMARY] ZUSAMMENFASSUNG")
         print("=" * 50)
-        print(f"✅ Neue Module: {registered_count}")
-        print(f"❌ Fehler: {len(errors)}")
-        print("🎯 Nächste Schritte:")
+        print(f"[OK] Neue Module: {registered_count}")
+        print(f"[ERROR] Fehler: {len(errors)}")
+        print("[INFO] Nächste Schritte:")
         print("   1. Admin-Panel öffnen")
         print("   2. Module-Details anpassen")
         print("   3. Module veröffentlichen")
@@ -2244,7 +2244,7 @@ def extract_module_metadata(html_file):
         return info
         
     except Exception as e:
-        print(f"⚠️ Fehler beim Extrahieren der Meta-Daten von {html_file.name}: {str(e)}")
+        print(f"[WARNING] Fehler beim Extrahieren der Meta-Daten von {html_file.name}: {str(e)}")
         return {
             'title': generate_title_from_filename(html_file.stem),
             'description': f'Automatisch erkanntes Modul: {html_file.stem}',
@@ -2319,7 +2319,7 @@ def find_or_create_category_for_module(category_slug):
     db.session.add(category)
     db.session.flush()
     
-    print(f"✨ Neue Kategorie erstellt: {cat_def['name']}")
+    print(f"[OK] Neue Kategorie erstellt: {cat_def['name']}")
     return category
 
 def create_auto_module(html_file, module_info, category):
@@ -2480,7 +2480,7 @@ def api_modules_search():
 
 def migrate_didis_streamlit_modules():
     """Migriert alle Didis Streamlit-Module aus dem anderen Projekt"""
-    print("🔄 Migriere Didis Streamlit-Module...")
+    print("[INFO] Migriere Didis Streamlit-Module...")
     
     # Module-Daten
     modules_data = [
@@ -2609,7 +2609,7 @@ def migrate_didis_streamlit_modules():
             if existing:
                 # Spezielle Behandlung für Marktampel-Modul: Update auf HTML-Version
                 if module_data['slug'] == 'marktampel-allokation' and existing.content_type == 'streamlit':
-                    print(f"🔄 Aktualisiere Marktampel-Modul auf HTML-Version...")
+                    print(f"[INFO] Aktualisiere Marktampel-Modul auf HTML-Version...")
                     existing.content_type = module_data['content_type']
                     existing.template_file = module_data.get('template_file')
                     existing.external_url = module_data.get('external_url', '')
@@ -2618,16 +2618,16 @@ def migrate_didis_streamlit_modules():
                     existing.difficulty_level = module_data.get('difficulty_level', existing.difficulty_level)
                     db.session.commit()
                     migrated_count += 1
-                    print(f"✅ Marktampel-Modul aktualisiert: {module_data['title']}")
+                    print(f"[OK] Marktampel-Modul aktualisiert: {module_data['title']}")
                     continue
                 else:
-                    print(f"⏭️  Modul bereits vorhanden: {module_data['title']}")
+                    print(f"[INFO] Modul bereits vorhanden: {module_data['title']}")
                     continue
             
             # Kategorie finden
             category = ModuleCategory.query.filter_by(slug=module_data['category']).first()
             if not category:
-                print(f"❌ Kategorie nicht gefunden: {module_data['category']}")
+                print(f"[ERROR] Kategorie nicht gefunden: {module_data['category']}")
                 continue
             
             # Neues Modul erstellen
@@ -2652,12 +2652,12 @@ def migrate_didis_streamlit_modules():
             db.session.commit()
             
             migrated_count += 1
-            print(f"✅ Migriert: {module_data['title']}")
+            print(f"[OK] Migriert: {module_data['title']}")
             
         except Exception as e:
             error_msg = f"Fehler bei {module_data['title']}: {str(e)}"
             errors.append(error_msg)
-            print(f"❌ {error_msg}")
+            print(f"[ERROR] {error_msg}")
     
     print(f"\n🎉 Migration abgeschlossen: {migrated_count} Module migriert, {len(errors)} Fehler")
     return migrated_count, errors
@@ -2977,7 +2977,7 @@ def init_demo_modules():
     db.session.add(playbook_module)
     
     db.session.commit()
-    print("✅ Demo-Module erfolgreich erstellt!")
+    print("[OK] Demo-Module erfolgreich erstellt!")
 
 def sync_modules_from_local():
     """🔄 Auto-Sync: Synchronisiert lokale Module-Strukturen mit Railway-Datenbank
@@ -3136,10 +3136,10 @@ def sync_modules_from_local():
             db.session.commit()
         
         if synced_categories > 0 or synced_modules > 0:
-            print(f"🔄 Auto-Sync completed: {synced_categories} categories, {synced_modules} modules synced to Railway")
+            print(f"[INFO] Auto-Sync completed: {synced_categories} categories, {synced_modules} modules synced to Railway")
             
     except Exception as e:
-        print(f"❌ Auto-sync error: {str(e)}")
+        print(f"[ERROR] Auto-sync error: {str(e)}")
         db.session.rollback()
 
 # === ERROR HANDLERS ===
@@ -3163,29 +3163,29 @@ def init_database():
     try:
         # Alle Tabellen erstellen
         db.create_all()
-        print("✅ Database-Tabellen erstellt!")
+        print("[OK] Database-Tabellen erstellt!")
         
         # User-Tabelle prüfen
         try:
             user_count = User.query.count()
-            print(f"📊 Anzahl User in Database: {user_count}")
+            print(f"[INFO] Anzahl User in Database: {user_count}")
         except Exception as e:
-            print(f"ℹ️  User-Tabelle wird erstellt: {e}")
+            print(f"[INFO] User-Tabelle wird erstellt: {e}")
         
         # Demo-Module erstellen (nur beim ersten Mal)
         if not ModuleCategory.query.first():
             init_demo_modules()
-            print("✅ Demo-Module erstellt!")
+            print("[OK] Demo-Module erstellt!")
         
         # Didis Streamlit-Module migrieren (einmalig)
         if not LearningModule.query.filter_by(content_type="streamlit").first():
             migrate_didis_streamlit_modules()
-            print("✅ Streamlit-Module migriert!")
+            print("[OK] Streamlit-Module migriert!")
             
         return True
         
     except Exception as e:
-        print(f"❌ Database-Initialisierung fehlgeschlagen: {e}")
+        print(f"[ERROR] Database-Initialisierung fehlgeschlagen: {e}")
         return False
 
 # === NEUE KATEGORIE-MANAGEMENT ROUTEN ===
@@ -3683,17 +3683,17 @@ if __name__ == '__main__':
         db_success = init_database()
         
         if not db_success:
-            print("🔄 App startet trotz Database-Problemen...")
+            print("[WARNING] App startet trotz Database-Problemen...")
     
-    print("🚀 Didis Premium Trading Academy mit Menüsystem startet...")
-    print("📱 Öffne Browser: http://localhost:5000")
-    print("✨ Features: Menüsystem, Lead-Magnete, Admin-Panel")
-    print("🔑 Login-Accounts:")
+    print("[START] Didis Premium Trading Academy mit Menüsystem startet...")
+    print("[INFO] Öffne Browser: http://localhost:5000")
+    print("[INFO] Features: Menüsystem, Lead-Magnete, Admin-Panel")
+    print("[INFO] Login-Accounts:")
     print("   - admin/admin (Elite Access + Admin)")
     print("   - didi/didi (Elite Access + Admin)")
     print("   - premium/premium (Premium Access)")
     print("   - test/test (Premium Access)")
-    print("🔧 Admin-Panel: http://localhost:5000/admin/modules")
-    print("🛑 Zum Beenden: Ctrl+C")
+    print("[INFO] Admin-Panel: http://localhost:5000/admin/modules")
+    print("[INFO] Zum Beenden: Ctrl+C")
     
     app.run(debug=True, host='0.0.0.0', port=5000)
