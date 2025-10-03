@@ -688,6 +688,39 @@ def upgrade_required(module_slug):
         module = None
     return render_template('upgrade_required.html', module=module)
 
+@app.route('/avwap-pinch')
+def avwap_pinch():
+    """AVWAP Pinch - Interactive Learning Module"""
+    # Zugriff prüfen
+    if not session.get('logged_in'):
+        flash('Bitte melde dich an, um auf dieses Modul zuzugreifen.', 'warning')
+        return redirect(url_for('login'))
+    
+    # Session State für Fortschritt initialisieren
+    if 'pinch_step' not in session:
+        session['pinch_step'] = 0
+    if 'pinch_quiz_scores' not in session:
+        session['pinch_quiz_scores'] = {}
+    
+    return render_template('avwap_pinch.html')
+
+@app.route('/avwap-pinch/update-progress', methods=['POST'])
+def avwap_pinch_update_progress():
+    """Update progress for AVWAP Pinch module"""
+    if not session.get('logged_in'):
+        return jsonify({'error': 'Not logged in'}), 401
+    
+    data = request.get_json()
+    step = data.get('step', 0)
+    quiz_scores = data.get('quiz_scores', {})
+    
+    # Session State aktualisieren
+    session['pinch_step'] = step
+    session['pinch_quiz_scores'] = quiz_scores
+    session.permanent = True
+    
+    return jsonify({'success': True, 'step': step})
+
 # Legacy Routes (kompatibel mit bestehender App)
 
 @app.route('/marktampel-allokation')
@@ -2582,6 +2615,20 @@ def migrate_didis_streamlit_modules():
             "difficulty_level": "advanced",
             "icon": "🎯",
             "sort_order": 16
+        },
+        {
+            "title": "The AVWAP Pinch",
+            "slug": "avwap-pinch",
+            "description": "Kapitel 5: Lerne den AVWAP Pinch zu erkennen und zu handeln - Energy and persistence conquer all things",
+            "category": "technische-analyse",
+            "content_type": "html",
+            "template_name": "avwap_pinch.html",
+            "required_subscription_levels": ["premium", "elite"],
+            "is_lead_magnet": False,
+            "estimated_duration": 120,
+            "difficulty_level": "advanced",
+            "icon": "🎯",
+            "sort_order": 17
         },
         {
             "title": "Trading Psychologie",

@@ -1,0 +1,1135 @@
+{% extends "base.html" %}
+
+{% block title %}The AVWAP Pinch - Trading-Strategie{% endblock %}
+
+{% block content %}
+<style>
+    /* AVWAP Pinch spezifische Styles */
+    .gamification-dashboard {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        margin: -20px -20px 2rem -20px;
+    }
+    
+    .section-title {
+        font-size: 28px;
+        font-weight: bold;
+        color: #1e40af;
+        margin: 2rem 0 1rem 0;
+        padding-bottom: 0.5rem;
+        border-bottom: 3px solid #0891b2;
+    }
+    
+    .concept-highlight {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border-left: 4px solid #0891b2;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    
+    .success-box {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border: 2px solid #28a745;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(40, 167, 69, 0.2);
+    }
+    
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+        border: 2px solid #ffc107;
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(255, 193, 7, 0.2);
+    }
+    
+    .trading-rule {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        border: 2px solid #059669;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 10px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .trading-rule::before {
+        content: "📈";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 30px;
+        opacity: 0.3;
+    }
+    
+    .chart-placeholder {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px dashed #6c757d;
+        padding: 3rem;
+        margin: 2rem 0;
+        border-radius: 10px;
+        text-align: center;
+        min-height: 400px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    
+    .chart-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin: 2rem 0;
+    }
+    
+    .next-button {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 2rem auto;
+        display: block;
+        transition: all 0.3s ease;
+    }
+    
+    .next-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+    }
+    
+    .key-takeaway {
+        background: white;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        border-left: 4px solid #28a745;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .quiz-section {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border: 2px solid #6c757d;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+    }
+    
+    .quiz-question {
+        margin: 1rem 0;
+    }
+    
+    .quiz-option {
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .quiz-option:hover {
+        background: #f8f9fa;
+        border-color: #0891b2;
+    }
+    
+    .quiz-option.selected {
+        background: #e0f2fe;
+        border-color: #0891b2;
+        font-weight: bold;
+    }
+    
+    .quiz-result {
+        padding: 1rem;
+        border-radius: 5px;
+        margin: 1rem 0;
+        font-weight: bold;
+    }
+    
+    .quiz-result.success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .quiz-result.warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+    }
+    
+    .progress-bar {
+        background: rgba(255,255,255,0.2);
+        height: 10px;
+        border-radius: 5px;
+        margin-top: 5px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        background: #10b981;
+        height: 100%;
+        border-radius: 5px;
+        transition: width 0.5s ease;
+    }
+    
+    .step-content {
+        display: none;
+    }
+    
+    .step-content.active {
+        display: block;
+        animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .completion-celebration {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 15px;
+        margin: 2rem 0;
+        text-align: center;
+    }
+    
+    .debug-controls {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 1000;
+        display: none;
+    }
+    
+    .debug-controls.active {
+        display: block;
+    }
+</style>
+
+<!-- Gamification Dashboard -->
+<div class="gamification-dashboard">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+        <div>
+            <h2 style="color: white; margin: 0;">📊 Chapter 5: The AVWAP Pinch</h2>
+            <p style="margin: 5px 0; opacity: 0.9;">"Energy and persistence conquer all things." - Benjamin Franklin</p>
+        </div>
+        <div style="text-align: right;">
+            <div style="font-size: 24px; font-weight: bold;">
+                Fortschritt: <span id="progress-text">0</span>/6 Schritte
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Debug Controls -->
+<div class="debug-controls" id="debug-controls">
+    <button onclick="toggleDebug()" style="margin-bottom: 10px;">🔧 Debug-Modus</button>
+    <div>
+        <label>Springe zu Schritt:</label>
+        <select id="debug-step-select" onchange="jumpToStep(this.value)">
+            <option value="0">0 - Start</option>
+            <option value="1">1 - Was ist ein Pinch?</option>
+            <option value="2">2 - Wie entsteht ein Pinch?</option>
+            <option value="3">3 - Wann einsteigen?</option>
+            <option value="4">4 - Risk Management</option>
+            <option value="5">5 - Praxisbeispiele</option>
+            <option value="6">6 - Key Takeaways</option>
+        </select>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="container">
+    <!-- Einleitung (immer sichtbar) -->
+    <div class="section-title">🎯 Lernziele dieses Kapitels</div>
+    
+    <div class="concept-highlight">
+        <h4>Was du lernen wirst:</h4>
+        <ul style="font-size: 16px; line-height: 1.8;">
+            <li>✅ Einen Pinch erkennen, während er sich bildet</li>
+            <li>✅ Wann du in einen Pinch einsteigen solltest</li>
+            <li>✅ Wer die Kontrolle über einen Pinch hat</li>
+            <li>✅ Warum ein Pinch kein Grund ist, eine Aktie zu kaufen oder zu shorten</li>
+            <li>✅ Wie du das Risiko managst, wenn eine Aktie aus einem engen Pinch ausbricht</li>
+        </ul>
+    </div>
+    
+    <!-- Schritt 0: Start -->
+    <div id="step-0" class="step-content active">
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Was ist ein AVWAP Pinch?</button>
+    </div>
+    
+    <!-- Schritt 1: Was ist ein AVWAP Pinch? -->
+    <div id="step-1" class="step-content">
+        <div class="section-title">📌 Was ist ein AVWAP Pinch?</div>
+        
+        <div class="concept-highlight">
+            <h4>🎯 Das Grundkonzept</h4>
+            <p style="font-size: 16px; line-height: 1.6;">
+            Ein <strong>AVWAP Pinch</strong> ist eine <strong>Kompression der Preisspanne</strong> zwischen zwei AVWAPs. 
+            Es ist ein Kampf zwischen Käufern und Verkäufern, bei dem die Energie komprimiert wird - 
+            wie eine Feder, die zusammengedrückt wird.
+            </p>
+        </div>
+        
+        <p><strong>🔍 Die Anatomie eines Pinch:</strong></p>
+        
+        <ol>
+            <li><strong>Längerfristiger Trend AVWAP</strong> - Repräsentiert den dominanten Trend</li>
+            <li><strong>Kurzfristiger Gegentrend AVWAP</strong> - Zeigt die aktuelle Korrektur</li>
+            <li><strong>Konvergierende Linien</strong> - Die beiden AVWAPs nähern sich an</li>
+            <li><strong>Energie-Kompression</strong> - Volumen und Range kontrahieren</li>
+            <li><strong>Ausbruch</strong> - Die komprimierte Energie wird freigesetzt</li>
+        </ol>
+        
+        <p><strong>💡 Kernprinzip:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        "Aktien, die aus einem Pinch ausbrechen, können einige der <strong>risikoärmsten, wahrscheinlichsten</strong> 
+        Trend-Fortsetzungs-Trades bieten."
+        </blockquote>
+        
+        <!-- Chart -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_TR.jpg') }}" 
+                 alt="AVWAP Pinch Grundkonzept" 
+                 class="chart-image"
+                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
+                AVWAP Pinch Grundkonzept - Zeigt zwei konvergierende AVWAPs mit Preisbewegung dazwischen
+            </p>
+        </div>
+        
+        <!-- Quiz für Schritt 1 -->
+        <div class="quiz-section">
+            <h3>🧠 Quiz: AVWAP Pinch verstehen</h3>
+            <div class="quiz-question">
+                <p><strong>Was ist ein AVWAP Pinch?</strong></p>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Eine Divergenz zwischen zwei AVWAPs</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="correct" onclick="selectQuizOption(this)">Eine Kompression der Preisspanne zwischen zwei AVWAPs</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Ein Breakout über AVWAP</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Ein Pinch zeigt:</strong></p>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Einen klaren Trend</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="correct" onclick="selectQuizOption(this)">Einen Kampf zwischen Käufern und Verkäufern</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Einen sicheren Kaufpunkt</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Die Energie in einem Pinch ist wie:</strong></p>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="correct" onclick="selectQuizOption(this)">Eine zusammengedrückte Feder</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Ein ruhiger See</div>
+                <div class="quiz-option" data-quiz="quiz1" data-answer="wrong" onclick="selectQuizOption(this)">Ein konstanter Fluss</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('quiz1', 3)">Antworten prüfen</button>
+            <div id="quiz1-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Wie entsteht ein Pinch?</button>
+    </div>
+    
+    <!-- Schritt 2: Wie entsteht ein Pinch? -->
+    <div id="step-2" class="step-content">
+        <div class="section-title">🔄 Wie entsteht ein Pinch?</div>
+        
+        <div class="warning-box">
+            <h4>⚡ Die Entstehung eines Pinch</h4>
+        </div>
+        
+        <p><strong>📊 Der Prozess Schritt für Schritt:</strong></p>
+        
+        <p><strong>1️⃣ Trends sind mehrdimensional</strong></p>
+        <ul>
+            <li>Es gibt Trends innerhalb von Trends</li>
+            <li>Ein längerfristiger Aufwärtstrend kann kurzfristige Pullbacks haben</li>
+            <li>Diese Counter-Trends bilden neue AVWAPs</li>
+        </ul>
+        
+        <p><strong>2️⃣ Die zwei AVWAP-Kräfte:</strong></p>
+        <ul>
+            <li><strong>Original AVWAP:</strong> Support/Resistance vom längerfristigen, kraftvolleren Trend</li>
+            <li><strong>Neuer AVWAP:</strong> Enthält Price Action vom Counter-Trend (Korrektur)</li>
+        </ul>
+        
+        <p><strong>3️⃣ Die Konvergenz:</strong></p>
+        <ul>
+            <li>Während sich die Range verengt, zeigt sich eine <strong>Energiekontraktion</strong></li>
+            <li>Die Aktie nähert sich einem <strong>Gleichgewichtszustand</strong></li>
+            <li>Trading-Volumen und Preisspanne kontrahieren gleichzeitig</li>
+        </ul>
+        
+        <p><strong>4️⃣ Die Psychologie:</strong></p>
+        
+        <div class="trading-rule">
+            <h4>🧠 Marktpsychologie im Pinch</h4>
+            <p style="color: #059669; font-size: 16px; line-height: 1.6;">
+            <strong>"Es gibt keinen Vorteil, in der Aktie involviert zu sein, während dieser Kampf andauert 
+            und die Aktie 'im Pinch' ist."</strong>
+            </p>
+            <p style="font-size: 16px; line-height: 1.6;">
+            Stattdessen wollen wir die Aktie beobachten für die <strong>Wiederkehr des primären Trends</strong>, 
+            damit wir teilnehmen können, wenn der kurzfristige Trend sich mit dem längeren, 
+            kraftvolleren Trend ausrichtet.
+            </p>
+        </div>
+        
+        <!-- Chart -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_BO.jpg') }}" 
+                 alt="Pinch-Entstehung mit Breakout" 
+                 class="chart-image"
+                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
+                Pinch-Entstehung und Breakout - Zeigt die schrittweise Konvergenz von zwei AVWAPs und den anschließenden Ausbruch
+            </p>
+        </div>
+        
+        <!-- Quiz für Schritt 2 -->
+        <div class="quiz-section">
+            <h3>🧠 Quiz: Pinch-Entstehung</h3>
+            <div class="quiz-question">
+                <p><strong>Während eines Pinch solltest du:</strong></p>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Sofort kaufen</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="correct" onclick="selectQuizOption(this)">Warten und beobachten</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Immer shorten</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Ein Pinch zeigt:</strong></p>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Klare Richtung</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="correct" onclick="selectQuizOption(this)">Gleichgewichtszustand</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Starken Trend</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Volumen während eines Pinch:</strong></p>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Steigt stark</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="correct" onclick="selectQuizOption(this)">Kontrahiert oft</div>
+                <div class="quiz-option" data-quiz="quiz2" data-answer="wrong" onclick="selectQuizOption(this)">Bleibt konstant</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('quiz2', 3)">Antworten prüfen</button>
+            <div id="quiz2-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Wann einsteigen?</button>
+    </div>
+    
+    <!-- Schritt 3: Wann einsteigen? -->
+    <div id="step-3" class="step-content">
+        <div class="section-title">⏰ Wann einsteigen?</div>
+        
+        <div class="success-box">
+            <h4>🎯 Der perfekte Einstiegszeitpunkt</h4>
+        </div>
+        
+        <p><strong>📈 Die goldene Regel:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        <strong>"Der ideale Zeitpunkt, eine Aktie zu kaufen, ist wenn sie aus einer engen Range ausbricht."</strong>
+        </blockquote>
+        
+        <p><strong>Warum das so wichtig ist:</strong></p>
+        
+        <p><strong>1️⃣ Zwei entscheidende Vorteile:</strong></p>
+        <ul>
+            <li><strong>Maximales Gewinnpotenzial:</strong> Du steigst ein, genau wenn der Trend beginnt</li>
+            <li><strong>Minimales Risiko:</strong> Wenn der Ausbruch scheitert, kannst du den Stop eng setzen</li>
+        </ul>
+        
+        <p><strong>2️⃣ Der Ausbruchsprozess:</strong></p>
+        <ol>
+            <li><strong>Beobachte</strong> die Aktie im Pinch</li>
+            <li><strong>Setze Alerts</strong> für den Ausbruch</li>
+            <li><strong>Warte auf Bestätigung</strong> - Preis muss aus der Range ausbrechen</li>
+            <li><strong>Kaufe</strong> beim bestätigten Ausbruch</li>
+            <li><strong>Setze Stop</strong> knapp unter dem Ausbruchsniveau</li>
+        </ol>
+        
+        <div class="warning-box">
+            <h4>⚠️ Wichtige Warnung</h4>
+            <p style="font-size: 16px; line-height: 1.6;">
+            <strong>Ein AVWAP Pinch wird höchstwahrscheinlich in Richtung des primären Trends ausbrechen.</strong>
+            Je enger der Pinch, desto wahrscheinlicher ist ein kraftvoller Ausbruch.
+            </p>
+            <p style="font-size: 16px; line-height: 1.6; color: #dc2626;">
+            <strong>ABER:</strong> Nicht alle Pinches lösen sich in Richtung des primären Trends auf, 
+            weshalb wir auf Preisbestätigung warten, bevor wir einsteigen.
+            </p>
+        </div>
+        
+        <!-- Chart -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_Touch_Off.jpg') }}" 
+                 alt="Pinch-Ausbruch mit Entry und Stop" 
+                 class="chart-image"
+                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
+                Pinch-Ausbruch mit Entry und Stop - Zeigt den Ausbruch aus dem Pinch mit markiertem Einstiegspunkt und Stop-Loss
+            </p>
+        </div>
+        
+        <!-- Quiz für Schritt 3 -->
+        <div class="quiz-section">
+            <h3>🧠 Quiz: Trading-Timing</h3>
+            <div class="quiz-question">
+                <p><strong>Der beste Zeitpunkt zum Kaufen ist:</strong></p>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Im Pinch</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="correct" onclick="selectQuizOption(this)">Beim Ausbruch aus dem Pinch</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Nach dem Pinch</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Warum warten wir auf den Ausbruch?</strong></p>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Für Spannung</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="correct" onclick="selectQuizOption(this)">Für bestes Risiko/Gewinn-Verhältnis</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Aus Tradition</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Wo setzen wir den Stop-Loss?</strong></p>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Weit weg</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="correct" onclick="selectQuizOption(this)">Knapp unter dem Ausbruchsniveau</div>
+                <div class="quiz-option" data-quiz="quiz3" data-answer="wrong" onclick="selectQuizOption(this)">Gar nicht</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('quiz3', 3)">Antworten prüfen</button>
+            <div id="quiz3-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Risk Management</button>
+    </div>
+    
+    <!-- Schritt 4: Risk Management -->
+    <div id="step-4" class="step-content">
+        <div class="section-title">🛡️ Risk Management mit dem Pinch</div>
+        
+        <div class="trading-rule">
+            <h4>📊 R-Multiple Strategie</h4>
+            <p style="color: #059669; font-size: 16px; line-height: 1.6;">
+            Wenn eine Aktie aus einem engen Pinch ausbricht, können wir <strong>enge Stops halten</strong> 
+            und <strong>mehr Anteile</strong> mit dem R-Multiple at Risk handeln.
+            </p>
+        </div>
+        
+        <p><strong>🎯 Stop-Loss Regeln:</strong></p>
+        
+        <p><strong>Für Long-Positionen:</strong></p>
+        <ul>
+            <li>Stop <strong>unter</strong> dem jüngsten und relevantesten <strong>Higher-Low</strong></li>
+            <li>Je enger der Stop, desto größer kann die Position sein (bei konstantem R)</li>
+        </ul>
+        
+        <p><strong>Für Short-Positionen:</strong></p>
+        <ul>
+            <li>Stop <strong>über</strong> dem jüngsten <strong>Lower-High</strong></li>
+            <li>Gleiche Logik: Enger Stop = Größere Position möglich</li>
+        </ul>
+        
+        <p><strong>📈 Die Trend-Definition:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        "Die simple Definition eines Trends sagt uns, wo wir Gelegenheiten kaufen sollten: 
+        in <strong>Aufwärtstrends</strong> und short in <strong>Abwärtstrends</strong>."
+        </blockquote>
+        
+        <p><strong>⚠️ Häufiger Fehler:</strong></p>
+        <p>Viele Trader kämpfen gegen diesen gesunden Menschenverstand:</p>
+        <ul>
+            <li>Sie versuchen, Aktien in Abwärtstrends zu kaufen (irrational verankert an frühere Preise)</li>
+            <li>Sie sehen es als "Schnäppchen" während die Preise fallen</li>
+            <li>Sie versuchen, Aktien zu shorten, die "zu viel" gestiegen sind</li>
+        </ul>
+        
+        <p><strong>✅ Die richtige Einstellung:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        "Umarme die höhere Wahrscheinlichkeit (und niedrigeren Stress) Gewinne, die kommen, 
+        wenn man dem Trend folgt."
+        </blockquote>
+        
+        <div class="success-box">
+            <h4>💡 Stop-Management während des Trades</h4>
+        </div>
+        
+        <p><strong>Nach dem Einstieg:</strong></p>
+        
+        <ol>
+            <li><strong>Initial Stop:</strong> Knapp unter dem Ausbruchsniveau</li>
+            <li><strong>Bei neuem High:</strong> Stop auf vorheriges Higher-Low anheben</li>
+            <li><strong>Teilverkauf:</strong> Bei starken Bewegungen Teil der Position verkaufen</li>
+            <li><strong>Rest-Position:</strong> Stop auf Break-Even oder besser anheben</li>
+            <li><strong>Trend folgen:</strong> Stop nachziehen mit jedem neuen Higher-Low</li>
+        </ol>
+        
+        <p><strong>📊 Reales Trading-Beispiel (NBIS):</strong></p>
+        <ul>
+            <li><strong>Einstieg:</strong> $90.00 nach Pinch-Ausbruch</li>
+            <li><strong>Alternative:</strong> Zweiter Einstieg bei "Handoff" Pull Back $90.40</li>
+            <li><strong>Initial Stop:</strong> $86.11 (Risiko: $3.89 pro Aktie)</li>
+            <li><strong>Teilgewinn:</strong> Bei HOD $98.00 → Hälfte verkaufen (+8.89% Gewinn)</li>
+            <li><strong>Stop-Anpassung:</strong> Stop auf $90.00 anheben (Break-Even für Rest-Position)</li>
+            <li><strong>Resultat:</strong> Risikofreier Trade mit bereits realisiertem Teilgewinn</li>
+        </ul>
+        
+        <h3>📊 Live Chart-Beispiel:</h3>
+        
+        <!-- Chart -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_TR.jpg') }}" 
+                 alt="Stop-Management Beispiel" 
+                 class="chart-image"
+                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
+                Stop-Management Beispiel - Realer Trade mit Einstieg, Initial Stop und Teilgewinn-Management
+            </p>
+        </div>
+        
+        <!-- Quiz für Schritt 4 -->
+        <div class="quiz-section">
+            <h3>🧠 Quiz: Risk Management</h3>
+            <div class="quiz-question">
+                <p><strong>Je enger der Pinch, desto:</strong></p>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Größer das Risiko</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="correct" onclick="selectQuizOption(this)">Kleiner kann der Stop sein</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Unwichtiger der Trade</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Bei einem neuen High solltest du:</strong></p>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Sofort verkaufen</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="correct" onclick="selectQuizOption(this)">Stop nachziehen</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Stop belassen</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Die beste Strategie ist:</strong></p>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Gegen den Trend handeln</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="correct" onclick="selectQuizOption(this)">Dem Trend folgen</div>
+                <div class="quiz-option" data-quiz="quiz4" data-answer="wrong" onclick="selectQuizOption(this)">Trend ignorieren</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('quiz4', 3)">Antworten prüfen</button>
+            <div id="quiz4-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Praxisbeispiele</button>
+    </div>
+    
+    <!-- Schritt 5: Praxisbeispiele -->
+    <div id="step-5" class="step-content">
+        <div class="section-title">📊 Praxisbeispiele</div>
+        
+        <div class="concept-highlight">
+            <h4>Chart 5.2: 30-Minuten Chart mit Pinch</h4>
+        </div>
+        
+        <!-- Chart -->
+        <div style="text-align: center; margin: 2rem 0;">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_BO.jpg') }}" 
+                 alt="30-Minuten Pinch Chart" 
+                 class="chart-image"
+                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
+                Chart 5.2 - 30-Minuten Pinch mit schrittweiser Analyse und Breakout-Bestätigung
+            </p>
+        </div>
+        
+        <p><strong>📖 Schritt-für-Schritt Analyse:</strong></p>
+        
+        <ol>
+            <li><strong>Initial AVWAP (1):</strong> Beginn des primären Trends</li>
+            <li><strong>VWAP from High (2):</strong> Pullback beginnt, neuer AVWAP startet</li>
+            <li><strong>Buy Point (3):</strong> Erste Kaufgelegenheit identifiziert</li>
+            <li><strong>Protective Stop (4):</strong> Initial Stop unter Support</li>
+            <li><strong>Higher High (5):</strong> Bestätigung des Aufwärtstrends</li>
+            <li><strong>Initial Stop (6):</strong> Stop-Loss Position</li>
+            <li><strong>New High (7):</strong> Stop auf (8) anheben</li>
+            <li><strong>New Stop 1 (8):</strong> Angehobener Stop nach Higher-Low</li>
+            <li><strong>Another New High (9):</strong> Weiterer Fortschritt</li>
+            <li><strong>New Stop 2 (10):</strong> Final angehobener Stop</li>
+        </ol>
+        
+        <p><strong>💡 Wichtige Beobachtung:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        "Beachte, wie die Aktie nicht sofort höheres Momentum fand. Wenn die Aktie den Initial Stop 
+        nicht verletzt (in diesem Fall bei 6), gib der Aktie die Gelegenheit zu arbeiten."
+        </blockquote>
+        
+        <p><strong>🎯 Trading-Tipp:</strong></p>
+        <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+        "Ein starker Move wie dieser ist oft eine exzellente Gelegenheit, einen Teil der Aktie zu verkaufen 
+        und dann den Stop auf dem Rest auf das Higher-Low anzuheben."
+        </blockquote>
+        
+        <!-- Quiz für Schritt 5 -->
+        <div class="quiz-section">
+            <h3>🧠 Quiz: Praxisanwendung</h3>
+            <div class="quiz-question">
+                <p><strong>Was machst du bei einem starken Anstieg nach Pinch-Ausbruch?</strong></p>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Alles verkaufen</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="correct" onclick="selectQuizOption(this)">Teilverkauf und Stop anheben</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Nichts</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Wenn die Aktie den Initial Stop nicht verletzt:</strong></p>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Sofort verkaufen</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="correct" onclick="selectQuizOption(this)">Der Aktie Zeit geben</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Stop entfernen</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Bei jedem neuen Higher-High:</strong></p>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Stop belassen</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="correct" onclick="selectQuizOption(this)">Stop auf vorheriges Higher-Low anheben</div>
+                <div class="quiz-option" data-quiz="quiz5" data-answer="wrong" onclick="selectQuizOption(this)">Verkaufen</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('quiz5', 3)">Antworten prüfen</button>
+            <div id="quiz5-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <button class="next-button" onclick="nextStep()">✅ Verstanden - Weiter zu: Key Takeaways</button>
+    </div>
+    
+    <!-- Schritt 6: Key Takeaways -->
+    <div id="step-6" class="step-content">
+        <div class="section-title">🎯 Key Takeaways</div>
+        
+        <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #28a745;">
+            <h2 style="text-align: center; color: #155724; margin-bottom: 1.5rem;">📋 DIE WICHTIGSTEN ERKENNTNISSE</h2>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>1.</strong> Ein AVWAP Pinch ist eine <strong>Verengung der Preisspanne</strong>.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>2.</strong> Der Ausbruch aus dem Pinch führt oft zu <strong>exzellenten Trend-Trades</strong>.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>3.</strong> Der Aktionspunkt eines AVWAP Pinch ist, wenn er <strong>aus seiner Konsolidierung ausbricht</strong>.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>4.</strong> Der ideale Zeitpunkt, eine Aktie zu kaufen, ist beim <strong>Ausbruch aus einer engen Range</strong>. Der frühe Einstieg in einen entstehenden Trend gibt uns zwei Vorteile: <strong>Maximales Gewinnpotenzial</strong> und <strong>minimales Risiko</strong> durch enge Stops.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>5.</strong> Es ist wichtiger, die <strong>Psychologie</strong> zu verstehen, wie ein Pinch entsteht, als einfach nur Muster zu erkennen.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>6.</strong> Nicht alle Pinches lösen sich in Richtung des primären Trends auf, weshalb wir auf <strong>Preisbestätigung warten</strong>, bevor wir einsteigen.</p>
+        </div>
+        
+        <div class="key-takeaway">
+            <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>7.</strong> AVWAP Pinches entstehen und sind <strong>auf allen Zeitrahmen handelbar</strong>.</p>
+        </div>
+        
+        <!-- Abschluss-Quiz -->
+        <div class="section-title">🏆 Abschluss-Quiz</div>
+        
+        <div class="quiz-section">
+            <h3>📝 Finales Quiz - Teste dein Gesamtverständnis</h3>
+            
+            <div class="quiz-question">
+                <p><strong>Ein AVWAP Pinch zeigt:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Einen klaren Kauf</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Eine Energie-Kompression</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Einen Verkauf</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Der beste Einstiegszeitpunkt ist:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Im Pinch</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Beim bestätigten Ausbruch</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Nach dem Pinch</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Je enger der Pinch:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Desto unwichtiger</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Desto kraftvoller der potenzielle Ausbruch</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Desto riskanter</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Risk Management bedeutet:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Große Stops</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Enge Stops mit R-Multiple</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Keine Stops</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>AVWAP Pinches funktionieren:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Nur auf Tages-Charts</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Auf allen Zeitrahmen</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Nur intraday</div>
+            </div>
+            
+            <div class="quiz-question">
+                <p><strong>Die wichtigste Regel ist:</strong></p>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Sofort kaufen</div>
+                <div class="quiz-option" data-quiz="final" data-answer="correct" onclick="selectQuizOption(this)">Auf Preisbestätigung warten</div>
+                <div class="quiz-option" data-quiz="final" data-answer="wrong" onclick="selectQuizOption(this)">Immer shorten</div>
+            </div>
+            
+            <button class="btn" onclick="checkQuiz('final', 6)">🏆 Finale Antworten prüfen</button>
+            <div id="final-result" class="quiz-result" style="display: none;"></div>
+        </div>
+        
+        <!-- Kapitel-Abschluss -->
+        <div class="completion-celebration" id="completion-celebration" style="display: none;">
+            <h2 style="color: white; margin: 0 0 1rem 0;">🎉 Kapitel 5 Abgeschlossen!</h2>
+            <h3 style="color: white; margin: 0 0 1rem 0;">"The AVWAP Pinch"</h3>
+            <p style="font-size: 18px; margin: 0;">
+            Du hast erfolgreich alle Aspekte des AVWAP Pinch gemeistert!
+            </p>
+        </div>
+        
+        <div id="completion-summary" style="display: none;">
+            <p><strong>🏆 Was du gelernt hast:</strong></p>
+            <ul>
+                <li>✅ Einen Pinch erkennen und verstehen</li>
+                <li>✅ Den perfekten Einstiegszeitpunkt identifizieren</li>
+                <li>✅ Risk Management mit engen Stops</li>
+                <li>✅ Die Psychologie hinter dem Pinch</li>
+                <li>✅ Praktische Anwendung auf allen Zeitrahmen</li>
+            </ul>
+            
+            <p><strong>🚀 Nächste Schritte:</strong></p>
+            <ol>
+                <li>Übe das Erkennen von Pinches auf verschiedenen Charts</li>
+                <li>Setze Alerts für potenzielle Pinch-Ausbrüche</li>
+                <li>Führe ein Trading-Journal für deine Pinch-Trades</li>
+                <li>Analysiere erfolgreiche und gescheiterte Pinches</li>
+            </ol>
+            
+            <p><strong>💡 Denke daran:</strong></p>
+            <blockquote style="font-style: italic; color: #059669; font-size: 16px; margin: 1rem 0; padding-left: 1rem; border-left: 3px solid #059669;">
+            "Energy and persistence conquer all things." - Benjamin Franklin
+            </blockquote>
+            
+            <p>Der AVWAP Pinch ist ein kraftvolles Tool, aber wie alle Trading-Strategien erfordert er 
+            <strong>Geduld</strong>, <strong>Disziplin</strong> und <strong>kontinuierliches Lernen</strong>.</p>
+        </div>
+    </div>
+    
+    <!-- Reset und Quiz-Zusammenfassung -->
+    <div id="controls-section" style="display: none;">
+        <hr style="margin: 2rem 0;">
+        <button class="btn secondary" onclick="resetModule()">🔄 Kapitel neu starten</button>
+        
+        <div id="quiz-summary" style="margin-top: 2rem;">
+            <h3>📊 Deine Quiz-Ergebnisse:</h3>
+            <div class="progress-bar" style="margin: 1rem 0;">
+                <div class="progress-fill" id="quiz-progress-fill" style="width: 0%;"></div>
+            </div>
+            <p id="quiz-summary-text"><strong>Gesamtpunktzahl: 0/0 (0%)</strong></p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Session State Management
+let currentStep = {{ session.get('pinch_step', 0) }};
+let quizScores = {{ session.get('pinch_quiz_scores', {}) | tojson }};
+let debugMode = false;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    updateProgress();
+    showCurrentStep();
+    updateQuizSummary();
+});
+
+// Progress Management
+function updateProgress() {
+    const progressText = document.getElementById('progress-text');
+    const progressFill = document.getElementById('progress-fill');
+    
+    if (progressText && progressFill) {
+        progressText.textContent = currentStep;
+        const percentage = (currentStep / 6) * 100;
+        progressFill.style.width = percentage + '%';
+    }
+}
+
+function showCurrentStep() {
+    // Hide all steps
+    const allSteps = document.querySelectorAll('.step-content');
+    allSteps.forEach(step => {
+        step.classList.remove('active');
+    });
+    
+    // Show steps up to current step
+    for (let i = 0; i <= currentStep; i++) {
+        const step = document.getElementById(`step-${i}`);
+        if (step) {
+            step.classList.add('active');
+        }
+    }
+    
+    // Show controls if we're past step 0
+    if (currentStep > 0) {
+        const controlsSection = document.getElementById('controls-section');
+        if (controlsSection) {
+            controlsSection.style.display = 'block';
+        }
+    }
+    
+    // Show completion elements if we're at step 6
+    if (currentStep >= 6) {
+        const celebration = document.getElementById('completion-celebration');
+        const summary = document.getElementById('completion-summary');
+        if (celebration) celebration.style.display = 'block';
+        if (summary) summary.style.display = 'block';
+    }
+}
+
+// Step Navigation
+function nextStep() {
+    if (currentStep < 6) {
+        currentStep++;
+        updateProgress();
+        showCurrentStep();
+        saveProgress();
+        
+        // Scroll to new content
+        setTimeout(() => {
+            const newStep = document.getElementById(`step-${currentStep}`);
+            if (newStep) {
+                newStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 100);
+    }
+}
+
+function jumpToStep(step) {
+    currentStep = parseInt(step);
+    updateProgress();
+    showCurrentStep();
+    saveProgress();
+}
+
+// Quiz Management
+function selectQuizOption(element) {
+    const quizName = element.getAttribute('data-quiz');
+    const siblings = document.querySelectorAll(`[data-quiz="${quizName}"]`);
+    
+    // Remove selection from siblings
+    siblings.forEach(sibling => {
+        sibling.classList.remove('selected');
+    });
+    
+    // Add selection to clicked element
+    element.classList.add('selected');
+}
+
+function checkQuiz(quizName, totalQuestions) {
+    const selectedOptions = document.querySelectorAll(`[data-quiz="${quizName}"].selected`);
+    let score = 0;
+    
+    selectedOptions.forEach(option => {
+        if (option.getAttribute('data-answer') === 'correct') {
+            score++;
+        }
+    });
+    
+    // Store score
+    quizScores[quizName] = score;
+    
+    // Show result
+    const resultDiv = document.getElementById(`${quizName}-result`);
+    if (resultDiv) {
+        resultDiv.style.display = 'block';
+        
+        let message = '';
+        let className = '';
+        
+        if (score === totalQuestions) {
+            message = `🎉 Perfekt! Du hast ${score}/${totalQuestions} Punkten!`;
+            className = 'success';
+            
+            // Special celebration for final quiz
+            if (quizName === 'final') {
+                // Add confetti effect
+                setTimeout(() => {
+                    createConfetti();
+                }, 500);
+            }
+        } else if (score >= Math.ceil(totalQuestions * 0.67)) {
+            message = `👍 Gut gemacht! Du hast ${score}/${totalQuestions} Punkten!`;
+            className = 'success';
+        } else {
+            message = `📖 Du hast ${score}/${totalQuestions} Punkten. Wiederhole nochmal die Konzepte.`;
+            className = 'warning';
+        }
+        
+        resultDiv.textContent = message;
+        resultDiv.className = `quiz-result ${className}`;
+    }
+    
+    updateQuizSummary();
+    saveProgress();
+}
+
+function updateQuizSummary() {
+    const summaryDiv = document.getElementById('quiz-summary');
+    if (!summaryDiv) return;
+    
+    let totalScore = 0;
+    let totalPossible = 0;
+    
+    Object.keys(quizScores).forEach(quizName => {
+        totalScore += quizScores[quizName];
+        if (quizName === 'final') {
+            totalPossible += 6; // Final quiz has 6 questions
+        } else {
+            totalPossible += 3; // Regular quizzes have 3 questions
+        }
+    });
+    
+    const percentage = totalPossible > 0 ? (totalScore / totalPossible) * 100 : 0;
+    
+    const progressFill = document.getElementById('quiz-progress-fill');
+    const summaryText = document.getElementById('quiz-summary-text');
+    
+    if (progressFill) {
+        progressFill.style.width = percentage + '%';
+    }
+    
+    if (summaryText) {
+        summaryText.innerHTML = `<strong>Gesamtpunktzahl: ${totalScore}/${totalPossible} (${percentage.toFixed(1)}%)</strong>`;
+    }
+}
+
+// Save progress to server
+function saveProgress() {
+    fetch('/avwap-pinch/update-progress', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            step: currentStep,
+            quiz_scores: quizScores
+        })
+    })
+    .catch(error => {
+        console.error('Error saving progress:', error);
+    });
+}
+
+// Reset module
+function resetModule() {
+    if (confirm('Möchtest du wirklich das Kapitel neu starten? Alle Fortschritte gehen verloren.')) {
+        currentStep = 0;
+        quizScores = {};
+        updateProgress();
+        showCurrentStep();
+        updateQuizSummary();
+        saveProgress();
+        
+        // Reset all quiz selections
+        document.querySelectorAll('.quiz-option.selected').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        // Hide all quiz results
+        document.querySelectorAll('.quiz-result').forEach(result => {
+            result.style.display = 'none';
+        });
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Debug Mode
+function toggleDebug() {
+    debugMode = !debugMode;
+    const debugControls = document.getElementById('debug-controls');
+    if (debugControls) {
+        debugControls.classList.toggle('active', debugMode);
+    }
+}
+
+// Confetti effect for completion
+function createConfetti() {
+    const colors = ['#f43f5e', '#10b981', '#3b82f6', '#f59e0b', '#8b5cf6'];
+    const confettiCount = 50;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        confetti.style.borderRadius = '50%';
+        
+        document.body.appendChild(confetti);
+        
+        // Animate confetti falling
+        const animation = confetti.animate([
+            { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+            { transform: `translateY(100vh) rotate(720deg)`, opacity: 0 }
+        ], {
+            duration: 3000 + Math.random() * 2000,
+            easing: 'cubic-bezier(0.5, 0, 0.5, 1)'
+        });
+        
+        animation.onfinish = () => {
+            confetti.remove();
+        };
+    }
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (debugMode) {
+        if (e.key === 'ArrowRight' && currentStep < 6) {
+            nextStep();
+        } else if (e.key === 'ArrowLeft' && currentStep > 0) {
+            currentStep--;
+            updateProgress();
+            showCurrentStep();
+            saveProgress();
+        }
+    }
+});
+</script>
+
+{% endblock %}
