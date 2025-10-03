@@ -102,10 +102,12 @@
         </div>
     </div>
     
+    {% if session.get('logged_in') and session.get('username') == 'admin' %}
     <div class="text-center" style="margin: 30px 0;">
         <a href="https://didis-trading-club.streamlit.app/" target="_blank" rel="noopener" class="btn secondary">
             🚀 Zur Streamlit-App
         </a>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
