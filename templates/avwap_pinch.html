@@ -4,228 +4,477 @@
 
 {% block content %}
 <style>
-    /* AVWAP Pinch spezifische Styles */
+    /* AVWAP Pinch - Didis Design-System */
+    
+    /* Gamification Dashboard - Premium Gold Design */
     .gamification-dashboard {
         position: sticky;
         top: 0;
         z-index: 100;
-        background: linear-gradient(135deg, #1e40af 0%, #0891b2 100%);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--gold-dark) 100%);
         color: white;
-        padding: 15px 20px;
+        padding: 20px;
         border-radius: 0 0 12px 12px;
-        box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
         margin: -20px -20px 2rem -20px;
     }
     
+    .gamification-dashboard h2 {
+        color: var(--gold-light);
+        margin: 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+    
+    .gamification-dashboard p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 5px 0;
+        font-style: italic;
+    }
+    
+    /* Section Titles - Gold Accent */
     .section-title {
-        font-size: 28px;
+        font-size: 2rem;
         font-weight: bold;
-        color: #1e40af;
+        color: var(--primary-dark);
         margin: 2rem 0 1rem 0;
         padding-bottom: 0.5rem;
-        border-bottom: 3px solid #0891b2;
+        border-bottom: 3px solid var(--gold-classic);
+        position: relative;
     }
     
+    .section-title::after {
+        content: '';
+        position: absolute;
+        bottom: -3px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: var(--gold-light);
+    }
+    
+    /* Concept Highlight - Premium Design */
     .concept-highlight {
-        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
-        border-left: 4px solid #0891b2;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    
-    .success-box {
-        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-        border: 2px solid #28a745;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(40, 167, 69, 0.2);
-    }
-    
-    .warning-box {
-        background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
-        border: 2px solid #ffc107;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        border-radius: 10px;
-        box-shadow: 0 3px 10px rgba(255, 193, 7, 0.2);
-    }
-    
-    .trading-rule {
-        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
-        border: 2px solid #059669;
-        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--bg-card) 0%, #f8f9fa 100%);
+        border-left: 4px solid var(--gold-classic);
+        padding: 2rem;
         margin: 2rem 0;
-        border-radius: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        position: relative;
+    }
+    
+    .concept-highlight::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--gold-dark), var(--gold-classic), var(--gold-light));
+        border-radius: 12px 12px 0 0;
+    }
+    
+    .concept-highlight h4 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    /* Success Box - Grün mit Gold-Akzenten */
+    .success-box {
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        border: 2px solid var(--success);
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(5, 150, 105, 0.1);
+        position: relative;
+    }
+    
+    .success-box h4 {
+        color: var(--success);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    /* Warning Box - Orange mit Gold-Harmonie */
+    .warning-box {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        border: 2px solid var(--warning);
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(214, 158, 46, 0.1);
+        position: relative;
+    }
+    
+    .warning-box h4 {
+        color: var(--warning);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    /* Trading Rule - Premium Gold Design */
+    .trading-rule {
+        background: linear-gradient(135deg, var(--gold-light) 0%, #f9f7e8 100%);
+        border: 2px solid var(--gold-classic);
+        padding: 2rem;
+        margin: 2rem 0;
+        border-radius: 12px;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 20px rgba(218, 165, 32, 0.15);
     }
     
     .trading-rule::before {
         content: "📈";
         position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 30px;
+        top: 15px;
+        right: 15px;
+        font-size: 2rem;
         opacity: 0.3;
     }
     
-    .chart-placeholder {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border: 2px dashed #6c757d;
-        padding: 3rem;
+    .trading-rule h4 {
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+    
+    /* Chart Container - Premium Design */
+    .chart-container {
+        background: var(--bg-card);
+        padding: 2rem;
         margin: 2rem 0;
-        border-radius: 10px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         text-align: center;
-        min-height: 400px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
+        border: 1px solid #e0e0e0;
     }
     
     .chart-image {
         max-width: 100%;
         height: auto;
-        border-radius: 10px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        margin: 2rem 0;
+        border-radius: 12px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        margin: 1rem 0;
+        transition: transform 0.3s ease;
     }
     
+    .chart-image:hover {
+        transform: scale(1.02);
+    }
+    
+    .chart-caption {
+        color: #666;
+        font-size: 0.9rem;
+        font-style: italic;
+        margin-top: 1rem;
+        line-height: 1.4;
+    }
+    
+    /* Next Button - Premium Gold Design */
     .next-button {
-        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold-classic) 100%);
         color: white;
-        padding: 1rem 2rem;
+        padding: 1.2rem 2.5rem;
         border: none;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: bold;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
         cursor: pointer;
         margin: 2rem auto;
         display: block;
         transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+        text-transform: none;
     }
     
     .next-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(5, 150, 105, 0.3);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+        background: linear-gradient(135deg, var(--gold-classic) 0%, var(--gold-light) 100%);
+        color: var(--primary-dark);
     }
     
+    /* Key Takeaways - Premium Design */
     .key-takeaway {
-        background: white;
-        padding: 1rem;
-        margin: 0.5rem 0;
-        border-left: 4px solid #28a745;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        background: var(--bg-card);
+        padding: 1.5rem;
+        margin: 1rem 0;
+        border-left: 4px solid var(--gold-classic);
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
     }
     
+    .key-takeaway:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .key-takeaway p {
+        margin: 0;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--primary-dark);
+    }
+    
+    /* Quiz Section - Premium Design */
     .quiz-section {
-        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-        border: 2px solid #6c757d;
-        border-radius: 10px;
-        padding: 1.5rem;
+        background: linear-gradient(135deg, var(--bg-card) 0%, #f8f9fa 100%);
+        border: 2px solid var(--gold-classic);
+        border-radius: 12px;
+        padding: 2rem;
         margin: 2rem 0;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .quiz-section h3 {
+        color: var(--primary-dark);
+        margin-bottom: 1.5rem;
+        font-size: 1.4rem;
     }
     
     .quiz-question {
-        margin: 1rem 0;
+        margin: 1.5rem 0;
+    }
+    
+    .quiz-question p {
+        font-weight: 600;
+        color: var(--primary-dark);
+        margin-bottom: 1rem;
+        font-size: 1.1rem;
     }
     
     .quiz-option {
-        margin: 0.5rem 0;
-        padding: 0.5rem;
-        background: white;
-        border: 1px solid #dee2e6;
-        border-radius: 5px;
+        margin: 0.8rem 0;
+        padding: 1rem 1.5rem;
+        background: var(--bg-card);
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        font-size: 1rem;
+        line-height: 1.4;
     }
     
     .quiz-option:hover {
         background: #f8f9fa;
-        border-color: #0891b2;
+        border-color: var(--gold-classic);
+        transform: translateX(5px);
     }
     
     .quiz-option.selected {
-        background: #e0f2fe;
-        border-color: #0891b2;
-        font-weight: bold;
+        background: linear-gradient(135deg, var(--gold-light) 0%, #f9f7e8 100%);
+        border-color: var(--gold-classic);
+        font-weight: 600;
+        color: var(--primary-dark);
     }
     
+    /* Quiz Results */
     .quiz-result {
-        padding: 1rem;
-        border-radius: 5px;
-        margin: 1rem 0;
-        font-weight: bold;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        font-weight: 600;
+        font-size: 1.1rem;
     }
     
     .quiz-result.success {
-        background: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
+        background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+        color: var(--success);
+        border: 2px solid var(--success);
     }
     
     .quiz-result.warning {
-        background: #fff3cd;
-        color: #856404;
-        border: 1px solid #ffeeba;
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        color: var(--warning);
+        border: 2px solid var(--warning);
     }
     
+    /* Progress Bar - Gold Design */
     .progress-bar {
-        background: rgba(255,255,255,0.2);
-        height: 10px;
-        border-radius: 5px;
-        margin-top: 5px;
+        background: rgba(255, 255, 255, 0.3);
+        height: 12px;
+        border-radius: 6px;
+        margin-top: 10px;
         overflow: hidden;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     
     .progress-fill {
-        background: #10b981;
+        background: linear-gradient(90deg, var(--gold-classic), var(--gold-light));
         height: 100%;
-        border-radius: 5px;
-        transition: width 0.5s ease;
+        border-radius: 6px;
+        transition: width 0.8s ease;
+        box-shadow: 0 2px 4px rgba(218, 165, 32, 0.3);
     }
     
+    /* Step Content Animation */
     .step-content {
         display: none;
     }
     
     .step-content.active {
         display: block;
-        animation: fadeIn 0.5s ease-in;
+        animation: fadeInUp 0.6s ease-out;
     }
     
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(20px); }
-        to { opacity: 1; transform: translateY(0); }
+    @keyframes fadeInUp {
+        from { 
+            opacity: 0; 
+            transform: translateY(30px); 
+        }
+        to { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
     }
     
+    /* Completion Celebration - Premium Design */
     .completion-celebration {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--gold-dark) 100%);
         color: white;
-        padding: 2rem;
+        padding: 3rem 2rem;
         border-radius: 15px;
-        margin: 2rem 0;
+        margin: 3rem 0;
         text-align: center;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow: hidden;
     }
     
+    .completion-celebration::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        animation: shimmer 2s infinite;
+    }
+    
+    @keyframes shimmer {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+    
+    .completion-celebration h2 {
+        color: var(--gold-light);
+        margin: 0 0 1rem 0;
+        font-size: 2.2rem;
+    }
+    
+    .completion-celebration h3 {
+        color: white;
+        margin: 0 0 1rem 0;
+        font-size: 1.5rem;
+    }
+    
+    /* Debug Controls - Minimal Design */
     .debug-controls {
         position: fixed;
         top: 10px;
         right: 10px;
-        background: rgba(0,0,0,0.8);
+        background: rgba(26, 26, 26, 0.95);
         color: white;
-        padding: 10px;
-        border-radius: 5px;
+        padding: 15px;
+        border-radius: 8px;
         z-index: 1000;
         display: none;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        border: 1px solid var(--gold-dark);
     }
     
     .debug-controls.active {
         display: block;
+    }
+    
+    .debug-controls button {
+        background: var(--gold-dark);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+    }
+    
+    .debug-controls select {
+        background: var(--primary-medium);
+        color: white;
+        border: 1px solid var(--gold-dark);
+        padding: 5px;
+        border-radius: 4px;
+        font-size: 0.9rem;
+    }
+    
+    /* Blockquotes - Premium Style */
+    blockquote {
+        background: linear-gradient(135deg, #f8f9fa 0%, var(--bg-card) 100%);
+        border-left: 4px solid var(--gold-classic);
+        padding: 1.5rem 2rem;
+        margin: 2rem 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+        color: var(--primary-dark);
+        font-size: 1.1rem;
+        line-height: 1.6;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* Lists - Enhanced Style */
+    ol, ul {
+        padding-left: 2rem;
+        line-height: 1.8;
+    }
+    
+    li {
+        margin: 0.5rem 0;
+        color: var(--primary-dark);
+    }
+    
+    li strong {
+        color: var(--gold-dark);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .gamification-dashboard {
+            margin: -20px -10px 2rem -10px;
+            padding: 15px;
+        }
+        
+        .gamification-dashboard > div {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .section-title {
+            font-size: 1.6rem;
+        }
+        
+        .concept-highlight,
+        .success-box,
+        .warning-box,
+        .trading-rule,
+        .quiz-section {
+            padding: 1.5rem;
+        }
+        
+        .next-button {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+        
+        .chart-container {
+            padding: 1rem;
+        }
     }
 </style>
 
@@ -315,13 +564,13 @@
         </blockquote>
         
         <!-- Chart -->
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_TR.jpg') }}" 
-                 alt="AVWAP Pinch Grundkonzept" 
-                 class="chart-image"
-                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
-                AVWAP Pinch Grundkonzept - Zeigt zwei konvergierende AVWAPs mit Preisbewegung dazwischen
+        <div class="chart-container">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/Pinch_UTHR_2025-09-10_18-09-25.jpg') }}" 
+                 alt="AVWAP Pinch Grundkonzept - UTHR" 
+                 class="chart-image">
+            <p class="chart-caption">
+                <strong>AVWAP Pinch Grundkonzept - UTHR</strong><br>
+                Zeigt zwei konvergierende AVWAPs mit Preisbewegung dazwischen. Die Energie wird komprimiert wie eine zusammengedrückte Feder.
             </p>
         </div>
         
@@ -402,13 +651,13 @@
         </div>
         
         <!-- Chart -->
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_BO.jpg') }}" 
-                 alt="Pinch-Entstehung mit Breakout" 
-                 class="chart-image"
-                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
-                Pinch-Entstehung und Breakout - Zeigt die schrittweise Konvergenz von zwei AVWAPs und den anschließenden Ausbruch
+        <div class="chart-container">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/Pinch_SNPS_2025-09-11_09-45-39.jpg') }}" 
+                 alt="Pinch-Entstehung - SNPS" 
+                 class="chart-image">
+            <p class="chart-caption">
+                <strong>Pinch-Entstehung - SNPS</strong><br>
+                Synopsys zeigt die schrittweise Konvergenz von zwei AVWAPs mit abnehmendem Volumen und Energiekontraktion.
             </p>
         </div>
         
@@ -486,13 +735,13 @@
         </div>
         
         <!-- Chart -->
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_Touch_Off.jpg') }}" 
-                 alt="Pinch-Ausbruch mit Entry und Stop" 
-                 class="chart-image"
-                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
-                Pinch-Ausbruch mit Entry und Stop - Zeigt den Ausbruch aus dem Pinch mit markiertem Einstiegspunkt und Stop-Loss
+        <div class="chart-container">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/Pinch_SNPS_BO_2025-09-11_09-45-39.jpg') }}" 
+                 alt="Pinch-Ausbruch mit Entry - SNPS Breakout" 
+                 class="chart-image">
+            <p class="chart-caption">
+                <strong>Pinch-Ausbruch - SNPS Breakout</strong><br>
+                Synopsys Ausbruch aus dem Pinch mit markiertem Einstiegspunkt und Stop-Loss. Perfektes Timing für maximales Gewinnpotenzial bei minimalem Risiko.
             </p>
         </div>
         
@@ -600,13 +849,13 @@
         <h3>📊 Live Chart-Beispiel:</h3>
         
         <!-- Chart -->
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_TR.jpg') }}" 
-                 alt="Stop-Management Beispiel" 
-                 class="chart-image"
-                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
-                Stop-Management Beispiel - Realer Trade mit Einstieg, Initial Stop und Teilgewinn-Management
+        <div class="chart-container">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/Pinch_NBIS_SL_11-09-2025_10-20-42.jpg') }}" 
+                 alt="Stop-Management Beispiel - NBIS" 
+                 class="chart-image">
+            <p class="chart-caption">
+                <strong>Stop-Management Beispiel - NBIS</strong><br>
+                Neurocrine Biosciences - Realer Trade mit Einstieg bei $90, Initial Stop bei $86.11 und Teilgewinn bei HOD $98. Risikofreier Trade durch professionelles Stop-Management.
             </p>
         </div>
         
@@ -650,13 +899,13 @@
         </div>
         
         <!-- Chart -->
-        <div style="text-align: center; margin: 2rem 0;">
-            <img src="{{ url_for('static', filename='../templates/Screenshots/AVWAP_Pinch_und_BO.jpg') }}" 
-                 alt="30-Minuten Pinch Chart" 
-                 class="chart-image"
-                 style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            <p style="color: #6c757d; font-size: 14px; margin-top: 10px; font-style: italic;">
-                Chart 5.2 - 30-Minuten Pinch mit schrittweiser Analyse und Breakout-Bestätigung
+        <div class="chart-container">
+            <img src="{{ url_for('static', filename='../templates/Screenshots/Pinch_SNPS_BO_2025-09-11_09-45-39.jpg') }}" 
+                 alt="Chart 5.2 - 30-Minuten Pinch" 
+                 class="chart-image">
+            <p class="chart-caption">
+                <strong>Chart 5.2 - 30-Minuten Pinch Analyse</strong><br>
+                Detaillierte Schritt-für-Schritt Analyse eines AVWAP Pinch mit nummerierten Annotationen (1-10) für optimales Verständnis der Trading-Sequenz.
             </p>
         </div>
         
