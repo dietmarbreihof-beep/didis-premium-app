@@ -30,6 +30,16 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database initialisieren
 db = SQLAlchemy(app)
 
+# Analytics-Middleware initialisieren
+try:
+    from analytics_middleware import AnalyticsMiddleware
+    analytics = AnalyticsMiddleware(app)
+    print("Analytics-Middleware aktiviert")
+except ImportError as e:
+    print(f"Analytics-Middleware konnte nicht geladen werden: {e}")
+except Exception as e:
+    print(f"Fehler beim Initialisieren der Analytics: {e}")
+
 # === USER MODELS ===
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -3723,6 +3733,112 @@ def admin_update_module_sort_order():
     except Exception as e:
         db.session.rollback()
         return jsonify({'success': False, 'error': f'Fehler beim Aktualisieren der Sortierung: {str(e)}'})
+
+# === ANALYTICS DASHBOARD ===
+
+@app.route('/admin/analytics')
+def admin_analytics():
+    """Admin Analytics Dashboard"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('login'))
+    
+    try:
+        from analytics_middleware import AnalyticsService
+        
+        # Zeiträume für verschiedene Statistiken
+        periods = {
+            'today': 1,
+            'week': 7,
+            'month': 30,
+            'quarter': 90
+        }
+        
+        # Grundstatistiken sammeln
+        stats = {}
+        for period_name, days in periods.items():
+            stats[period_name] = {
+                'unique_visitors': AnalyticsService.get_unique_visitors_count(days),
+                'page_views': AnalyticsService.get_total_page_views(days),
+                'top_pages': AnalyticsService.get_top_pages(days, limit=5),
+                'device_stats': AnalyticsService.get_device_stats(days),
+                'referrer_stats': AnalyticsService.get_referrer_stats(days, limit=5)
+            }
+        
+        # Tägliche Statistiken für Charts (letzte 30 Tage)
+        daily_stats = AnalyticsService.get_daily_stats(30)
+        
+        # Chart-Daten für JavaScript vorbereiten
+        chart_data = {
+            'dates': [stat.date.strftime('%Y-%m-%d') for stat in daily_stats],
+            'unique_visitors': [stat.unique_visitors for stat in daily_stats],
+            'page_views': [stat.page_views for stat in daily_stats]
+        }
+        
+        return render_template('admin/analytics.html', 
+                             stats=stats, 
+                             chart_data=chart_data,
+                             periods=periods)
+        
+    except Exception as e:
+        flash(f'Fehler beim Laden der Analytics: {str(e)}', 'error')
+        return redirect(url_for('admin_modules'))
+
+@app.route('/admin/analytics/api/data')
+def admin_analytics_api():
+    """API-Endpoint für Analytics-Daten (AJAX)"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'error': 'Unauthorized'}), 401
+    
+    try:
+        from analytics_middleware import AnalyticsService
+        
+        # Parameter aus Request
+        days = int(request.args.get('days', 30))
+        metric = request.args.get('metric', 'overview')
+        
+        if metric == 'overview':
+            data = {
+                'unique_visitors': AnalyticsService.get_unique_visitors_count(days),
+                'page_views': AnalyticsService.get_total_page_views(days),
+                'top_pages': [
+                    {
+                        'url': page.page_url,
+                        'title': page.page_title,
+                        'views': page.views,
+                        'unique_visitors': page.unique_visitors
+                    } for page in AnalyticsService.get_top_pages(days, limit=10)
+                ]
+            }
+        elif metric == 'devices':
+            device_stats = AnalyticsService.get_device_stats(days)
+            data = {
+                'devices': [
+                    {
+                        'type': stat.device_type,
+                        'unique_visitors': stat.unique_visitors,
+                        'total_views': stat.total_views
+                    } for stat in device_stats
+                ]
+            }
+        elif metric == 'daily':
+            daily_stats = AnalyticsService.get_daily_stats(days)
+            data = {
+                'daily_stats': [
+                    {
+                        'date': stat.date.strftime('%Y-%m-%d'),
+                        'unique_visitors': stat.unique_visitors,
+                        'page_views': stat.page_views
+                    } for stat in daily_stats
+                ]
+            }
+        else:
+            return jsonify({'error': 'Invalid metric'}), 400
+        
+        return jsonify(data)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     with app.app_context():

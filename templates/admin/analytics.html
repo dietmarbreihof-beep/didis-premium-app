@@ -1,0 +1,426 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard - Admin{% endblock %}
+
+{% block content %}
+<div class="card">
+    <!-- Header -->
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+        <div style="font-size: 64px; margin-bottom: 20px;">📊</div>
+        <h1 style="color: white; margin-bottom: 15px; font-size: 32px; font-weight: 700;">Analytics Dashboard</h1>
+        <p style="color: rgba(255, 255, 255, 0.9); font-size: 18px; line-height: 1.6; max-width: 600px; margin: 0 auto;">
+            Detaillierte Besucher-Statistiken mit IP-basierter Deduplizierung für präzise Unique-Visitor-Zahlen.
+        </p>
+    </div>
+
+    <!-- Zeitraum-Filter -->
+    <div style="margin-bottom: 30px; text-align: center;">
+        <div style="display: inline-flex; background: #f8f9fa; border-radius: 8px; padding: 4px;">
+            <button class="period-btn active" data-period="today" style="
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                color: white; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                font-weight: 600; 
+                cursor: pointer;
+                margin-right: 2px;
+            ">Heute</button>
+            <button class="period-btn" data-period="week" style="
+                background: transparent; 
+                color: #666; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                font-weight: 600; 
+                cursor: pointer;
+                margin-right: 2px;
+            ">7 Tage</button>
+            <button class="period-btn" data-period="month" style="
+                background: transparent; 
+                color: #666; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                font-weight: 600; 
+                cursor: pointer;
+                margin-right: 2px;
+            ">30 Tage</button>
+            <button class="period-btn" data-period="quarter" style="
+                background: transparent; 
+                color: #666; 
+                border: none; 
+                padding: 10px 20px; 
+                border-radius: 6px; 
+                font-weight: 600; 
+                cursor: pointer;
+            ">90 Tage</button>
+        </div>
+    </div>
+
+    <!-- Hauptstatistiken -->
+    <div id="main-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; margin-bottom: 40px;">
+        <!-- Unique Visitors -->
+        <div class="stat-card" style="
+            background: white; 
+            border-radius: 12px; 
+            padding: 30px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+            border: 2px solid #f0f0f0;
+            text-align: center;
+        ">
+            <div style="font-size: 48px; margin-bottom: 15px;">👥</div>
+            <div class="stat-number" id="unique-visitors" style="font-size: 36px; font-weight: 700; color: #667eea; margin-bottom: 10px;">
+                {{ stats.today.unique_visitors }}
+            </div>
+            <div style="color: #666; font-size: 16px; font-weight: 600;">Unique Visitors</div>
+            <div style="color: #999; font-size: 14px; margin-top: 5px;">IP-basierte Deduplizierung</div>
+        </div>
+
+        <!-- Page Views -->
+        <div class="stat-card" style="
+            background: white; 
+            border-radius: 12px; 
+            padding: 30px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+            border: 2px solid #f0f0f0;
+            text-align: center;
+        ">
+            <div style="font-size: 48px; margin-bottom: 15px;">📄</div>
+            <div class="stat-number" id="page-views" style="font-size: 36px; font-weight: 700; color: #38a169; margin-bottom: 10px;">
+                {{ stats.today.page_views }}
+            </div>
+            <div style="color: #666; font-size: 16px; font-weight: 600;">Seitenaufrufe</div>
+            <div style="color: #999; font-size: 14px; margin-top: 5px;">Gesamtanzahl</div>
+        </div>
+
+        <!-- Pages per Visitor -->
+        <div class="stat-card" style="
+            background: white; 
+            border-radius: 12px; 
+            padding: 30px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+            border: 2px solid #f0f0f0;
+            text-align: center;
+        ">
+            <div style="font-size: 48px; margin-bottom: 15px;">📊</div>
+            <div class="stat-number" id="pages-per-visitor" style="font-size: 36px; font-weight: 700; color: #daa520; margin-bottom: 10px;">
+                {% if stats.today.unique_visitors > 0 %}
+                    {{ "%.1f"|format(stats.today.page_views / stats.today.unique_visitors) }}
+                {% else %}
+                    0.0
+                {% endif %}
+            </div>
+            <div style="color: #666; font-size: 16px; font-weight: 600;">Seiten pro Besucher</div>
+            <div style="color: #999; font-size: 14px; margin-top: 5px;">Durchschnitt</div>
+        </div>
+
+        <!-- Conversion Rate (falls User eingeloggt) -->
+        <div class="stat-card" style="
+            background: white; 
+            border-radius: 12px; 
+            padding: 30px; 
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); 
+            border: 2px solid #f0f0f0;
+            text-align: center;
+        ">
+            <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
+            <div class="stat-number" id="conversion-rate" style="font-size: 36px; font-weight: 700; color: #e53e3e; margin-bottom: 10px;">
+                -
+            </div>
+            <div style="color: #666; font-size: 16px; font-weight: 600;">Conversion Rate</div>
+            <div style="color: #999; font-size: 14px; margin-top: 5px;">Anmeldungen/Besucher</div>
+        </div>
+    </div>
+
+    <!-- Charts Sektion -->
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 40px;">
+        <!-- Verlaufs-Chart -->
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #1a1a1a; margin-bottom: 20px; font-size: 20px; font-weight: 600;">
+                📈 Besucher-Verlauf (30 Tage)
+            </h3>
+            <canvas id="visitorChart" width="400" height="200"></canvas>
+        </div>
+
+        <!-- Device Stats -->
+        <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+            <h3 style="color: #1a1a1a; margin-bottom: 20px; font-size: 20px; font-weight: 600;">
+                📱 Geräte-Verteilung
+            </h3>
+            <canvas id="deviceChart" width="300" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- Top Pages -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); margin-bottom: 30px;">
+        <h3 style="color: #1a1a1a; margin-bottom: 25px; font-size: 20px; font-weight: 600;">
+            🔥 Top-Seiten
+        </h3>
+        <div id="top-pages-table">
+            <div style="display: grid; grid-template-columns: 3fr 1fr 1fr; gap: 15px; padding: 15px 0; border-bottom: 2px solid #f0f0f0; font-weight: 600; color: #666;">
+                <div>Seite</div>
+                <div style="text-align: center;">Aufrufe</div>
+                <div style="text-align: center;">Unique Visitors</div>
+            </div>
+            {% for page in stats.today.top_pages %}
+            <div style="display: grid; grid-template-columns: 3fr 1fr 1fr; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+                <div>
+                    <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 5px;">{{ page.page_title or 'Unbekannte Seite' }}</div>
+                    <div style="color: #666; font-size: 14px;">{{ page.page_url }}</div>
+                </div>
+                <div style="text-align: center; font-weight: 600; color: #38a169;">{{ page.views }}</div>
+                <div style="text-align: center; font-weight: 600; color: #667eea;">{{ page.unique_visitors }}</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Referrer Stats -->
+    <div style="background: white; border-radius: 12px; padding: 30px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: #1a1a1a; margin-bottom: 25px; font-size: 20px; font-weight: 600;">
+            🔗 Top-Referrer
+        </h3>
+        <div id="referrer-stats">
+            {% if stats.today.referrer_stats %}
+                {% for referrer in stats.today.referrer_stats %}
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+                    <div>
+                        <div style="font-weight: 600; color: #1a1a1a;">{{ referrer.referrer[:50] }}{% if referrer.referrer|length > 50 %}...{% endif %}</div>
+                        <div style="color: #666; font-size: 14px;">{{ referrer.unique_visitors }} unique visitors</div>
+                    </div>
+                    <div style="font-weight: 600; color: #38a169;">{{ referrer.total_visits }} Besuche</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; color: #666; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 15px;">🔍</div>
+                    <div>Keine Referrer-Daten für den gewählten Zeitraum</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js für Diagramme -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// Chart-Daten aus Backend
+const chartData = {{ chart_data | tojson }};
+const statsData = {{ stats | tojson }};
+
+// Visitor Chart
+const visitorCtx = document.getElementById('visitorChart').getContext('2d');
+const visitorChart = new Chart(visitorCtx, {
+    type: 'line',
+    data: {
+        labels: chartData.dates,
+        datasets: [{
+            label: 'Unique Visitors',
+            data: chartData.unique_visitors,
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.4,
+            fill: true
+        }, {
+            label: 'Seitenaufrufe',
+            data: chartData.page_views,
+            borderColor: '#38a169',
+            backgroundColor: 'rgba(56, 161, 105, 0.1)',
+            tension: 0.4,
+            fill: true
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'top',
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+// Device Chart (Pie Chart)
+const deviceCtx = document.getElementById('deviceChart').getContext('2d');
+const deviceStats = statsData.today.device_stats;
+const deviceChart = new Chart(deviceCtx, {
+    type: 'doughnut',
+    data: {
+        labels: deviceStats.map(d => d.device_type.charAt(0).toUpperCase() + d.device_type.slice(1)),
+        datasets: [{
+            data: deviceStats.map(d => d.unique_visitors),
+            backgroundColor: [
+                '#667eea',
+                '#38a169',
+                '#daa520',
+                '#e53e3e',
+                '#764ba2'
+            ]
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            }
+        }
+    }
+});
+
+// Zeitraum-Filter Funktionalität
+document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // Aktive Klasse entfernen
+        document.querySelectorAll('.period-btn').forEach(b => {
+            b.classList.remove('active');
+            b.style.background = 'transparent';
+            b.style.color = '#666';
+        });
+        
+        // Aktive Klasse hinzufügen
+        this.classList.add('active');
+        this.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+        this.style.color = 'white';
+        
+        // Daten für gewählten Zeitraum laden
+        const period = this.dataset.period;
+        updateStats(period);
+    });
+});
+
+function updateStats(period) {
+    const periodStats = statsData[period];
+    
+    // Hauptstatistiken aktualisieren
+    document.getElementById('unique-visitors').textContent = periodStats.unique_visitors;
+    document.getElementById('page-views').textContent = periodStats.page_views;
+    
+    const pagesPerVisitor = periodStats.unique_visitors > 0 
+        ? (periodStats.page_views / periodStats.unique_visitors).toFixed(1)
+        : '0.0';
+    document.getElementById('pages-per-visitor').textContent = pagesPerVisitor;
+    
+    // Top-Pages Tabelle aktualisieren
+    updateTopPagesTable(periodStats.top_pages);
+    
+    // Referrer Stats aktualisieren
+    updateReferrerStats(periodStats.referrer_stats);
+    
+    // Device Chart aktualisieren
+    deviceChart.data.labels = periodStats.device_stats.map(d => 
+        d.device_type.charAt(0).toUpperCase() + d.device_type.slice(1)
+    );
+    deviceChart.data.datasets[0].data = periodStats.device_stats.map(d => d.unique_visitors);
+    deviceChart.update();
+}
+
+function updateTopPagesTable(topPages) {
+    const tableContainer = document.getElementById('top-pages-table');
+    let html = `
+        <div style="display: grid; grid-template-columns: 3fr 1fr 1fr; gap: 15px; padding: 15px 0; border-bottom: 2px solid #f0f0f0; font-weight: 600; color: #666;">
+            <div>Seite</div>
+            <div style="text-align: center;">Aufrufe</div>
+            <div style="text-align: center;">Unique Visitors</div>
+        </div>
+    `;
+    
+    topPages.forEach(page => {
+        html += `
+            <div style="display: grid; grid-template-columns: 3fr 1fr 1fr; gap: 15px; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+                <div>
+                    <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 5px;">${page.page_title || 'Unbekannte Seite'}</div>
+                    <div style="color: #666; font-size: 14px;">${page.page_url}</div>
+                </div>
+                <div style="text-align: center; font-weight: 600; color: #38a169;">${page.views}</div>
+                <div style="text-align: center; font-weight: 600; color: #667eea;">${page.unique_visitors}</div>
+            </div>
+        `;
+    });
+    
+    tableContainer.innerHTML = html;
+}
+
+function updateReferrerStats(referrerStats) {
+    const container = document.getElementById('referrer-stats');
+    
+    if (referrerStats.length === 0) {
+        container.innerHTML = `
+            <div style="text-align: center; color: #666; padding: 40px;">
+                <div style="font-size: 48px; margin-bottom: 15px;">🔍</div>
+                <div>Keine Referrer-Daten für den gewählten Zeitraum</div>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = '';
+    referrerStats.forEach(referrer => {
+        const shortReferrer = referrer.referrer.length > 50 
+            ? referrer.referrer.substring(0, 50) + '...'
+            : referrer.referrer;
+            
+        html += `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #f0f0f0;">
+                <div>
+                    <div style="font-weight: 600; color: #1a1a1a;">${shortReferrer}</div>
+                    <div style="color: #666; font-size: 14px;">${referrer.unique_visitors} unique visitors</div>
+                </div>
+                <div style="font-weight: 600; color: #38a169;">${referrer.total_visits} Besuche</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+// Auto-Refresh alle 5 Minuten
+setInterval(() => {
+    const activePeriod = document.querySelector('.period-btn.active').dataset.period;
+    // Hier könnte ein AJAX-Call für Live-Updates implementiert werden
+    console.log('Auto-refresh für Periode:', activePeriod);
+}, 300000); // 5 Minuten
+</script>
+
+<style>
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    border-color: #daa520;
+}
+
+.period-btn:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+}
+
+@media (max-width: 768px) {
+    #main-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+    
+    .stat-card {
+        padding: 20px !important;
+    }
+    
+    .stat-number {
+        font-size: 24px !important;
+    }
+    
+    div[style*="grid-template-columns: 2fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{% endblock %}

@@ -204,6 +204,53 @@ class ModuleAccess(db.Model):
     completed_at = db.Column(db.DateTime, nullable=True)
     progress_percentage = db.Column(db.Integer, default=0)
 
+class VisitorAnalytics(db.Model):
+    """Tracking für Besucher-Analytics mit IP-basierter Deduplizierung"""
+    __tablename__ = 'visitor_analytics'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Visitor Information
+    ip_address = db.Column(db.String(45), nullable=False)  # IPv6 support
+    user_agent = db.Column(db.Text)
+    
+    # Page Information
+    page_url = db.Column(db.String(500), nullable=False)
+    page_title = db.Column(db.String(200))
+    referrer = db.Column(db.String(500))
+    
+    # Session Information
+    session_id = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Null für anonyme Besucher
+    
+    # Timestamps
+    visited_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+    # Geographic Information (optional)
+    country = db.Column(db.String(2))  # ISO country code
+    city = db.Column(db.String(100))
+    
+    # Device Information
+    device_type = db.Column(db.String(20))  # mobile, desktop, tablet
+    browser = db.Column(db.String(50))
+    os = db.Column(db.String(50))
+    
+    # Relationships
+    user = db.relationship('User', backref='visits', lazy=True)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ip_address': self.ip_address,
+            'page_url': self.page_url,
+            'page_title': self.page_title,
+            'visited_at': self.visited_at.isoformat() if self.visited_at else None,
+            'user_id': self.user_id,
+            'device_type': self.device_type,
+            'browser': self.browser,
+            'os': self.os
+        }
+
 # Helper Functions
 def init_default_modules():
     """Erstellt Standard-Module in der Database"""

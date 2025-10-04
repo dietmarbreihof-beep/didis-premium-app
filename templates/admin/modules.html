@@ -52,6 +52,11 @@
            onclick="return confirm('🚨 Kritische fehlende Module registrieren?\n\nDies fügt wichtige Module wie Tirone Levels, EV Calculator etc. hinzu.')">
             🚨 Fehlende Module reparieren
         </a>
+        <a href="{{ url_for('admin_analytics') }}" 
+           class="btn" 
+           style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+            📊 Analytics Dashboard
+        </a>
         <a href="{{ url_for('fix_duplicate_categories') }}" 
            class="btn secondary" 
            onclick="return confirm('🔧 Doppelte Kategorien bereinigen?\n\nDies führt doppelte Kategorien zusammen und verschiebt alle Module zur ersten Kategorie.')">
