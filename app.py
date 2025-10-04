@@ -30,15 +30,128 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database initialisieren
 db = SQLAlchemy(app)
 
-# Analytics-Middleware initialisieren
-try:
-    from analytics_middleware import AnalyticsMiddleware
-    analytics = AnalyticsMiddleware(app)
-    print("Analytics-Middleware aktiviert")
-except ImportError as e:
-    print(f"Analytics-Middleware konnte nicht geladen werden: {e}")
-except Exception as e:
-    print(f"Fehler beim Initialisieren der Analytics: {e}")
+# Analytics-Modell direkt definieren (für korrekte db-Instanz)
+class VisitorAnalytics(db.Model):
+    """Tracking für Besucher-Analytics mit IP-basierter Deduplizierung"""
+    __tablename__ = 'visitor_analytics'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    
+    # Visitor Information
+    ip_address = db.Column(db.String(45), nullable=False)  # IPv6 support
+    user_agent = db.Column(db.Text)
+    
+    # Page Information
+    page_url = db.Column(db.String(500), nullable=False)
+    page_title = db.Column(db.String(200))
+    referrer = db.Column(db.String(500))
+    
+    # Session Information
+    session_id = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Null für anonyme Besucher
+    
+    # Timestamps
+    visited_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    
+    # Geographic Information (optional)
+    country = db.Column(db.String(2))  # ISO country code
+    city = db.Column(db.String(100))
+    
+    # Device Information
+    device_type = db.Column(db.String(20))  # mobile, desktop, tablet
+    browser = db.Column(db.String(50))
+    os = db.Column(db.String(50))
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ip_address': self.ip_address,
+            'page_url': self.page_url,
+            'page_title': self.page_title,
+            'visited_at': self.visited_at.isoformat() if self.visited_at else None,
+            'user_id': self.user_id,
+            'device_type': self.device_type,
+            'browser': self.browser,
+            'os': self.os
+        }
+
+print("VisitorAnalytics-Modell definiert")
+
+# Analytics-Middleware direkt implementieren
+def track_visitor():
+    """Einfache Visitor-Tracking Funktion"""
+    # Prüfe ob Request getrackt werden soll
+    static_extensions = ['.css', '.js', '.ico', '.png', '.jpg', '.jpeg', '.gif', '.svg', '.woff', '.woff2', '.ttf']
+    if any(request.path.endswith(ext) for ext in static_extensions):
+        return
+    
+    if request.path.startswith('/api/'):
+        return
+    
+    # Bot-Erkennung
+    user_agent = request.headers.get('User-Agent', '').lower()
+    bot_patterns = ['bot', 'crawler', 'spider', 'scraper', 'curl', 'wget']
+    if any(pattern in user_agent for pattern in bot_patterns):
+        return
+    
+    try:
+        # Client-IP ermitteln
+        if request.headers.get('X-Forwarded-For'):
+            ip_address = request.headers.get('X-Forwarded-For').split(',')[0].strip()
+        elif request.headers.get('X-Real-IP'):
+            ip_address = request.headers.get('X-Real-IP')
+        elif request.headers.get('CF-Connecting-IP'):
+            ip_address = request.headers.get('CF-Connecting-IP')
+        else:
+            ip_address = request.remote_addr or '127.0.0.1'
+        
+        # Session-ID generieren
+        if 'analytics_session_id' not in session:
+            import uuid
+            session['analytics_session_id'] = str(uuid.uuid4())
+        
+        # Device-Type bestimmen (einfache Version)
+        user_agent_string = request.headers.get('User-Agent', '')
+        if 'mobile' in user_agent_string.lower():
+            device_type = 'mobile'
+        elif 'tablet' in user_agent_string.lower():
+            device_type = 'tablet'
+        else:
+            device_type = 'desktop'
+        
+        # Page-Title mapping
+        page_titles = {
+            '/': 'Home - Didis Premium Trading Academy',
+            '/login': 'Login - Didis Premium Trading Academy',
+            '/admin/analytics': 'Analytics Dashboard - Didis Premium Trading Academy',
+            '/trading-tools': 'Trading-Tools - Didis Premium Trading Academy'
+        }
+        
+        # Analytics-Eintrag erstellen
+        analytics_entry = VisitorAnalytics(
+            ip_address=ip_address,
+            user_agent=user_agent_string[:500] if user_agent_string else None,  # Limit für DB
+            page_url=request.url,
+            page_title=page_titles.get(request.path, f"Seite {request.path} - Didis Premium Trading Academy"),
+            referrer=request.headers.get('Referer'),
+            session_id=session['analytics_session_id'],
+            user_id=session.get('user_id'),
+            device_type=device_type,
+            browser='Unknown',
+            os='Unknown'
+        )
+        
+        db.session.add(analytics_entry)
+        db.session.commit()
+        
+    except Exception as e:
+        # Fehler beim Tracking sollen die App nicht crashen
+        print(f"Analytics Tracking Error: {e}")
+        db.session.rollback()
+
+# Registriere die Tracking-Funktion
+app.before_request(track_visitor)
+print("Analytics-Tracking aktiviert")
 
 # === USER MODELS ===
 
@@ -3744,7 +3857,9 @@ def admin_analytics():
         return redirect(url_for('login'))
     
     try:
-        from analytics_middleware import AnalyticsService
+        # Verwende das lokale VisitorAnalytics-Modell
+        from sqlalchemy import func, distinct, cast, Date
+        from datetime import datetime, timedelta
         
         # Zeiträume für verschiedene Statistiken
         periods = {
@@ -3757,16 +3872,82 @@ def admin_analytics():
         # Grundstatistiken sammeln
         stats = {}
         for period_name, days in periods.items():
+            cutoff_date = datetime.utcnow() - timedelta(days=days)
+            
+            # Unique Visitors
+            unique_visitors = db.session.query(
+                func.count(distinct(VisitorAnalytics.ip_address))
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).scalar() or 0
+            
+            # Page Views
+            page_views = VisitorAnalytics.query.filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).count()
+            
+            # Top Pages
+            top_pages = db.session.query(
+                VisitorAnalytics.page_url,
+                VisitorAnalytics.page_title,
+                func.count(VisitorAnalytics.id).label('views'),
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).group_by(
+                VisitorAnalytics.page_url,
+                VisitorAnalytics.page_title
+            ).order_by(
+                func.count(VisitorAnalytics.id).desc()
+            ).limit(5).all()
+            
+            # Device Stats
+            device_stats = db.session.query(
+                VisitorAnalytics.device_type,
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors'),
+                func.count(VisitorAnalytics.id).label('total_views')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).group_by(
+                VisitorAnalytics.device_type
+            ).all()
+            
+            # Referrer Stats
+            referrer_stats = db.session.query(
+                VisitorAnalytics.referrer,
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors'),
+                func.count(VisitorAnalytics.id).label('total_visits')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date,
+                VisitorAnalytics.referrer.isnot(None),
+                VisitorAnalytics.referrer != ''
+            ).group_by(
+                VisitorAnalytics.referrer
+            ).order_by(
+                func.count(VisitorAnalytics.id).desc()
+            ).limit(5).all()
+            
             stats[period_name] = {
-                'unique_visitors': AnalyticsService.get_unique_visitors_count(days),
-                'page_views': AnalyticsService.get_total_page_views(days),
-                'top_pages': AnalyticsService.get_top_pages(days, limit=5),
-                'device_stats': AnalyticsService.get_device_stats(days),
-                'referrer_stats': AnalyticsService.get_referrer_stats(days, limit=5)
+                'unique_visitors': unique_visitors,
+                'page_views': page_views,
+                'top_pages': top_pages,
+                'device_stats': device_stats,
+                'referrer_stats': referrer_stats
             }
         
         # Tägliche Statistiken für Charts (letzte 30 Tage)
-        daily_stats = AnalyticsService.get_daily_stats(30)
+        cutoff_date = datetime.utcnow() - timedelta(days=30)
+        daily_stats = db.session.query(
+            cast(VisitorAnalytics.visited_at, Date).label('date'),
+            func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors'),
+            func.count(VisitorAnalytics.id).label('page_views')
+        ).filter(
+            VisitorAnalytics.visited_at >= cutoff_date
+        ).group_by(
+            cast(VisitorAnalytics.visited_at, Date)
+        ).order_by(
+            cast(VisitorAnalytics.visited_at, Date)
+        ).all()
         
         # Chart-Daten für JavaScript vorbereiten
         chart_data = {
@@ -3791,27 +3972,66 @@ def admin_analytics_api():
         return jsonify({'error': 'Unauthorized'}), 401
     
     try:
-        from analytics_middleware import AnalyticsService
+        # Verwende das lokale VisitorAnalytics-Modell
+        from sqlalchemy import func, distinct, cast, Date
+        from datetime import datetime, timedelta
         
         # Parameter aus Request
         days = int(request.args.get('days', 30))
         metric = request.args.get('metric', 'overview')
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
         
         if metric == 'overview':
+            # Unique Visitors
+            unique_visitors = db.session.query(
+                func.count(distinct(VisitorAnalytics.ip_address))
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).scalar() or 0
+            
+            # Page Views
+            page_views = VisitorAnalytics.query.filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).count()
+            
+            # Top Pages
+            top_pages_query = db.session.query(
+                VisitorAnalytics.page_url,
+                VisitorAnalytics.page_title,
+                func.count(VisitorAnalytics.id).label('views'),
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).group_by(
+                VisitorAnalytics.page_url,
+                VisitorAnalytics.page_title
+            ).order_by(
+                func.count(VisitorAnalytics.id).desc()
+            ).limit(10).all()
+            
             data = {
-                'unique_visitors': AnalyticsService.get_unique_visitors_count(days),
-                'page_views': AnalyticsService.get_total_page_views(days),
+                'unique_visitors': unique_visitors,
+                'page_views': page_views,
                 'top_pages': [
                     {
                         'url': page.page_url,
                         'title': page.page_title,
                         'views': page.views,
                         'unique_visitors': page.unique_visitors
-                    } for page in AnalyticsService.get_top_pages(days, limit=10)
+                    } for page in top_pages_query
                 ]
             }
         elif metric == 'devices':
-            device_stats = AnalyticsService.get_device_stats(days)
+            device_stats = db.session.query(
+                VisitorAnalytics.device_type,
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors'),
+                func.count(VisitorAnalytics.id).label('total_views')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).group_by(
+                VisitorAnalytics.device_type
+            ).all()
+            
             data = {
                 'devices': [
                     {
@@ -3822,7 +4042,18 @@ def admin_analytics_api():
                 ]
             }
         elif metric == 'daily':
-            daily_stats = AnalyticsService.get_daily_stats(days)
+            daily_stats = db.session.query(
+                cast(VisitorAnalytics.visited_at, Date).label('date'),
+                func.count(func.distinct(VisitorAnalytics.ip_address)).label('unique_visitors'),
+                func.count(VisitorAnalytics.id).label('page_views')
+            ).filter(
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).group_by(
+                cast(VisitorAnalytics.visited_at, Date)
+            ).order_by(
+                cast(VisitorAnalytics.visited_at, Date)
+            ).all()
+            
             data = {
                 'daily_stats': [
                     {
