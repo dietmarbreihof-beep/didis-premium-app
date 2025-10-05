@@ -3862,8 +3862,10 @@ def admin_analytics():
     print(f"Logged in: {session.get('logged_in')}")
     print(f"User: {session.get('user', {})}")
     
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        print("Analytics Zugriff verweigert - Admin-Berechtigung erforderlich")
+    # Prüfe ob User eingeloggt und Admin/Didi ist
+    user = session.get('user', {})
+    if not user or user.get('username') not in ['admin', 'didi']:
+        print(f"Analytics Zugriff verweigert - User: {user}")
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('login'))
     
@@ -3979,7 +3981,9 @@ def admin_analytics():
 @app.route('/admin/analytics/api/data')
 def admin_analytics_api():
     """API-Endpoint für Analytics-Daten (AJAX)"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+    # Prüfe ob User eingeloggt und Admin/Didi ist  
+    user = session.get('user', {})
+    if not user or user.get('username') not in ['admin', 'didi']:
         return jsonify({'error': 'Unauthorized'}), 401
     
     try:
