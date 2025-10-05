@@ -3849,10 +3849,21 @@ def admin_update_module_sort_order():
 
 # === ANALYTICS DASHBOARD ===
 
+@app.route('/admin/analytics-test')
+def admin_analytics_test():
+    """Einfacher Analytics Test"""
+    print("Analytics Test Route aufgerufen!")
+    return f"<h1>Analytics Test</h1><p>Session: {session}</p><p>User: {session.get('user', {})}</p>"
+
 @app.route('/admin/analytics')
 def admin_analytics():
     """Admin Analytics Dashboard"""
+    print(f"Analytics Route aufgerufen - Session: {session}")
+    print(f"Logged in: {session.get('logged_in')}")
+    print(f"User: {session.get('user', {})}")
+    
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        print("Analytics Zugriff verweigert - Admin-Berechtigung erforderlich")
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('login'))
     
