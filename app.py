@@ -1181,6 +1181,17 @@ def trading_tools():
             'category': 'Risikomanagement'
         },
         {
+            'title': 'ABCD Trade-Grades Position Sizing Calculator',
+            'description': 'Exponentielles Bet-Sizing für Elite-Trader. Interaktive Lernseite mit Poker-Analogie, 5 Tabs und progressiver Freischaltung. Lerne wie Du A-Trades von D-Trades unterscheidest und Deine Performance exponentiell steigerst.',
+            'icon': '🎯',
+            'url': '/position-sizing-abcd-calculator',
+            'status': 'available',
+            'required_subscription': ['premium', 'elite'],
+            'estimated_time': '45 min',
+            'difficulty': 'Fortgeschritten',
+            'category': 'Risikomanagement'
+        },
+        {
             'title': 'Allokation Asset-Klassen',
             'description': 'Professionelle Portfolio-Analyse mit Marktampel-System und optimaler Asset-Allokation.',
             'icon': '📊',
