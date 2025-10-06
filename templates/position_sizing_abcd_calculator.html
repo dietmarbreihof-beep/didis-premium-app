@@ -796,6 +796,8 @@
             padding: 15px;
             cursor: pointer;
             transition: all 0.3s ease;
+            color: var(--primary-dark);
+            font-weight: 500;
         }
 
         .quiz-option:hover {
@@ -1067,13 +1069,8 @@
                             </p>
                             <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium);">
                                 Die Win-Rates in diesem Tool (90%, 70%, 55%, 40%) stammen aus Lance Breitsteins Beispiel-Fallstudie - 
-                                <strong> nicht aus Deinen realen Trading-Daten!</strong> Du kannst nicht einfach raten, welche Win-Rate Deine Setups haben. 
-                                Du musst es messen!
+                                <strong> nicht aus Deinen realen Trading-Daten!</strong> Du musst es messen!
                             </p>
-                            <div style="margin-top: 15px; padding: 15px; background: rgba(218, 165, 32, 0.2); border-radius: 8px;">
-                                <strong>Minimum:</strong> 30-50 Trades pro Grade bevor Du valide Schlüsse ziehen kannst. 
-                                Besser: 100+ Trades für statistische Signifikanz.
-                            </div>
                         </div>
 
                         <div style="background: var(--bg-page); border-radius: 12px; padding: 25px; border-left: 6px solid var(--gold-dark);">
@@ -1081,15 +1078,9 @@
                                 2. Entwickelte Trading-Strategie
                             </h4>
                             <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
-                                Du brauchst ein <strong>erprobtes Playbook</strong> mit definierten Setups:
+                                Du brauchst ein <strong>erprobtes Playbook</strong> mit definierten Setups.
                             </p>
-                            <ul style="font-size: 1.05em; line-height: 1.8; padding-left: 25px;">
-                                <li>Stage 2 Breakout-Setup</li>
-                                <li>Momentum-Plays mit Katalysator</li>
-                                <li>Mean Reversion bei Support</li>
-                                <li>Swing-Trades nach Konsolidierung</li>
-                            </ul>
-                            <p style="font-size: 1.05em; line-height: 1.6; margin-top: 15px; color: var(--primary-medium);">
+                            <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium);">
                                 <strong>Wenn Du noch kein klares System hast:</strong> Fokussiere Dich ERST auf das Erlernen einer Strategie 
                                 mit kleinen, gleichbleibenden Positionsgrößen. Bet-Sizing kommt später!
                             </p>
@@ -1102,17 +1093,28 @@
                             <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
                                 Du musst in der Lage sein, <strong>größere Positionsgrößen zu handeln, ohne dass es Deine Psychologie verändert.</strong>
                             </p>
-                            <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium);">
-                                Wenn Du bei 8x Deiner normalen Size nervös wirst und deshalb zu früh aussteigst oder 
-                                Deine Entry-Regeln missachtest, zerstörst Du den gesamten Expected Value Vorteil. 
-                                Die Positionsgröße darf Deine Ausführung NICHT beeinflussen.
-                            </p>
                             <div style="margin-top: 15px; padding: 15px; background: rgba(229, 62, 62, 0.2); border-radius: 8px;">
-                                <strong>Warnung:</strong> Viele Trader ruinieren ihre Accounts, weil sie zu schnell skalieren, 
-                                bevor sie psychologisch bereit sind!
+                                <strong>Warnung:</strong> Viele Trader ruinieren ihre Accounts, weil sie zu schnell skalieren!
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <!-- Quiz nach Warnung -->
+                <div class="quiz-container">
+                    <div class="quiz-question">🧠 Quiz: Was ist die wichtigste Voraussetzung für exponentielles Sizing?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer(2, 'A', false)">
+                            A) Viel Geld im Depot haben
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(2, 'B', true)">
+                            B) A-Trades von D-Trades unterscheiden können - IN ECHTZEIT, VOR dem Entry
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(2, 'C', false)">
+                            C) Viele Jahre Erfahrung haben
+                        </div>
+                    </div>
+                    <div id="quiz2Feedback" class="quiz-feedback" style="display: none;"></div>
                 </div>
 
                 <div class="highlight-box">
@@ -1124,55 +1126,23 @@
                         </p>
                         <p style="margin-bottom: 15px;">
                             <strong>Phase 2 (Monate 7-12):</strong> Analysiere Dein Journal. Identifiziere Deine besten Setups. 
-                            Beginne mit leichtem linearem Sizing (1x, 1.5x, 2x, 3x). Sammle mehr Daten.
+                            Beginne mit leichtem linearem Sizing (1x, 1.5x, 2x, 3x).
                         </p>
                         <p style="margin-bottom: 15px;">
                             <strong>Phase 3 (Jahr 2+):</strong> Mit 100+ Trades und bewiesener Konsistenz: 
-                            Beginne vorsichtig mit exponentiellem Sizing. Steigere monatlich um 10%.
+                            Beginne vorsichtig mit exponentiellem Sizing.
                         </p>
                         <p>
-                            <strong>Phase 4 (Elite Level):</strong> Nach Jahren der Erfahrung und psychologischer Meisterschaft: 
+                            <strong>Phase 4 (Elite Level):</strong> Nach Jahren der Erfahrung: 
                             Aggressive Skalierung bei A-Setups (1x, 3x, 9x, 27x).
                         </p>
                     </div>
                 </div>
 
-                <div class="success-box">
-                    <h3 class="success-title">🚀 Dein nächster Schritt</h3>
-                    <p style="font-size: 1.2em; line-height: 1.8; color: var(--primary-dark); margin-bottom: 20px;">
-                        Wenn Du noch kein vollständiges Trade-Journal hast, starte JETZT damit:
-                    </p>
-                    <div style="background: white; padding: 20px; border-radius: 8px;">
-                        <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
-                            <strong>Minimales Journal pro Trade:</strong>
-                        </p>
-                        <ul style="font-size: 1.05em; line-height: 1.8; padding-left: 25px;">
-                            <li>Datum & Ticker</li>
-                            <li>Setup-Typ (z.B. "Stage 2 Breakout")</li>
-                            <li><strong>Grade VOR Entry</strong> (A/B/C/D) - das ist kritisch!</li>
-                            <li>Entry & Exit Preis</li>
-                            <li>Ergebnis (Win/Loss/Breakeven)</li>
-                            <li>P&L in Euro</li>
-                            <li>Kurze Notiz: Warum dieser Grade? Was lief gut/schlecht?</li>
-                        </ul>
-                    </div>
-                    <p style="font-size: 1.1em; line-height: 1.6; margin-top: 20px; color: var(--primary-dark);">
-                        Nach 50-100 Trades hast Du genug Daten, um Deine echten Win-Rates pro Grade zu berechnen. 
-                        Dann - und erst dann - kannst Du den Kalkulator mit Deinen realen Zahlen nutzen.
-                    </p>
-                </div>
-
-                <div style="margin-top: 30px; padding: 25px; background: var(--primary-medium); border-radius: 12px; color: white; text-align: center;">
-                    <p style="font-size: 1.3em; line-height: 1.8;">
-                        <strong style="color: var(--gold-classic);">Denk dran:</strong> Elite-Trader wurden nicht über Nacht zu Elite-Tradern. 
-                        Sie verbrachten Jahre damit, ihr Handwerk zu perfektionieren, bevor sie aggressiv skalieren konnten.
-                    </p>
-                    <p style="font-size: 1.1em; margin-top: 15px; opacity: 0.9;">
-                        Sei geduldig mit Dir selbst. Fokussiere Dich auf Konsistenz vor Sizing.
-                    </p>
-                </div>
+                <button class="next-step-button" onclick="nextStep()" id="step2NextButton" style="display: none;">
+                    ✅ Warnung verstanden - Weiter zu Schritt 3: Trade-Grades ➡️
+                </button>
             </div>
-        </div>
 
         <!-- Calculator Tab -->
         <div id="calculator" class="tab-content">
@@ -1759,7 +1729,11 @@
             if (isCorrect) {
                 event.target.classList.add('correct');
                 feedbackElement.className = 'quiz-feedback correct';
-                feedbackElement.textContent = '✅ Richtig! Du hast die Analogie verstanden.';
+                if (quizNumber === 1) {
+                    feedbackElement.textContent = '✅ Richtig! Du hast die Analogie verstanden.';
+                } else if (quizNumber === 2) {
+                    feedbackElement.textContent = '✅ Perfekt! Das ist der Schlüssel zum erfolgreichen Position-Sizing.';
+                }
                 
                 // Show next step button
                 const nextButton = document.getElementById(`step${quizNumber}NextButton`);
@@ -2275,3 +2249,4 @@
     {% include '_navigation.html' %}
 </body>
 </html>
+
