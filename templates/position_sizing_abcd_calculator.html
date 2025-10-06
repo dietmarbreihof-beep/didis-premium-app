@@ -402,6 +402,206 @@
             line-height: 1.8;
         }
 
+        /* Poker Cards Styling */
+        .poker-comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .poker-card-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .poker-card-section:hover {
+            transform: translateY(-10px);
+        }
+
+        .poker-section-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .d-trade-section .poker-section-title {
+            color: #e53e3e;
+        }
+
+        .a-trade-section .poker-section-title {
+            color: #38a169;
+        }
+
+        .poker-subtitle {
+            text-align: center;
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .poker-table {
+            background: radial-gradient(ellipse at center, #1a5c3d 0%, #0d3d26 100%);
+            border-radius: 200px;
+            padding: 60px 40px;
+            border: 8px solid #8B4513;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+                        inset 0 0 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .poker-table::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 85%;
+            border: 2px dashed rgba(255, 215, 0, 0.2);
+            border-radius: 200px;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .playing-card {
+            width: 140px;
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .playing-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+        }
+
+        .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .card-suit {
+            font-size: 2em;
+            line-height: 1;
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+        }
+
+        .red {
+            color: #e53e3e;
+        }
+
+        .black {
+            color: #1a1a1a;
+        }
+
+        .poker-stats-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 6px solid;
+        }
+
+        .d-trade-section .poker-stats-box {
+            border-left-color: #e53e3e;
+        }
+
+        .a-trade-section .poker-stats-box {
+            border-left-color: #38a169;
+        }
+
+        .poker-stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .poker-stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .poker-stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .poker-stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .d-trade-section .poker-stat-value {
+            color: #e53e3e;
+        }
+
+        .a-trade-section .poker-stat-value {
+            color: #38a169;
+        }
+
+        .poker-warning-box {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.2), rgba(229, 62, 62, 0.1));
+            border: 2px solid #e53e3e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .poker-success-box {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.2), rgba(56, 161, 105, 0.1));
+            border: 2px solid #38a169;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .poker-emphasis {
+            font-size: 1.2em;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .poker-probability {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+        }
+
         /* Footer */
         .footer {
             margin-top: 40px;
@@ -431,6 +631,29 @@
             }
             
             .result-amount .amount {
+                font-size: 2em;
+            }
+
+            /* Poker Cards Responsive */
+            .poker-comparison-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .playing-card {
+                width: 110px;
+                height: 160px;
+            }
+
+            .card-value {
+                font-size: 2em;
+            }
+
+            .card-center {
+                font-size: 3em;
+            }
+
+            .poker-section-title {
                 font-size: 2em;
             }
         }
@@ -929,68 +1152,153 @@
 
         <!-- Poker Tab -->
         <div id="poker" class="tab-content">
-            <div class="content-card">
-                <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
-                    ♠️ Die Poker-Analogie: Warum Trade-Grades wie Poker-Hände sind
+            <div style="background: linear-gradient(135deg, #0a4d2e 0%, #1a5c3d 50%, #0a4d2e 100%); border-radius: 12px; padding: 40px; color: white;">
+                <h2 style="font-size: 2.5em; margin-bottom: 20px; text-align: center; color: #daa520; text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);">
+                    ♠️ Die Poker-Analogie ♥️
                 </h2>
+                <p style="font-size: 1.4em; text-align: center; margin-bottom: 50px; opacity: 0.9;">
+                    Warum Du niemals gleich viel auf jede Hand setzen solltest
+                </p>
 
-                <div class="grid-2" style="margin-bottom: 30px;">
-                    <div style="background: rgba(229, 62, 62, 0.2); border-radius: 12px; padding: 25px; border-left: 6px solid var(--error);">
-                        <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--error);">9-2 Hand (D-Trade)</h3>
-                        <div style="font-size: 3em; text-align: center; margin-bottom: 15px;">9♣ 2♥</div>
-                        <div style="font-size: 1.2em; margin-bottom: 10px;"><strong>Win-Rate:</strong> 38.9%</div>
-                        <p style="font-size: 1.05em; line-height: 1.6;">
-                            Die schlechteste Starting Hand im Poker. Du spielst sie nur, wenn Du musst (Big Blind). Aber Du setzt niemals groß darauf!
-                        </p>
+                <div class="poker-comparison-grid">
+                    <!-- D-Trade Section -->
+                    <div class="poker-card-section d-trade-section">
+                        <div class="poker-section-title">D-TRADE</div>
+                        <div class="poker-subtitle">Die schlechteste Starting Hand</div>
+                        
+                        <div class="poker-table">
+                            <div class="cards-container">
+                                <div class="playing-card">
+                                    <div class="card-value black">9</div>
+                                    <div class="card-suit black">♣</div>
+                                    <div class="card-center black">♣</div>
+                                </div>
+                                
+                                <div class="playing-card">
+                                    <div class="card-value red">2</div>
+                                    <div class="card-suit red">♥</div>
+                                    <div class="card-center red">♥</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="poker-stats-box">
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Win-Rate:</span>
+                                <span class="poker-stat-value">38,9%</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Häufigkeit:</span>
+                                <span class="poker-stat-value">Ständig verfügbar</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Ranking:</span>
+                                <span class="poker-stat-value">Schlechteste Hand</span>
+                            </div>
+                        </div>
+
+                        <div class="poker-probability">
+                            Diese Hand verliert in <strong>6 von 10 Fällen</strong>
+                        </div>
+
+                        <div class="poker-warning-box">
+                            <p class="poker-emphasis">
+                                ⚠️ Niemals groß setzen!<br><br>
+                                Selbst Profi-Pokerspieler folden diese Hand sofort, wenn sie nicht im Big Blind sind. 
+                                Warum? Weil die Wahrscheinlichkeit zu verlieren viel höher ist als zu gewinnen.
+                            </p>
+                        </div>
                     </div>
 
-                    <div style="background: rgba(56, 161, 105, 0.2); border-radius: 12px; padding: 25px; border-left: 6px solid var(--success);">
-                        <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--success);">Pocket Aces (A-Trade)</h3>
-                        <div style="font-size: 3em; text-align: center; margin-bottom: 15px;">A♥ A♠</div>
-                        <div style="font-size: 1.2em; margin-bottom: 10px;"><strong>Win-Rate:</strong> 85.3%</div>
-                        <p style="font-size: 1.05em; line-height: 1.6;">
-                            Die stärkste Starting Hand! Kommt nur 1 von 221 Händen vor (0.45%). Wenn Du sie bekommst: GO ALL-IN!
-                        </p>
+                    <!-- A-Trade Section -->
+                    <div class="poker-card-section a-trade-section">
+                        <div class="poker-section-title">A-TRADE</div>
+                        <div class="poker-subtitle">Pocket Aces - Die Königshand</div>
+                        
+                        <div class="poker-table">
+                            <div class="cards-container">
+                                <div class="playing-card">
+                                    <div class="card-value red">A</div>
+                                    <div class="card-suit red">♥</div>
+                                    <div class="card-center red">♥</div>
+                                </div>
+                                
+                                <div class="playing-card">
+                                    <div class="card-value black">A</div>
+                                    <div class="card-suit black">♠</div>
+                                    <div class="card-center black">♠</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="poker-stats-box">
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Win-Rate:</span>
+                                <span class="poker-stat-value">85,3%</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Häufigkeit:</span>
+                                <span class="poker-stat-value">1 von 221 Händen (0,45%)</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Ranking:</span>
+                                <span class="poker-stat-value">Beste Starting Hand</span>
+                            </div>
+                        </div>
+
+                        <div class="poker-probability">
+                            Diese Hand gewinnt in <strong>mehr als 8 von 10 Fällen</strong>
+                        </div>
+
+                        <div class="poker-success-box">
+                            <p class="poker-emphasis">
+                                🚀 GO ALL-IN!<br><br>
+                                Wenn Du Pocket Aces bekommst, ist es Zeit massiv zu setzen. Diese Hand kommt nur alle 221 Hände vor - 
+                                Du kannst es Dir nicht leisten, diese Gelegenheit zu verpassen!
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="highlight-box" style="margin-bottom: 30px;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--primary-dark);">🎯 Die entscheidende Frage</h3>
-                    <p style="font-size: 1.2em; line-height: 1.8; color: var(--primary-dark);">
-                        Stell Dir vor, Du sitzt am Pokertisch und bekommst abwechselnd 9-2 und Pocket Aces.<br/><br/>
-                        <strong>Würdest Du auf beide Hände gleich viel setzen?</strong><br/><br/>
-                        Natürlich nicht! Das wäre finanzieller Selbstmord.<br/><br/>
-                        Genau so ist es beim Trading: Wenn Du auf einen D-Trade und einen A-Trade die gleiche Positionsgröße setzt, verschenkst Du massiv Potential!
+                <!-- Bottom Conclusion -->
+                <div style="margin-top: 60px; text-align: center; background: rgba(0, 0, 0, 0.4); padding: 40px; border-radius: 20px; border: 2px solid #daa520;">
+                    <h2 style="color: #daa520; font-size: 2.2em; margin-bottom: 20px;">💡 Die entscheidende Lektion</h2>
+                    <p style="color: white; font-size: 1.3em; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                        Würdest Du auf 9-2 und Pocket Aces die <strong>gleiche Summe</strong> setzen?<br><br>
+                        <span style="color: #e53e3e; font-size: 1.2em;">Natürlich nicht!</span><br><br>
+                        Genau so funktioniert Trading: Wenn Du auf D-Trades und A-Trades die gleiche Positionsgröße setzt, 
+                        <strong style="color: #daa520;">verschenkst Du massiv Potential</strong> und machst Dich langfristig zum Verlierer-Trader.
                     </p>
                 </div>
 
-                <div style="background: var(--bg-page); border-radius: 12px; padding: 30px;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--primary-dark);">📈 Trading = Professionelles Poker</h3>
+                <!-- Trading = Poker Analogien -->
+                <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 30px; margin-top: 30px;">
+                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: #daa520;">📈 Trading = Professionelles Poker</h3>
                     <div style="display: grid; gap: 20px;">
-                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
-                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 1: Wahrscheinlichkeiten</strong>
-                            <p style="margin-top: 10px; line-height: 1.6;">
+                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
+                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 1: Wahrscheinlichkeiten</strong>
+                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
                                 Sowohl beim Poker als auch beim Trading geht es um das Spielen von Wahrscheinlichkeiten, nicht um Garantien.
                             </p>
                         </div>
                         
-                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
-                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 2: Seltenheit der Premiumhände</strong>
-                            <p style="margin-top: 10px; line-height: 1.6;">
+                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
+                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 2: Seltenheit der Premiumhände</strong>
+                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
                                 Pocket Aces kommen nur 0.45% vor - genau wie A-Trades nur 2-3x pro Monat auftreten.
                             </p>
                         </div>
                         
-                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
-                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 3: Bankroll Management</strong>
-                            <p style="margin-top: 10px; line-height: 1.6;">
+                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
+                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 3: Bankroll Management</strong>
+                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
                                 Professionelle Pokerspieler passen ihre Einsätze der Handstärke an - genau wie Du Deine Positionsgröße dem Trade-Grade anpassen solltest.
                             </p>
                         </div>
                         
-                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
-                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Die Lektion:</strong>
-                            <p style="margin-top: 10px; line-height: 1.6;">
+                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
+                            <strong style="font-size: 1.2em; color: #daa520;">Die Lektion:</strong>
+                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
                                 Elite-Trader, wie Elite-Pokerspieler, machen den Großteil ihres Geldes mit wenigen großen Händen/Trades. Sie erkennen die Pocket Aces, wenn sie kommen, und setzen massiv darauf!
                             </p>
                         </div>
