@@ -1537,6 +1537,73 @@ def tirone_quadrant_lines():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/position-sizing-abcd-calculator')
+def position_sizing_abcd_calculator():
+    """ABCD Trade-Grades Position Sizing Calculator"""
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='position-sizing-abcd-calculator').first()
+    except:
+        pass
+    
+    # Falls kein Modul in DB, erstelle ein temporäres für Template-Kompatibilität
+    if not module:
+        from types import SimpleNamespace
+        module = SimpleNamespace(
+            title='ABCD Trade-Grades Position Sizing Calculator',
+            description='Exponentielles Bet-Sizing für Elite-Trader - Wie Du durch intelligentes Bet-Sizing Deine Trading-Performance exponentiell steigerst',
+            slug='position-sizing-abcd-calculator',
+            icon='🎯',
+            estimated_duration=45,
+            difficulty_level='advanced',
+            view_count=0
+        )
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = session.get('user', {}).get('membership', 'free') if session.get('logged_in') else 'free'
+    
+    # Für Demo-Zwecke: Premium und Elite können zugreifen
+    if user_subscription not in ['premium', 'elite'] and hasattr(module, 'required_subscription_levels'):
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='position-sizing-abcd-calculator'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in'):
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            if hasattr(module, 'id'):
+                progress = ModuleProgress.query.filter_by(
+                    user_id=str(user_id), 
+                    module_id=module.id
+                ).first()
+                
+                if not progress:
+                    progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                    db.session.add(progress)
+                    db.session.commit()
+                else:
+                    progress.last_accessed = datetime.utcnow()
+                    db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if hasattr(module, 'id'):
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if hasattr(module, 'id') else (None, None)
+    
+    return render_template('position_sizing_abcd_calculator.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 # === HELPER FUNCTIONS ===
 
 def get_module_navigation(current_module):
@@ -1984,6 +2051,82 @@ def update_marktampel_module():
         db.session.rollback()
         flash(f'❌ Fehler beim Update: {str(e)}', 'error')
         return redirect(url_for('admin_modules'))
+
+@app.route('/admin/add-position-sizing-calculator')
+def add_position_sizing_calculator():
+    """🎯 Fügt den ABCD Position-Sizing-Calculator zur Datenbank hinzu"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        # Prüfen ob bereits existiert
+        existing_module = LearningModule.query.filter_by(slug='position-sizing-abcd-calculator').first()
+        if existing_module:
+            flash('⚠️ Position-Sizing-Calculator existiert bereits!', 'warning')
+            return redirect(url_for('admin_modules'))
+        
+        # Risikomanagement-Kategorie finden
+        risk_category = ModuleCategory.query.filter_by(slug='risikomanagement').first()
+        if not risk_category:
+            flash('❌ Risikomanagement-Kategorie nicht gefunden. Führe erst die Demo-Module-Initialisierung aus.', 'error')
+            return redirect(url_for('admin_modules'))
+        
+        # Position Sizing Unterkategorie finden
+        position_sizing_subcategory = ModuleSubcategory.query.filter_by(
+            category_id=risk_category.id,
+            slug='position-sizing'
+        ).first()
+        
+        if not position_sizing_subcategory:
+            # Unterkategorie erstellen falls sie nicht existiert
+            position_sizing_subcategory = ModuleSubcategory(
+                category_id=risk_category.id,
+                name='3.1 Position Sizing',
+                slug='position-sizing',
+                icon='🎯',
+                description='Optimale Positionsgrößenbestimmung für verschiedene Trade-Qualitäten',
+                sort_order=1,
+                is_active=True
+            )
+            db.session.add(position_sizing_subcategory)
+            db.session.flush()
+        
+        # Sort-Order bestimmen
+        max_order = db.session.query(db.func.max(LearningModule.sort_order)).filter_by(
+            subcategory_id=position_sizing_subcategory.id
+        ).scalar() or 0
+        
+        # Neues Modul erstellen
+        calculator_module = LearningModule(
+            category_id=risk_category.id,
+            subcategory_id=position_sizing_subcategory.id,
+            title='ABCD Trade-Grades Position Sizing Calculator',
+            slug='position-sizing-abcd-calculator',
+            description='Exponentielles Bet-Sizing für Elite-Trader: Wie Du durch intelligentes Bet-Sizing Deine Trading-Performance exponentiell steigerst. Interaktiver Calculator mit 5 Tabs: Warnung für Anfänger, Live-Calculator, Trade-Grades-Übersicht, Performance-Vergleich und Poker-Analogie.',
+            icon='🎯',
+            template_file='position_sizing_abcd_calculator.html',
+            content_type='html',
+            is_published=True,
+            is_lead_magnet=False,
+            required_subscription_levels=['premium', 'elite'],
+            estimated_duration=45,
+            difficulty_level='advanced',
+            sort_order=max_order + 1
+        )
+        
+        db.session.add(calculator_module)
+        db.session.commit()
+        
+        flash('✅ ABCD Position-Sizing-Calculator erfolgreich zur Datenbank hinzugefügt!', 'success')
+        flash('🎯 Modul ist verfügbar unter: /position-sizing-abcd-calculator', 'info')
+        flash('📊 Kategorie: 3. Risikomanagement → 3.1 Position Sizing', 'info')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Hinzufügen des Moduls: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_modules'))
 
 @app.route('/admin/init-database')
 def admin_init_database():

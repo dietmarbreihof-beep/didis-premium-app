@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ABCD Trade-Grades Position Sizing Calculator - Exponentielles Bet-Sizing für Elite-Trader">
+    <meta name="keywords" content="Position Sizing, Trade Grades, ABCD Trading, Exponentielles Sizing, Bet Sizing">
+    
+    <title>🎯 ABCD Trade-Grades Calculator | Didis Trading Academy</title>
+    
+    <!-- Import Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* Didis Design-System */
+            --primary-dark: #1a1a1a;
+            --primary-medium: #2d2d2d;
+            --gold-dark: #b8860b;
+            --gold-classic: #daa520;
+            --gold-light: #f4e97b;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --error: #e53e3e;
+            --bg-page: #f7f7f7;
+            --bg-card: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-medium) 100%);
+            color: var(--primary-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero Header */
+        .hero-header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--gold-dark) 100%);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .hero-header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px 25px;
+            background: var(--primary-medium);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: normal;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-classic));
+            font-weight: bold;
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Content Cards */
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Grid Layout */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.2em;
+            border: 2px solid var(--gold-classic);
+            border-radius: 8px;
+        }
+
+        .form-group input[type="range"] {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .range-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: var(--gold-dark);
+        }
+
+        /* Radio Buttons */
+        .radio-group {
+            margin-bottom: 10px;
+        }
+
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 12px;
+            background: var(--bg-page);
+            border-radius: 8px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option.selected {
+            background: var(--gold-light);
+            border-color: var(--gold-dark);
+        }
+
+        .radio-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .radio-description {
+            margin-top: 5px;
+            margin-left: 30px;
+            font-size: 0.9em;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Grade Buttons */
+        .grade-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .grade-button {
+            padding: 15px;
+            background: var(--bg-page);
+            color: var(--primary-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.2em;
+            transition: all 0.3s ease;
+        }
+
+        .grade-button.selected {
+            color: white;
+        }
+
+        .grade-button.grade-a.selected { background: var(--success); }
+        .grade-button.grade-b.selected { background: var(--warning); }
+        .grade-button.grade-c.selected { background: var(--gold-light); color: var(--primary-dark); }
+        .grade-button.grade-d.selected { background: var(--error); }
+
+        /* Result Display */
+        .result-card {
+            border-radius: 12px;
+            padding: 30px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-amount {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .result-amount .label {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .result-amount .amount {
+            font-size: 3em;
+            font-weight: bold;
+        }
+
+        .result-amount .percentage {
+            font-size: 1.1em;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .characteristics {
+            background: rgba(255,255,255,0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .characteristics h3 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .characteristics div {
+            margin-bottom: 10px;
+        }
+
+        /* Trade Grade Cards */
+        .grade-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .grade-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .grade-card.grade-a { border-left: 6px solid var(--success); }
+        .grade-card.grade-b { border-left: 6px solid var(--warning); }
+        .grade-card.grade-c { border-left: 6px solid var(--gold-light); }
+        .grade-card.grade-d { border-left: 6px solid var(--error); }
+
+        .grade-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .grade-title.grade-a { color: var(--success); }
+        .grade-title.grade-b { color: var(--warning); }
+        .grade-title.grade-c { color: var(--gold-dark); }
+        .grade-title.grade-d { color: var(--error); }
+
+        .grade-stats {
+            margin-bottom: 15px;
+            padding: 15px;
+            background: var(--bg-page);
+            border-radius: 8px;
+        }
+
+        .grade-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .grade-examples {
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .grade-examples.grade-a { background: rgba(56, 161, 105, 0.1); }
+        .grade-examples.grade-b { background: rgba(214, 158, 46, 0.1); }
+        .grade-examples.grade-c { background: rgba(184, 134, 11, 0.1); }
+        .grade-examples.grade-d { background: rgba(229, 62, 62, 0.1); }
+
+        /* Comparison Cards */
+        .comparison-card {
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .comparison-card.positive {
+            background: rgba(56, 161, 105, 0.2);
+            border-left: 6px solid var(--success);
+        }
+
+        .comparison-card.negative {
+            background: rgba(229, 62, 62, 0.2);
+            border-left: 6px solid var(--error);
+        }
+
+        .comparison-amount {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comparison-amount.positive { color: var(--success); }
+        .comparison-amount.negative { color: var(--error); }
+
+        .comparison-percentage {
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        /* Warning Boxes */
+        .warning-box {
+            background: rgba(229, 62, 62, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 6px solid var(--error);
+        }
+
+        .warning-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: var(--error);
+        }
+
+        .success-box {
+            background: rgba(56, 161, 105, 0.2);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 6px solid var(--success);
+        }
+
+        .success-title {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--gold-light), var(--gold-classic));
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .highlight-title {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+        }
+
+        /* Lists */
+        ul {
+            padding-left: 25px;
+        }
+
+        li {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary-medium) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                min-width: auto;
+            }
+            
+            .hero-header h1 {
+                font-size: 2em;
+            }
+            
+            .result-amount .amount {
+                font-size: 2em;
+            }
+        }
+
+        /* Hidden class for tab content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <!-- Hero Header -->
+        <div class="hero-header">
+            <h1>🎯 Positionsgrößen-Kalkulator</h1>
+            <p>Wie Du durch intelligentes Bet-Sizing Deine Trading-Performance exponentiell steigerst</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-button active" onclick="showTab('beginner')">⚠️ START HIER</button>
+            <button class="tab-button" onclick="showTab('calculator')">🧮 Kalkulator</button>
+            <button class="tab-button" onclick="showTab('grades')">📊 Trade-Grades</button>
+            <button class="tab-button" onclick="showTab('comparison')">📈 Vergleich</button>
+            <button class="tab-button" onclick="showTab('poker')">♠️ Poker-Analogie</button>
+        </div>
+
+        <!-- Beginner Tab -->
+        <div id="beginner" class="tab-content active">
+            <div class="content-card">
+                <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
+                    ⚠️ WICHTIG: Lies das zuerst!
+                </h2>
+
+                <div class="warning-box">
+                    <h3 class="warning-title">🚨 Exponentielles Bet-Sizing ist NICHT für Anfänger!</h3>
+                    <p style="font-size: 1.2em; line-height: 1.8; color: var(--primary-dark);">
+                        Dieser Kalkulator und die gesamte Methodik basieren auf einem fundamentalen Prinzip: 
+                        <strong> Du musst Deine A-Trades von Deinen D-Trades unterscheiden können - IN ECHTZEIT, VOR dem Entry!</strong>
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.6em; margin-bottom: 20px; color: var(--primary-dark);">
+                        🎯 Drei kritische Voraussetzungen
+                    </h3>
+                    
+                    <div style="display: grid; gap: 20px;">
+                        <div style="background: var(--bg-page); border-radius: 12px; padding: 25px; border-left: 6px solid var(--gold-dark);">
+                            <h4 style="font-size: 1.3em; margin-bottom: 15px; color: var(--gold-dark);">
+                                1. Empirische Daten aus Deinem Journal
+                            </h4>
+                            <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
+                                <strong>Ohne Journal-Auswertung Deiner eigenen Setups fehlt Dir die empirische Grundlage für präzises Grading.</strong>
+                            </p>
+                            <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium);">
+                                Die Win-Rates in diesem Tool (90%, 70%, 55%, 40%) stammen aus Lance Breitsteins Beispiel-Fallstudie - 
+                                <strong> nicht aus Deinen realen Trading-Daten!</strong> Du kannst nicht einfach raten, welche Win-Rate Deine Setups haben. 
+                                Du musst es messen!
+                            </p>
+                            <div style="margin-top: 15px; padding: 15px; background: rgba(218, 165, 32, 0.2); border-radius: 8px;">
+                                <strong>Minimum:</strong> 30-50 Trades pro Grade bevor Du valide Schlüsse ziehen kannst. 
+                                Besser: 100+ Trades für statistische Signifikanz.
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg-page); border-radius: 12px; padding: 25px; border-left: 6px solid var(--gold-dark);">
+                            <h4 style="font-size: 1.3em; margin-bottom: 15px; color: var(--gold-dark);">
+                                2. Entwickelte Trading-Strategie
+                            </h4>
+                            <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
+                                Du brauchst ein <strong>erprobtes Playbook</strong> mit definierten Setups:
+                            </p>
+                            <ul style="font-size: 1.05em; line-height: 1.8; padding-left: 25px;">
+                                <li>Stage 2 Breakout-Setup</li>
+                                <li>Momentum-Plays mit Katalysator</li>
+                                <li>Mean Reversion bei Support</li>
+                                <li>Swing-Trades nach Konsolidierung</li>
+                            </ul>
+                            <p style="font-size: 1.05em; line-height: 1.6; margin-top: 15px; color: var(--primary-medium);">
+                                <strong>Wenn Du noch kein klares System hast:</strong> Fokussiere Dich ERST auf das Erlernen einer Strategie 
+                                mit kleinen, gleichbleibenden Positionsgrößen. Bet-Sizing kommt später!
+                            </p>
+                        </div>
+
+                        <div style="background: var(--bg-page); border-radius: 12px; padding: 25px; border-left: 6px solid var(--gold-dark);">
+                            <h4 style="font-size: 1.3em; margin-bottom: 15px; color: var(--gold-dark);">
+                                3. Psychologische Stabilität
+                            </h4>
+                            <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
+                                Du musst in der Lage sein, <strong>größere Positionsgrößen zu handeln, ohne dass es Deine Psychologie verändert.</strong>
+                            </p>
+                            <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium);">
+                                Wenn Du bei 8x Deiner normalen Size nervös wirst und deshalb zu früh aussteigst oder 
+                                Deine Entry-Regeln missachtest, zerstörst Du den gesamten Expected Value Vorteil. 
+                                Die Positionsgröße darf Deine Ausführung NICHT beeinflussen.
+                            </p>
+                            <div style="margin-top: 15px; padding: 15px; background: rgba(229, 62, 62, 0.2); border-radius: 8px;">
+                                <strong>Warnung:</strong> Viele Trader ruinieren ihre Accounts, weil sie zu schnell skalieren, 
+                                bevor sie psychologisch bereit sind!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h3 class="highlight-title">✅ Der richtige Weg zum exponentiellen Sizing</h3>
+                    <div style="font-size: 1.1em; line-height: 1.8; color: var(--primary-dark);">
+                        <p style="margin-bottom: 15px;">
+                            <strong>Phase 1 (Monate 1-6):</strong> Lerne Dein Setup. Trade mit kleiner, gleichbleibender Size. 
+                            Führe detailliertes Journal. Ziel: Konsistenz entwickeln.
+                        </p>
+                        <p style="margin-bottom: 15px;">
+                            <strong>Phase 2 (Monate 7-12):</strong> Analysiere Dein Journal. Identifiziere Deine besten Setups. 
+                            Beginne mit leichtem linearem Sizing (1x, 1.5x, 2x, 3x). Sammle mehr Daten.
+                        </p>
+                        <p style="margin-bottom: 15px;">
+                            <strong>Phase 3 (Jahr 2+):</strong> Mit 100+ Trades und bewiesener Konsistenz: 
+                            Beginne vorsichtig mit exponentiellem Sizing. Steigere monatlich um 10%.
+                        </p>
+                        <p>
+                            <strong>Phase 4 (Elite Level):</strong> Nach Jahren der Erfahrung und psychologischer Meisterschaft: 
+                            Aggressive Skalierung bei A-Setups (1x, 3x, 9x, 27x).
+                        </p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h3 class="success-title">🚀 Dein nächster Schritt</h3>
+                    <p style="font-size: 1.2em; line-height: 1.8; color: var(--primary-dark); margin-bottom: 20px;">
+                        Wenn Du noch kein vollständiges Trade-Journal hast, starte JETZT damit:
+                    </p>
+                    <div style="background: white; padding: 20px; border-radius: 8px;">
+                        <p style="font-size: 1.1em; line-height: 1.6; margin-bottom: 15px;">
+                            <strong>Minimales Journal pro Trade:</strong>
+                        </p>
+                        <ul style="font-size: 1.05em; line-height: 1.8; padding-left: 25px;">
+                            <li>Datum & Ticker</li>
+                            <li>Setup-Typ (z.B. "Stage 2 Breakout")</li>
+                            <li><strong>Grade VOR Entry</strong> (A/B/C/D) - das ist kritisch!</li>
+                            <li>Entry & Exit Preis</li>
+                            <li>Ergebnis (Win/Loss/Breakeven)</li>
+                            <li>P&L in Euro</li>
+                            <li>Kurze Notiz: Warum dieser Grade? Was lief gut/schlecht?</li>
+                        </ul>
+                    </div>
+                    <p style="font-size: 1.1em; line-height: 1.6; margin-top: 20px; color: var(--primary-dark);">
+                        Nach 50-100 Trades hast Du genug Daten, um Deine echten Win-Rates pro Grade zu berechnen. 
+                        Dann - und erst dann - kannst Du den Kalkulator mit Deinen realen Zahlen nutzen.
+                    </p>
+                </div>
+
+                <div style="margin-top: 30px; padding: 25px; background: var(--primary-medium); border-radius: 12px; color: white; text-align: center;">
+                    <p style="font-size: 1.3em; line-height: 1.8;">
+                        <strong style="color: var(--gold-classic);">Denk dran:</strong> Elite-Trader wurden nicht über Nacht zu Elite-Tradern. 
+                        Sie verbrachten Jahre damit, ihr Handwerk zu perfektionieren, bevor sie aggressiv skalieren konnten.
+                    </p>
+                    <p style="font-size: 1.1em; margin-top: 15px; opacity: 0.9;">
+                        Sei geduldig mit Dir selbst. Fokussiere Dich auf Konsistenz vor Sizing.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Tab -->
+        <div id="calculator" class="tab-content">
+            <div class="grid-2">
+                <!-- Einstellungen -->
+                <div class="content-card">
+                    <h2 style="font-size: 1.8em; margin-bottom: 25px; color: var(--primary-dark);">
+                        🧮 Deine Einstellungen
+                    </h2>
+
+                    <div class="form-group">
+                        <label>Depotwert (€)</label>
+                        <input type="number" id="depotwert" value="100000" onchange="updateCalculation()">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Basis-Risiko pro D-Trade (%)</label>
+                        <input type="range" id="risikoRange" min="0.25" max="3" step="0.25" value="1" onchange="updateRiskSlider()">
+                        <div class="range-value" id="risikoValue">1%</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sizing-Methode</label>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectMethod('equal')">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" name="method" value="equal" id="equal">
+                                    <span style="font-weight: bold; font-size: 1.05em;">Gleiches Sizing</span>
+                                </div>
+                                <div class="radio-description">Für Anfänger - Lerne erst Dein System</div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectMethod('linear')">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" name="method" value="linear" id="linear">
+                                    <span style="font-weight: bold; font-size: 1.05em;">Lineares Sizing</span>
+                                </div>
+                                <div class="radio-description">Für Beginner mit ersten Daten</div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option selected" onclick="selectMethod('exponential')">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" name="method" value="exponential" id="exponential" checked>
+                                    <span style="font-weight: bold; font-size: 1.05em;">Exponentielles Sizing</span>
+                                </div>
+                                <div class="radio-description">Für Trader mit 4+ Jahren Erfahrung + robuste Daten</div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectMethod('wild')">
+                                <div style="display: flex; align-items: center;">
+                                    <input type="radio" name="method" value="wild" id="wild">
+                                    <span style="font-weight: bold; font-size: 1.05em;">Exponentiell Wild</span>
+                                </div>
+                                <div class="radio-description">Für Elite-Trader mit 8+ Jahren Erfahrung + tonnenweise Daten</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Trade-Grade auswählen</label>
+                        <div class="grade-grid">
+                            <button class="grade-button grade-a selected" onclick="selectGrade('A')">A-Trade</button>
+                            <button class="grade-button grade-b" onclick="selectGrade('B')">B-Trade</button>
+                            <button class="grade-button grade-c" onclick="selectGrade('C')">C-Trade</button>
+                            <button class="grade-button grade-d" onclick="selectGrade('D')">D-Trade</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ergebnis -->
+                <div class="result-card" id="resultCard" style="background: var(--success);">
+                    <h2 style="font-size: 1.8em; margin-bottom: 25px;" id="resultTitle">A-Trade Positionsgröße</h2>
+
+                    <div class="result-amount">
+                        <div class="label">Empfohlenes Risiko</div>
+                        <div class="amount" id="resultAmount">€8.000,00</div>
+                        <div class="percentage" id="resultPercentage">8,00% des Depots</div>
+                    </div>
+
+                    <div class="characteristics">
+                        <h3>Trade-Charakteristika</h3>
+                        <div><strong>Win-Rate:</strong> <span id="winRate">90%</span></div>
+                        <div><strong>Risk/Reward:</strong> <span id="riskReward">1:4</span></div>
+                        <div><strong>Expected Value:</strong> <span id="expectedValue">$3.50</span></div>
+                        <div><strong>Häufigkeit:</strong> <span id="frequency">2-3x pro Monat</span></div>
+                    </div>
+
+                    <div class="characteristics">
+                        <p style="line-height: 1.6; font-size: 1.05em;">
+                            <strong>Beschreibung:</strong> <span id="description">Die absoluten Highlight-Trades des Jahres. Pocket Aces. Alles stimmt perfekt.</span>
+                        </p>
+                        <p style="line-height: 1.6; font-size: 1.05em; margin-top: 10px;">
+                            <strong>Beispiele:</strong> <span id="examples">QXO Entry bei $13.90, CELH Breakout, SMCI Stage 2 Setup</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Grades Tab -->
+        <div id="grades" class="tab-content">
+            <div class="grid-4">
+                <div class="grade-card grade-a">
+                    <h3 class="grade-title grade-a">A-Trade</h3>
+                    <div class="grade-stats">
+                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--success); font-weight: bold;">90%</span></div>
+                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--success); font-weight: bold;">1:4</span></div>
+                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--success); font-weight: bold;">$3.50</span></div>
+                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">2-3x pro Monat</span></div>
+                    </div>
+                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                        Die absoluten Highlight-Trades des Jahres. Pocket Aces. Alles stimmt perfekt.
+                    </p>
+                    <div class="grade-examples grade-a">
+                        <strong style="color: var(--success);">Beispiele:</strong>
+                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                            QXO Entry bei $13.90, CELH Breakout, SMCI Stage 2 Setup
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grade-card grade-b">
+                    <h3 class="grade-title grade-b">B-Trade</h3>
+                    <div class="grade-stats">
+                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--warning); font-weight: bold;">70%</span></div>
+                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--warning); font-weight: bold;">1:2</span></div>
+                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--warning); font-weight: bold;">$1.10</span></div>
+                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Mehrmals pro Woche</span></div>
+                    </div>
+                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                        Solide Setups mit gutem Risk-Reward. Die "Singles" im Trading.
+                    </p>
+                    <div class="grade-examples grade-b">
+                        <strong style="color: var(--warning);">Beispiele:</strong>
+                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                            Stage 2 Continuation, Breakout über Resistance, Momentum-Plays
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grade-card grade-c">
+                    <h3 class="grade-title grade-c">C-Trade</h3>
+                    <div class="grade-stats">
+                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">55%</span></div>
+                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">1:1</span></div>
+                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">$0.10</span></div>
+                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Täglich</span></div>
+                    </div>
+                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                        Durchschnittliche Trades. Leichter Edge, aber nichts Besonderes.
+                    </p>
+                    <div class="grade-examples grade-c">
+                        <strong style="color: var(--gold-dark);">Beispiele:</strong>
+                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                            Kleine Scalps, Range-Trades, Routine-Setups
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grade-card grade-d">
+                    <h3 class="grade-title grade-d">D-Trade</h3>
+                    <div class="grade-stats">
+                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--error); font-weight: bold;">40%</span></div>
+                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--error); font-weight: bold;">1:1</span></div>
+                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--error); font-weight: bold;">-$0.20</span></div>
+                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Ständig verfügbar</span></div>
+                    </div>
+                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                        Mediocre 50/50 Trades oder negativer Expected Value. Vermeiden!
+                    </p>
+                    <div class="grade-examples grade-d">
+                        <strong style="color: var(--error);">Beispiele:</strong>
+                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                            FOMO-Trades, Breaking News ohne Setup, Übertrading
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparison Tab -->
+        <div id="comparison" class="tab-content">
+            <div class="content-card">
+                <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
+                    📊 Die Macht des Exponentiellen Sizings
+                </h2>
+
+                <div class="highlight-box" style="margin-bottom: 30px;">
+                    <p style="font-size: 1.1em; line-height: 1.6; color: var(--primary-dark);">
+                        <strong>Annahme:</strong> 100 Trades über ein Jahr: 2x A-Trades, 8x B-Trades, 24x C-Trades, 66x D-Trades<br/>
+                        <strong>Depotwert:</strong> €<span id="comparisonDepot">100.000</span><br/>
+                        <strong>Basis-Risiko (D-Trade):</strong> <span id="comparisonRisk">1</span>%
+                    </p>
+                </div>
+
+                <div class="grid-4" style="margin-bottom: 30px;">
+                    <div class="comparison-card negative">
+                        <h3 style="font-size: 1.3em; margin-bottom: 15px; color: var(--primary-dark);">Gleiches Sizing</h3>
+                        <div class="comparison-amount negative" id="equalResult">-€2.000,00</div>
+                        <div class="comparison-percentage negative" id="equalPercentage">-2,00%</div>
+                    </div>
+
+                    <div class="comparison-card positive">
+                        <h3 style="font-size: 1.3em; margin-bottom: 15px; color: var(--primary-dark);">Lineares Sizing</h3>
+                        <div class="comparison-amount positive" id="linearResult">+€11.000,00</div>
+                        <div class="comparison-percentage positive" id="linearPercentage">+11,00%</div>
+                    </div>
+
+                    <div class="comparison-card positive">
+                        <h3 style="font-size: 1.3em; margin-bottom: 15px; color: var(--primary-dark);">Exponentielles Sizing</h3>
+                        <div class="comparison-amount positive" id="exponentialResult">+€35.000,00</div>
+                        <div class="comparison-percentage positive" id="exponentialPercentage">+35,00%</div>
+                    </div>
+
+                    <div class="comparison-card positive">
+                        <h3 style="font-size: 1.3em; margin-bottom: 15px; color: var(--primary-dark);">Exponentiell Wild</h3>
+                        <div class="comparison-amount positive" id="wildResult">+€94.600,00</div>
+                        <div class="comparison-percentage positive" id="wildPercentage">+94,60%</div>
+                    </div>
+                </div>
+
+                <div style="background: var(--bg-page); border-radius: 12px; padding: 30px;">
+                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--primary-dark);">💡 Kernerkenntnisse</h3>
+                    <ul style="font-size: 1.1em; line-height: 1.8; color: var(--primary-medium);">
+                        <li style="margin-bottom: 15px;">
+                            <strong>Gleiches Sizing:</strong> Bei konstanter Positionsgröße wirst Du zum Verlierer-Trader, selbst wenn Du gute Trades identifizieren kannst!
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <strong>Lineares Sizing:</strong> Schon eine einfache Skalierung (1x, 2x, 3x, 4x) macht Dich profitabel.
+                        </li>
+                        <li style="margin-bottom: 15px;">
+                            <strong>Exponentielles Sizing:</strong> Die wahre Magie beginnt hier. Durch 1x, 2x, 4x, 8x vervielfachst Du Deine Performance dramatisch.
+                        </li>
+                        <li>
+                            <strong>Exponentiell Wild:</strong> Elite-Trader setzen auf extreme Skalierung (1x, 3x, 9x, 27x) und machen 80%+ ihrer Jahresperformance mit weniger als 5% ihrer Trades!
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Poker Tab -->
+        <div id="poker" class="tab-content">
+            <div class="content-card">
+                <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
+                    ♠️ Die Poker-Analogie: Warum Trade-Grades wie Poker-Hände sind
+                </h2>
+
+                <div class="grid-2" style="margin-bottom: 30px;">
+                    <div style="background: rgba(229, 62, 62, 0.2); border-radius: 12px; padding: 25px; border-left: 6px solid var(--error);">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--error);">9-2 Hand (D-Trade)</h3>
+                        <div style="font-size: 3em; text-align: center; margin-bottom: 15px;">9♣ 2♥</div>
+                        <div style="font-size: 1.2em; margin-bottom: 10px;"><strong>Win-Rate:</strong> 38.9%</div>
+                        <p style="font-size: 1.05em; line-height: 1.6;">
+                            Die schlechteste Starting Hand im Poker. Du spielst sie nur, wenn Du musst (Big Blind). Aber Du setzt niemals groß darauf!
+                        </p>
+                    </div>
+
+                    <div style="background: rgba(56, 161, 105, 0.2); border-radius: 12px; padding: 25px; border-left: 6px solid var(--success);">
+                        <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--success);">Pocket Aces (A-Trade)</h3>
+                        <div style="font-size: 3em; text-align: center; margin-bottom: 15px;">A♥ A♠</div>
+                        <div style="font-size: 1.2em; margin-bottom: 10px;"><strong>Win-Rate:</strong> 85.3%</div>
+                        <p style="font-size: 1.05em; line-height: 1.6;">
+                            Die stärkste Starting Hand! Kommt nur 1 von 221 Händen vor (0.45%). Wenn Du sie bekommst: GO ALL-IN!
+                        </p>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--primary-dark);">🎯 Die entscheidende Frage</h3>
+                    <p style="font-size: 1.2em; line-height: 1.8; color: var(--primary-dark);">
+                        Stell Dir vor, Du sitzt am Pokertisch und bekommst abwechselnd 9-2 und Pocket Aces.<br/><br/>
+                        <strong>Würdest Du auf beide Hände gleich viel setzen?</strong><br/><br/>
+                        Natürlich nicht! Das wäre finanzieller Selbstmord.<br/><br/>
+                        Genau so ist es beim Trading: Wenn Du auf einen D-Trade und einen A-Trade die gleiche Positionsgröße setzt, verschenkst Du massiv Potential!
+                    </p>
+                </div>
+
+                <div style="background: var(--bg-page); border-radius: 12px; padding: 30px;">
+                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: var(--primary-dark);">📈 Trading = Professionelles Poker</h3>
+                    <div style="display: grid; gap: 20px;">
+                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
+                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 1: Wahrscheinlichkeiten</strong>
+                            <p style="margin-top: 10px; line-height: 1.6;">
+                                Sowohl beim Poker als auch beim Trading geht es um das Spielen von Wahrscheinlichkeiten, nicht um Garantien.
+                            </p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
+                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 2: Seltenheit der Premiumhände</strong>
+                            <p style="margin-top: 10px; line-height: 1.6;">
+                                Pocket Aces kommen nur 0.45% vor - genau wie A-Trades nur 2-3x pro Monat auftreten.
+                            </p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
+                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Ähnlichkeit 3: Bankroll Management</strong>
+                            <p style="margin-top: 10px; line-height: 1.6;">
+                                Professionelle Pokerspieler passen ihre Einsätze der Handstärke an - genau wie Du Deine Positionsgröße dem Trade-Grade anpassen solltest.
+                            </p>
+                        </div>
+                        
+                        <div style="padding: 20px; background: white; border-radius: 8px; border-left: 4px solid var(--gold-dark);">
+                            <strong style="font-size: 1.2em; color: var(--gold-dark);">Die Lektion:</strong>
+                            <p style="margin-top: 10px; line-height: 1.6;">
+                                Elite-Trader, wie Elite-Pokerspieler, machen den Großteil ihres Geldes mit wenigen großen Händen/Trades. Sie erkennen die Pocket Aces, wenn sie kommen, und setzen massiv darauf!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">
+                <strong style="color: var(--gold-classic);">Denk dran:</strong> Elite-Trader machen 80%+ ihrer Jahresperformance mit weniger als 5% ihrer Trades!
+            </p>
+            <p style="font-size: 1.05em; opacity: 0.9;">
+                Die Kunst liegt darin, die Pocket Aces zu erkennen und dann die Ranch zu setzen.
+            </p>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Global variables
+        let currentTab = 'beginner';
+        let selectedGrade = 'A';
+        let selectedMethod = 'exponential';
+        let depotwert = 100000;
+        let risikoProTrade = 1;
+
+        // Trade grades data
+        const tradeGrades = {
+            A: {
+                name: 'A-Trade',
+                color: '#38a169',
+                winRate: 90,
+                reward: 4,
+                risk: 1,
+                ev: 3.50,
+                frequency: '2-3x pro Monat',
+                beschreibung: 'Die absoluten Highlight-Trades des Jahres. Pocket Aces. Alles stimmt perfekt.',
+                beispiele: 'QXO Entry bei $13.90, CELH Breakout, SMCI Stage 2 Setup'
+            },
+            B: {
+                name: 'B-Trade',
+                color: '#d69e2e',
+                winRate: 70,
+                reward: 2,
+                risk: 1,
+                ev: 1.10,
+                frequency: 'Mehrmals pro Woche',
+                beschreibung: 'Solide Setups mit gutem Risk-Reward. Die "Singles" im Trading.',
+                beispiele: 'Stage 2 Continuation, Breakout über Resistance, Momentum-Plays'
+            },
+            C: {
+                name: 'C-Trade',
+                color: '#f4e97b',
+                winRate: 55,
+                reward: 1,
+                risk: 1,
+                ev: 0.10,
+                frequency: 'Täglich',
+                beschreibung: 'Durchschnittliche Trades. Leichter Edge, aber nichts Besonderes.',
+                beispiele: 'Kleine Scalps, Range-Trades, Routine-Setups'
+            },
+            D: {
+                name: 'D-Trade',
+                color: '#e53e3e',
+                winRate: 40,
+                reward: 1,
+                risk: 1,
+                ev: -0.20,
+                frequency: 'Ständig verfügbar',
+                beschreibung: 'Mediocre 50/50 Trades oder negativer Expected Value. Vermeiden!',
+                beispiele: 'FOMO-Trades, Breaking News ohne Setup, Übertrading'
+            }
+        };
+
+        // Multipliers for different methods
+        const multipliers = {
+            equal: { A: 1, B: 1, C: 1, D: 1 },
+            linear: { A: 4, B: 3, C: 2, D: 1 },
+            exponential: { A: 8, B: 4, C: 2, D: 1 },
+            wild: { A: 27, B: 9, C: 3, D: 1 }
+        };
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            currentTab = tabName;
+        }
+
+        // Method selection
+        function selectMethod(method) {
+            selectedMethod = method;
+            
+            // Update radio buttons
+            document.querySelectorAll('.radio-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Update radio input
+            document.getElementById(method).checked = true;
+            
+            updateCalculation();
+        }
+
+        // Grade selection
+        function selectGrade(grade) {
+            selectedGrade = grade;
+            
+            // Update buttons
+            document.querySelectorAll('.grade-button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            updateCalculation();
+        }
+
+        // Update risk slider
+        function updateRiskSlider() {
+            const slider = document.getElementById('risikoRange');
+            risikoProTrade = parseFloat(slider.value);
+            document.getElementById('risikoValue').textContent = risikoProTrade + '%';
+            updateCalculation();
+        }
+
+        // Calculate position size
+        function calculatePositionSize(grade, method) {
+            const basisRisiko = (depotwert * risikoProTrade) / 100;
+            return basisRisiko * multipliers[method][grade];
+        }
+
+        // Update calculation
+        function updateCalculation() {
+            // Get current values
+            depotwert = parseFloat(document.getElementById('depotwert').value) || 100000;
+            
+            const currentSize = calculatePositionSize(selectedGrade, selectedMethod);
+            const grade = tradeGrades[selectedGrade];
+            
+            // Update result display
+            document.getElementById('resultTitle').textContent = grade.name + ' Positionsgröße';
+            document.getElementById('resultAmount').textContent = '€' + currentSize.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            document.getElementById('resultPercentage').textContent = ((currentSize / depotwert) * 100).toFixed(2) + '% des Depots';
+            
+            // Update characteristics
+            document.getElementById('winRate').textContent = grade.winRate + '%';
+            document.getElementById('riskReward').textContent = '1:' + grade.reward;
+            document.getElementById('expectedValue').textContent = '$' + grade.ev;
+            document.getElementById('frequency').textContent = grade.frequency;
+            document.getElementById('description').textContent = grade.beschreibung;
+            document.getElementById('examples').textContent = grade.beispiele;
+            
+            // Update result card color
+            const resultCard = document.getElementById('resultCard');
+            resultCard.style.background = grade.color;
+            
+            // Update comparison
+            updateComparison();
+        }
+
+        // Calculate comparison
+        function updateComparison() {
+            const trades = [
+                { grade: 'A', count: 2, ev: 3.50 },
+                { grade: 'B', count: 8, ev: 1.10 },
+                { grade: 'C', count: 24, ev: 0.10 },
+                { grade: 'D', count: 66, ev: -0.20 }
+            ];
+
+            const methods = ['equal', 'linear', 'exponential', 'wild'];
+            const results = {};
+
+            methods.forEach(method => {
+                let totalPL = 0;
+                trades.forEach(({ grade, count, ev }) => {
+                    const size = calculatePositionSize(grade, method);
+                    totalPL += size * ev * count;
+                });
+                results[method] = totalPL;
+            });
+
+            // Update comparison display
+            document.getElementById('comparisonDepot').textContent = depotwert.toLocaleString('de-DE');
+            document.getElementById('comparisonRisk').textContent = risikoProTrade;
+            
+            // Update results
+            const methodIds = {
+                equal: 'equalResult',
+                linear: 'linearResult', 
+                exponential: 'exponentialResult',
+                wild: 'wildResult'
+            };
+            
+            const percentageIds = {
+                equal: 'equalPercentage',
+                linear: 'linearPercentage',
+                exponential: 'exponentialPercentage', 
+                wild: 'wildPercentage'
+            };
+
+            Object.entries(results).forEach(([method, pl]) => {
+                const isPositive = pl > 0;
+                const performance = ((pl / depotwert) * 100).toFixed(2);
+                
+                const resultElement = document.getElementById(methodIds[method]);
+                const percentageElement = document.getElementById(percentageIds[method]);
+                
+                resultElement.textContent = (isPositive ? '+' : '') + '€' + pl.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                percentageElement.textContent = (isPositive ? '+' : '') + performance + '%';
+                
+                // Update classes
+                resultElement.className = 'comparison-amount ' + (isPositive ? 'positive' : 'negative');
+                percentageElement.className = 'comparison-percentage ' + (isPositive ? 'positive' : 'negative');
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCalculation();
+        });
+    </script>
+
+    <!-- Navigation -->
+    {% include '_navigation.html' %}
+</body>
+</html>
