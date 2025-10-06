@@ -700,6 +700,163 @@
             transform: translateY(-2px);
         }
 
+        /* Progressive Disclosure Styling */
+        .learning-step {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .learning-step.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .learning-step.locked {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--gold-light);
+        }
+
+        .step-number {
+            background: var(--gold-dark);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+
+        .step-title {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .next-step-button {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold-classic));
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .next-step-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .quiz-container {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #0ea5e9;
+        }
+
+        .quiz-question {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: var(--primary-dark);
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--gold-classic);
+            transform: translateX(5px);
+        }
+
+        .quiz-option.selected {
+            border-color: var(--gold-dark);
+            background: var(--gold-light);
+        }
+
+        .quiz-option.correct {
+            border-color: var(--success);
+            background: rgba(56, 161, 105, 0.1);
+        }
+
+        .quiz-option.wrong {
+            border-color: var(--error);
+            background: rgba(229, 62, 62, 0.1);
+        }
+
+        .quiz-feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .quiz-feedback.correct {
+            background: rgba(56, 161, 105, 0.2);
+            color: var(--success);
+        }
+
+        .quiz-feedback.wrong {
+            background: rgba(229, 62, 62, 0.2);
+            color: var(--error);
+        }
+
+        .progress-bar-container {
+            background: #e5e7eb;
+            height: 8px;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-classic));
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
         /* Hidden class for tab content */
         .tab-content {
             display: none;
@@ -719,21 +876,173 @@
             <p>Wie Du durch intelligentes Bet-Sizing Deine Trading-Performance exponentiell steigerst</p>
         </div>
 
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+        <div class="progress-text" id="progressText">Schritt 1 von 5: Poker-Analogie verstehen</div>
+
         <!-- Tab Navigation -->
         <div class="tab-navigation">
-            <button class="tab-button active" onclick="showTab('beginner')">⚠️ START HIER</button>
-            <button class="tab-button" onclick="showTab('calculator')">🧮 Kalkulator</button>
-            <button class="tab-button" onclick="showTab('grades')">📊 Trade-Grades</button>
-            <button class="tab-button" onclick="showTab('comparison')">📈 Vergleich</button>
-            <button class="tab-button" onclick="showTab('poker')">♠️ Poker-Analogie</button>
+            <button class="tab-button active" onclick="showTab('poker')">♠️ 1. Poker-Analogie</button>
+            <button class="tab-button" onclick="showTab('warning')">⚠️ 2. Wichtige Warnung</button>
+            <button class="tab-button" onclick="showTab('grades')">📊 3. Trade-Grades</button>
+            <button class="tab-button" onclick="showTab('calculator')">🧮 4. Calculator</button>
+            <button class="tab-button" onclick="showTab('comparison')">📈 5. Performance-Vergleich</button>
         </div>
 
-        <!-- Beginner Tab -->
-        <div id="beginner" class="tab-content active">
-            <div class="content-card">
-                <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
-                    ⚠️ WICHTIG: Lies das zuerst!
+        <!-- Poker Tab (Schritt 1) -->
+        <div id="poker" class="tab-content active">
+            <div style="background: linear-gradient(135deg, #0a4d2e 0%, #1a5c3d 50%, #0a4d2e 100%); border-radius: 12px; padding: 40px; color: white;">
+                <div class="step-header" style="border-bottom-color: #daa520;">
+                    <div class="step-number">1</div>
+                    <div class="step-title" style="color: #daa520;">♠️ Die Poker-Analogie verstehen</div>
+                </div>
+
+                <h2 style="font-size: 2.5em; margin-bottom: 20px; text-align: center; color: #daa520; text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);">
+                    Warum Du niemals gleich viel auf jede Hand setzen solltest
                 </h2>
+
+                <div class="poker-comparison-grid">
+                    <!-- D-Trade Section -->
+                    <div class="poker-card-section d-trade-section">
+                        <div class="poker-section-title">D-TRADE</div>
+                        <div class="poker-subtitle">Die schlechteste Starting Hand</div>
+                        
+                        <div class="poker-table">
+                            <div class="cards-container">
+                                <div class="playing-card">
+                                    <div class="card-value black">9</div>
+                                    <div class="card-suit black">♣</div>
+                                    <div class="card-center black">♣</div>
+                                </div>
+                                
+                                <div class="playing-card">
+                                    <div class="card-value red">2</div>
+                                    <div class="card-suit red">♥</div>
+                                    <div class="card-center red">♥</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="poker-stats-box">
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Win-Rate:</span>
+                                <span class="poker-stat-value">38,9%</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Trading-Equivalent:</span>
+                                <span class="poker-stat-value">D-Trade (40%)</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Häufigkeit:</span>
+                                <span class="poker-stat-value">Ständig verfügbar</span>
+                            </div>
+                        </div>
+
+                        <div class="poker-probability">
+                            Diese Hand verliert in <strong>6 von 10 Fällen</strong>
+                        </div>
+
+                        <div class="poker-warning-box">
+                            <p class="poker-emphasis">
+                                ⚠️ Niemals groß setzen!<br><br>
+                                Selbst Profi-Pokerspieler folden diese Hand sofort. 
+                                Warum? Weil die Wahrscheinlichkeit zu verlieren viel höher ist als zu gewinnen.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- A-Trade Section -->
+                    <div class="poker-card-section a-trade-section">
+                        <div class="poker-section-title">A-TRADE</div>
+                        <div class="poker-subtitle">Pocket Aces - Die Königshand</div>
+                        
+                        <div class="poker-table">
+                            <div class="cards-container">
+                                <div class="playing-card">
+                                    <div class="card-value red">A</div>
+                                    <div class="card-suit red">♥</div>
+                                    <div class="card-center red">♥</div>
+                                </div>
+                                
+                                <div class="playing-card">
+                                    <div class="card-value black">A</div>
+                                    <div class="card-suit black">♠</div>
+                                    <div class="card-center black">♠</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="poker-stats-box">
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Win-Rate:</span>
+                                <span class="poker-stat-value">85,3%</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Trading-Equivalent:</span>
+                                <span class="poker-stat-value">A-Trade (90%)</span>
+                            </div>
+                            <div class="poker-stat-row">
+                                <span class="poker-stat-label">Häufigkeit:</span>
+                                <span class="poker-stat-value">1 von 221 Händen (0,45%)</span>
+                            </div>
+                        </div>
+
+                        <div class="poker-probability">
+                            Diese Hand gewinnt in <strong>mehr als 8 von 10 Fällen</strong>
+                        </div>
+
+                        <div class="poker-success-box">
+                            <p class="poker-emphasis">
+                                🚀 GO ALL-IN!<br><br>
+                                Wenn Du Pocket Aces bekommst, ist es Zeit massiv zu setzen. Diese Hand kommt nur alle 221 Hände vor!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz nach Poker-Analogie -->
+                <div class="quiz-container">
+                    <div class="quiz-question">🧠 Quiz: Verstehst Du die Poker-Analogie?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer(1, 'A', false)">
+                            A) Ich sollte auf alle Poker-Hände gleich viel setzen
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(1, 'B', true)">
+                            B) Ich sollte auf starke Hände (Pocket Aces) viel mehr setzen als auf schwache Hände (9-2)
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(1, 'C', false)">
+                            C) Poker hat nichts mit Trading zu tun
+                        </div>
+                    </div>
+                    <div id="quiz1Feedback" class="quiz-feedback" style="display: none;"></div>
+                </div>
+
+                <!-- Bottom Conclusion -->
+                <div style="margin-top: 40px; text-align: center; background: rgba(0, 0, 0, 0.4); padding: 40px; border-radius: 20px; border: 2px solid #daa520;">
+                    <h2 style="color: #daa520; font-size: 2.2em; margin-bottom: 20px;">💡 Die entscheidende Lektion</h2>
+                    <p style="color: white; font-size: 1.3em; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                        Würdest Du auf 9-2 und Pocket Aces die <strong>gleiche Summe</strong> setzen?<br><br>
+                        <span style="color: #e53e3e; font-size: 1.2em;">Natürlich nicht!</span><br><br>
+                        Genau so funktioniert Trading: Wenn Du auf D-Trades und A-Trades die gleiche Positionsgröße setzt, 
+                        <strong style="color: #daa520;">verschenkst Du massiv Potential</strong> und machst Dich langfristig zum Verlierer-Trader.
+                    </p>
+                </div>
+
+                <button class="next-step-button" onclick="nextStep()" id="step1NextButton" style="display: none;">
+                    ✅ Verstanden - Weiter zu Schritt 2: Wichtige Warnung ➡️
+                </button>
+            </div>
+        </div>
+
+        <!-- Warning Tab (Schritt 2) -->
+        <div id="warning" class="tab-content">
+            <div class="content-card">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">⚠️ Kritische Warnung für Anfänger</div>
+                </div>
 
                 <div class="warning-box">
                     <h3 class="warning-title">🚨 Exponentielles Bet-Sizing ist NICHT für Anfänger!</h3>
@@ -1321,13 +1630,16 @@
     <!-- JavaScript -->
     <script>
         // Global variables
-        let currentTab = 'beginner';
+        let currentTab = 'poker';
         let selectedGrade = 'A';
         let selectedMethod = 'exponential';
         let depotwert = 100000;
         let risikoProTrade = 1;
         let comparisonChart = null;
         let currentChartType = 'bar';
+        let currentStep = 1;
+        let quizAnswers = {};
+        let unlockedSteps = [1]; // Schritt 1 ist immer freigeschaltet
 
         // Trade grades data
         const tradeGrades = {
@@ -1385,8 +1697,25 @@
             wild: { A: 27, B: 9, C: 3, D: 1 }
         };
 
-        // Tab switching
+        // Progressive Learning System
+        const stepMapping = {
+            'poker': 1,
+            'warning': 2, 
+            'grades': 3,
+            'calculator': 4,
+            'comparison': 5
+        };
+
+        // Tab switching with unlock logic
         function showTab(tabName) {
+            const stepNumber = stepMapping[tabName];
+            
+            // Check if step is unlocked
+            if (!unlockedSteps.includes(stepNumber)) {
+                alert(`🔒 Schritt ${stepNumber} ist noch nicht freigeschaltet! Absolviere erst die vorherigen Schritte.`);
+                return;
+            }
+
             // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -1404,6 +1733,98 @@
             event.target.classList.add('active');
             
             currentTab = tabName;
+            currentStep = stepNumber;
+            
+            updateProgress();
+        }
+
+        // Quiz system
+        function selectQuizAnswer(quizNumber, answer, isCorrect) {
+            // Mark all options as unselected
+            const quizOptions = event.target.parentElement.querySelectorAll('.quiz-option');
+            quizOptions.forEach(option => {
+                option.classList.remove('selected', 'correct', 'wrong');
+            });
+            
+            // Mark selected option
+            event.target.classList.add('selected');
+            
+            // Store answer
+            quizAnswers[quizNumber] = { answer, isCorrect };
+            
+            // Show feedback
+            const feedbackElement = document.getElementById(`quiz${quizNumber}Feedback`);
+            feedbackElement.style.display = 'block';
+            
+            if (isCorrect) {
+                event.target.classList.add('correct');
+                feedbackElement.className = 'quiz-feedback correct';
+                feedbackElement.textContent = '✅ Richtig! Du hast die Analogie verstanden.';
+                
+                // Show next step button
+                const nextButton = document.getElementById(`step${quizNumber}NextButton`);
+                if (nextButton) {
+                    nextButton.style.display = 'block';
+                }
+            } else {
+                event.target.classList.add('wrong');
+                feedbackElement.className = 'quiz-feedback wrong';
+                feedbackElement.textContent = '❌ Nicht ganz richtig. Denk nochmal über die Poker-Analogie nach!';
+            }
+        }
+
+        // Next step function
+        function nextStep() {
+            const nextStepNumber = currentStep + 1;
+            
+            // Unlock next step
+            if (!unlockedSteps.includes(nextStepNumber)) {
+                unlockedSteps.push(nextStepNumber);
+            }
+            
+            // Update tab button states
+            updateTabStates();
+            
+            // Switch to next tab
+            const nextTabName = Object.keys(stepMapping).find(key => stepMapping[key] === nextStepNumber);
+            if (nextTabName) {
+                showTab(nextTabName);
+            }
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const totalSteps = 5;
+            const progress = (currentStep / totalSteps) * 100;
+            
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            const stepNames = {
+                1: 'Poker-Analogie verstehen',
+                2: 'Wichtige Warnung lesen', 
+                3: 'Trade-Grades lernen',
+                4: 'Calculator anwenden',
+                5: 'Performance-Vergleich analysieren'
+            };
+            
+            document.getElementById('progressText').textContent = 
+                `Schritt ${currentStep} von ${totalSteps}: ${stepNames[currentStep]}`;
+        }
+
+        // Update tab button states (locked/unlocked)
+        function updateTabStates() {
+            document.querySelectorAll('.tab-button').forEach((button, index) => {
+                const stepNumber = index + 1;
+                if (unlockedSteps.includes(stepNumber)) {
+                    button.style.opacity = '1';
+                    button.style.cursor = 'pointer';
+                    button.disabled = false;
+                } else {
+                    button.style.opacity = '0.5';
+                    button.style.cursor = 'not-allowed';
+                    button.disabled = true;
+                }
+            });
         }
 
         // Method selection
@@ -1838,9 +2259,14 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateCalculation();
+            updateProgress();
+            updateTabStates();
+            
             // Initialize chart after a short delay to ensure DOM is ready
             setTimeout(() => {
-                createComparisonChart();
+                if (currentTab === 'comparison') {
+                    createComparisonChart();
+                }
             }, 100);
         });
     </script>
