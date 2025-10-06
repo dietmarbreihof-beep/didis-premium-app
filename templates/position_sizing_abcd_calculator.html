@@ -11,6 +11,9 @@
     <!-- Import Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
+    <!-- Chart.js für interaktive Diagramme -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <style>
         :root {
             /* Didis Design-System */
@@ -432,6 +435,48 @@
             }
         }
 
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .chart-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .chart-tab-button {
+            padding: 10px 20px;
+            background: var(--bg-page);
+            border: 2px solid var(--gold-classic);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: var(--primary-dark);
+        }
+
+        .chart-tab-button.active {
+            background: var(--gold-classic);
+            color: white;
+        }
+
+        .chart-tab-button:hover {
+            transform: translateY(-2px);
+        }
+
         /* Hidden class for tab content */
         .tab-content {
             display: none;
@@ -794,6 +839,24 @@
                     </p>
                 </div>
 
+                <!-- Chart Container mit Tab-Auswahl -->
+                <div class="chart-container">
+                    <div class="chart-tabs">
+                        <button class="chart-tab-button active" onclick="showChart('bar')">📊 Balkendiagramm</button>
+                        <button class="chart-tab-button" onclick="showChart('line')">📈 Linienchart</button>
+                        <button class="chart-tab-button" onclick="showChart('doughnut')">🍩 Donut-Chart</button>
+                    </div>
+                    
+                    <div class="chart-wrapper">
+                        <canvas id="comparisonChart"></canvas>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px; font-size: 0.9em; color: #666;">
+                        <span id="chartDescription">Jahresperformance-Vergleich der verschiedenen Sizing-Methoden</span>
+                    </div>
+                </div>
+
+                <!-- Numerische Ergebnisse (kompakter) -->
                 <div class="grid-4" style="margin-bottom: 30px;">
                     <div class="comparison-card negative">
                         <h3 style="font-size: 1.3em; margin-bottom: 15px; color: var(--primary-dark);">Gleiches Sizing</h3>
@@ -931,6 +994,8 @@
         let selectedMethod = 'exponential';
         let depotwert = 100000;
         let risikoProTrade = 1;
+        let comparisonChart = null;
+        let currentChartType = 'bar';
 
         // Trade grades data
         const tradeGrades = {
@@ -1079,6 +1144,11 @@
             
             // Update comparison
             updateComparison();
+            
+            // Update chart if it exists
+            if (comparisonChart) {
+                createComparisonChart();
+            }
         }
 
         // Calculate comparison
@@ -1137,9 +1207,286 @@
             });
         }
 
+        // Chart functions
+        function showChart(chartType) {
+            currentChartType = chartType;
+            
+            // Update tab buttons
+            document.querySelectorAll('.chart-tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update chart description
+            const descriptions = {
+                bar: 'Jahresperformance-Vergleich der verschiedenen Sizing-Methoden',
+                line: 'Performance-Entwicklung über verschiedene Sizing-Ansätze',
+                doughnut: 'Verteilung der Performance-Beiträge nach Sizing-Methode'
+            };
+            document.getElementById('chartDescription').textContent = descriptions[chartType];
+            
+            // Recreate chart
+            createComparisonChart();
+        }
+
+        function createComparisonChart() {
+            const ctx = document.getElementById('comparisonChart').getContext('2d');
+            
+            // Destroy existing chart
+            if (comparisonChart) {
+                comparisonChart.destroy();
+            }
+            
+            // Calculate current results
+            const trades = [
+                { grade: 'A', count: 2, ev: 3.50 },
+                { grade: 'B', count: 8, ev: 1.10 },
+                { grade: 'C', count: 24, ev: 0.10 },
+                { grade: 'D', count: 66, ev: -0.20 }
+            ];
+
+            const methods = ['equal', 'linear', 'exponential', 'wild'];
+            const results = {};
+            const labels = ['Gleiches Sizing', 'Lineares Sizing', 'Exponentielles Sizing', 'Exponentiell Wild'];
+
+            methods.forEach(method => {
+                let totalPL = 0;
+                trades.forEach(({ grade, count, ev }) => {
+                    const size = calculatePositionSize(grade, method);
+                    totalPL += size * ev * count;
+                });
+                results[method] = totalPL;
+            });
+
+            const data = [results.equal, results.linear, results.exponential, results.wild];
+            const percentages = data.map(value => ((value / depotwert) * 100).toFixed(1));
+            
+            // Colors based on performance
+            const backgroundColors = data.map(value => 
+                value < 0 ? '#e53e3e' : 
+                value < 10000 ? '#38a169' : 
+                value < 50000 ? '#d69e2e' : '#b8860b'
+            );
+            
+            const borderColors = backgroundColors.map(color => color);
+
+            let chartConfig = {};
+
+            if (currentChartType === 'bar') {
+                chartConfig = {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Jahresperformance (€)',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderColor: borderColors,
+                            borderWidth: 2,
+                            borderRadius: 8,
+                            borderSkipped: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#1a1a1a',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#daa520',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        const percentage = ((value / depotwert) * 100).toFixed(2);
+                                        return [
+                                            `Performance: €${value.toLocaleString('de-DE')}`,
+                                            `Rendite: ${percentage}%`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f0f0'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '€' + value.toLocaleString('de-DE');
+                                    },
+                                    color: '#666'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#666',
+                                    maxRotation: 45
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1000,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                };
+            } else if (currentChartType === 'line') {
+                chartConfig = {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Performance-Entwicklung',
+                            data: data,
+                            borderColor: '#daa520',
+                            backgroundColor: 'rgba(218, 165, 32, 0.1)',
+                            borderWidth: 4,
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: backgroundColors,
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 3,
+                            pointRadius: 8,
+                            pointHoverRadius: 12
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: '#1a1a1a',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#daa520',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        const percentage = ((value / depotwert) * 100).toFixed(2);
+                                        return [
+                                            `Performance: €${value.toLocaleString('de-DE')}`,
+                                            `Rendite: ${percentage}%`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
+                                    color: '#f0f0f0'
+                                },
+                                ticks: {
+                                    callback: function(value) {
+                                        return '€' + value.toLocaleString('de-DE');
+                                    },
+                                    color: '#666'
+                                }
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    color: '#666'
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1500,
+                            easing: 'easeOutQuart'
+                        }
+                    }
+                };
+            } else if (currentChartType === 'doughnut') {
+                // Für Donut-Chart nur positive Werte verwenden
+                const positiveData = data.filter(value => value > 0);
+                const positiveLabels = labels.filter((label, index) => data[index] > 0);
+                const positiveColors = backgroundColors.filter((color, index) => data[index] > 0);
+                
+                chartConfig = {
+                    type: 'doughnut',
+                    data: {
+                        labels: positiveLabels,
+                        datasets: [{
+                            data: positiveData,
+                            backgroundColor: positiveColors,
+                            borderColor: '#ffffff',
+                            borderWidth: 3,
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true,
+                                    color: '#666',
+                                    font: {
+                                        size: 12,
+                                        weight: '600'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: '#1a1a1a',
+                                titleColor: '#ffffff',
+                                bodyColor: '#ffffff',
+                                borderColor: '#daa520',
+                                borderWidth: 1,
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed;
+                                        const percentage = ((value / depotwert) * 100).toFixed(2);
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const share = ((value / total) * 100).toFixed(1);
+                                        return [
+                                            `Performance: €${value.toLocaleString('de-DE')}`,
+                                            `Rendite: ${percentage}%`,
+                                            `Anteil: ${share}%`
+                                        ];
+                                    }
+                                }
+                            }
+                        },
+                        animation: {
+                            duration: 1200,
+                            easing: 'easeOutBounce'
+                        }
+                    }
+                };
+            }
+
+            comparisonChart = new Chart(ctx, chartConfig);
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             updateCalculation();
+            // Initialize chart after a short delay to ensure DOM is ready
+            setTimeout(() => {
+                createComparisonChart();
+            }, 100);
         });
     </script>
 
