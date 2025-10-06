@@ -854,6 +854,30 @@
                     <div style="text-align: center; margin-top: 15px; font-size: 0.9em; color: #666;">
                         <span id="chartDescription">Jahresperformance-Vergleich der verschiedenen Sizing-Methoden</span>
                     </div>
+                    
+                    <!-- Farblegende für Balkendiagramm -->
+                    <div id="colorLegend" style="display: flex; justify-content: center; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 16px; height: 16px; background: #ef4444; border-radius: 4px;"></div>
+                            <span style="font-size: 0.9em; color: #666;">Verlust</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 16px; height: 16px; background: #86efac; border-radius: 4px;"></div>
+                            <span style="font-size: 0.9em; color: #666;">Niedrige Performance</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 16px; height: 16px; background: #4ade80; border-radius: 4px;"></div>
+                            <span style="font-size: 0.9em; color: #666;">Mittlere Performance</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 16px; height: 16px; background: #22c55e; border-radius: 4px;"></div>
+                            <span style="font-size: 0.9em; color: #666;">Gute Performance</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 16px; height: 16px; background: #16a34a; border-radius: 4px;"></div>
+                            <span style="font-size: 0.9em; color: #666;">Elite Performance</span>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Numerische Ergebnisse (kompakter) -->
@@ -1225,6 +1249,14 @@
             };
             document.getElementById('chartDescription').textContent = descriptions[chartType];
             
+            // Show/hide color legend based on chart type
+            const colorLegend = document.getElementById('colorLegend');
+            if (chartType === 'bar') {
+                colorLegend.style.display = 'flex';
+            } else {
+                colorLegend.style.display = 'none';
+            }
+            
             // Recreate chart
             createComparisonChart();
         }
@@ -1261,12 +1293,27 @@
             const data = [results.equal, results.linear, results.exponential, results.wild];
             const percentages = data.map(value => ((value / depotwert) * 100).toFixed(1));
             
-            // Colors based on performance
-            const backgroundColors = data.map(value => 
-                value < 0 ? '#e53e3e' : 
-                value < 10000 ? '#38a169' : 
-                value < 50000 ? '#d69e2e' : '#b8860b'
-            );
+            // Bedingte Formatierung: Hell- bis Dunkelgrün basierend auf Performance
+            const backgroundColors = data.map((value, index) => {
+                if (value < 0) {
+                    return '#ef4444'; // Rot für Verluste
+                } else {
+                    // Grün-Gradient basierend auf Ranking (0 = schlechteste positive, 3 = beste)
+                    const positiveValues = data.filter(v => v >= 0);
+                    const sortedPositive = [...positiveValues].sort((a, b) => a - b);
+                    const rank = sortedPositive.indexOf(value);
+                    
+                    // Grün-Gradient von hell zu dunkel
+                    const greenShades = [
+                        '#86efac', // Hellgrün (schlechteste positive Performance)
+                        '#4ade80', // Mittelgrün  
+                        '#22c55e', // Grün
+                        '#16a34a'  // Dunkelgrün (beste Performance)
+                    ];
+                    
+                    return greenShades[Math.min(rank, 3)];
+                }
+            });
             
             const borderColors = backgroundColors.map(color => color);
 
@@ -1349,8 +1396,8 @@
                         datasets: [{
                             label: 'Performance-Entwicklung',
                             data: data,
-                            borderColor: '#daa520',
-                            backgroundColor: 'rgba(218, 165, 32, 0.1)',
+                            borderColor: '#16a34a',
+                            backgroundColor: 'rgba(22, 163, 74, 0.1)',
                             borderWidth: 4,
                             fill: true,
                             tension: 0.4,
