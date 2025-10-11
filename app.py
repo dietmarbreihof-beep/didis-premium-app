@@ -4271,6 +4271,14 @@ if __name__ == '__main__':
         
         if not db_success:
             print("[WARNING] App startet trotz Database-Problemen...")
+        
+        # Volumen-Analyse Modul initialisieren
+        try:
+            from init_volume_module import init_volume_module
+            init_volume_module()
+            print("[INFO] Volumen-Analyse Modul initialisiert")
+        except Exception as e:
+            print(f"[WARNING] Volumen-Modul-Init fehlgeschlagen: {e}")
     
     print("[START] Didis Premium Trading Academy mit Menüsystem startet...")
     print("[INFO] Öffne Browser: http://localhost:5000")
