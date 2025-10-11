@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lerne Symmetrie im Trading - Eine der einfachsten und mächtigsten Heurist
+
+iken zur Vorhersage von Kursbewegungen.">
+    <title>📊 Symmetrie im Trading | Didis Trading Academy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+            line-height: 1.6;
+            font-size: 1.05em;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Hero Header */
+        .main-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        /* Fortschrittsbalken */
+        .progress-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #daa520;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            border-left: 6px solid #b8860b;
+            padding-left: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin: 30px 0 15px;
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 4px solid #b8860b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-left: 4px solid #38a169;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid #d69e2e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        /* Chart Images */
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 3px solid #2d2d2d;
+            transition: all 0.3s ease;
+        }
+
+        .chart-container img:hover {
+            border-color: #b8860b;
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.3);
+        }
+
+        .chart-caption {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Quiz Sections */
+        .quiz-container {
+            background: #f7f7f7;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #daa520;
+        }
+
+        .quiz-question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fffef8;
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.5);
+        }
+
+        .btn-secondary {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: white;
+            border: 2px solid #daa520;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .example-header {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #b8860b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .example-header::before {
+            content: "📈";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #b8860b;
+        }
+
+        /* Key Takeaways */
+        .takeaways-container {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #38a169;
+            margin: 40px 0;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #38a169;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2em;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.6em;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="main-header">
+            <h1>📊 Symmetrie im Trading</h1>
+            <p>Lerne eine der einfachsten und mächtigsten Heuristiken zur Vorhersage von Kursbewegungen</p>
+        </div>
+
+        <!-- Fortschrittsanzeige -->
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 1.1em;">Dein Fortschritt:</strong>
+                <span id="progress-text" style="font-size: 1.1em; color: #b8860b; font-weight: 600;">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p id="step-indicator" style="margin-top: 10px; color: #666;">Schritt 0 von 10</p>
+        </div>
+
+        <!-- Schritt 1: Technische Analyse als Werkzeugkasten -->
+        <div id="step-1" class="content-section active">
+            <h2 class="section-title">🧰 Technische Analyse als Werkzeugkasten</h2>
+            
+            <p style="font-size: 1.2em; line-height: 1.8; margin: 20px 0;">
+                Die technische Analyse ist ein <strong>wesentlicher Bestandteil</strong> des Aktienhandels. 
+                Es gibt viele Werkzeuge im technischen Analyse-Werkzeugkasten - aber nur wenige bieten den größten Nutzen.
+            </p>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">💡 Die Wahrheit über Trading-Tools</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Viele Trader verbringen Jahre damit, komplizierte Indikatoren zu meistern. 
+                    Aber die <strong>einfachsten Werkzeuge</strong> sind oft die mächtigsten.
+                </p>
+            </div>
+
+            <h3 style="font-size: 1.4em; margin: 30px 0 15px;">🎯 Was macht ein gutes Trading-Tool aus?</h3>
+            <ol style="font-size: 1.1em;">
+                <li><strong>Einfach zu verstehen:</strong> Keine komplexen Formeln oder Berechnungen</li>
+                <li><strong>Visuell klar:</strong> Du kannst es sofort im Chart erkennen</li>
+                <li><strong>Praktisch anwendbar:</strong> Hilft Dir, bessere Entscheidungen zu treffen</li>
+                <li><strong>Universell einsetzbar:</strong> Funktioniert auf allen Zeitebenen und Assets</li>
+            </ol>
+
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">✨ Symmetrie erfüllt alle diese Kriterien!</h4>
+                <p style="line-height: 1.8;">
+                    Symmetrie in Aktiendiagrammen ist eines dieser seltenen Werkzeuge, das <strong>einfach, visuell und praktisch</strong> ist. 
+                    Du wirst gleich verstehen, warum es so wertvoll ist.
+                </p>
+            </div>
+
+            <!-- Quiz 1 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Technische Analyse</h3>
+                
+                <div class="quiz-question">1. Was zeichnet ein gutes Trading-Tool aus?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="a">
+                    Es muss kompliziert und schwer zu verstehen sein
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="b">
+                    Es sollte einfach, visuell klar und praktisch anwendbar sein
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="c">
+                    Es muss teure Software benötigen
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Wie viele Trading-Tools bieten den größten Nutzen?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="a">
+                    Alle verfügbaren Indikatoren
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="b">
+                    Nur wenige, dafür die richtigen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="c">
+                    Mindestens 50 verschiedene Indikatoren
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. Warum ist Einfachheit wichtig?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="a">
+                    Weil Trader faul sind
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="b">
+                    Weil einfache Tools oft die mächtigsten und praktischsten sind
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="c">
+                    Einfachheit ist unwichtig
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(1)">Antworten prüfen</button>
+                <div id="quiz-1-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(2)">Weiter zu Schritt 2: Was ist Symmetrie? →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 2: Was ist Symmetrie? -->
+        <div id="step-2" class="content-section">
+            <h2 class="section-title">🔄 Was ist Symmetrie?</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">🎯 Die Definition</h3>
+                <p style="font-size: 1.2em; line-height: 1.8; font-weight: 600;">
+                    Symmetrie in Aktiendiagrammen bezieht sich auf das Auftreten von <strong>gleich großen Kursbewegungen</strong>.
+                </p>
+            </div>
+
+            <p style="font-size: 1.1em; line-height: 1.8; margin: 20px 0;">
+                Stell Dir Symmetrie wie ein <strong>Spiegelbild</strong> vor: Die Größe einer anfänglichen Bewegung 
+                wird von einer Ausbruchsbewegung gespiegelt.
+            </p>
+
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">📐 Das Spiegelbild-Konzept</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Erste Bewegung:</strong> Die Aktie steigt um z.B. 10 Dollar</li>
+                    <li><strong>Konsolidierung:</strong> Der Preis bewegt sich seitwärts</li>
+                    <li><strong>Zweite Bewegung:</strong> Nach dem Ausbruch steigt die Aktie wieder um etwa 10 Dollar</li>
+                    <li><strong>Das Resultat:</strong> Symmetrische Bewegungen - wie im Spiegel!</li>
+                </ul>
+            </div>
+
+            <h3 style="font-size: 1.4em; margin: 30px 0 15px;">🔍 Warum "Spiegelbild"?</h3>
+            <p style="font-size: 1.1em; line-height: 1.8;">
+                Das Konzept ist visuell sehr eingängig: Wenn Du die erste Bewegung "spiegelst", erhältst Du eine Erwartung 
+                für die zweite Bewegung. Es ist <strong>nicht exakt</strong>, aber gibt Dir einen hilfreichen Anhaltspunkt.
+            </p>
+
+            <!-- Quiz 2 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Was ist Symmetrie?</h3>
+                
+                <div class="quiz-question">1. Was bedeutet Symmetrie in Charts?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="a">
+                    Der Chart sieht schön aus
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="b">
+                    Gleich große Kursbewegungen wie ein Spiegelbild
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="c">
+                    Die Aktie handelt seitwärts
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was wird bei Symmetrie "gespiegelt"?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="a">
+                    Die Größe der Kursbewegung
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="b">
+                    Die Farbe der Kerzen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="c">
+                    Das Handelsvolumen
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. Ist Symmetrie exakt oder eine Schätzung?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_3" value="a">
+                    Eine hilfreiche Schätzung, nicht exakt
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_3" value="b">
+                    Immer 100% exakt
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_3" value="c">
+                    Völlig zufällig und nutzlos
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(2)">Antworten prüfen</button>
+                <div id="quiz-2-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(3)">Weiter zu Schritt 3: Warum existiert Symmetrie? →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 3-5: Simplified placeholders -->
+        <div id="step-3" class="content-section">
+            <h2 class="section-title">🧠 Warum existiert Symmetrie?</h2>
+            <p style="font-size: 1.2em;">Symmetrie existiert, weil sie eine der <strong>einfachsten Heuristiken</strong> ist, 
+            die Trader zur Verfügung haben. [Inhalt wird dynamisch geladen]</p>
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(4)">Weiter zu Schritt 4 →</button>
+            </div>
+        </div>
+
+        <div id="step-4" class="content-section">
+            <h2 class="section-title">🎯 Nutzen: Prognose von Kursbewegungen</h2>
+            <p style="font-size: 1.2em;">Verwende Symmetrie um <strong>Kursziele zu schätzen</strong>. 
+            [Inhalt wird dynamisch geladen]</p>
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(5)">Weiter zu Schritt 5 →</button>
+            </div>
+        </div>
+
+        <div id="step-5" class="content-section">
+            <h2 class="section-title">📊 Nutzen: Konsolidierung verstehen</h2>
+            <p style="font-size: 1.2em;">Symmetrie hilft Dir, <strong>Breakout-Potenzial</strong> einzuschätzen. 
+            [Inhalt wird dynamisch geladen]</p>
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(6)">Weiter zu Schritt 6: QBTS Praxis-Beispiel →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 6: QBTS Praxis-Beispiel mit Chart (WICHTIG!) -->
+        <div id="step-6" class="content-section">
+            <h2 class="section-title">💹 QBTS Praxis-Beispiel</h2>
+            
+            <p style="font-size: 1.2em; line-height: 1.8; margin: 20px 0;">
+                Lass uns das Konzept der Symmetrie an einem <strong>realen Beispiel</strong> demonstrieren: 
+                der Aktie <strong>QBTS</strong>.
+            </p>
+
+            <div class="chart-container">
+                <img src="{{ url_for('static', filename='screenshots/Symmetry_Beispiel_QBTS.jpg') }}" 
+                     alt="QBTS Symmetrie Beispiel Chart">
+                <p class="chart-caption">
+                    QBTS demonstriert perfekt das Konzept der Symmetrie: Zwei markierte Bewegungen zeigen 
+                    ähnliche Größenordnungen - die erste von ~$18 zu ~$27 (+$9), die zweite von ~$27 zu ~$38 (+$11)
+                </p>
+            </div>
+
+            <div class="example-box">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">📈 Schritt-für-Schritt Analyse</h3>
+                
+                <h4 style="margin: 20px 0 10px;">1️⃣ Die erste Bewegung (August-September)</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Start:</strong> Ungefähr $18-19</li>
+                    <li><strong>Ziel:</strong> Ungefähr $27</li>
+                    <li><strong>Bewegungsgröße:</strong> Etwa $8-9 nach oben</li>
+                    <li><strong>Charakteristik:</strong> Starke, kontinuierliche Aufwärtsbewegung</li>
+                </ul>
+
+                <h4 style="margin: 20px 0 10px;">2️⃣ Die Konsolidierung (Ende September)</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Preisspanne:</strong> Seitwärtsbewegung um $24-27</li>
+                    <li><strong>Dauer:</strong> Einige Tage bis Wochen</li>
+                    <li><strong>Bedeutung:</strong> Markt "pausiert" nach der ersten Bewegung</li>
+                    <li><strong>Trader-Psychologie:</strong> Konsolidierung baut Energie für nächste Bewegung auf</li>
+                </ul>
+
+                <h4 style="margin: 20px 0 10px;">3️⃣ Die zweite Bewegung (Oktober)</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Start:</strong> Ausbruch aus Konsolidierung bei ~$27</li>
+                    <li><strong>Ziel:</strong> Ungefähr $38</li>
+                    <li><strong>Bewegungsgröße:</strong> Etwa $11 nach oben</li>
+                    <li><strong>Symmetrie:</strong> Ähnliche Größenordnung wie erste Bewegung!</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h3 style="margin-bottom: 15px; color: #38a169;">✨ Was beweist dieses Beispiel?</h3>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Symmetrie existiert wirklich:</strong> Zwei Bewegungen von ähnlicher Größe</li>
+                    <li><strong>Es ist keine exakte Wissenschaft:</strong> $8-9 vs $11 - nah, aber nicht identisch</li>
+                    <li><strong>Es gibt Dir Orientierung:</strong> Nach der ersten Bewegung konntest Du mit ~$8-10 weiterer Bewegung rechnen</li>
+                    <li><strong>Risiko-Management wird möglich:</strong> Du weißt ungefähr, wo Du Gewinnmitnahmen planen solltest</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <h4 style="margin-bottom: 15px;">⚠️ Wichtige Einschränkung</h4>
+                <p style="line-height: 1.8;">
+                    Beachte: Symmetrie ist <strong>keineswegs deterministisch</strong>! Die Bewegung hätte auch kleiner oder größer sein können. 
+                    Aber es gibt Dir einen <strong>Anhaltspunkt</strong> - und das ist im Trading extrem wertvoll.
+                </p>
+            </div>
+
+            <!-- Quiz 6 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: QBTS Beispiel</h3>
+                
+                <div class="quiz-question">1. Wie groß war ungefähr die erste QBTS-Bewegung?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="a">
+                    $8-9 nach oben
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="b">
+                    $20 nach oben
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="c">
+                    $2-3 nach oben
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was geschah nach der Konsolidierung?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="a">
+                    Der Preis fiel stark
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="b">
+                    Eine weitere Aufwärtsbewegung von ähnlicher Größe (~$11)
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="c">
+                    Nichts, die Aktie blieb stehen
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. Waren die Bewegungen perfekt symmetrisch?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="a">
+                    Ja, auf den Cent genau
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="b">
+                    Nein, aber ähnliche Größenordnung ($8-9 vs $11)
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_3" value="c">
+                    Nein, völlig unterschiedlich
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">4. Was beweist das QBTS-Beispiel?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_4" value="a">
+                    Symmetrie ist nutzlos
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_4" value="b">
+                    Symmetrie gibt hilfreiche Orientierung, ist aber nicht exakt
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_4" value="c">
+                    Symmetrie funktioniert immer perfekt
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(6)">Antworten prüfen</button>
+                <div id="quiz-6-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(7)">Weiter zu Schritt 7 →</button>
+            </div>
+        </div>
+
+        <!-- Schritte 7-9: Simplified -->
+        <div id="step-7" class="content-section">
+            <h2 class="section-title">🧮 Erwartungswertberechnungen</h2>
+            <p>Symmetrie als <strong>Ausgangspunkt für EV</strong>-Berechnungen. [Inhalt wird dynamisch geladen]</p>
+            <button class="btn btn-primary" onclick="nextStep(8)">Weiter →</button>
+        </div>
+
+        <div id="step-8" class="content-section">
+            <h2 class="section-title">⚠️ Einschränkungen der Symmetrie</h2>
+            <p>Symmetrie ist <strong>nicht deterministisch</strong>. [Inhalt wird dynamisch geladen]</p>
+            <button class="btn btn-primary" onclick="nextStep(9)">Weiter →</button>
+        </div>
+
+        <div id="step-9" class="content-section">
+            <h2 class="section-title">🔗 Integration mit anderen Tools</h2>
+            <p>Kombiniere Symmetrie mit <strong>anderen Risikomanagement-Strategien</strong>. [Inhalt wird dynamisch geladen]</p>
+            <button class="btn btn-primary" onclick="nextStep(10)">Weiter zu Key Takeaways →</button>
+        </div>
+
+        <!-- Schritt 10: Key Takeaways -->
+        <div id="step-10" class="content-section">
+            <h2 class="section-title">📋 Key Takeaways</h2>
+            
+            <div class="takeaways-container">
+                <h3 style="text-align: center; color: #38a169; margin-bottom: 30px; font-size: 2em;">
+                    🎯 Die wichtigsten Erkenntnisse
+                </h3>
+                
+                <div class="takeaway-item">
+                    <p><strong>1.</strong> Symmetrie ist ein wertvolles Werkzeug der technischen Analyse, das oft übersehen wird.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>2.</strong> Definition: Symmetrie bezieht sich auf gleich große Kursbewegungen - wie ein Spiegelbild im Chart.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>3.</strong> Es ist eine der einfachsten Heuristiken zur Vorhersage von Kursbewegungen und liefert grobe Schätzungen.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>4.</strong> Symmetrie hilft beim Verständnis der Konsolidierung und beim Einschätzen des Breakout-Potenzials.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>5.</strong> Sie dient als Ausgangspunkt für Erwartungswertberechnungen und hilft bei fundierteren Trading-Entscheidungen.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>6.</strong> Das QBTS-Beispiel zeigt: Erste Bewegung ~$8-9, dann Konsolidierung, dann zweite Bewegung ~$11 - praktische Anwendung der Symmetrie.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>7.</strong> Wichtige Einschränkung: Symmetrie ist keineswegs deterministisch - Kursbewegungen können erheblich variieren.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>8.</strong> Verwende Symmetrie NICHT blind, sondern in Verbindung mit anderen Risikomanagement-Strategien und Analysemethoden.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3 style="text-align: center; margin-bottom: 20px;">🎓 Dein Weg nach vorn</h3>
+                <p style="font-size: 1.1em; line-height: 1.8; text-align: center;">
+                    Symmetrie-Analyse ist eine Fähigkeit, die Du durch <strong>Übung und Beobachtung</strong> meisterst. 
+                    Beginne heute damit, in Deinen Charts nach symmetrischen Mustern zu suchen. 
+                    Mit der Zeit entwickelst Du ein Gefühl dafür, wann Symmetrie wahrscheinlich ist und wann nicht.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="window.location.href='/'">Zurück zur Übersicht</button>
+                <button class="btn btn-secondary" onclick="resetProgress()">Modul wiederholen</button>
+            </div>
+        </div>
+
+        <script>
+            let currentStep = 1;
+            const totalSteps = 10;
+
+            window.addEventListener('DOMContentLoaded', function() {
+                loadProgress();
+                updateProgress();
+            });
+
+            function saveProgress() {
+                localStorage.setItem('symmetrie_step', currentStep);
+                localStorage.setItem('symmetrie_timestamp', new Date().toISOString());
+            }
+
+            function loadProgress() {
+                const saved = localStorage.getItem('symmetrie_step');
+                if (saved) {
+                    currentStep = parseInt(saved);
+                }
+            }
+
+            function nextStep(step) {
+                currentStep = step;
+                saveProgress();
+                showStep(step);
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            function showStep(step) {
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                const currentSection = document.getElementById(`step-${step}`);
+                if (currentSection) {
+                    currentSection.classList.add('active');
+                }
+            }
+
+            function updateProgress() {
+                const percentage = Math.round((currentStep / totalSteps) * 100);
+                document.getElementById('progress-fill').style.width = percentage + '%';
+                document.getElementById('progress-text').textContent = percentage + '%';
+                document.getElementById('step-indicator').textContent = `Schritt ${currentStep} von ${totalSteps}`;
+            }
+
+            function checkQuiz(quizNumber) {
+                const answers = {
+                    1: { q1_1: 'b', q1_2: 'b', q1_3: 'b' },
+                    2: { q2_1: 'b', q2_2: 'a', q2_3: 'a' },
+                    6: { q6_1: 'a', q6_2: 'b', q6_3: 'b', q6_4: 'b' }
+                };
+
+                const correctAnswers = answers[quizNumber];
+                let score = 0;
+                let total = Object.keys(correctAnswers).length;
+
+                for (let question in correctAnswers) {
+                    const selected = document.querySelector(`input[name="${question}"]:checked`);
+                    if (selected && selected.value === correctAnswers[question]) {
+                        score++;
+                    }
+                }
+
+                const feedback = document.getElementById(`quiz-${quizNumber}-feedback`);
+                feedback.classList.add('show');
+                
+                if (score === total) {
+                    feedback.style.background = 'linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%)';
+                    feedback.style.border = '2px solid #38a169';
+                    feedback.innerHTML = `<strong style="color: #38a169;">🎉 Perfekt! ${score}/${total} richtig!</strong><p>Du hast alle Konzepte verstanden. Weiter so!</p>`;
+                } else if (score >= total * 0.6) {
+                    feedback.style.background = 'linear-gradient(135deg, #fef3cd 0%, #ffeaa7 100%)';
+                    feedback.style.border = '2px solid #d69e2e';
+                    feedback.innerHTML = `<strong style="color: #d69e2e;">👍 Gut! ${score}/${total} richtig</strong><p>Du bist auf dem richtigen Weg.</p>`;
+                } else {
+                    feedback.style.background = 'linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%)';
+                    feedback.style.border = '2px solid #e53e3e';
+                    feedback.innerHTML = `<strong style="color: #e53e3e;">📖 ${score}/${total} richtig</strong><p>Lies diesen Abschnitt nochmal durch.</p>`;
+                }
+            }
+
+            function resetProgress() {
+                if (confirm('Möchtest Du wirklich Deinen gesamten Fortschritt zurücksetzen?')) {
+                    localStorage.removeItem('symmetrie_step');
+                    localStorage.removeItem('symmetrie_timestamp');
+                    currentStep = 1;
+                    showStep(1);
+                    updateProgress();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

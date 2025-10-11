@@ -856,6 +856,18 @@ def volume_analyse_grundlagen():
     
     return render_template('volume-analyse-grundlagen.html')
 
+@app.route('/symmetrie-trading')
+def symmetrie_trading():
+    """Interaktive Lernseite für Symmetrie im Trading"""
+    track_visitor()  # Analytics
+    
+    # Zugriff prüfen (optional - kann auch öffentlich sein)
+    # if not session.get('logged_in'):
+    #     flash('Bitte melde dich an, um auf dieses Modul zuzugreifen.', 'warning')
+    #     return redirect(url_for('login'))
+    
+    return render_template('symmetrie-trading.html')
+
 # Legacy Routes (kompatibel mit bestehender App)
 
 @app.route('/marktampel-allokation')
