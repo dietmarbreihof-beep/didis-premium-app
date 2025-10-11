@@ -844,6 +844,18 @@ def avwap_pinch_update_progress():
     
     return jsonify({'success': True, 'step': step})
 
+@app.route('/volume-analyse-grundlagen')
+def volume_analyse_grundlagen():
+    """Interaktive Lernseite für Volumen-Analyse Grundlagen"""
+    track_visitor()  # Analytics
+    
+    # Zugriff prüfen (optional - kann auch öffentlich sein)
+    # if not session.get('logged_in'):
+    #     flash('Bitte melde dich an, um auf dieses Modul zuzugreifen.', 'warning')
+    #     return redirect(url_for('login'))
+    
+    return render_template('volume-analyse-grundlagen.html')
+
 # Legacy Routes (kompatibel mit bestehender App)
 
 @app.route('/marktampel-allokation')

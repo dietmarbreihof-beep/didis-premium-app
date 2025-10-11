@@ -1,0 +1,1732 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lerne Volumen-Analyse im Trading - Die wichtigste Variable nach Preis und Zeit. Mit Breaking News, Continuation Plays und Kapitulation.">
+    <title>📊 Volumen-Analyse Grundlagen | Didis Trading Academy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f7f7f7;
+            line-height: 1.6;
+            font-size: 1.05em;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* Hero Header */
+        .main-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            padding: 40px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .main-header h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .main-header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        /* Fortschrittsbalken */
+        .progress-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #daa520;
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        /* Content Sections */
+        .content-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            border-left: 6px solid #b8860b;
+            padding-left: 20px;
+        }
+
+        .section-subtitle {
+            font-size: 1.6em;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin: 30px 0 15px;
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 4px solid #b8860b;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            border-left: 4px solid #38a169;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef3cd 0%, #ffeaa7 100%);
+            border-left: 4px solid #d69e2e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .error-box {
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        /* Chart Images */
+        .chart-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .chart-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border: 3px solid #2d2d2d;
+            transition: all 0.3s ease;
+        }
+
+        .chart-container img:hover {
+            border-color: #b8860b;
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.3);
+        }
+
+        .chart-caption {
+            margin-top: 15px;
+            font-size: 0.95em;
+            color: #666;
+            font-style: italic;
+        }
+
+        /* Quiz Sections */
+        .quiz-container {
+            background: #f7f7f7;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #daa520;
+        }
+
+        .quiz-question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fffef8;
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.5);
+        }
+
+        .btn-secondary {
+            background: #2d2d2d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #1a1a1a;
+        }
+
+        /* Example Boxes */
+        .example-box {
+            background: white;
+            border: 2px solid #daa520;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .example-header {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #b8860b;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .example-header::before {
+            content: "📈";
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        strong {
+            color: #b8860b;
+        }
+
+        /* Key Takeaways */
+        .takeaways-container {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border: 2px solid #38a169;
+            margin: 40px 0;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #38a169;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        /* Completion */
+        .completion-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .completion-box h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-header h1 {
+                font-size: 2em;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.6em;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="main-header">
+            <h1>📊 Volumen-Analyse Grundlagen</h1>
+            <p>Lerne die wichtigste Trading-Variable nach Preis und Zeit</p>
+        </div>
+
+        <!-- Fortschrittsanzeige -->
+        <div class="progress-container">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <strong style="font-size: 1.1em;">Dein Fortschritt:</strong>
+                <span id="progress-text" style="font-size: 1.1em; color: #b8860b; font-weight: 600;">0%</span>
+            </div>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <p id="step-indicator" style="margin-top: 10px; color: #666;">Schritt 0 von 10</p>
+        </div>
+
+        <!-- Schritt 1: Einführung -->
+        <div id="step-1" class="content-section active">
+            <h2 class="section-title">💪 Die Macht des Volumens</h2>
+            
+            <p style="font-size: 1.2em; line-height: 1.8; margin: 20px 0;">
+                Neben <strong>Preis</strong> und <strong>Zeit</strong> ist <strong>Volumen</strong> die dritte essenzielle Variable, die Du im Trading bewerten musst.
+            </p>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">🎯 Warum Volumen so wichtig ist</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Vergiss alle fancy Indikatoren. Wenn ich nur <strong>ein einziges Datenfeld</strong> zusätzlich zu Preis und Zeit haben könnte, 
+                    wäre Volumen bei weitem das wichtigste.
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">📊 Die drei essenziellen Trading-Variablen</h3>
+            <ol style="font-size: 1.1em;">
+                <li><strong>Preis:</strong> Wo wird gehandelt?</li>
+                <li><strong>Zeit:</strong> Wann geschieht es?</li>
+                <li><strong>Volumen:</strong> Wie viel Interesse besteht? Wie viele Teilnehmer sind involviert?</li>
+            </ol>
+
+            <div class="success-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    💡 <strong>Kernaussage:</strong> Nach über einem Jahrzehnt Trading ist meine Überzeugung nur gewachsen, 
+                    wie wichtig es ist, Volumen richtig zu berücksichtigen. Nach Analyse von hunderttausenden Charts glaube ich fest daran:
+                </p>
+                <p style="font-size: 1.2em; font-weight: 700; color: #38a169; margin-top: 15px; text-align: center;">
+                    "Die größten Trends werden von enormen Volumenaustauschs vorangeget."
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">🎭 Drei Hauptkategorien wo Volumen kritisch ist</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+                <div class="example-box">
+                    <div class="example-header">Breaking News</div>
+                    <p>Große Headlines ziehen enormes Volumen an. Je mehr Volumen, desto bedeutender der Catalyst.</p>
+                </div>
+                <div class="example-box">
+                    <div class="example-header">Continuation Plays</div>
+                    <p>Volumen bestätigt Preisbewegungen. Hohe Volumen bei Breakouts = starke Überzeugung.</p>
+                </div>
+                <div class="example-box">
+                    <div class="example-header">Kapitulation</div>
+                    <p>Volume Climax signalisiert Trendumkehrungen. Extreme Volumen + scharfe Preisbewegung = Trend-Erschöpfung.</p>
+                </div>
+            </div>
+
+            <!-- Quiz 1 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Die Macht des Volumens</h3>
+                
+                <div class="quiz-question">1. Welche drei Variablen sind im Trading essentiell?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="a">
+                    Preis, RSI, und MACD
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="b">
+                    Preis, Zeit, und Volumen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_1" value="c">
+                    Preis, Stochastic, und Bollinger Bands
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was geht großen Trends voraus?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="a">
+                    Niedrige Volatilität
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="b">
+                    Enorme Volumenaustausche
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_2" value="c">
+                    Komplexe Chartmuster
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. In welchen drei Hauptkategorien ist Volumen kritisch?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="a">
+                    Day-Trading, Swing-Trading, Long-Term
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="b">
+                    Breaking News, Continuation Plays, Kapitulation
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q1_3" value="c">
+                    Small-Caps, Mid-Caps, Large-Caps
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(1)">Antworten prüfen</button>
+                <div id="quiz-1-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(2)">Weiter zu Schritt 2: Volumen & Marktpsychologie →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 2: Volumen & Marktpsychologie -->
+        <div id="step-2" class="content-section">
+            <h2 class="section-title">🎭 Volumen & Marktpsychologie</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">💭 Volumen als Psychologie der Holder</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Denk an Volumen als die <strong>Psychologie der Marktteilnehmer</strong>. Die meisten Holder mit Volumen 
+                    sind entweder im Minus oder im Gewinn - basierend auf wo sie gekauft haben.
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">📈 Was Volumen uns sagt</h3>
+            
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">1. Neue Kostenbasis für durchschnittliche Holder</h4>
+                <p style="line-height: 1.8;">
+                    Wenn ein enormer Austausch von Aktien stattfindet, repräsentiert das eine <strong>neue Kostenbasis</strong> 
+                    für den durchschnittlichen Holder. Das ist entscheidend für zukünftige Support- und Resistance-Level.
+                </p>
+            </div>
+
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">2. Mehr Interesse = Mehr Teilnehmer</h4>
+                <p style="line-height: 1.8;">
+                    Mehr Volumen bedeutet mehr Interesse. Es bedeutet, dass mehr Teilnehmer <strong>aktiv Aktien austauschen</strong> 
+                    und neue Holder involviert werden. Das hat wichtige Implikationen für jede Art von Strategie.
+                </p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-header">Praktisches Beispiel: Neue Kostenbasis</div>
+                <p style="margin: 10px 0; line-height: 1.8;">
+                    Stell Dir vor, eine Aktie handelt normalerweise 1 Million Aktien pro Tag. An einem Tag mit Breaking News 
+                    werden plötzlich 20 Millionen Aktien gehandelt zwischen $48-$52.
+                </p>
+                <p style="margin: 10px 0; line-height: 1.8; font-weight: 600; color: #b8860b;">
+                    → Der durchschnittliche Holder hat jetzt eine Kostenbasis um $50. Das wird zum neuen "Fair Value" 
+                    und wichtigen psychologischen Level für zukünftige Bewegungen.
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">🧠 Psychologische Implikationen</h3>
+            <ul style="font-size: 1.1em;">
+                <li><strong>Holder-Emotionen:</strong> Holder mit hohem Volumen haben emotionale Verbindungen zu ihren Entry-Preisen</li>
+                <li><strong>Pain Points:</strong> Wenn der Preis unter ihre Kostenbasis fällt, werden sie nervös</li>
+                <li><strong>Relief Rallies:</strong> Wenn der Preis zurück zu ihrer Kostenbasis steigt, neigen viele zum Aussteigen</li>
+                <li><strong>Neue Welten:</strong> Bei neuem Volumen auf höheren Preisen entsteht eine neue psychologische Landschaft</li>
+            </ul>
+
+            <!-- Quiz 2 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Volumen & Marktpsychologie</h3>
+                
+                <div class="quiz-question">1. Was repräsentiert ein enormer Volumenaustausch?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="a">
+                    Nur technische Daten
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="b">
+                    Eine neue Kostenbasis für durchschnittliche Holder
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_1" value="c">
+                    Manipulation durch Market Maker
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was bedeutet "mehr Volumen"?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="a">
+                    Mehr Interesse und mehr aktive Teilnehmer
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="b">
+                    Garantiert höhere Preise
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q2_2" value="c">
+                    Der Markt ist überbewertet
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(2)">Antworten prüfen</button>
+                <div id="quiz-2-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(3)">Weiter zu Schritt 3: Breaking News & Volumen →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 3: Breaking News & Volumen -->
+        <div id="step-3" class="content-section">
+            <h2 class="section-title">📰 Breaking News & Volumen</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">🚀 Die Größten Headlines = Enormes Volumen</h3>
+                <p style="font-size: 1.2em; line-height: 1.8; font-weight: 600;">
+                    Die besten und größten Headlines ziehen generell <strong>enormes Volumen</strong> an. Oft macht die Aktie 
+                    innerhalb von Minuten einen großen Prozentsatz ihres durchschnittlichen Tagesvolumens.
+                </p>
+            </div>
+
+            <div class="chart-container">
+                <img src="{{ url_for('static', filename='screenshots/Volume_Overview_News.jpg') }}" 
+                     alt="Breaking News Volumen Chart">
+                <p class="chart-caption">
+                    Breaking News: Massiver Volumen-Spike signalisiert enormes Interesse und bestätigt die Bedeutung der Nachricht
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">📊 Beispiel 1: MSOS (Cannabis-ETF) - 30. August 2023</h3>
+            <div class="success-box">
+                <h4 style="color: #38a169; margin-bottom: 15px;">🎯 Die Nachricht</h4>
+                <p style="line-height: 1.8;">
+                    Das US-Gesundheitsministerium (HHS) empfahl die Neuklassifizierung von Marihuana als <strong>weniger gefährliche Droge</strong>. 
+                    Das war eine massive Breaking News für den Cannabis-Sektor.
+                </p>
+                
+                <h4 style="color: #38a169; margin: 20px 0 15px;">📈 Die Volumen-Reaktion</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>In den ersten 2 Minuten:</strong> 565.000 Aktien gehandelt</li>
+                    <li><strong>Average Daily Volume (ADV):</strong> 9 Millionen Aktien</li>
+                    <li><strong>Prozent des ADV:</strong> Über 5% in nur 2 Minuten!</li>
+                    <li><strong>Das Resultat:</strong> Ein außergewöhnlicher Wert, der die Bedeutung der News bestätigte</li>
+                </ul>
+
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 1.2em; font-weight: 700; color: #38a169; text-align: center;">
+                        💚 Das Volumen blieb den Rest des Tages extrem hoch - ein Zeichen für anhaltende Dynamik!
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">📊 Beispiel 2: SMCI - 19. Januar 2024</h3>
+            <div class="highlight-box">
+                <h4 style="margin-bottom: 15px;">🎯 Die Nachricht</h4>
+                <p style="line-height: 1.8;">
+                    Super Micro Computer (SMCI) veröffentlichte eine vorläufige Gewinnprognose, angetrieben durch <strong>KI-Wachstum</strong>. 
+                    Bereits ein Large-Cap-Unternehmen, aber die Volumen-Reaktion war historisch.
+                </p>
+                
+                <h4 style="margin: 20px 0 15px;">📈 Die Volumen-Explosion</h4>
+                <ul style="line-height: 1.8;">
+                    <li><strong>Float (verfügbare Aktien):</strong> Rund 50 Millionen</li>
+                    <li><strong>An diesem Tag gehandelt:</strong> 23 Millionen Aktien</li>
+                    <li><strong>Das bedeutet:</strong> 46% des gesamten Float an EINEM einzigen Tag!</li>
+                    <li><strong>Für ein Large-Cap:</strong> Extrem ungewöhnlich und historisch</li>
+                </ul>
+
+                <div style="background: rgba(255, 255, 255, 0.5); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 1.2em; font-weight: 700; color: #b8860b; text-align: center;">
+                        ⚡ In den folgenden Wochen wurden täglich enorme Prozentsätze des Float gehandelt - beispiellos in diesem Ausmaß!
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">⚠️ Gegenbeispiel: ENV - Volumen löst sich auf</h3>
+            <div class="warning-box">
+                <h4 style="margin-bottom: 15px;">📰 Die Nachricht</h4>
+                <p style="line-height: 1.8;">
+                    ENV erwog einen Verkauf des Unternehmens. Klingt bullish, oder?
+                </p>
+                
+                <h4 style="margin: 20px 0 15px;">⚠️ Das Problem</h4>
+                <p style="line-height: 1.8;">
+                    Die Nachricht wurde im Vorfeld durch <strong>Insider-Käufe "Front-Running"</strong> beeinträchtigt. 
+                    Viele wussten bereits davon.
+                </p>
+
+                <h4 style="margin: 20px 0 15px;">📉 Die Volumen-Reaktion</h4>
+                <ul style="line-height: 1.8;">
+                    <li>Nach dem <strong>anfänglichen Anstieg</strong> löste sich das Volumen sofort auf</li>
+                    <li>Volumen blieb <strong>nicht als signifikanter Prozentsatz des ADV</strong> erhalten</li>
+                    <li>Das zeigte: Die Headline würde <strong>keine nachhaltige Dynamik</strong> entwickeln</li>
+                </ul>
+
+                <div style="background: rgba(255, 255, 255, 0.8); padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 1.1em; font-weight: 600; color: #d69e2e;">
+                        📍 Lerneffekt: Nicht die Headline selbst ist entscheidend, sondern die Volumen-Reaktion!
+                    </p>
+                </div>
+            </div>
+
+            <div class="success-box" style="margin-top: 30px;">
+                <h3 style="margin-bottom: 15px; color: #38a169;">🎯 Die Trading-Regel für Breaking News</h3>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li>Bewerte das gehandelte Volumen sofort</li>
+                    <li>Normalisiere es am Average Daily Volume (ADV)</li>
+                    <li>Die besten Headlines = Riesiges Volumen das über Phasen erhalten bleibt</li>
+                    <li>Dokumentiere und lerne aus jedem Beispiel</li>
+                </ol>
+            </div>
+
+            <!-- Quiz 3 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Breaking News & Volumen</h3>
+                
+                <div class="quiz-question">1. Bei MSOS: Wie viel des ADV wurde in 2 Minuten gehandelt?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_1" value="a">
+                    Weniger als 1%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_1" value="b">
+                    Über 5% - ein außergewöhnlicher Wert
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_1" value="c">
+                    Genau 2%
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Bei SMCI: Wie viel des Float wurde an einem Tag gehandelt?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_2" value="a">
+                    10%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_2" value="b">
+                    25%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_3" value="c">
+                    46% - historisch für Large-Cap
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. Was war das Problem bei ENV?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_3" value="a">
+                    Zu viel Volumen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_3" value="b">
+                    Volumen löste sich nach anfänglichem Spike auf
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q3_3" value="c">
+                    Die Nachricht war zu bullish
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(3)">Antworten prüfen</button>
+                <div id="quiz-3-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(4)">Weiter zu Schritt 4: Volumen normalisieren →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 4: Volumen normalisieren -->
+        <div id="step-4" class="content-section">
+            <h2 class="section-title">⚖️ Volumen normalisieren: ADV & Float</h2>
+            
+            <div class="warning-box">
+                <h3 style="margin-bottom: 15px;">⚠️ Absolute Zahlen sind irreführend!</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    1 Million Aktien klingen nach viel? Nicht wenn das Tagesvolumen normalerweise 50 Millionen beträgt! 
+                    Du <strong>musst Volumen immer im Kontext</strong> betrachten.
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">📊 Die zwei wichtigsten Normalisierungen</h3>
+
+            <div class="example-box">
+                <div class="example-header">1. Average Daily Volume (ADV)</div>
+                <p style="line-height: 1.8; margin: 15px 0;">
+                    <strong>ADV</strong> ist das durchschnittliche tägliche Handelsvolumen über einen bestimmten Zeitraum (z.B. 30 Tage).
+                </p>
+                <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-weight: 600; margin-bottom: 10px;">Beispiel-Berechnung:</p>
+                    <ul>
+                        <li>ADV: 5 Millionen Aktien</li>
+                        <li>Heutiges Volumen: 15 Millionen Aktien</li>
+                        <li><strong style="color: #b8860b;">Normalisiert: 300% des ADV (3x normal!)</strong></li>
+                    </ul>
+                </div>
+                <p style="color: #38a169; font-weight: 600; margin-top: 15px;">
+                    ✅ Faustregel: Über 200% ADV = signifikante Aktivität
+                </p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-header">2. Float (verfügbare Aktien)</div>
+                <p style="line-height: 1.8; margin: 15px 0;">
+                    <strong>Float</strong> ist die Anzahl der Aktien, die für den öffentlichen Handel verfügbar sind (nach Abzug von Insider-Holdings).
+                </p>
+                <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                    <p style="font-weight: 600; margin-bottom: 10px;">Beispiel-Berechnung:</p>
+                    <ul>
+                        <li>Float: 20 Millionen Aktien</li>
+                        <li>Heutiges Volumen: 8 Millionen Aktien</li>
+                        <li><strong style="color: #b8860b;">Normalisiert: 40% des Float gehandelt!</strong></li>
+                    </ul>
+                </div>
+                <p style="color: #38a169; font-weight: 600; margin-top: 15px;">
+                    ✅ Faustregel: Über 30% Float = enormer Austausch und neue Kostenbasis
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">🎯 Praktische Anwendung</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">So normalisierst Du Volumen richtig:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Finde ADV:</strong> Auf TradingView, Yahoo Finance, oder Deinem Broker</li>
+                    <li><strong>Finde Float:</strong> Finviz.com oder Stock-Screener</li>
+                    <li><strong>Berechne Prozentsatz:</strong> (Heutiges Volumen ÷ ADV) × 100%</li>
+                    <li><strong>Bewerte:</strong> >200% ADV oder >30% Float = sehr signifikant</li>
+                </ol>
+            </div>
+
+            <!-- Quiz 4 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Volumen normalisieren</h3>
+                
+                <div class="quiz-question">1. Warum sind absolute Volumenzahlen irreführend?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_1" value="a">
+                    Sie müssen im Kontext von ADV oder Float betrachtet werden
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_1" value="b">
+                    Sie sind immer zu niedrig
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_1" value="c">
+                    Sie sind nicht wichtig
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Ab welchem Prozentsatz des ADV gilt Volumen als signifikant?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_2" value="a">
+                    Über 50%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_2" value="b">
+                    Über 200%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q4_2" value="c">
+                    Über 1000%
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(4)">Antworten prüfen</button>
+                <div id="quiz-4-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(5)">Weiter zu Schritt 5: Continuation Plays →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 5: Continuation Plays -->
+        <div id="step-5" class="content-section">
+            <h2 class="section-title">🚀 Continuation Plays & Volumen-Bestätigung</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">📈 Volumen bestätigt Preisbewegungen</h3>
+                <p style="font-size: 1.2em; line-height: 1.8; font-weight: 600;">
+                    Eine der primären Rollen von Volumen in der technischen Analyse ist die <strong>Bestätigung von Preisbewegungen</strong>. 
+                    Wenn Preise bei hohem Volumen ausbrechen, signalisiert das starke Überzeugung der Marktteilnehmer.
+                </p>
+            </div>
+
+            <div class="chart-container">
+                <img src="{{ url_for('static', filename='screenshots/Volume_Overview_Continuation.jpg') }}" 
+                     alt="Continuation Play Volumen Chart">
+                <p class="chart-caption">
+                    Continuation Play: Hohe Volumen beim Breakout bestätigt die Preisbewegung und signalisiert starke Überzeugung
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">✅ Breakout mit hohem Volumen</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">Was geschieht:</h4>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Starke Überzeugung:</strong> Viele Marktteilnehmer sind sich einig über die Richtung</li>
+                    <li><strong>Höhere Glaubwürdigkeit:</strong> Der Breakout ist "echt" und nicht nur technisches Rauschen</li>
+                    <li><strong>Höhere Wahrscheinlichkeit:</strong> Der Trend setzt sich in gleicher Richtung fort</li>
+                    <li><strong>Neue Teilnehmer:</strong> Das Interesse zieht mehr Trader an</li>
+                </ul>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 1.1em; font-weight: 700; color: #38a169; text-align: center;">
+                        💚 Je mehr Volumen beim Breakout, desto bedeutender ist der durchbrochene Level!
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">❌ Breakout mit niedrigem Volumen</h3>
+            <div class="error-box">
+                <h4 style="margin-bottom: 15px; color: #e53e3e;">Was geschieht:</h4>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Fehlende Begeisterung:</strong> Wenig Interesse von Marktteilnehmern</li>
+                    <li><strong>Zweifel an Nachhaltigkeit:</strong> Kann der Trend sich halten?</li>
+                    <li><strong>Mögliche Falle:</strong> Breakout könnte schnell scheitern (Fake-Out)</li>
+                    <li><strong>Bedeutungslos:</strong> Wenn kein Volumen → Teilnehmer interessieren sich nicht für diesen Level</li>
+                </ul>
+                
+                <div style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px;">
+                    <p style="font-size: 1.1em; font-weight: 700; color: #e53e3e; text-align: center;">
+                        🚨 Ohne Volumen = Ohne Überzeugung = Ohne Nachhaltigkeit
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">🎯 Die Level-Bedeutung</h3>
+            <div class="highlight-box">
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Wenn ein Breakout geschieht und <strong>kein bedeutendes Volumen</strong> damit einhergeht, signalisiert das, 
+                    dass Teilnehmer sich nicht darum kümmern, dass dieser Preislevel durchbrochen wurde.
+                </p>
+                <p style="font-size: 1.1em; line-height: 1.8; margin-top: 15px;">
+                    Aber wenn <strong>enormes Volumen</strong> abgeht, ist das ein Zeichen für <strong>großes Interesse</strong> 
+                    der Teilnehmer an dem was bevorsteht.
+                </p>
+            </div>
+
+            <!-- Quiz 5 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Continuation Plays</h3>
+                
+                <div class="quiz-question">1. Was signalisiert ein Breakout mit hohem Volumen?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_1" value="a">
+                    Starke Überzeugung und höhere Wahrscheinlichkeit für Fortsetzung
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_1" value="b">
+                    Dass der Trend bald endet
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_1" value="c">
+                    Nichts Besonderes
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was bedeutet ein Breakout mit niedrigem Volumen?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_2" value="a">
+                    Sehr bullish
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_2" value="b">
+                    Fehlende Begeisterung und Zweifel an Nachhaltigkeit
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q5_2" value="c">
+                    Garantie für Gewinn
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(5)">Antworten prüfen</button>
+                <div id="quiz-5-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(6)">Weiter zu Schritt 6: Kapitulation & Trendumkehr →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 6: Kapitulation -->
+        <div id="step-6" class="content-section">
+            <h2 class="section-title">💥 Kapitulation & Trendumkehr</h2>
+            
+            <div class="error-box">
+                <h3 style="margin-bottom: 15px;">🔴 Der wichtigste Trendumkehr-Indikator</h3>
+                <p style="font-size: 1.2em; line-height: 1.8; font-weight: 600;">
+                    Es gibt keinen wichtigeren Indikator für Trendumkehrungen als <strong>Volumen-Kapitulation</strong>. 
+                    Ein Volume Climax geht oft bedeutenden Marktumkehrungen voraus.
+                </p>
+            </div>
+
+            <div class="chart-container">
+                <img src="{{ url_for('static', filename='screenshots/Volume_Overview_Kapitulation.jpg') }}" 
+                     alt="Kapitulation Volumen Chart">
+                <p class="chart-caption">
+                    Kapitulation: Massiver Volumen-Spike mit scharfem Preisverfall signalisiert Sentiment-Shift und mögliche Trendumkehr
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">📉 Kapitulation in einem Uptrend</h3>
+            <div class="example-box">
+                <h4 style="margin-bottom: 15px; color: #b8860b;">Was geschieht:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Plötzlicher Volumen-Anstieg</strong> begleitet von scharfem Preisverfall</li>
+                    <li><strong>Sentiment-Shift:</strong> Von bullish zu bearish</li>
+                    <li><strong>Panik-Verkäufe:</strong> Longs steigen aus, Shorts steigen ein</li>
+                    <li><strong>Volume Climax:</strong> Höhepunkt der Verkaufsdynamik</li>
+                </ol>
+                
+                <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <p style="font-size: 1.1em; font-weight: 700; color: #e53e3e;">
+                        📍 Dieses Phänomen als "Volume Climax" bekannt, geht oft signifikanten Marktumkehrungen voraus.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">📈 Kapitulation in einem Downtrend</h3>
+            <div class="example-box">
+                <h4 style="margin-bottom: 15px; color: #b8860b;">Was geschieht:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Volumen-Anstieg</strong> während Preisverfall</li>
+                    <li>Gefolgt von <strong>plötzlichem Preisanstieg</strong></li>
+                    <li><strong>Shorts covern:</strong> Panik bei Short-Sellern</li>
+                    <li><strong>Mögliche Umkehr:</strong> Zu Upside</li>
+                </ol>
+                
+                <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <p style="font-size: 1.1em; font-weight: 700; color: #38a169;">
+                        📍 Die besten Kapitulationen sind von <strong>extremen Volumen-Leveln</strong> begleitet.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">🧠 Warum Kapitulation funktioniert</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px; color: #38a169;">Die zwei Hauptfaktoren:</h4>
+                
+                <p style="font-size: 1.1em; line-height: 1.8; margin: 15px 0;">
+                    <strong>1. Neue Holder-Kostenbasis:</strong><br>
+                    Durch den massiven Volumenaustausch bei niedrigeren (oder höheren) Preisen entsteht eine neue durchschnittliche 
+                    Kostenbasis für Holder. Das verschiebt die psychologischen Support/Resistance-Level.
+                </p>
+                
+                <p style="font-size: 1.1em; line-height: 1.8; margin: 15px 0;">
+                    <strong>2. Liquiditäts-Vakuum:</strong><br>
+                    Nach der Kapitulation entsteht ein Vakuum an Liquidität. Alle die verkaufen wollten, haben verkauft. 
+                    Was bleibt sind nur noch Käufer (oder umgekehrt). Das führt oft zur Trend-Erschöpfung.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <p style="font-size: 1.2em; font-weight: 700; color: #b8860b; text-align: center;">
+                    ⚡ Kombination aus Holder-Kostenbasis-Shift + Liquiditäts-Vakuum = Trend-Erschöpfung
+                </p>
+            </div>
+
+            <!-- Quiz 6 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Kapitulation</h3>
+                
+                <div class="quiz-question">1. Was ist ein Volume Climax?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="a">
+                    Plötzlicher Volumen-Anstieg der oft Marktumkehrungen vorausgeht
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="b">
+                    Niedriges Volumen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_1" value="c">
+                    Ein Chart-Pattern
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Warum führt Kapitulation zur Trend-Erschöpfung?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="a">
+                    Weil der Chart komisch aussieht
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="b">
+                    Neue Kostenbasis + Liquiditäts-Vakuum
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q6_2" value="c">
+                    Weil alle schlafen gehen
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(6)">Antworten prüfen</button>
+                <div id="quiz-6-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(7)">Weiter zu Schritt 7: Die Checkliste →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 7: Praktische Checkliste -->
+        <div id="step-7" class="content-section">
+            <h2 class="section-title">✅ Praktische Volumen-Analyse: Die Checkliste</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">📋 Deine Schritt-für-Schritt Anleitung</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Nutze diese Checkliste bei <strong>jedem Setup</strong> um Volumen korrekt zu bewerten und bessere Trading-Entscheidungen zu treffen.
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">1️⃣ Volumen identifizieren</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px;">Fragen die Du stellen musst:</h4>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li>❓ Wie viele Aktien wurden heute gehandelt?</li>
+                    <li>❓ Wie viele Aktien wurden in der letzten Stunde/15 Minuten gehandelt?</li>
+                    <li>❓ Sehe ich ungewöhnliche Volumen-Spikes im Chart?</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">2️⃣ Volumen normalisieren</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px;">Vergleiche mit Kontext:</h4>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li>📊 Wie ist das Average Daily Volume (ADV)?</li>
+                    <li>📊 Prozentsatz des ADV: (Heutiges Volumen ÷ ADV) × 100%</li>
+                    <li>📊 Wie ist der Float? Welcher Prozentsatz wurde gehandelt?</li>
+                    <li>📊 Vergleich mit früheren Volumen-Balken: Ist es außergewöhnlich?</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">3️⃣ Volumen-Persistenz bewerten</h3>
+            <div class="success-box">
+                <h4 style="margin-bottom: 15px;">Bleibt das Volumen hoch?</h4>
+                <ul style="font-size: 1.1em; line-height: 1.8;">
+                    <li>⏱️ Hält das Volumen über mehrere Minuten/Stunden?</li>
+                    <li>⏱️ Oder löst es sich sofort auf? (Red Flag!)</li>
+                    <li>⏱️ Bei Breaking News: Wird Volumen nachhaltig getauscht?</li>
+                    <li>⏱️ Bei Breakouts: Bleibt Volumen nach dem Breakout erhöht?</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">4️⃣ Volumen-Muster erkennen</h3>
+            <div class="example-box">
+                <div class="example-header">Breaking News Pattern</div>
+                <p style="line-height: 1.8;">
+                    ✅ Enormer Spike innerhalb Minuten<br>
+                    ✅ >200% des ADV schnell erreicht<br>
+                    ✅ Volumen bleibt erhöht über Stunden/Tage<br>
+                    → <strong style="color: #38a169;">Bullish für Continuation</strong>
+                </p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-header">Breakout Pattern</div>
+                <p style="line-height: 1.8;">
+                    ✅ Volumen-Anstieg beim Level-Durchbruch<br>
+                    ✅ Volumen größer als bei vorherigen Versuchen<br>
+                    ✅ Volumen bleibt erhöht nach Breakout<br>
+                    → <strong style="color: #38a169;">Bestätigt Breakout</strong>
+                </p>
+            </div>
+
+            <div class="example-box">
+                <div class="example-header">Kapitulation Pattern</div>
+                <p style="line-height: 1.8;">
+                    ✅ Extremer Volumen-Spike (oft 300-500%+ ADV)<br>
+                    ✅ Scharfe Preisbewegung in eine Richtung<br>
+                    ✅ Gefolgt von Umkehr oder Stabilisierung<br>
+                    → <strong style="color: #e53e3e;">Mögliche Trendumkehr</strong>
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">5️⃣ Integration in Dein Setup</h3>
+            <div class="highlight-box">
+                <h4 style="margin-bottom: 15px; color: #b8860b;">So nutzt Du Volumen in Deinem Trading:</h4>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Entry-Bestätigung:</strong> Warte auf Volumen-Bestätigung vor Entry</li>
+                    <li><strong>Stop-Loss-Platzierung:</strong> Setze Stops unter Volumen-Clustern (neue Kostenbasis)</li>
+                    <li><strong>Position-Sizing:</strong> Größere Position bei klarer Volumen-Bestätigung</li>
+                    <li><strong>Exit-Signale:</strong> Abnehmende Volumen = schwächerer Trend = Gewinn-Mitnahme erwägen</li>
+                    <li><strong>Dokumentation:</strong> Notiere Volumen-Charakteristiken in Deinem Trading-Journal</li>
+                </ol>
+            </div>
+
+            <!-- Quiz 7 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Die Checkliste</h3>
+                
+                <div class="quiz-question">1. Was ist der erste Schritt bei der Volumen-Analyse?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_1" value="a">
+                    Trade sofort eingehen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_1" value="b">
+                    Volumen identifizieren und mit ADV/Float vergleichen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_1" value="c">
+                    Nur auf den Preis schauen
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was signalisiert "Volumen löst sich auf"?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_2" value="a">
+                    Sehr bullish
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_2" value="b">
+                    Red Flag - fehlende nachhaltige Dynamik
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q7_2" value="c">
+                    Nichts Besonderes
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(7)">Antworten prüfen</button>
+                <div id="quiz-7-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(8)">Weiter zu Schritt 8: Häufige Fehler →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 8: Häufige Fehler -->
+        <div id="step-8" class="content-section">
+            <h2 class="section-title">⚠️ Häufige Fehler & Fallstricke</h2>
+            
+            <div class="error-box">
+                <h3 style="margin-bottom: 15px;">🚫 Vermeide diese typischen Anfängerfehler</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Selbst erfahrene Trader machen diese Fehler. Lerne sie zu erkennen und zu vermeiden!
+                </p>
+            </div>
+
+            <h3 class="section-subtitle">❌ Fehler 1: Volumen isoliert betrachten</h3>
+            <div class="warning-box">
+                <h4 style="margin-bottom: 15px;">Das Problem:</h4>
+                <p style="line-height: 1.8;">
+                    Volumen allein sagt Dir nichts ohne <strong>Preis-Context</strong>. Hohe Volumen können sowohl 
+                    bei Kaufdruck als auch bei Verkaufsdruck auftreten.
+                </p>
+                <h4 style="margin: 20px 0 10px;">Die Lösung:</h4>
+                <ul style="line-height: 1.8;">
+                    <li>✅ Schaue immer auf Preis UND Volumen zusammen</li>
+                    <li>✅ Steigt Preis bei hohem Volumen? = Kaufdruck</li>
+                    <li>✅ Fällt Preis bei hohem Volumen? = Verkaufsdruck</li>
+                    <li>✅ Seitwärts bei hohem Volumen? = Unentschieden/Konsolidierung</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">❌ Fehler 2: ADV/Float ignorieren</h3>
+            <div class="warning-box">
+                <h4 style="margin-bottom: 15px;">Das Problem:</h4>
+                <p style="line-height: 1.8;">
+                    "1 Million Aktien gehandelt" - ist das viel? Du weißt es nicht ohne Kontext! 
+                    Für einen Small-Cap mit 2M ADV ist das enorm. Für Apple mit 50M+ ADV ist das nichts.
+                </p>
+                <h4 style="margin: 20px 0 10px;">Die Lösung:</h4>
+                <ul style="line-height: 1.8;">
+                    <li>✅ Immer ADV prüfen und Prozentsatz berechnen</li>
+                    <li>✅ Immer Float prüfen bei Small/Mid-Caps</li>
+                    <li>✅ Normalisierung ist NICHT optional - es ist essentiell</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">❌ Fehler 3: Front-Running übersehen</h3>
+            <div class="warning-box">
+                <h4 style="margin-bottom: 15px;">Das Problem (ENV-Beispiel):</h4>
+                <p style="line-height: 1.8;">
+                    Breaking News erscheint, aber der Preis ist bereits gelaufen bevor die News offiziell war. 
+                    Das deutet auf <strong>Front-Running</strong> oder Leak der Information hin.
+                </p>
+                <h4 style="margin: 20px 0 10px;">Die Lösung:</h4>
+                <ul style="line-height: 1.8;">
+                    <li>✅ Prüfe den Chart VOR der Nachricht</li>
+                    <li>✅ War da bereits ungewöhnliche Aktivität?</li>
+                    <li>✅ Wenn ja: Sei vorsichtig - viele sind bereits "im Trade"</li>
+                    <li>✅ Wenn Volumen nach News-Release abfällt → Red Flag</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">❌ Fehler 4: Zu früh einsteigen</h3>
+            <div class="error-box">
+                <h4 style="margin-bottom: 15px;">Das Problem:</h4>
+                <p style="line-height: 1.8;">
+                    Du siehst eine Nachricht, der Preis bewegt sich, und Du springst sofort rein - 
+                    <strong>bevor Volumen die Bewegung bestätigt hat</strong>.
+                </p>
+                <h4 style="margin: 20px 0 10px;">Die Lösung:</h4>
+                <ul style="line-height: 1.8;">
+                    <li>✅ Warte auf Volumen-Bestätigung (>200% ADV bei Breaking News)</li>
+                    <li>✅ Warte dass Volumen persistent ist (nicht sofort abfällt)</li>
+                    <li>✅ Bei Breakouts: Warte auf erhöhtes Volumen beim Durchbruch</li>
+                    <li>✅ Geduld > FOMO - bessere Entries = bessere Trades</li>
+                </ul>
+            </div>
+
+            <h3 class="section-subtitle">❌ Fehler 5: Kapitulation falsch interpretieren</h3>
+            <div class="error-box">
+                <h4 style="margin-bottom: 15px;">Das Problem:</h4>
+                <p style="line-height: 1.8;">
+                    Du siehst einen Volume Climax und denkst sofort "Umkehr!" - aber nicht jeder Volumen-Spike 
+                    ist eine Kapitulation. Manchmal ist es nur der Anfang eines größeren Moves.
+                </p>
+                <h4 style="margin: 20px 0 10px;">Die Lösung:</h4>
+                <ul style="line-height: 1.8;">
+                    <li>✅ Warte auf Preis-Bestätigung der Umkehr</li>
+                    <li>✅ Schaue auf Preis-Action NACH dem Volumen-Spike</li>
+                    <li>✅ Kapitulation ≠ garantierte Umkehr (nur erhöhte Wahrscheinlichkeit)</li>
+                    <li>✅ Nutze andere Confluence-Faktoren (Support/Resistance, Timeframes, etc.)</li>
+                </ul>
+            </div>
+
+            <div class="success-box" style="margin-top: 40px;">
+                <h3 style="margin-bottom: 15px; color: #38a169;">✅ Die Golden Rules</h3>
+                <ol style="font-size: 1.1em; line-height: 1.8;">
+                    <li><strong>Kontext ist König:</strong> Volumen + Preis + ADV/Float zusammen betrachten</li>
+                    <li><strong>Warte auf Bestätigung:</strong> Nicht jeden Spike blind traden</li>
+                    <li><strong>Dokumentiere:</strong> Lerne aus jedem Trade mit Volumen-Analyse</li>
+                    <li><strong>Sei geduldig:</strong> Die besten Setups haben klare Volumen-Signale</li>
+                </ol>
+            </div>
+
+            <!-- Quiz 8 -->
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">🧠 Quiz: Häufige Fehler</h3>
+                
+                <div class="quiz-question">1. Warum ist es falsch, Volumen isoliert zu betrachten?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_1" value="a">
+                    Volumen ist unwichtig
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_1" value="b">
+                    Volumen braucht Preis-Context um interpretiert zu werden
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_1" value="c">
+                    Volumen sagt Dir alles
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was ist Front-Running?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_2" value="a">
+                    Schnelles Laufen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_2" value="b">
+                    Preis ist bereits gelaufen vor offizieller News (Insider-Aktivität)
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="q8_2" value="c">
+                    Ein Chart-Pattern
+                </label>
+
+                <button class="btn btn-secondary" onclick="checkQuiz(8)">Antworten prüfen</button>
+                <div id="quiz-8-feedback" class="quiz-feedback"></div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(9)">Weiter zu Schritt 9: Key Takeaways →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 9: Key Takeaways -->
+        <div id="step-9" class="content-section">
+            <h2 class="section-title">📋 Key Takeaways</h2>
+            
+            <div class="takeaways-container">
+                <h3 style="text-align: center; color: #38a169; margin-bottom: 30px; font-size: 2em;">
+                    🎯 Die wichtigsten Erkenntnisse
+                </h3>
+                
+                <div class="takeaway-item">
+                    <p><strong>1.</strong> Volumen ist bei weitem das wichtigste Datenfeld neben Preis und Zeit. Vergiss fancy Indikatoren.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>2.</strong> Die größten Trends werden von enormen Volumenaustauschen vorangegangen - bei Breaking News, Continuation Plays und Kapitulationen.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>3.</strong> Volumen repräsentiert die Psychologie der Holder. Es zeigt ihre Kostenbasis und emotionale Verbindung zu Preisleveln.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>4.</strong> Normalisiere Volumen IMMER am Average Daily Volume (ADV) oder Float. Absolute Zahlen sind bedeutungslos ohne Kontext.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>5.</strong> Bei Breaking News: Die besten Headlines ziehen sofort enormes Volumen an (>200% ADV schnell) das über Zeit erhalten bleibt.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>6.</strong> Bei Continuation Plays: Hohe Volumen beim Breakout bestätigen die Bewegung. Niedriges Volumen = fehlende Überzeugung.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>7.</strong> Bei Kapitulation: Volume Climax (extremes Volumen + scharfe Preisbewegung) geht oft Trendumkehrungen voraus.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>8.</strong> Volumen-Persistenz ist entscheidend. Volumen das sich sofort auflöst signalisiert fehlende nachhaltige Dynamik.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>9.</strong> Front-Running erkennen: Prüfe ob ungewöhnliche Aktivität VOR der offiziellen News war. Wenn ja, sei vorsichtig.</p>
+                </div>
+                
+                <div class="takeaway-item">
+                    <p><strong>10.</strong> Betrachte Volumen nie isoliert - immer im Zusammenhang mit Preis, Timing, ADV/Float und Deiner Trading-Strategie.</p>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3 style="text-align: center; margin-bottom: 20px;">🎓 Dein Weg nach vorn</h3>
+                <p style="font-size: 1.1em; line-height: 1.8; text-align: center;">
+                    Volumen-Analyse ist eine Fähigkeit die Du durch <strong>Übung und Dokumentation</strong> meisterst. 
+                    Beginne heute damit, bei jedem Trade Volumen zu bewerten und in Deinem Journal zu notieren. 
+                    Mit der Zeit entwickelst Du ein Gefühl für bedeutende vs. unbedeutende Volumen-Muster.
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="nextStep(10)">Weiter zum Abschluss-Quiz →</button>
+            </div>
+        </div>
+
+        <!-- Schritt 10: Abschluss-Quiz -->
+        <div id="step-10" class="content-section">
+            <h2 class="section-title">🎓 Abschluss-Quiz</h2>
+            
+            <div class="highlight-box">
+                <h3 style="margin-bottom: 15px;">🏆 Teste Dein Gesamt-Wissen</h3>
+                <p style="font-size: 1.1em; line-height: 1.8;">
+                    Dieses umfassende Quiz deckt alle Konzepte ab, die Du in diesem Modul gelernt hast. 
+                    Schaffe mindestens 80% um das Modul als "Gemeistert" zu markieren!
+                </p>
+            </div>
+
+            <div class="quiz-container">
+                <h3 style="color: #b8860b; margin-bottom: 20px;">📝 Umfassendes Abschluss-Quiz</h3>
+                
+                <div class="quiz-question">1. Die drei essenziellen Trading-Variablen sind:</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_1" value="a">
+                    Preis, RSI, und Bollinger Bands
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_1" value="b">
+                    Preis, Zeit, und Volumen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_1" value="c">
+                    Volumen, MACD, und Stochastic
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">2. Was repräsentiert ein enormer Volumenaustausch psychologisch?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_2" value="a">
+                    Nichts Besonderes
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_2" value="b">
+                    Eine neue Kostenbasis für durchschnittliche Holder
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_2" value="c">
+                    Garantierter Gewinn
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">3. Bei SMCI wurde wie viel des Float an einem Tag gehandelt?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_3" value="a">
+                    5%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_3" value="b">
+                    46% - historisch für Large-Cap
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_3" value="c">
+                    90%
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">4. Ab welchem Prozentsatz gilt Volumen als signifikant im Verhältnis zum ADV?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_4" value="a">
+                    Über 50%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_4" value="b">
+                    Über 200%
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_4" value="c">
+                    Über 10%
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">5. Was signalisiert ein Breakout mit niedrigem Volumen?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_5" value="a">
+                    Starke Überzeugung
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_5" value="b">
+                    Fehlende Begeisterung und Zweifel an Nachhaltigkeit
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_5" value="c">
+                    Garantierter Erfolg
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">6. Was ist ein Volume Climax?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_6" value="a">
+                    Niedriges Volumen
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_6" value="b">
+                    Plötzlicher extremer Volumen-Anstieg der oft Marktumkehrungen vorausgeht
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_6" value="c">
+                    Ein bestimmtes Chart-Pattern
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">7. Was bedeutet "Volumen löst sich auf"?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_7" value="a">
+                    Sehr bullish
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_7" value="b">
+                    Red Flag - fehlende nachhaltige Dynamik
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_7" value="c">
+                    Normal und gut
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">8. Warum führt Kapitulation oft zur Trend-Erschöpfung?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_8" value="a">
+                    Weil alle müde sind
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_8" value="b">
+                    Neue Holder-Kostenbasis + Liquiditäts-Vakuum
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_8" value="c">
+                    Weil Charts es sagen
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">9. Was ist der größte Fehler bei Volumen-Analyse?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_9" value="a">
+                    Zu viel Volumen analysieren
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_9" value="b">
+                    Volumen isoliert ohne Preis-Context betrachten
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_9" value="c">
+                    Volumen überhaupt zu beachten
+                </label>
+
+                <div class="quiz-question" style="margin-top: 25px;">10. Was ist "Front-Running"?</div>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_10" value="a">
+                    Ein Jogging-Style
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_10" value="b">
+                    Preis läuft bereits vor offizieller News (Insider-Aktivität)
+                </label>
+                <label class="quiz-option">
+                    <input type="radio" name="qf_10" value="c">
+                    Wenn Du als erster kaufst
+                </label>
+
+                <button class="btn btn-primary" onclick="checkFinalQuiz()" style="margin-top: 30px;">Quiz abschließen 🎯</button>
+                <div id="final-quiz-feedback" class="quiz-feedback"></div>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completion" style="display: none;">
+            <div class="completion-box">
+                <h2>🎉 Herzlichen Glückwunsch!</h2>
+                <h3 style="margin: 20px 0;">Du hast "Volumen-Analyse Grundlagen" gemeistert!</h3>
+                <p style="font-size: 1.2em; line-height: 1.8;">
+                    Du kennst jetzt die wichtigste Trading-Variable nach Preis und Zeit. 
+                    Nutze Volumen-Analyse bei jedem Trade und Du wirst einen enormen Vorteil gegenüber 
+                    anderen Tradern haben, die dieses mächtige Tool ignorieren.
+                </p>
+                <div style="margin: 30px 0;">
+                    <p style="font-size: 1.3em;">📊 <strong>Module abgeschlossen:</strong> Volumen-Analyse Grundlagen</p>
+                    <p style="font-size: 1.3em;">⏱️ <strong>Investierte Zeit:</strong> ~45-60 Minuten</p>
+                    <p style="font-size: 1.3em;">🎓 <strong>Status:</strong> Gemeistert</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" onclick="window.location.href='/'">Zurück zur Übersicht</button>
+                <button class="btn btn-secondary" onclick="resetProgress()">Modul wiederholen</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Globale Variablen
+        let currentStep = 1;
+        const totalSteps = 10;
+
+        // Fortschritt laden beim Start
+        window.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            updateProgress();
+        });
+
+        // Fortschritt speichern
+        function saveProgress() {
+            localStorage.setItem('volume_grundlagen_step', currentStep);
+            localStorage.setItem('volume_grundlagen_timestamp', new Date().toISOString());
+        }
+
+        // Fortschritt laden
+        function loadProgress() {
+            const saved = localStorage.getItem('volume_grundlagen_step');
+            if (saved) {
+                currentStep = parseInt(saved);
+            }
+        }
+
+        // Zum nächsten Schritt
+        function nextStep(step) {
+            currentStep = step;
+            saveProgress();
+            showStep(step);
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Schritt anzeigen
+        function showStep(step) {
+            // Alle Schritte ausblenden
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Aktuellen Schritt anzeigen
+            const currentSection = document.getElementById(`step-${step}`);
+            if (currentSection) {
+                currentSection.classList.add('active');
+            }
+        }
+
+        // Fortschrittsanzeige aktualisieren
+        function updateProgress() {
+            const percentage = Math.round((currentStep / totalSteps) * 100);
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = percentage + '%';
+            document.getElementById('step-indicator').textContent = `Schritt ${currentStep} von ${totalSteps}`;
+        }
+
+        // Quiz-Prüfung
+        function checkQuiz(quizNumber) {
+            const answers = {
+                1: { q1_1: 'b', q1_2: 'b', q1_3: 'b' },
+                2: { q2_1: 'b', q2_2: 'a' },
+                3: { q3_1: 'b', q3_2: 'c', q3_3: 'b' },
+                4: { q4_1: 'a', q4_2: 'b' },
+                5: { q5_1: 'a', q5_2: 'b' },
+                6: { q6_1: 'a', q6_2: 'b' },
+                7: { q7_1: 'b', q7_2: 'b' },
+                8: { q8_1: 'b', q8_2: 'b' }
+            };
+
+            const correctAnswers = answers[quizNumber];
+            let score = 0;
+            let total = Object.keys(correctAnswers).length;
+
+            for (let question in correctAnswers) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                if (selected && selected.value === correctAnswers[question]) {
+                    score++;
+                }
+            }
+
+            const feedback = document.getElementById(`quiz-${quizNumber}-feedback`);
+            feedback.classList.add('show');
+            
+            if (score === total) {
+                feedback.style.background = 'linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%)';
+                feedback.style.border = '2px solid #38a169';
+                feedback.innerHTML = `<strong style="color: #38a169;">🎉 Perfekt! ${score}/${total} richtig!</strong><p>Du hast alle Konzepte verstanden. Weiter so!</p>`;
+            } else if (score >= total * 0.6) {
+                feedback.style.background = 'linear-gradient(135deg, #fef3cd 0%, #ffeaa7 100%)';
+                feedback.style.border = '2px solid #d69e2e';
+                feedback.innerHTML = `<strong style="color: #d69e2e;">👍 Gut! ${score}/${total} richtig</strong><p>Du bist auf dem richtigen Weg. Lies nochmal die Schlüsselkonzepte.</p>`;
+            } else {
+                feedback.style.background = 'linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%)';
+                feedback.style.border = '2px solid #e53e3e';
+                feedback.innerHTML = `<strong style="color: #e53e3e;">📖 ${score}/${total} richtig</strong><p>Lies diesen Abschnitt nochmal sorgfältig durch.</p>`;
+            }
+        }
+
+        // Abschluss-Quiz Prüfung
+        function checkFinalQuiz() {
+            const correctAnswers = {
+                qf_1: 'b', qf_2: 'b', qf_3: 'b', qf_4: 'b', qf_5: 'b',
+                qf_6: 'b', qf_7: 'b', qf_8: 'b', qf_9: 'b', qf_10: 'b'
+            };
+
+            let score = 0;
+            let total = Object.keys(correctAnswers).length;
+
+            for (let question in correctAnswers) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                if (selected && selected.value === correctAnswers[question]) {
+                    score++;
+                }
+            }
+
+            const percentage = Math.round((score / total) * 100);
+            const feedback = document.getElementById('final-quiz-feedback');
+            feedback.classList.add('show');
+
+            if (percentage >= 80) {
+                feedback.style.background = 'linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%)';
+                feedback.style.border = '2px solid #38a169';
+                feedback.innerHTML = `<strong style="color: #38a169;">🏆 Ausgezeichnet! ${score}/${total} richtig (${percentage}%)</strong><p>Du hast das Modul gemeistert! Herzlichen Glückwunsch!</p>`;
+                
+                // Zeige Completion Screen nach 2 Sekunden
+                setTimeout(() => {
+                    document.querySelectorAll('.content-section').forEach(s => s.style.display = 'none');
+                    document.getElementById('completion').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Optional: Confetti-Effekt
+                    if (typeof confetti !== 'undefined') {
+                        confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 }
+                        });
+                    }
+                }, 2000);
+            } else if (percentage >= 60) {
+                feedback.style.background = 'linear-gradient(135deg, #fef3cd 0%, #ffeaa7 100%)';
+                feedback.style.border = '2px solid #d69e2e';
+                feedback.innerHTML = `<strong style="color: #d69e2e;">👍 Gut! ${score}/${total} richtig (${percentage}%)</strong><p>Fast geschafft! Lies die Abschnitte nochmal durch wo Du unsicher warst, und versuche es erneut.</p>`;
+            } else {
+                feedback.style.background = 'linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%)';
+                feedback.style.border = '2px solid #e53e3e';
+                feedback.innerHTML = `<strong style="color: #e53e3e;">📖 ${score}/${total} richtig (${percentage}%)</strong><p>Nimm Dir Zeit und gehe nochmal durch alle Schritte. Volumen-Analyse ist wichtig!</p>`;
+            }
+        }
+
+        // Reset-Funktion
+        function resetProgress() {
+            if (confirm('Möchtest Du wirklich Deinen gesamten Fortschritt zurücksetzen?')) {
+                localStorage.removeItem('volume_grundlagen_step');
+                localStorage.removeItem('volume_grundlagen_timestamp');
+                currentStep = 1;
+                showStep(1);
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
+
