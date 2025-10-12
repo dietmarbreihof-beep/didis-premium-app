@@ -690,3 +690,54 @@ Railway-Logs zeigen Auto-Sync-Aktivität:
 
 **Mit diesem System sind lokale Änderungen AUTOMATISCH online - keine manuellen Schritte mehr nötig!** 🚀
 
+---
+
+## 🚀 **DEPLOYMENT-REGEL: IMMER SOFORT SYNCHRONISIEREN**
+
+### **KRITISCH: User prüft IMMER die Online-App!**
+
+**WICHTIG:** Der User testet und prüft ausschließlich die produktive Railway-App unter:
+```
+https://didis-premium-app-production.up.railway.app/
+```
+
+### **Obligatorische Workflow-Regel:**
+
+**Nach JEDER Code-Änderung MUSS SOFORT deployed werden:**
+
+```bash
+# 1. Änderungen committen
+git add .
+git commit -m "Beschreibung der Änderung"
+
+# 2. SOFORT zu Railway pushen
+git push origin main
+
+# 3. User informieren dass Deployment läuft
+```
+
+### **Ausnahmen: KEINE!**
+
+- ❌ NICHT warten bis "mehrere Änderungen" fertig sind
+- ❌ NICHT fragen ob deployed werden soll
+- ❌ NICHT annehmen dass lokale Tests ausreichen
+
+### **Begründung:**
+
+- User testet NUR die Online-App
+- Lokale Änderungen sind für User UNSICHTBAR
+- Railway-Deployment dauert nur 2-3 Minuten
+- Schnelles Feedback ist wichtiger als "saubere Commits"
+
+### **Code-Pattern:**
+
+```python
+# Nach jeder Änderung an app.py, templates/, etc:
+# 1. git add <geänderte-dateien>
+# 2. git commit -m "Kurze Beschreibung"  
+# 3. git push origin main
+# 4. Sage User: "Deployment läuft - in 2-3 Min online!"
+```
+
+**Diese Regel hat HÖCHSTE PRIORITÄT und überschreibt alle anderen Deployment-Überlegungen!** 🔥
+
