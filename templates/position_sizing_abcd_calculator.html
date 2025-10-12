@@ -412,6 +412,7 @@
 
         .poker-card-section {
             background: rgba(255, 255, 255, 0.05);
+            -webkit-backdrop-filter: blur(10px);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 40px;
@@ -1032,7 +1033,7 @@
                     </p>
                 </div>
 
-                <button class="next-step-button" onclick="nextStep()" id="step1NextButton" style="display: none;">
+                <button type="button" class="next-step-button" onclick="nextStep()" id="step1NextButton" style="display: none;">
                     ✅ Verstanden - Weiter zu Schritt 2: Wichtige Warnung ➡️
                 </button>
             </div>
@@ -1139,12 +1140,136 @@
                     </div>
                 </div>
 
-                <button class="next-step-button" onclick="nextStep()" id="step2NextButton" style="display: none;">
+                <button type="button" class="next-step-button" onclick="nextStep()" id="step2NextButton" style="display: none;">
                     ✅ Warnung verstanden - Weiter zu Schritt 3: Trade-Grades ➡️
                 </button>
+                
+                <!-- DEBUG: Direkter Test-Button -->
+                <button type="button" onclick="showTab('grades')" style="margin-top: 20px; padding: 15px; background: blue; color: white; border: none; border-radius: 8px;">
+                    🔧 DEBUG: Direkt zu Grades-Tab
+                </button>
             </div>
+        </div>
 
-        <!-- Calculator Tab -->
+        <!-- Grades Tab (Schritt 3) -->
+        <div id="grades" class="tab-content">
+            <div class="content-card">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">📊 Trade-Grades verstehen</div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3 style="font-size: 1.6em; margin-bottom: 20px; color: var(--primary-dark); text-align: center;">
+                        🎯 Die 4 Trade-Kategorien im Detail
+                    </h3>
+                    <p style="font-size: 1.1em; line-height: 1.8; color: var(--primary-medium); text-align: center; max-width: 800px; margin: 0 auto 30px;">
+                        Elite-Trader kategorisieren jeden Trade VOR dem Entry. So weißt Du genau, wie viel Risiko Du eingehen solltest.
+                    </p>
+                </div>
+
+                <div class="grid-4">
+                    <div class="grade-card grade-a">
+                        <h3 class="grade-title grade-a">A-Trade</h3>
+                        <div class="grade-stats">
+                            <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--success); font-weight: bold;">90%</span></div>
+                            <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--success); font-weight: bold;">1:4</span></div>
+                            <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--success); font-weight: bold;">$3.50</span></div>
+                            <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">2-3x pro Monat</span></div>
+                        </div>
+                        <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                            Die absoluten Highlight-Trades des Jahres. Pocket Aces. Alles stimmt perfekt.
+                        </p>
+                        <div class="grade-examples grade-a">
+                            <strong style="color: var(--success);">Beispiele:</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                                QXO Entry bei $13.90, CELH Breakout, SMCI Stage 2 Setup
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-card grade-b">
+                        <h3 class="grade-title grade-b">B-Trade</h3>
+                        <div class="grade-stats">
+                            <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--warning); font-weight: bold;">70%</span></div>
+                            <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--warning); font-weight: bold;">1:2</span></div>
+                            <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--warning); font-weight: bold;">$1.10</span></div>
+                            <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Mehrmals pro Woche</span></div>
+                        </div>
+                        <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                            Solide Setups mit gutem Risk-Reward. Die "Singles" im Trading.
+                        </p>
+                        <div class="grade-examples grade-b">
+                            <strong style="color: var(--warning);">Beispiele:</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                                Stage 2 Continuation, Breakout über Resistance, Momentum-Plays
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-card grade-c">
+                        <h3 class="grade-title grade-c">C-Trade</h3>
+                        <div class="grade-stats">
+                            <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">55%</span></div>
+                            <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">1:1</span></div>
+                            <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">$0.10</span></div>
+                            <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Täglich</span></div>
+                        </div>
+                        <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                            Durchschnittliche Trades. Leichter Edge, aber nichts Besonderes.
+                        </p>
+                        <div class="grade-examples grade-c">
+                            <strong style="color: var(--gold-dark);">Beispiele:</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                                Kleine Scalps, Range-Trades, Routine-Setups
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grade-card grade-d">
+                        <h3 class="grade-title grade-d">D-Trade</h3>
+                        <div class="grade-stats">
+                            <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--error); font-weight: bold;">40%</span></div>
+                            <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--error); font-weight: bold;">1:1</span></div>
+                            <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--error); font-weight: bold;">-$0.20</span></div>
+                            <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Ständig verfügbar</span></div>
+                        </div>
+                        <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
+                            Mediocre 50/50 Trades oder negativer Expected Value. Vermeiden!
+                        </p>
+                        <div class="grade-examples grade-d">
+                            <strong style="color: var(--error);">Beispiele:</strong>
+                            <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
+                                FOMO-Trades, Breaking News ohne Setup, Übertrading
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quiz nach Trade-Grades -->
+                <div class="quiz-container" style="margin-top: 30px;">
+                    <div class="quiz-question">🧠 Quiz: Welcher Trade-Typ hat den höchsten Expected Value?</div>
+                    <div class="quiz-options">
+                        <div class="quiz-option" onclick="selectQuizAnswer(3, 'A', true)">
+                            A) A-Trade mit $3.50 EV pro gerisikiertem Dollar
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(3, 'B', false)">
+                            B) B-Trade mit $1.10 EV, weil sie häufiger vorkommen
+                        </div>
+                        <div class="quiz-option" onclick="selectQuizAnswer(3, 'C', false)">
+                            C) Alle Trades haben den gleichen Expected Value
+                        </div>
+                    </div>
+                    <div id="quiz3Feedback" class="quiz-feedback" style="display: none;"></div>
+                </div>
+
+                <button type="button" class="next-step-button" onclick="nextStep()" id="step3NextButton" style="display: none;">
+                    ✅ Trade-Grades verstanden - Weiter zu Schritt 4: Calculator ➡️
+                </button>
+            </div>
+        </div>
+
+        <!-- Calculator Tab (Schritt 4) -->
         <div id="calculator" class="tab-content">
             <div class="grid-2">
                 <!-- Einstellungen -->
@@ -1245,88 +1370,7 @@
             </div>
         </div>
 
-        <!-- Grades Tab -->
-        <div id="grades" class="tab-content">
-            <div class="grid-4">
-                <div class="grade-card grade-a">
-                    <h3 class="grade-title grade-a">A-Trade</h3>
-                    <div class="grade-stats">
-                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--success); font-weight: bold;">90%</span></div>
-                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--success); font-weight: bold;">1:4</span></div>
-                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--success); font-weight: bold;">$3.50</span></div>
-                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">2-3x pro Monat</span></div>
-                    </div>
-                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
-                        Die absoluten Highlight-Trades des Jahres. Pocket Aces. Alles stimmt perfekt.
-                    </p>
-                    <div class="grade-examples grade-a">
-                        <strong style="color: var(--success);">Beispiele:</strong>
-                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
-                            QXO Entry bei $13.90, CELH Breakout, SMCI Stage 2 Setup
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grade-card grade-b">
-                    <h3 class="grade-title grade-b">B-Trade</h3>
-                    <div class="grade-stats">
-                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--warning); font-weight: bold;">70%</span></div>
-                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--warning); font-weight: bold;">1:2</span></div>
-                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--warning); font-weight: bold;">$1.10</span></div>
-                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Mehrmals pro Woche</span></div>
-                    </div>
-                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
-                        Solide Setups mit gutem Risk-Reward. Die "Singles" im Trading.
-                    </p>
-                    <div class="grade-examples grade-b">
-                        <strong style="color: var(--warning);">Beispiele:</strong>
-                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
-                            Stage 2 Continuation, Breakout über Resistance, Momentum-Plays
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grade-card grade-c">
-                    <h3 class="grade-title grade-c">C-Trade</h3>
-                    <div class="grade-stats">
-                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">55%</span></div>
-                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">1:1</span></div>
-                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--gold-dark); font-weight: bold;">$0.10</span></div>
-                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Täglich</span></div>
-                    </div>
-                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
-                        Durchschnittliche Trades. Leichter Edge, aber nichts Besonderes.
-                    </p>
-                    <div class="grade-examples grade-c">
-                        <strong style="color: var(--gold-dark);">Beispiele:</strong>
-                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
-                            Kleine Scalps, Range-Trades, Routine-Setups
-                        </div>
-                    </div>
-                </div>
-
-                <div class="grade-card grade-d">
-                    <h3 class="grade-title grade-d">D-Trade</h3>
-                    <div class="grade-stats">
-                        <div class="grade-stat"><span><strong>Win-Rate:</strong></span><span style="color: var(--error); font-weight: bold;">40%</span></div>
-                        <div class="grade-stat"><span><strong>R:R:</strong></span><span style="color: var(--error); font-weight: bold;">1:1</span></div>
-                        <div class="grade-stat"><span><strong>EV:</strong></span><span style="color: var(--error); font-weight: bold;">-$0.20</span></div>
-                        <div class="grade-stat"><span><strong>Häufigkeit:</strong></span><span style="font-size: 0.9em;">Ständig verfügbar</span></div>
-                    </div>
-                    <p style="font-size: 1.05em; line-height: 1.6; color: var(--primary-medium); margin-bottom: 15px;">
-                        Mediocre 50/50 Trades oder negativer Expected Value. Vermeiden!
-                    </p>
-                    <div class="grade-examples grade-d">
-                        <strong style="color: var(--error);">Beispiele:</strong>
-                        <div style="font-size: 0.95em; margin-top: 8px; line-height: 1.5;">
-                            FOMO-Trades, Breaking News ohne Setup, Übertrading
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Comparison Tab -->
+        <!-- Comparison Tab (Schritt 5) -->
         <div id="comparison" class="tab-content">
             <div class="content-card">
                 <h2 style="font-size: 2em; margin-bottom: 30px; color: var(--primary-dark); text-align: center;">
@@ -1429,163 +1473,6 @@
             </div>
         </div>
 
-        <!-- Poker Tab -->
-        <div id="poker" class="tab-content">
-            <div style="background: linear-gradient(135deg, #0a4d2e 0%, #1a5c3d 50%, #0a4d2e 100%); border-radius: 12px; padding: 40px; color: white;">
-                <h2 style="font-size: 2.5em; margin-bottom: 20px; text-align: center; color: #daa520; text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);">
-                    ♠️ Die Poker-Analogie ♥️
-                </h2>
-                <p style="font-size: 1.4em; text-align: center; margin-bottom: 50px; opacity: 0.9;">
-                    Warum Du niemals gleich viel auf jede Hand setzen solltest
-                </p>
-
-                <div class="poker-comparison-grid">
-                    <!-- D-Trade Section -->
-                    <div class="poker-card-section d-trade-section">
-                        <div class="poker-section-title">D-TRADE</div>
-                        <div class="poker-subtitle">Die schlechteste Starting Hand</div>
-                        
-                        <div class="poker-table">
-                            <div class="cards-container">
-                                <div class="playing-card">
-                                    <div class="card-value black">9</div>
-                                    <div class="card-suit black">♣</div>
-                                    <div class="card-center black">♣</div>
-                                </div>
-                                
-                                <div class="playing-card">
-                                    <div class="card-value red">2</div>
-                                    <div class="card-suit red">♥</div>
-                                    <div class="card-center red">♥</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="poker-stats-box">
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Win-Rate:</span>
-                                <span class="poker-stat-value">38,9%</span>
-                            </div>
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Häufigkeit:</span>
-                                <span class="poker-stat-value">Ständig verfügbar</span>
-                            </div>
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Ranking:</span>
-                                <span class="poker-stat-value">Schlechteste Hand</span>
-                            </div>
-                        </div>
-
-                        <div class="poker-probability">
-                            Diese Hand verliert in <strong>6 von 10 Fällen</strong>
-                        </div>
-
-                        <div class="poker-warning-box">
-                            <p class="poker-emphasis">
-                                ⚠️ Niemals groß setzen!<br><br>
-                                Selbst Profi-Pokerspieler folden diese Hand sofort, wenn sie nicht im Big Blind sind. 
-                                Warum? Weil die Wahrscheinlichkeit zu verlieren viel höher ist als zu gewinnen.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- A-Trade Section -->
-                    <div class="poker-card-section a-trade-section">
-                        <div class="poker-section-title">A-TRADE</div>
-                        <div class="poker-subtitle">Pocket Aces - Die Königshand</div>
-                        
-                        <div class="poker-table">
-                            <div class="cards-container">
-                                <div class="playing-card">
-                                    <div class="card-value red">A</div>
-                                    <div class="card-suit red">♥</div>
-                                    <div class="card-center red">♥</div>
-                                </div>
-                                
-                                <div class="playing-card">
-                                    <div class="card-value black">A</div>
-                                    <div class="card-suit black">♠</div>
-                                    <div class="card-center black">♠</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="poker-stats-box">
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Win-Rate:</span>
-                                <span class="poker-stat-value">85,3%</span>
-                            </div>
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Häufigkeit:</span>
-                                <span class="poker-stat-value">1 von 221 Händen (0,45%)</span>
-                            </div>
-                            <div class="poker-stat-row">
-                                <span class="poker-stat-label">Ranking:</span>
-                                <span class="poker-stat-value">Beste Starting Hand</span>
-                            </div>
-                        </div>
-
-                        <div class="poker-probability">
-                            Diese Hand gewinnt in <strong>mehr als 8 von 10 Fällen</strong>
-                        </div>
-
-                        <div class="poker-success-box">
-                            <p class="poker-emphasis">
-                                🚀 GO ALL-IN!<br><br>
-                                Wenn Du Pocket Aces bekommst, ist es Zeit massiv zu setzen. Diese Hand kommt nur alle 221 Hände vor - 
-                                Du kannst es Dir nicht leisten, diese Gelegenheit zu verpassen!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bottom Conclusion -->
-                <div style="margin-top: 60px; text-align: center; background: rgba(0, 0, 0, 0.4); padding: 40px; border-radius: 20px; border: 2px solid #daa520;">
-                    <h2 style="color: #daa520; font-size: 2.2em; margin-bottom: 20px;">💡 Die entscheidende Lektion</h2>
-                    <p style="color: white; font-size: 1.3em; line-height: 1.8; max-width: 900px; margin: 0 auto;">
-                        Würdest Du auf 9-2 und Pocket Aces die <strong>gleiche Summe</strong> setzen?<br><br>
-                        <span style="color: #e53e3e; font-size: 1.2em;">Natürlich nicht!</span><br><br>
-                        Genau so funktioniert Trading: Wenn Du auf D-Trades und A-Trades die gleiche Positionsgröße setzt, 
-                        <strong style="color: #daa520;">verschenkst Du massiv Potential</strong> und machst Dich langfristig zum Verlierer-Trader.
-                    </p>
-                </div>
-
-                <!-- Trading = Poker Analogien -->
-                <div style="background: rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 30px; margin-top: 30px;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 20px; color: #daa520;">📈 Trading = Professionelles Poker</h3>
-                    <div style="display: grid; gap: 20px;">
-                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
-                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 1: Wahrscheinlichkeiten</strong>
-                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
-                                Sowohl beim Poker als auch beim Trading geht es um das Spielen von Wahrscheinlichkeiten, nicht um Garantien.
-                            </p>
-                        </div>
-                        
-                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
-                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 2: Seltenheit der Premiumhände</strong>
-                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
-                                Pocket Aces kommen nur 0.45% vor - genau wie A-Trades nur 2-3x pro Monat auftreten.
-                            </p>
-                        </div>
-                        
-                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
-                            <strong style="font-size: 1.2em; color: #daa520;">Ähnlichkeit 3: Bankroll Management</strong>
-                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
-                                Professionelle Pokerspieler passen ihre Einsätze der Handstärke an - genau wie Du Deine Positionsgröße dem Trade-Grade anpassen solltest.
-                            </p>
-                        </div>
-                        
-                        <div style="padding: 20px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; border-left: 4px solid #daa520;">
-                            <strong style="font-size: 1.2em; color: #daa520;">Die Lektion:</strong>
-                            <p style="margin-top: 10px; line-height: 1.6; color: white;">
-                                Elite-Trader, wie Elite-Pokerspieler, machen den Großteil ihres Geldes mit wenigen großen Händen/Trades. Sie erkennen die Pocket Aces, wenn sie kommen, und setzen massiv darauf!
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Footer -->
         <div class="footer">
             <p style="font-size: 1.2em; line-height: 1.8; margin-bottom: 15px;">
@@ -1678,7 +1565,9 @@
 
         // Tab switching with unlock logic
         function showTab(tabName) {
+            console.log('showTab called with:', tabName);
             const stepNumber = stepMapping[tabName];
+            console.log('Step number:', stepNumber, 'Unlocked steps:', unlockedSteps);
             
             // Check if step is unlocked
             if (!unlockedSteps.includes(stepNumber)) {
@@ -1692,20 +1581,35 @@
             });
             
             // Remove active class from all buttons
-            document.querySelectorAll('.tab-button').forEach(btn => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            tabButtons.forEach(btn => {
                 btn.classList.remove('active');
             });
             
             // Show selected tab
-            document.getElementById(tabName).classList.add('active');
+            const tabElement = document.getElementById(tabName);
+            console.log('Tab element found:', tabElement);
+            if (tabElement) {
+                tabElement.classList.add('active');
+                console.log('Added active class to tab:', tabName);
+            } else {
+                console.error('Tab element not found:', tabName);
+            }
             
-            // Add active class to clicked button
-            event.target.classList.add('active');
+            // Add active class to the correct button (find by step number)
+            const targetButton = tabButtons[stepNumber - 1];
+            if (targetButton) {
+                targetButton.classList.add('active');
+                console.log('Added active class to button:', stepNumber);
+            }
             
             currentTab = tabName;
             currentStep = stepNumber;
             
             updateProgress();
+            
+            // Scroll to top when switching tabs
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Quiz system
@@ -1733,6 +1637,8 @@
                     feedbackElement.textContent = '✅ Richtig! Du hast die Analogie verstanden.';
                 } else if (quizNumber === 2) {
                     feedbackElement.textContent = '✅ Perfekt! Das ist der Schlüssel zum erfolgreichen Position-Sizing.';
+                } else if (quizNumber === 3) {
+                    feedbackElement.textContent = '✅ Exzellent! A-Trades haben den höchsten Expected Value und sollten daher die größte Position bekommen.';
                 }
                 
                 // Show next step button
@@ -1743,26 +1649,52 @@
             } else {
                 event.target.classList.add('wrong');
                 feedbackElement.className = 'quiz-feedback wrong';
-                feedbackElement.textContent = '❌ Nicht ganz richtig. Denk nochmal über die Poker-Analogie nach!';
+                if (quizNumber === 1 || quizNumber === 2) {
+                    feedbackElement.textContent = '❌ Nicht ganz richtig. Denk nochmal über die Poker-Analogie nach!';
+                } else if (quizNumber === 3) {
+                    feedbackElement.textContent = '❌ Nicht ganz richtig. Schau Dir die Expected Values (EV) nochmal an!';
+                }
             }
         }
 
         // Next step function
         function nextStep() {
+            console.log('nextStep called, current step:', currentStep);
             const nextStepNumber = currentStep + 1;
+            console.log('Next step number:', nextStepNumber);
             
             // Unlock next step
             if (!unlockedSteps.includes(nextStepNumber)) {
                 unlockedSteps.push(nextStepNumber);
+                console.log('Unlocked step:', nextStepNumber);
             }
+            console.log('All unlocked steps:', unlockedSteps);
             
             // Update tab button states
             updateTabStates();
             
             // Switch to next tab
             const nextTabName = Object.keys(stepMapping).find(key => stepMapping[key] === nextStepNumber);
+            console.log('Next tab name:', nextTabName);
+            
+            // Check if tab element exists
+            const tabElement = document.getElementById(nextTabName);
+            if (!tabElement) {
+                alert('FEHLER: Tab-Element "' + nextTabName + '" nicht gefunden!');
+                return;
+            }
+            
             if (nextTabName) {
                 showTab(nextTabName);
+                // Verify the tab is now active
+                setTimeout(() => {
+                    const isActive = tabElement.classList.contains('active');
+                    if (!isActive) {
+                        alert('WARNUNG: Tab wurde nicht aktiviert! Tab: ' + nextTabName);
+                    }
+                }, 100);
+            } else {
+                alert('FEHLER: Konnte keinen Tab-Namen für Schritt ' + nextStepNumber + ' finden!');
             }
         }
 
