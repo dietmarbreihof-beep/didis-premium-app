@@ -8,6 +8,11 @@ Zweck: Initiale Bulk-Registrierung aller Templates in die Datenbank
 
 import sys
 import os
+import io
+
+# Windows encoding fix
+if sys.platform == "win32":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
 # Füge Parent-Directory zum Python-Path hinzu
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

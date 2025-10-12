@@ -170,3 +170,6 @@ secrets.json
 
 # OneDrive specific
 .sync
+
+# Module sync flag (nicht ins Git - wird bei jedem Deployment neu erstellt)
+.modules_synced

@@ -156,8 +156,22 @@ print("Analytics-Tracking aktiviert")
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
     """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
-    if hasattr(app, '_modules_initialized'):
-        return
+    import os
+    import time
+    
+    # Persistenter Check via File (funktioniert über Worker hinweg!)
+    sync_flag_file = '.modules_synced'
+    
+    # Prüfe ob kürzlich synchronisiert wurde
+    if os.path.exists(sync_flag_file):
+        try:
+            file_age = time.time() - os.path.getmtime(sync_flag_file)
+            # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
+            if file_age < 3600:
+                print(f"ℹ️ Module-Sync übersprungen (zuletzt vor {int(file_age/60)} Minuten)")
+                return True
+        except Exception as e:
+            print(f"⚠️ Fehler beim Lesen des Sync-Flags: {e}")
     
     try:
         with app.app_context():
@@ -179,24 +193,32 @@ def init_modules_on_startup():
             
             # 3. Templates scannen und neue Module registrieren
             print("🔍 Scanne Templates nach neuen Modulen...")
-            # Hinweis: Dieser Scan wird NICHT automatisch ausgeführt
-            # Admin muss /admin/force-sync-templates aufrufen
             print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
             
             print("="*60)
             print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
             print("="*60 + "\n")
             
-        app._modules_initialized = True
+            # Setze Flag-Datei (persistent über Worker!)
+            try:
+                with open(sync_flag_file, 'w') as f:
+                    from datetime import datetime
+                    f.write(datetime.utcnow().isoformat())
+                print(f"💾 Sync-Flag gesetzt: {sync_flag_file}")
+            except Exception as flag_error:
+                print(f"⚠️ Konnte Sync-Flag nicht setzen: {flag_error}")
+        
+        return True
         
     except Exception as e:
-        print(f"⚠️ Fehler beim Module-Auto-Sync: {str(e)}")
-        app._modules_initialized = True  # Trotzdem als initialisiert markieren
+        print(f"⚠️ Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return False
 
-@app.before_request
-def run_startup_sync():
-    """Führt Module-Sync beim ersten Request aus"""
-    init_modules_on_startup()
+# ❌ ENTFERNT: @app.before_request Hook
+# Grund: Läuft bei JEDEM Request (CSS, JS, Images) - zu oft!
+# Lösung: Nur beim App-Start aufrufen (siehe unten bei __main__)
 
 # === USER MODELS ===
 
@@ -4562,6 +4584,10 @@ def admin_analytics_api():
 
 if __name__ == '__main__':
     with app.app_context():
+        # Module-Sync beim Start (verhindert dass bei jedem Request läuft!)
+        print("[STARTUP] Führe einmaligen Module-Sync aus...")
+        init_modules_on_startup()
+        
         # Database initialisieren
         db_success = init_database()
         
