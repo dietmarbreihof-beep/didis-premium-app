@@ -153,6 +153,51 @@ def track_visitor():
 app.before_request(track_visitor)
 print("Analytics-Tracking aktiviert")
 
+# === AUTO-SYNC ON STARTUP ===
+def init_modules_on_startup():
+    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
+    if hasattr(app, '_modules_initialized'):
+        return
+    
+    try:
+        with app.app_context():
+            print("\n" + "="*60)
+            print("🚀 MODULE AUTO-SYNC BEIM START")
+            print("="*60)
+            
+            # 1. Kategorien synchronisieren (inkl. "Neue Module")
+            print("📋 Synchronisiere Kategorien...")
+            sync_modules_from_local()
+            db.session.commit()
+            print("✅ Kategorien synchronisiert")
+            
+            # 2. Module aus JSON-Backup wiederherstellen
+            print("📥 Prüfe JSON-Backup...")
+            restored_count = restore_modules_from_json()
+            if restored_count > 0:
+                print(f"✅ {restored_count} Module aus Backup wiederhergestellt")
+            
+            # 3. Templates scannen und neue Module registrieren
+            print("🔍 Scanne Templates nach neuen Modulen...")
+            # Hinweis: Dieser Scan wird NICHT automatisch ausgeführt
+            # Admin muss /admin/force-sync-templates aufrufen
+            print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
+            
+            print("="*60)
+            print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
+            print("="*60 + "\n")
+            
+        app._modules_initialized = True
+        
+    except Exception as e:
+        print(f"⚠️ Fehler beim Module-Auto-Sync: {str(e)}")
+        app._modules_initialized = True  # Trotzdem als initialisiert markieren
+
+@app.before_request
+def run_startup_sync():
+    """Führt Module-Sync beim ersten Request aus"""
+    init_modules_on_startup()
+
 # === USER MODELS ===
 
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -2045,6 +2090,13 @@ def add_module():
         
         db.session.add(module)
         db.session.commit()
+        
+        # JSON-Backup erstellen
+        try:
+            backup_module_to_json(module)
+        except Exception as backup_error:
+            print(f"⚠️ JSON-Backup fehlgeschlagen: {str(backup_error)}")
+        
         flash(f'Modul "{title}" erfolgreich erstellt!', 'success')
         
     except Exception as e:
@@ -2053,6 +2105,80 @@ def add_module():
     
     return redirect(url_for('admin_modules'))
 
+@app.route('/admin/get-all-categories')
+def get_all_categories():
+    """📋 Gibt alle Kategorien für Dropdown zurück"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'})
+    
+    try:
+        categories = ModuleCategory.query.order_by(ModuleCategory.sort_order).all()
+        return jsonify({
+            'success': True,
+            'categories': [
+                {
+                    'id': cat.id,
+                    'name': cat.name,
+                    'slug': cat.slug,
+                    'icon': cat.icon
+                }
+                for cat in categories
+            ]
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/move-module/<int:module_id>', methods=['POST'])
+def move_module(module_id):
+    """📦 Verschiebt ein Modul in eine andere Kategorie (Ein-Klick-Verschieben)"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'})
+    
+    try:
+        module = LearningModule.query.get_or_404(module_id)
+        data = request.get_json()
+        new_category_id = data.get('category_id')
+        new_subcategory_id = data.get('subcategory_id')
+        
+        if not new_category_id:
+            return jsonify({'success': False, 'error': 'Kategorie-ID fehlt'})
+        
+        # Kategorie validieren
+        new_category = ModuleCategory.query.get(new_category_id)
+        if not new_category:
+            return jsonify({'success': False, 'error': 'Kategorie nicht gefunden'})
+        
+        # Alten Kategorie-Namen für Log speichern
+        old_category_name = module.category.name if module.category else 'Keine'
+        
+        # Modul verschieben
+        module.category_id = new_category_id
+        module.subcategory_id = new_subcategory_id if new_subcategory_id else None
+        
+        # Entferne den [Vorschlag: ...] Teil aus der Description
+        if '[Vorschlag:' in module.description:
+            module.description = module.description.split('[Vorschlag:')[0].strip()
+        
+        # Sort-Order neu berechnen
+        if new_subcategory_id:
+            max_order = db.session.query(db.func.max(LearningModule.sort_order)).filter_by(subcategory_id=new_subcategory_id).scalar() or 0
+        else:
+            max_order = db.session.query(db.func.max(LearningModule.sort_order)).filter_by(category_id=new_category_id, subcategory_id=None).scalar() or 0
+        module.sort_order = max_order + 1
+        
+        db.session.commit()
+        
+        flash(f'✅ Modul "{module.title}" von "{old_category_name}" nach "{new_category.name}" verschoben!', 'success')
+        
+        return jsonify({
+            'success': True,
+            'message': f'Modul erfolgreich nach {new_category.name} verschoben',
+            'new_category': new_category.name
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/admin/update-marktampel')
 def update_marktampel_module():
@@ -2216,6 +2342,25 @@ def admin_init_database():
     
     return redirect(url_for('admin_modules'))
 
+@app.route('/admin/force-sync-templates')
+def force_sync_templates():
+    """🔄 Erzwingt komplette Synchronisation aller Templates"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        # Stelle sicher dass "Neue Module" Kategorie existiert
+        sync_modules_from_local()
+        db.session.commit()
+        
+        # Führe Auto-Registrierung aus
+        return auto_register_modules()
+        
+    except Exception as e:
+        flash(f'❌ Fehler bei Template-Synchronisation: {str(e)}', 'error')
+        return redirect(url_for('admin_modules'))
+
 @app.route('/admin/auto-register-modules')
 def auto_register_modules():
     """🚀 Automatische Registrierung neuer HTML-Templates"""
@@ -2274,14 +2419,31 @@ def auto_register_modules():
                 # Meta-Daten aus HTML extrahieren
                 module_info = extract_module_metadata(html_file)
                 
-                # Kategorie finden oder erstellen
-                category = find_or_create_category_for_module(module_info['category'])
+                # WICHTIG: Alle automatisch gescannten Module gehen in "Neue Module" Kategorie
+                neue_module_category = ModuleCategory.query.filter_by(slug='neue-module').first()
                 
-                # Neues Modul erstellen
-                create_auto_module(html_file, module_info, category)
+                if not neue_module_category:
+                    # Fallback: "Neue Module" Kategorie erstellen falls nicht vorhanden
+                    neue_module_category = ModuleCategory(
+                        name='🆕 Neue Module',
+                        slug='neue-module',
+                        icon='🆕',
+                        description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
+                        sort_order=999,
+                        is_active=True
+                    )
+                    db.session.add(neue_module_category)
+                    db.session.flush()
+                
+                # Speichere den erkannten Kategorie-Vorschlag in der Description
+                suggested_category = module_info.get('category', 'technische-analyse')
+                module_info['description'] += f" [Vorschlag: {suggested_category}]"
+                
+                # Neues Modul erstellen in "Neue Module" Kategorie
+                create_auto_module(html_file, module_info, neue_module_category)
                 registered_count += 1
                 
-                print(f"[OK] REGISTRIERT: {module_info['title']}")
+                print(f"[OK] REGISTRIERT: {module_info['title']} → 🆕 Neue Module (Vorschlag: {suggested_category})")
                 
             except Exception as e:
                 error_msg = f"Fehler bei {html_file.name}: {str(e)}"
@@ -2615,6 +2777,133 @@ def generate_title_from_filename(filename):
     
     # Standard Title Case
     return title.title()
+
+def backup_module_to_json(module):
+    """💾 Sichert Modul-Definition in JSON-Backup-Datei"""
+    import json
+    import os
+    from datetime import datetime
+    
+    backup_file = 'modules_backup.json'
+    
+    try:
+        # Lade existierende Backups
+        if os.path.exists(backup_file):
+            with open(backup_file, 'r', encoding='utf-8') as f:
+                backups = json.load(f)
+        else:
+            backups = {'modules': [], 'last_updated': None}
+        
+        # Modul-Definition erstellen
+        module_def = {
+            'id': module.id,
+            'title': module.title,
+            'slug': module.slug,
+            'description': module.description,
+            'icon': module.icon,
+            'template_file': module.template_file,
+            'external_url': module.external_url,
+            'content_type': module.content_type,
+            'category_slug': module.category.slug if module.category else None,
+            'subcategory_id': module.subcategory_id,
+            'is_published': module.is_published,
+            'is_lead_magnet': module.is_lead_magnet,
+            'required_subscription_levels': module.required_subscription_levels,
+            'estimated_duration': module.estimated_duration,
+            'difficulty_level': module.difficulty_level,
+            'sort_order': module.sort_order,
+            'created_at': module.created_at.isoformat() if module.created_at else None,
+            'backed_up_at': datetime.utcnow().isoformat()
+        }
+        
+        # Prüfe ob Modul bereits existiert (Update statt Duplicate)
+        existing_idx = None
+        for idx, existing_module in enumerate(backups['modules']):
+            if existing_module.get('slug') == module.slug:
+                existing_idx = idx
+                break
+        
+        if existing_idx is not None:
+            # Update existing
+            backups['modules'][existing_idx] = module_def
+            print(f"💾 JSON-Backup aktualisiert: {module.title}")
+        else:
+            # Add new
+            backups['modules'].append(module_def)
+            print(f"💾 JSON-Backup erstellt: {module.title}")
+        
+        backups['last_updated'] = datetime.utcnow().isoformat()
+        
+        # Speichere Backup
+        with open(backup_file, 'w', encoding='utf-8') as f:
+            json.dump(backups, f, indent=2, ensure_ascii=False)
+        
+        return True
+        
+    except Exception as e:
+        print(f"❌ JSON-Backup Fehler: {str(e)}")
+        return False
+
+def restore_modules_from_json():
+    """📥 Stellt Module aus JSON-Backup wieder her"""
+    import json
+    import os
+    
+    backup_file = 'modules_backup.json'
+    
+    if not os.path.exists(backup_file):
+        print("ℹ️ Keine JSON-Backup-Datei gefunden")
+        return 0
+    
+    try:
+        with open(backup_file, 'r', encoding='utf-8') as f:
+            backups = json.load(f)
+        
+        restored_count = 0
+        
+        for module_def in backups.get('modules', []):
+            # Prüfe ob Modul bereits existiert
+            existing = LearningModule.query.filter_by(slug=module_def['slug']).first()
+            if existing:
+                continue
+            
+            # Kategorie finden
+            category = ModuleCategory.query.filter_by(slug=module_def['category_slug']).first()
+            if not category:
+                print(f"⚠️ Kategorie nicht gefunden für {module_def['title']}: {module_def['category_slug']}")
+                continue
+            
+            # Modul wiederherstellen
+            new_module = LearningModule(
+                title=module_def['title'],
+                slug=module_def['slug'],
+                description=module_def['description'],
+                icon=module_def['icon'],
+                template_file=module_def.get('template_file'),
+                external_url=module_def.get('external_url'),
+                content_type=module_def.get('content_type', 'html'),
+                category_id=category.id,
+                subcategory_id=module_def.get('subcategory_id'),
+                is_published=module_def.get('is_published', False),
+                is_lead_magnet=module_def.get('is_lead_magnet', False),
+                required_subscription_levels=module_def.get('required_subscription_levels', []),
+                estimated_duration=module_def.get('estimated_duration', 60),
+                difficulty_level=module_def.get('difficulty_level', 'intermediate'),
+                sort_order=module_def.get('sort_order', 100)
+            )
+            
+            db.session.add(new_module)
+            restored_count += 1
+            print(f"📥 Wiederhergestellt: {module_def['title']}")
+        
+        db.session.commit()
+        print(f"✅ {restored_count} Module aus JSON-Backup wiederhergestellt")
+        return restored_count
+        
+    except Exception as e:
+        print(f"❌ JSON-Restore Fehler: {str(e)}")
+        db.session.rollback()
+        return 0
 
 def find_or_create_category_for_module(category_slug):
     """Findet oder erstellt Kategorie für Modul"""
@@ -3376,6 +3665,13 @@ def sync_modules_from_local():
                 'icon': '👑',
                 'description': 'Professionelle Trading-Systeme für Elite-Trader - System III Methodologie',
                 'sort_order': 5
+            },
+            {
+                'name': '🆕 Neue Module',
+                'slug': 'neue-module',
+                'icon': '🆕',
+                'description': 'Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
+                'sort_order': 999
             }
             # 🆕 NEUE KATEGORIEN HIER HINZUFÜGEN → Automatisch online!
         ]

@@ -43,7 +43,13 @@
         <button class="btn" onclick="showAddModuleModal()" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
             📄 Neues Modul hinzufügen
         </button>
-        <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, var(--success), #047857);">
+        <a href="{{ url_for('force_sync_templates') }}" 
+           class="btn primary" 
+           style="background: linear-gradient(135deg, var(--success), #047857);"
+           onclick="return confirm('🔄 Alle Templates synchronisieren?\n\nDies scannt den templates-Ordner nach neuen HTML-Dateien und fügt sie zur Kategorie \'🆕 Neue Module\' hinzu.')">
+            🔄 Templates synchronisieren
+        </a>
+        <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, #10b981, #059669);">
             🚀 Module auto-registrieren
         </button>
         <a href="{{ url_for('register_missing_modules') }}" 
@@ -171,6 +177,9 @@
                                         <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                                     </select>
                                     <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
+                                    {% if module.category and module.category.slug == 'neue-module' %}
+                                    <button class="action-btn" onclick="quickMoveModule({{ module.id }}, '{{ module.title }}')" title="📦 Schnell verschieben" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold;">📦</button>
+                                    {% endif %}
                                     <button class="action-btn" onclick="toggleModuleStatus({{ module.id }}, 'published')" title="{% if module.is_published %}Verstecken{% else %}Veröffentlichen{% endif %}">
                                         {% if module.is_published %}👁️{% else %}🔒{% endif %}
                                     </button>
@@ -227,6 +236,9 @@
                                 <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                             </select>
                             <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
+                            {% if module.category and module.category.slug == 'neue-module' %}
+                            <button class="action-btn" onclick="quickMoveModule({{ module.id }}, '{{ module.title }}')" title="📦 Schnell verschieben" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold;">📦</button>
+                            {% endif %}
                             <button class="action-btn" onclick="toggleModuleStatus({{ module.id }}, 'published')" title="{% if module.is_published %}Verstecken{% else %}Veröffentlichen{% endif %}">
                                 {% if module.is_published %}👁️{% else %}🔒{% endif %}
                             </button>
@@ -289,6 +301,9 @@
                                 <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                             </select>
                             <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
+                            {% if module.category and module.category.slug == 'neue-module' %}
+                            <button class="action-btn" onclick="quickMoveModule({{ module.id }}, '{{ module.title }}')" title="📦 Schnell verschieben" style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: bold;">📦</button>
+                            {% endif %}
                             <button class="action-btn" onclick="toggleModuleStatus({{ module.id }}, 'published')" title="{% if module.is_published %}Verstecken{% else %}Veröffentlichen{% endif %}">
                                 {% if module.is_published %}👁️{% else %}🔒{% endif %}
                             </button>
@@ -2000,10 +2015,70 @@ function updateModuleBadge(moduleId, level) {
     }
 }
 
-// Move Module
+// Move Module (vollständiger Modus mit Modal)
 function moveModule(moduleId) {
     document.getElementById('move_module_id').value = moduleId;
     document.getElementById('moveModuleModal').style.display = 'block';
+}
+
+// 📦 Quick Move Module - Ein-Klick-Verschieben
+function quickMoveModule(moduleId, currentModuleName) {
+    // Hole alle Kategorien
+    fetch('/admin/get-all-categories')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const categories = data.categories;
+                
+                // Erstelle Dropdown-Optionen
+                let options = categories.map(cat => 
+                    `${cat.id}. ${cat.icon} ${cat.name}`
+                ).join('\n');
+                
+                let categoryChoice = prompt(
+                    `📦 Modul "${currentModuleName}" verschieben nach:\n\n` +
+                    `Wähle Kategorie-Nummer:\n\n` +
+                    options +
+                    `\n\nGib die Nummer der Ziel-Kategorie ein:`,
+                    ''
+                );
+                
+                if (categoryChoice && !isNaN(categoryChoice)) {
+                    const categoryId = parseInt(categoryChoice);
+                    
+                    // Verschiebe Modul
+                    fetch(`/admin/move-module/${moduleId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            category_id: categoryId,
+                            subcategory_id: null
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showNotification('success', `✅ Modul nach "${data.new_category}" verschoben!`);
+                            setTimeout(() => {
+                                location.reload();
+                            }, 1500);
+                        } else {
+                            alert('❌ Fehler: ' + data.error);
+                        }
+                    })
+                    .catch(error => {
+                        alert('❌ Fehler beim Verschieben: ' + error);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Fehler beim Laden der Kategorien:', error);
+            // Fallback auf normale moveModule Funktion
+            moveModule(moduleId);
+        });
 }
 
 // Update Subcategory Options when category changes
