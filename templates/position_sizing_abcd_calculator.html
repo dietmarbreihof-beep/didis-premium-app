@@ -1143,11 +1143,6 @@
                 <button type="button" class="next-step-button" onclick="nextStep()" id="step2NextButton" style="display: none;">
                     ✅ Warnung verstanden - Weiter zu Schritt 3: Trade-Grades ➡️
                 </button>
-                
-                <!-- DEBUG: Direkter Test-Button -->
-                <button type="button" onclick="showTab('grades')" style="margin-top: 20px; padding: 15px; background: blue; color: white; border: none; border-radius: 8px;">
-                    🔧 DEBUG: Direkt zu Grades-Tab
-                </button>
             </div>
         </div>
 
@@ -1565,9 +1560,7 @@
 
         // Tab switching with unlock logic
         function showTab(tabName) {
-            console.log('showTab called with:', tabName);
             const stepNumber = stepMapping[tabName];
-            console.log('Step number:', stepNumber, 'Unlocked steps:', unlockedSteps);
             
             // Check if step is unlocked
             if (!unlockedSteps.includes(stepNumber)) {
@@ -1588,19 +1581,14 @@
             
             // Show selected tab
             const tabElement = document.getElementById(tabName);
-            console.log('Tab element found:', tabElement);
             if (tabElement) {
                 tabElement.classList.add('active');
-                console.log('Added active class to tab:', tabName);
-            } else {
-                console.error('Tab element not found:', tabName);
             }
             
             // Add active class to the correct button (find by step number)
             const targetButton = tabButtons[stepNumber - 1];
             if (targetButton) {
                 targetButton.classList.add('active');
-                console.log('Added active class to button:', stepNumber);
             }
             
             currentTab = tabName;
@@ -1659,42 +1647,20 @@
 
         // Next step function
         function nextStep() {
-            console.log('nextStep called, current step:', currentStep);
             const nextStepNumber = currentStep + 1;
-            console.log('Next step number:', nextStepNumber);
             
             // Unlock next step
             if (!unlockedSteps.includes(nextStepNumber)) {
                 unlockedSteps.push(nextStepNumber);
-                console.log('Unlocked step:', nextStepNumber);
             }
-            console.log('All unlocked steps:', unlockedSteps);
             
             // Update tab button states
             updateTabStates();
             
             // Switch to next tab
             const nextTabName = Object.keys(stepMapping).find(key => stepMapping[key] === nextStepNumber);
-            console.log('Next tab name:', nextTabName);
-            
-            // Check if tab element exists
-            const tabElement = document.getElementById(nextTabName);
-            if (!tabElement) {
-                alert('FEHLER: Tab-Element "' + nextTabName + '" nicht gefunden!');
-                return;
-            }
-            
             if (nextTabName) {
                 showTab(nextTabName);
-                // Verify the tab is now active
-                setTimeout(() => {
-                    const isActive = tabElement.classList.contains('active');
-                    if (!isActive) {
-                        alert('WARNUNG: Tab wurde nicht aktiviert! Tab: ' + nextTabName);
-                    }
-                }, 100);
-            } else {
-                alert('FEHLER: Konnte keinen Tab-Namen für Schritt ' + nextStepNumber + ' finden!');
             }
         }
 
