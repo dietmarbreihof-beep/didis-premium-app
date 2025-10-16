@@ -1,0 +1,344 @@
+The trend is your friend.
+
+One of the most famous sayings in trading and probably my favorite quote ever by Jesse Livermore.
+
+We're going to dive deep into why you all need to live, breathe and trade with the trend.
+
+A principle I found is paramount through my own experience.
+
+Today's topic is going to be a bit more extensive as we are going to be covering the how to define a trend, how to build trading rules around trends, how those trading rules can help you capture big moves or stay out of trouble and what causes trends to begin or end?
+
+What first led me down?
+
+This obsession of studying trends came from when I was just starting to excel.
+
+In my career.
+
+I was close to breaking into the top ten at Trillium, but what kept me out of the top of the leaderboard was consistently large losses that amounted to millions of dollars in P and L.
+
+So I thought to myself, wait a second man, this isn't normal if I can just avoid some of these bigger losses.
+
+That is going to have such a huge disproportionate effect on my trading.
+
+As a result, I did a massive deep dive on my whole career and one thing became abundantly clear.
+
+My best trades worked immediately in my favor and my largest losses were all attributed to when I was fighting the trend.
+
+It sounds paradoxical and incredibly hindsight, but it's not it's no doubt that across every experience level, whether you're a beginner or an eight figure trader, the commonality is that our best trades tend to work right away and that is a heuristic that we can work with going back to the Jesse Livermore quote.
+
+There are endless clichés and quotes that are just total nonsense, but over the course of my career none held up stronger than the the trend is your friend.
+
+There are a handful of positives from going with the trend that immediately come to mind first.
+
+Not only does it increase win rate, but it can increase your reward.
+
+Think about how many more market participants are on your side when you're riding the wave.
+
+Second you open up yourself to asymmetric SKU and third you minimize drawdowns and the heat you need to take on a position?
+
+No longer.
+
+Do you need to average down on positions going against you?
+
+I know what you're thinking.
+
+Can everything be structured with the trend?
+
+I'm going to break down.
+
+How the answer to that question is a resounding.
+
+Yes, let's start from scratch.
+
+What even is a trend?
+
+How do I define it?
+
+And how do you personally define it?
+
+Have you taken the time to ask yourself these basic questions?
+
+It may seem simple, but it's often overlooked and without doing so you can't get to the next step of what the implications are to your trading.
+
+Trending stocks, whether in an uptrend or downtrend are encountering new prices.
+
+If we think back to basic math and algebra, we're looking at the slope of a line and for the most part a slope of one or negative one would be considered a trend in either direction.
+
+Now contrast that to what I would define as a range bound stock or something.
+
+That is consolidating the price action stays within a band of past prices and has a slope of zero.
+
+Simply identifying these two types of price action has big implications for your trading.
+
+I see so many traders churn and burn over and over.
+
+Taking endless paper cuts when stocks are.
+
+Rangebound rather than waiting for a breakout of that range for a true trend to begin.
+
+Let's dive into a few examples and go one step further In defining uptrends generally I look for Anything that is upward sloping and then start.
+
+To break down the nuances.
+
+This is a ten year chart of SPY.
+
+You can clearly see, we have some really deep pullbacks, especially during Covid for example.
+
+But nevertheless, the slope and trend are clearly positive upwards and to the right, what other characteristics make a trend other than the basic upward sloping line.
+
+Higher highs and higher lows.
+
+Take this example of how I painted in the yellow lines.
+
+This is kind of how I view these various legs as a stock plays out.
+
+We have one initial leg hire from roughly forty eight dollars to sixty four dollars, followed by a pullback to fifty three dollars.
+
+This is our first higher low to the trend, then the pattern emerges.
+
+You see the retest highs, higher low, retest highs, higher low, retest highs, higher low, then boom.
+
+We finally break out.
+
+This pattern.
+
+Not only fits the basic definition of an uptrend, but it's an uptrend that is showing higher highs and higher lows.
+
+Which is one of the nicest patterns you can get when trading something like a breakout.
+
+Here's another example in Nvidia.
+
+The funny thing about this chart is, I clipped this before their massive earnings release and what do you know?
+
+The pattern only continued further from there.
+
+It's insane to think I knew people that were shorting this stock prior to the earnings release.
+
+It's one of those things where you should really ask yourself why you did that?
+
+Looking at this chart you had a stock that was going up strongly when with very shallow pullbacks and continuous legs higher.
+
+We've got a beautiful consolidation in the two hundred and eighty dollars range, right?
+
+I mean, this stock doubled from one forty dollars to two hundred eighty in a couple of months and it didn't pull back a dime.
+
+This was one of the most beautiful stairstep patterns.
+
+You can imagine sure enough earnings blew out and the trend kept on trending.
+
+Here is a term.
+
+Every single person in the industry has probably heard a million times over their career VWAP, and no, it doesn't stand for very wet aß.
+
+Well, never mind.
+
+This is another way of defining a trend and I think it's one of the most commonly used indicators out there a stock holding above or below vwap where the volume weighted average price again.
+
+Prior to earnings release on May eighteenth Nvidia held above VWAP the entire time as the market was a little strong.
+
+Crazy to think, but I know some people who might short this type of chart.
+
+Another trend indicator.
+
+Moving averages as we dive into different charts, I am doing my best to showcase all different timeframes and what I'm teaching is applicable across the board.
+
+My view of technical analysis is much like fractals.
+
+It can be infinitely zoomed in or out and the concepts hold.
+
+This is a one year weekly chart of FSLR holding the twenty period moving average.
+
+Absolutely beautiful uptrend that gets broken under the moving average.
+
+Maybe you got stopped out at the one hundred dollars, eighty cents level and it reclaims.
+
+Nevertheless a great chart.
+
+You see the higher highs, the higher lows clear as day.
+
+Let's reminisce on the now defunct FRC.
+
+This was previously in play and was breaking down.
+
+Sure enough, we hold prior bar highs in what would be considered a very aggressive downtrend.
+
+If I'm trying to catch trends as part of my playbook, especially on stocks that are hyper in play, prior bars are a very common trailing stop that I use.
+
+You'll see this more as I get into additional specific real world examples.
+
+Another way of defining a trend.
+
+Holding a trend line.
+
+This chart was actually brought to my attention when someone tagged me in a Twitter post about the right.
+
+Side of the V.
+
+This is Bank of Hawaii.
+
+Holding a trend line all morning and once we break the trend, boom, the counter trend is in and we're off to the races.
+
+There was no reason to be long prior to that.
+
+If you were holding a short position, there was no reason to cover prior to that as well.
+
+The final example I'm going to give, which is really kind of a subset of identifying a trend is what I would call holding above a reference price.
+
+What's that you may ask?
+
+This is essentially the unaffected price prior to breaking news or a key catalyst.
+
+Let's take a look at AMD which had breaking news during this day.
+
+Can you guess where the unaffected price or reference price would be eighty three dollars, fifty cents.
+
+As long as we hold above that price.
+
+That news would be viewed as good and it's a positive signal if we reverse below that price, that could be a sign of uh oh, maybe this news isn't as good as the market expects.
+
+Or maybe I'm missing something that is buried in the press release in doing that.
+
+We can start to build rules that become increasingly more powerful when multiple trends align on multiple timeframes.
+
+I want the day traders on my side.
+
+I want the swing traders on my side.
+
+I want the hedge funds on my side.
+
+Whether it's daily, weekly, monthly or yearly time frames.
+
+I want everybody on my side in that trade.
+
+The Tesla nine hundred dollars breakout pre split back in October twenty twenty one is the perfect example.
+
+This was one of those trades where we made an insane move higher going six x from fifty dollars all the way to its post split highs at three hundred dollars.
+
+You can clearly see three hundred dollars was a massive resistance level as we pulled off from it.
+
+But do you notice anything After we pull away from dollar three hundred, we make a higher low and we come back to retest those highs and then we finally break on an earnings catalyst.
+
+This chart is as textbook as it gets.
+
+You have the a weekly breakout, daily breakout, intraday breakout and you have an earnings catalyst.
+
+The stars I mean, the trends are aligning.
+
+This is where we want to be capitalizing on capturing moves with our trailing stops.
+
+Even if you're using the weekly chart, you are catching a solid chunk of that move, using our prior bar lows to get out now pivoting slightly as I alluded to before.
+
+There are ways to go with the trend, but still be on a bit of a counter trend, right?
+
+Sounds dicey.
+
+And that's because it is check out this intraday chart of GME on January twenty eighth twenty twenty one an absolute meltdown with mind blowing volatility.
+
+Where this gets scary is if you're fading the downside right?
+
+If you buy two hundred and ten dollars, thinking this is overextended, guess what we just went another hundred points lower.
+
+I can only imagine how many people were getting liquidated in this move and getting blown up.
+
+So the key is to wait for the counter trend.
+
+One way I often define that is the break of prior bar highs, so I would be buying in this bar if possible and trying to catch as much of this move higher as possible.
+
+When I started to wait for the counter trend, I stopped drawing down significantly.
+
+That is one of the first things that transformed my big losses into big gainers.
+
+My homework for you is to make a list of all the ways you define a trend much like the examples I gave and what a trend might be for you, your strategies and the indicators you use.
+
+The most important part of this is documenting it with actual charts and write ups to back your data up as you've heard me say.
+
+The more detailed, the more it will benefit you in all aspects.
+
+Once you've got your definition of a trend down based on your system and style of trading, you can take it a step further and implement rules and systems around this one rule I've come to conclusion with along with a good buddy of mine, Kenny at SMB Capital is that we never want to be long a stock if it's steadily holding below VWAP, unless it capitulates lower or vice versa going back to that Nvidia example where it was holding steadily above VWAP, I never want to be short that I have no reason to unless it capitulates higher.
+
+Small adjustments like that can really help you avoid a lot of losses.
+
+Another area I tend to avoid RIS Trading in no Man's Land.
+
+I have an entirely separate video on this topic, but to summarize I refuse to generally take trades in range bound or consolidating stocks.
+
+Prior to a break above or below that trading range.
+
+My second set of homework for you all make a list of rules to follow based on whether a stock is trending or range bound.
+
+I already gave you a few, like my main one of not taking anything counter to the trend, unless it truly capitulates.
+
+The nuance behind these rules is, you have to define everything what does capitulation mean to you and so on now let's dive into when a trend is actually starting so we can spot it in real time.
+
+First of all is there breaking news or a fundamental catalyst?
+
+Think back to the prior examples like the Nvidia earnings or what about Tesla?
+
+Breaking above the dollar three hundred level.
+
+If a stock is breaking out of a consolidation or a range, we want to be paying attention.
+
+The more trends you can identify and combine the better.
+
+Right when I look back at that Tesla chart, I process the huge breakout to all time highs fundamental catalyst.
+
+Given the earnings you have all the momentum traders buying it, hedge funds and institutions like Cathie Wood are buying it and you have shorts that that have stops at three hundred dollars.
+
+Thinking oh my God, I need to cover.
+
+Essentially every single person, small or large is on your side and when we combine all of these, we get the start of a very powerful trend.
+
+So when might a trend end?
+
+In my eyes, I am looking for characteristics like huge volume and price extension that are in.
+
+Essence capitulatory signals.
+
+Sometimes a trend runs too hot or too bearish, resulting in a real flush out that is my.
+
+Favorite signal that can mark the end of a trend.
+
+Now that doesn't always happen.
+
+There are other ways a trend can end.
+
+Here are a few additional examples.
+
+After multiple legs in one direction the larger the legs are.
+
+Especially if they accelerate in size, there tends to be a more probable cause for a reversal.
+
+One other cause is breaking news or fundamental catalysts that are counter to the trend.
+
+Another trend stopper is when there is no consolidation or not enough consolidation.
+
+Consolidation is considered price acceptance.
+
+Essentially the market is finding an equilibrium where prices agreed upon.
+
+Check out this chart of Alibaba Baba this was a darling stock that ended up getting crushed.
+
+When President Xi got reelected.
+
+We had this massive puke where everyone thought China was done for nobody could own any Chinese names anymore.
+
+What's notable is that volume bar it's multiples of any volume we've done previously on the year and is in essence a massive price dump.
+
+This is an example of peak pessimism that provided the foundation for Alibaba to countertrend and move higher.
+
+So my third homework assignment and I promise.
+
+We're getting towards the end is take the groundwork I've laid and systemize reasons why you feel trends begin and end.
+
+I have not provided them all because there are plenty that can be unique to you and your system personalizing.
+
+This is what is going to make it that much more powerful for yourself as a trader.
+
+Lastly make this a project, dissect your own trading and find the spots in your strategies that you can better optimize by being with the trend or or for that matter just not fighting it.
+
+Document, document, document, with charts and write-ups in detail beyond imaginable.
+
+I cannot think of any trader regardless of timeframe, that wouldn't benefit from doing so.
+
+And remember, the trend is your friend.
+

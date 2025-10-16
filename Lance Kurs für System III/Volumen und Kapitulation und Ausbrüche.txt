@@ -1,0 +1,148 @@
+As discussed in the overview.
+
+Volume has important implications for interpreting charts when they capitulate, oftentimes when prices are accelerating and the chart is overextended.
+
+A huge climax in volume often marks a reversal after an exhaustion of buyers or sellers.
+
+Oftentimes, I'm looking for the volume to be multiples of the preceding bars on an intraday basis.
+
+I love seeing volume that in a two minute bar does a meaningful percentage of a normal day's average trading volume.
+
+And on a daily chart I love seeing volumes that are doing large percentages of the float.
+
+One astute question, some of you might be wondering is if huge volume signifies both breakouts and capitulations.
+
+How do you know?
+
+Which will be?
+
+The key of course is in the context of the chart.
+
+Capitulations occur with huge price expansion while the stock is overextended.
+
+Stocks are at the extreme end of their ranges when they capitulate.
+
+Breakouts on the other hand occur after periods of price acceptance and consolidation.
+
+The volume increases as the stock exits the range, it has steadily been trading in with that clarification let's dive into some examples.
+
+The first example is SHOT in late November.
+
+Twenty twenty three.
+
+The ticker was exploding higher in price with the daily bars becoming enormous.
+
+The the stock went from two dollars to almost eight dollars in the course of a couple days and volume was accelerating higher with it note the uptick in trading volume with each passing day ideally reaching two times the volume.
+
+Of the prior bar, which is what I like to look for on the top day shot experiences a staggering three x increase in volume.
+
+Compared to the prior day and many multiples of the already high level of volume indicating substantial capitulation.
+
+So often these extreme accelerations in price and volume mark a pivotal turning point in the stock, because the average price of holders shifts and everyone that was going to euphorically buy has bought in simplified terms.
+
+The average price of holders went from about two dollars to five dollars plus in a matter of days, notably with SHOT which has a float of thirty five million shares.
+
+The trading volume on the peak day surpassed seventy million shares, so we traded double the entire float in just one day.
+
+Such extraordinary volume turnover imply substantial changes in average shareholder prices and positions almost a year later.
+
+That day still remains the high.
+
+A second example this time in intraday downside capitulation is si on February twenty third.
+
+Twenty twenty one typically in capitulation scenarios.
+
+My rule of thumb is, I want to see at least double the volume of the preceding bar during panics as a sign that the volume flushout is accelerating.
+
+However, SI surpasses this benchmark by an extraordinary margin, trading a staggering one hundred times the volume of the prior bar, and notably higher even than The Opening Print.
+
+SI's Volume in that bar even represented a significant percentage of its average daily volume.
+
+No surprise that was the bottom.
+
+In this next example, we will discuss TLT on March.
+
+Third Twenty Twenty TLT is a fairly boring security.
+
+It is just an etf of treasuries intraday.
+
+When this ticker starts to capitulate, I ideally want to see two times the prior bar's volume as a sign of significant capitulation.
+
+However, TLT surpasses this benchmark and we trade almost four times the volume of the prior bar and are far above the upper Bollinger band.
+
+The two point five million shares traded on the Apex bar also represented a significant percentage of the average daily volume.
+
+Essentially, when we had a boring security, making a sharp severe move higher on euphoric volume, which marked the top.
+
+Now, let's contrast those last three charts with EL on November first Twenty twenty three on this day, EL was melting lower intraday, but the ticker failed to capitulate in volume and price as the size of the bars were sustained or decreasing in size.
+
+As a result, I had no interest in playing this long, despite the bounce not being so awful and that's totally OK.
+
+Let's explore one last example of how a sharper move in price can lack volume capitulation and as a result not be interesting to me in terms of mean reversion.
+
+On January twenty fourth Twenty Twenty four Netflix was gapping up in the pre market after reporting earnings intraday, Netflix initially popped from five hundred and thirty eight dollars to five hundred and fifty eight dollars in a short amount of time.
+
+However, given how steady the volume on this move was, I wasn't too interested in a mean reversion trade.
+
+The steadiness of this leg disqualifies it as Netflix was not accelerating much in price or just as importantly volume.
+
+Compared to previous examples like SHOT or or SI, this was a much less capitulatory move, due to the numerous nuances working against this trade, the expected value is much lower compared to the previous three examples.
+
+If trying to short it.
+
+Therefore, I want to consider passing on this trade and wait for a better opportunity There were a lot of examples covered in this video.
+
+Keep in mind that these are all very intentionally chosen.
+
+Be sure to study the nuances of why the three I chose as great examples are so good, and why the two I chose as examples that did not capitulate, do not fit the criteria we were looking for.
+
+As always keep on building out your database of examples on your own and the nuances will make more and more sense over time in everything I trade.
+
+Volume is a critical indicator and that is no different for breakout trades.
+
+The best breakouts or breakdowns have a huge surge in volume upon the breach of the level, as we will see in these examples.
+
+As I mentioned, when I am analyzing the volume, I try to compare the volume going off compared to previous bars.
+
+What I like to see is a noticeable and visible increase in volume, which might allow me to get a feel for just how big of a deal that breakout might be.
+
+Let's take this example of the VVOS breakout trade on November twenty ninth Twenty twenty three.
+
+This is such a textbook beautiful example that I always love to reference during this VVOS consolidation, the volume tapers off during the multi hour period of price acceptance and then we see a sharp increase in volume on the break of resistance just shy of dollar twenty essentially during that.
+
+Consolidation period throughout the afternoon, Shorts are entering and longs are taking their profits given the scale of the up move in the name.
+
+Many are expecting the stock to resolve lower when the stock instead holds up, then breaks out, longs are left to pile back in and shorts.
+
+Are scrambling to take covers leading to that surge in volume.
+
+The next example is Carvana Ticker CVNA on June eighth Twenty twenty three, which is a conceptually similar chart to VVOS.
+
+During the consolidation phase of Carvana, the trading volume gradually diminishes as the stock builds a base just below twenty dollars.
+
+However, once Carvana breaches the key resistance level, there's a notable surge in volume.
+
+In this case, that was the highest volume bar of the day in a stock with significant short interest.
+
+Such a pronounced increase in volume upon breaking resistance is crucial.
+
+It suggests that short sellers are covering their.
+
+Positions by purchasing shares above the resistance level, while other traders are showing increased interest in buying into the breakout.
+
+Now, let's contrast those last two charts with DJT on March twenty sixth Twenty twenty three DJT was in play following the symbol change from DWAC intraday.
+
+It put in a support level at sixty six dollars and was consolidating above this level for the majority of the morning at ten forty five DJT attempted to roll over below sixty six dollars.
+
+However, this roll to lows was not confirmed by a noticeable increase in volume.
+
+This means that other market participants didn't view this consolidation breakdown and as important or meaningful enough to be a part of.
+
+As a result you can see it ended up failing.
+
+Keep in mind that, as always trading is a probabilistic game.
+
+Not every breakout or breakdown with high volume will work and not everyone with low volume will not.
+
+That being said as you document and study these over time you'll find that volume confirmation on these breakouts is in the aggregate a useful indicator.
+

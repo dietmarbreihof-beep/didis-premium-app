@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defining Trend - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-quote {
+            font-size: 1.8em;
+            font-style: italic;
+            margin: 30px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            border-left: 5px solid #daa520;
+        }
+
+        .hero-author {
+            font-size: 1.2em;
+            color: #f4e97b;
+            margin-top: 10px;
+        }
+
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        /* Content Sections */
+        .content-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #daa520;
+        }
+
+        .section-subtitle {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2d2d2d;
+            margin: 30px 0 15px 0;
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #b8860b;
+            margin: 25px 0;
+        }
+
+        .highlight-box h4 {
+            font-size: 1.3em;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            font-size: 1.05em;
+            color: #2d2d2d;
+            line-height: 1.8;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #38a169;
+            margin: 25px 0;
+        }
+
+        .success-box h4 {
+            font-size: 1.3em;
+            color: #155724;
+            margin-bottom: 15px;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #d69e2e;
+            margin: 25px 0;
+        }
+
+        .warning-box h4 {
+            font-size: 1.3em;
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .danger-box {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #e53e3e;
+            margin: 25px 0;
+        }
+
+        .danger-box h4 {
+            font-size: 1.3em;
+            color: #721c24;
+            margin-bottom: 15px;
+        }
+
+        /* Expandable Sections */
+        .expandable {
+            margin: 20px 0;
+        }
+
+        .expandable-header {
+            background: #2d2d2d;
+            color: white;
+            padding: 20px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .expandable-header:hover {
+            background: linear-gradient(135deg, #2d2d2d 0%, #b8860b 100%);
+        }
+
+        .expandable-header h3 {
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .expandable-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .expandable.active .expandable-icon {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            background: white;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .expandable.active .expandable-content {
+            max-height: 5000px;
+            padding: 30px;
+            border: 2px solid #daa520;
+            border-top: none;
+        }
+
+        /* List Styling */
+        .styled-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .styled-list li {
+            padding: 15px 15px 15px 50px;
+            margin: 10px 0;
+            background: #f7f7f7;
+            border-radius: 8px;
+            position: relative;
+            font-size: 1.05em;
+            transition: all 0.3s ease;
+        }
+
+        .styled-list li:hover {
+            background: #fff3cd;
+            transform: translateX(5px);
+        }
+
+        .styled-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 20px;
+            color: #38a169;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #2196f3;
+        }
+
+        .quiz-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #0d47a1;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .quiz-question h4 {
+            font-size: 1.1em;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .quiz-option {
+            padding: 12px 15px;
+            margin: 8px 0;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fff3cd;
+        }
+
+        .quiz-option.selected {
+            border-color: #2196f3;
+            background: #e3f2fd;
+        }
+
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #d4edda;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #fee;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #daa520 0%, #f4e97b 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(184, 134, 11, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #38a169 0%, #48bb78 100%);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #48bb78 0%, #68d391 100%);
+            transform: translateY(-2px);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 50%, #f4e97b 100%);
+            border-radius: 15px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Homework Section */
+        .homework-box {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid #9c27b0;
+            margin: 30px 0;
+        }
+
+        .homework-box h3 {
+            font-size: 1.5em;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .homework-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .homework-item h4 {
+            font-size: 1.2em;
+            color: #6a1b9a;
+            margin-bottom: 10px;
+        }
+
+        /* Example Charts */
+        .chart-example {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border: 2px solid #daa520;
+        }
+
+        .chart-example h4 {
+            font-size: 1.2em;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .chart-description {
+            color: #666;
+            font-size: 1.05em;
+            line-height: 1.8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2em;
+            }
+
+            .hero-quote {
+                font-size: 1.3em;
+            }
+
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+
+            .content-card {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 1.6em;
+            }
+        }
+
+        /* Fade In Animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        /* Checkbox Styling */
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin: 10px 0;
+            background: #f7f7f7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            background: #fff3cd;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .checkbox-item.checked {
+            background: #d4edda;
+            border: 2px solid #38a169;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero-section fade-in">
+            <h1>📈 Defining Trend</h1>
+            <p style="font-size: 1.3em; margin-top: 15px;">Die Kunst, Trends zu erkennen und zu nutzen</p>
+            <div class="hero-quote">
+                "The trend is your friend."
+                <div class="hero-author">— Jesse Livermore</div>
+            </div>
+        </div>
+
+        <!-- Progress Tracking -->
+        <div class="progress-container fade-in">
+            <div class="progress-title">🎯 Dein Fortschritt</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%;">
+                    <span id="progressText">0%</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card fade-in">
+                <div class="stat-icon">🎯</div>
+                <div class="stat-title">Win Rate</div>
+                <div class="stat-value">Mit dem Trend steigt deine Win Rate signifikant</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">📊</div>
+                <div class="stat-title">Asymmetrisches Risiko</div>
+                <div class="stat-value">Bessere Risk-Reward wenn alle auf deiner Seite sind</div>
+            </div>
+            <div class="stat-card fade-in">
+                <div class="stat-icon">🛡️</div>
+                <div class="stat-title">Weniger Drawdowns</div>
+                <div class="stat-value">Minimiere Heat auf deinen Positionen</div>
+            </div>
+        </div>
+
+        <!-- Einführung -->
+        <div class="content-card fade-in">
+            <div class="section-title">🎓 Warum Trends so wichtig sind</div>
+            
+            <div class="highlight-box">
+                <h4>💡 Lance's Erkenntnis</h4>
+                <p>Als Lance kurz davor war, in die Top 10 bei Trillium zu kommen, hielten ihn große Verluste zurück. Nach einem tiefen Analyse-Dive wurde klar:</p>
+                <ul style="margin-top: 15px; padding-left: 20px;">
+                    <li style="margin: 10px 0;"><strong>Seine besten Trades</strong> funktionierten sofort in seine Richtung</li>
+                    <li style="margin: 10px 0;"><strong>Seine größten Verluste</strong> entstanden, wenn er gegen den Trend kämpfte</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h4>✅ Die 3 Haupt-Vorteile des Trend-Trading</h4>
+                <ol style="padding-left: 20px; margin-top: 15px;">
+                    <li style="margin: 10px 0;"><strong>Höhere Win Rate:</strong> Mehr Marktteilnehmer sind auf deiner Seite</li>
+                    <li style="margin: 10px 0;"><strong>Bessere Rewards:</strong> Du reitest die Welle mit allen anderen</li>
+                    <li style="margin: 10px 0;"><strong>Weniger Heat:</strong> Kein Averaging Down mehr nötig</li>
+                </ol>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Die Realität</h4>
+                <p>Viele Trader "churnen und burnen" sich durch endlose kleine Verluste, weil sie in rangebound Aktien traden, anstatt auf den Breakout zu warten. <strong>Warte auf den echten Trend!</strong></p>
+            </div>
+        </div>
+
+        <!-- Was ist ein Trend? -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>📐 Was ist ein Trend? - Die Definition</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="section-subtitle">🔍 Grundlagen der Trend-Definition</div>
+                
+                <p style="font-size: 1.1em; margin: 20px 0;">Ein Trend ist, wenn eine Aktie <strong>neue Preise</strong> erreicht. Wenn wir an Mathematik denken, schauen wir auf die <strong>Steigung einer Linie</strong>:</p>
+
+                <div class="chart-example">
+                    <h4>📊 Uptrend: Steigung = +1</h4>
+                    <div class="chart-description">
+                        <p>Preis bewegt sich nach oben und nach rechts. Die Aktie erreicht kontinuierlich neue Hochs.</p>
+                    </div>
+                </div>
+
+                <div class="chart-example">
+                    <h4>📉 Downtrend: Steigung = -1</h4>
+                    <div class="chart-description">
+                        <p>Preis bewegt sich nach unten. Die Aktie erreicht kontinuierlich neue Tiefs.</p>
+                    </div>
+                </div>
+
+                <div class="chart-example">
+                    <h4>↔️ Range-bound: Steigung = 0</h4>
+                    <div class="chart-description">
+                        <p>Preis bleibt innerhalb eines Bandes vergangener Preise. <strong>Keine neuen Preise = Kein Trend!</strong></p>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <h4>🚫 Vermeide Range-bound Stocks</h4>
+                    <p>So viele Trader verlieren Geld, weil sie in konsolidierenden Aktien traden. <strong>Warte auf den Breakout!</strong> Dann beginnt der echte Trend und du kannst mit dem Momentum mitfahren.</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section1')">✓ Trend-Definition verstanden</button>
+            </div>
+        </div>
+
+        <!-- Higher Highs & Higher Lows -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>📈 Higher Highs & Higher Lows - Das Muster erkennen</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="section-subtitle">🎯 Das klassische Uptrend-Pattern</div>
+
+                <div class="highlight-box">
+                    <h4>💎 Das perfekte Muster</h4>
+                    <p>Ein sauberer Uptrend zeigt folgendes Pattern:</p>
+                    <ol style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;"><strong>Initiales Leg höher</strong> - z.B. von $48 auf $64</li>
+                        <li style="margin: 10px 0;"><strong>Pullback zu höherem Low</strong> - z.B. auf $53 (höher als $48!)</li>
+                        <li style="margin: 10px 0;"><strong>Retest der Highs</strong> - zurück Richtung $64</li>
+                        <li style="margin: 10px 0;"><strong>Erneutes höheres Low</strong> - das Muster wiederholt sich</li>
+                        <li style="margin: 10px 0;"><strong>Finaler Breakout</strong> - über das alte High hinaus!</li>
+                    </ol>
+                </div>
+
+                <div class="chart-example">
+                    <h4>📊 Beispiel: SPY 10-Jahres-Chart</h4>
+                    <div class="chart-description">
+                        <p><strong>Pattern:</strong> Retest Highs → Higher Low → Retest Highs → Higher Low → Retest Highs → Higher Low → BOOM! Breakout!</p>
+                        <p style="margin-top: 15px; color: #38a169; font-weight: 600;">Trotz tiefer Pullbacks (z.B. Covid) bleibt der Gesamttrend klar nach oben.</p>
+                    </div>
+                </div>
+
+                <div class="chart-example">
+                    <h4>🚀 Beispiel: NVDA - Die Perfektion</h4>
+                    <div class="chart-description">
+                        <p>Nvidia verdoppelte von $140 auf $280 in wenigen Monaten - <strong>ohne einen Cent zurückzugeben!</strong></p>
+                        <p style="margin-top: 10px;">Schöne Konsolidierung bei $280, dann explodierten die Earnings und der Trend setzte sich fort.</p>
+                        <p style="margin-top: 10px; color: #e53e3e; font-weight: 600;">Fun Fact: Lance kannte Leute, die das vor Earnings geshortet haben. Warum gegen so einen starken Trend kämpfen?! 🤦</p>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎓 Das Stairstep-Pattern</h4>
+                    <p>Die schönsten Uptrends sehen aus wie eine Treppe:</p>
+                    <p style="margin-top: 10px;">Stufe hoch → kurze Konsolidierung → Stufe hoch → kurze Konsolidierung → Stufe hoch</p>
+                    <p style="margin-top: 10px; font-weight: 600;">Jede "Stufe" ist ein neues Higher High, jede "Konsolidierung" ist ein Higher Low.</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section2')">✓ Higher Highs/Lows Pattern verstanden</button>
+            </div>
+        </div>
+
+        <!-- Trend-Indikatoren -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>🔧 Trend-Indikatoren - Deine Tools zur Identifikation</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="section-subtitle">📊 1. VWAP (Volume Weighted Average Price)</div>
+
+                <div class="highlight-box">
+                    <h4>💡 VWAP als Trend-Indikator</h4>
+                    <p>VWAP ist einer der am häufigsten genutzten Indikatoren. Die Regel ist einfach:</p>
+                    <ul style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;"><strong>Preis ÜBER VWAP:</strong> Bullischer Trend</li>
+                        <li style="margin: 10px 0;"><strong>Preis UNTER VWAP:</strong> Bearischer Trend</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <h4>🎯 Beispiel: NVDA vor Earnings</h4>
+                    <div class="chart-description">
+                        <p>Nvidia hielt <strong>die gesamte Zeit über VWAP</strong> vor dem Earnings Release am 18. Mai.</p>
+                        <p style="margin-top: 10px; color: #38a169; font-weight: 600;">Warum sollte man das shorten?! Der Trend war kristallklar bullisch.</p>
+                    </div>
+                </div>
+
+                <div class="danger-box">
+                    <h4>🚫 Lance's VWAP-Regel (mit Kenny @ SMB Capital)</h4>
+                    <p><strong>Niemals long sein, wenn die Aktie stetig unter VWAP hält</strong> - außer es kapituliert nach unten.</p>
+                    <p style="margin-top: 10px;"><strong>Niemals short sein, wenn die Aktie stetig über VWAP hält</strong> - außer es kapituliert nach oben.</p>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 40px;">📊 2. Moving Averages</div>
+
+                <div class="highlight-box">
+                    <h4>📈 Moving Averages als Trend-Tool</h4>
+                    <p>Moving Averages zeigen den durchschnittlichen Preis über einen bestimmten Zeitraum.</p>
+                    <ul style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;"><strong>Preis über MA:</strong> Uptrend intakt</li>
+                        <li style="margin: 10px 0;"><strong>Preis unter MA:</strong> Downtrend oder Trendwechsel</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <h4>⚡ Beispiel: FSLR Weekly Chart</h4>
+                    <div class="chart-description">
+                        <p>FSLR hielt perfekt die 20-Period Moving Average über Wochen.</p>
+                        <p style="margin-top: 10px;">Als es unter die MA brach (bei ~$100.80), war das der Exit-Signal. Nach Reclaim ging's wieder los!</p>
+                        <p style="margin-top: 10px; color: #38a169; font-weight: 600;">Du siehst: Higher Highs, Higher Lows - glasklar!</p>
+                    </div>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 40px;">📊 3. Prior Bar Highs/Lows</div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Prior Bars als Trailing Stop</h4>
+                    <p>Besonders bei hyper-aktiven Stocks nutzt Lance <strong>Prior Bar Highs/Lows als Trailing Stop</strong>.</p>
+                </div>
+
+                <div class="chart-example">
+                    <h4>💥 Beispiel: FRC Breakdown</h4>
+                    <div class="chart-description">
+                        <p>First Republic Capital (FRC) war in einem aggressiven Downtrend.</p>
+                        <p style="margin-top: 10px;">Solange es unter Prior Bar Highs blieb, war der Trend intakt. Kein Grund zu covern!</p>
+                    </div>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 40px;">📊 4. Trend Lines</div>
+
+                <div class="chart-example">
+                    <h4>📐 Beispiel: Bank of Hawaii</h4>
+                    <div class="chart-description">
+                        <p>Die Aktie hielt eine Trend Line den ganzen Morgen. Sobald die Trend Line brach → BOOM!</p>
+                        <p style="margin-top: 10px; color: #e53e3e; font-weight: 600;">Counter-Trend war in Gang. Kein Grund long zu sein vorher, kein Grund Shorts zu covern vorher.</p>
+                    </div>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 40px;">📊 5. Reference Price (Unaffected Price)</div>
+
+                <div class="highlight-box">
+                    <h4>🔔 Breaking News Trading</h4>
+                    <p>Bei Breaking News gibt es einen <strong>"unaffected price"</strong> - der Preis direkt vor der News.</p>
+                </div>
+
+                <div class="chart-example">
+                    <h4>⚡ Beispiel: AMD Breaking News</h4>
+                    <div class="chart-description">
+                        <p><strong>Unaffected Price:</strong> $83.50</p>
+                        <p style="margin-top: 10px;"><strong>Regel:</strong> Solange wir über $83.50 halten, ist die News positiv!</p>
+                        <p style="margin-top: 10px;"><strong>Wenn wir unter $83.50 fallen:</strong> Uh-oh, vielleicht ist die News doch nicht so gut...</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section3')">✓ Trend-Indikatoren beherrscht</button>
+            </div>
+        </div>
+
+        <!-- Multiple Timeframe Alignment -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>🎯 Multiple Timeframe Alignment - Die ultimative Power</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="highlight-box">
+                    <h4>🚀 Wenn alle Trends aligned sind</h4>
+                    <p>Die wahre Magic passiert, wenn <strong>mehrere Trends auf verschiedenen Timeframes gleichzeitig aligned sind</strong>.</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>💰 Du willst ALLE auf deiner Seite haben</h4>
+                    <ul style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;">✅ <strong>Day Trader</strong> auf deiner Seite</li>
+                        <li style="margin: 10px 0;">✅ <strong>Swing Trader</strong> auf deiner Seite</li>
+                        <li style="margin: 10px 0;">✅ <strong>Hedge Funds</strong> auf deiner Seite</li>
+                        <li style="margin: 10px 0;">✅ <strong>Institutionelle</strong> auf deiner Seite</li>
+                        <li style="margin: 10px 0;">✅ <strong>Alle Timeframes</strong> (Daily, Weekly, Monthly, Yearly) aligned</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <h4>🔥 Case Study: TSLA $300 Breakout (Pre-Split, Oktober 2021)</h4>
+                    <div class="chart-description">
+                        <p><strong>Setup:</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>6x Move von $50 auf $300 (post-split Highs)</li>
+                            <li>$300 war massiver Resistance Level</li>
+                            <li>Pullback, dann <strong>Higher Low</strong></li>
+                            <li>Retest der $300 Highs</li>
+                            <li>Dann: <strong>Earnings Catalyst</strong> = Breakout!</li>
+                        </ul>
+                        
+                        <p style="margin-top: 20px; color: #38a169; font-weight: 600;"><strong>Was war aligned?</strong></p>
+                        <ul style="padding-left: 20px; margin-top: 10px;">
+                            <li>✅ <strong>Weekly Breakout:</strong> Aus mehrjähriger Konsolidierung</li>
+                            <li>✅ <strong>Daily Breakout:</strong> Über $300 Resistance</li>
+                            <li>✅ <strong>Intraday Breakout:</strong> Morning squeeze</li>
+                            <li>✅ <strong>Fundamental Catalyst:</strong> Earnings Beat</li>
+                            <li>✅ <strong>Higher Highs & Higher Lows:</strong> Perfektes Pattern</li>
+                        </ul>
+
+                        <p style="margin-top: 20px; color: #b8860b; font-weight: 600; font-size: 1.2em;">🌟 DIE STERNE (TRENDS) WAREN ALIGNED! 🌟</p>
+                        
+                        <p style="margin-top: 20px;">Das ist, wo du mit Trailing Stops massive Moves catchen kannst. Selbst mit Weekly Chart Trailing Stops hättest du einen riesigen Chunk des Moves mitgenommen!</p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚡ Das ist die Power von Alignment</h4>
+                    <p>Wenn Trends auf mehreren Timeframes aligned sind, hast du:</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>📈 Maximale Buying Power</li>
+                        <li>🎯 Minimales Risiko</li>
+                        <li>🚀 Asymmetrisches Upside Potential</li>
+                        <li>💪 Alle Marktteilnehmer auf deiner Seite</li>
+                    </ul>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section4')">✓ Timeframe Alignment verstanden</button>
+            </div>
+        </div>
+
+        <!-- Counter-Trend Trading -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>⚡ Counter-Trend Trading - Die sichere Art</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="danger-box">
+                    <h4>🚨 Die Gefahr von Counter-Trend Trades</h4>
+                    <p>Counter-Trend Trading kann dich ZERSTÖREN, wenn du es falsch machst!</p>
+                </div>
+
+                <div class="chart-example">
+                    <h4>💥 Case Study: GME Meltdown - 28. Januar 2021</h4>
+                    <div class="chart-description">
+                        <p><strong>Das Szenario:</strong> GME ist in einem absoluten Freefall. Krasse Volatilität!</p>
+                        
+                        <p style="margin-top: 15px; color: #e53e3e; font-weight: 600;"><strong>❌ Das FALSCHE:</strong></p>
+                        <p>Du kaufst bei $210, weil es "überextended" aussieht.</p>
+                        <p>Was passiert? Es fällt weitere $100! Du wirst liquidiert!</p>
+                        
+                        <p style="margin-top: 15px; color: #38a169; font-weight: 600;"><strong>✅ Das RICHTIGE:</strong></p>
+                        <p><strong>Warte auf den Counter-Trend!</strong></p>
+                        <p>Lance's Regel: Kaufe bei <strong>Break of Prior Bar Highs</strong></p>
+                        <p>Dann catchst du den Counter-Trend Move ohne die Heat des Downtrends!</p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎓 Lance's Counter-Trend Regel</h4>
+                    <p><strong>"Warte auf den Counter-Trend, bevor du gegen den Haupttrend tradest!"</strong></p>
+                    <p style="margin-top: 15px;">Als Lance anfing, auf Counter-Trends zu warten, hörten die massiven Drawdowns auf.</p>
+                    <p style="margin-top: 10px; color: #1a1a1a; font-weight: 600;">Das war eine der ersten Transformationen, die aus großen Verlusten große Gewinner machte! 🎯</p>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So tradest du Counter-Trends sicher</h4>
+                    <ol style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;"><strong>Identifiziere den Haupttrend</strong> (z.B. harter Downtrend)</li>
+                        <li style="margin: 10px 0;"><strong>Warte auf Kapitulation</strong> (extreme Volumen, Preis Extension)</li>
+                        <li style="margin: 10px 0;"><strong>Warte auf Counter-Trend Signal</strong> (z.B. Break of Prior Bar Highs)</li>
+                        <li style="margin: 10px 0;"><strong>Dann erst einsteigen</strong> - mit klarem Stop!</li>
+                    </ol>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section5')">✓ Counter-Trend Trading beherrscht</button>
+            </div>
+        </div>
+
+        <!-- Wann beginnen Trends? -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>🚀 Wann beginnen Trends?</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="highlight-box">
+                    <h4>🎯 Die 3 Haupt-Katalysatoren für Trend-Starts</h4>
+                </div>
+
+                <div class="section-subtitle">1️⃣ Breaking News oder Fundamental Catalyst</div>
+                <div class="success-box">
+                    <h4>📰 News als Trend-Starter</h4>
+                    <ul style="padding-left: 20px;">
+                        <li style="margin: 10px 0;"><strong>Earnings Beats/Misses</strong></li>
+                        <li style="margin: 10px 0;"><strong>FDA Approvals</strong></li>
+                        <li style="margin: 10px 0;"><strong>M&A Announcements</strong></li>
+                        <li style="margin: 10px 0;"><strong>Guidance Changes</strong></li>
+                        <li style="margin: 10px 0;"><strong>Regulatory News</strong></li>
+                    </ul>
+                    <p style="margin-top: 15px;">Denk an <strong>Nvidia Earnings</strong> oder <strong>Tesla $300 Breakout</strong> - beide hatten fundamentale Katalysatoren!</p>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">2️⃣ Breakout aus Konsolidierung/Range</div>
+                <div class="success-box">
+                    <h4>📊 Technische Breakouts</h4>
+                    <p>Wenn eine Aktie lange in einer Range konsolidiert, baut sich Energie auf.</p>
+                    <p style="margin-top: 10px;">Der <strong>Breakout aus der Range</strong> ist oft der Start eines neuen Trends!</p>
+                    <ul style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;">✅ Resistance wird zu Support</li>
+                        <li style="margin: 10px 0;">✅ Shorts müssen covern (Stops über Range)</li>
+                        <li style="margin: 10px 0;">✅ Breakout-Käufer steigen ein</li>
+                        <li style="margin: 10px 0;">✅ Momentum entsteht</li>
+                    </ul>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">3️⃣ Multiple Trends Alignen</div>
+                <div class="highlight-box">
+                    <h4>🌟 Die Magic Combination</h4>
+                    <p>Die stärksten Trends beginnen, wenn <strong>mehrere Faktoren zusammenkommen</strong>:</p>
+                    <ul style="padding-left: 20px; margin-top: 15px;">
+                        <li style="margin: 10px 0;">📰 <strong>Fundamental Catalyst</strong> (z.B. Earnings)</li>
+                        <li style="margin: 10px 0;">📊 <strong>Technischer Breakout</strong> (z.B. All-Time Highs)</li>
+                        <li style="margin: 10px 0;">📈 <strong>Multiple Timeframes aligned</strong> (Daily + Weekly + Monthly)</li>
+                        <li style="margin: 10px 0;">💪 <strong>Hohe Volumen</strong> (Bestätigung)</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <h4>🔥 Tesla $300 Breakout - Perfekte Kombination</h4>
+                    <div class="chart-description">
+                        <p>✅ Fundamentaler Katalyst: <strong>Earnings Beat</strong></p>
+                        <p>✅ Technischer Breakout: <strong>$300 All-Time Highs</strong></p>
+                        <p>✅ Pattern: <strong>Higher Highs & Higher Lows</strong></p>
+                        <p>✅ Multiple Timeframes: <strong>Weekly, Daily, Intraday aligned</strong></p>
+                        <p>✅ Participants: <strong>Day Traders, Hedge Funds, Cathie Wood, Short Covers ALLE auf einer Seite!</strong></p>
+                        <p style="margin-top: 15px; color: #b8860b; font-weight: 600; font-size: 1.1em;">= DER PERFEKTE TREND START! 🚀</p>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section6')">✓ Trend-Starts erkannt</button>
+            </div>
+        </div>
+
+        <!-- Wann enden Trends? -->
+        <div class="expandable">
+            <div class="expandable-header" onclick="toggleSection(this)">
+                <h3>🛑 Wann enden Trends?</h3>
+                <span class="expandable-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="warning-box">
+                    <h4>⚠️ Trend-Enden erkennen ist KRITISCH</h4>
+                    <p>Zu lange in einem endenden Trend zu bleiben, kann Gewinne zunichte machen!</p>
+                </div>
+
+                <div class="section-subtitle">🔴 Signal 1: Kapitulation - Massive Volumen & Extension</div>
+                <div class="danger-box">
+                    <h4>💥 Climactic Moves</h4>
+                    <p>Trends die zu heiß oder zu bearish laufen, führen oft zu einem <strong>Flush Out</strong>.</p>
+                    <p style="margin-top: 15px;"><strong>Kennzeichen:</strong></p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li style="margin: 8px 0;">📊 <strong>Extreme Volumen</strong> (Vielfaches des Durchschnitts)</li>
+                        <li style="margin: 8px 0;">📈 <strong>Massive Preis-Extension</strong> (zu weit, zu schnell)</li>
+                        <li style="margin: 8px 0;">😱 <strong>Peak Emotion</strong> (Euphorie oder Panik)</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <h4>📊 Beispiel: BABA China Crash</h4>
+                    <div class="chart-description">
+                        <p><strong>Kontext:</strong> Präsident Xi wurde wiedergewählt → China-Panik</p>
+                        <p style="margin-top: 10px;"><strong>Was passierte:</strong> Massive Volumen-Bar (Vielfaches des Jahres-Durchschnitts)</p>
+                        <p style="margin-top: 10px;"><strong>Emotion:</strong> Peak Pessimismus - "Niemand kann mehr China-Aktien halten!"</p>
+                        <p style="margin-top: 15px; color: #38a169; font-weight: 600;">Das war die <strong>Foundation für einen Counter-Trend!</strong> Der Downtrend endete durch Kapitulation.</p>
+                    </div>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">🔴 Signal 2: Multiple große Legs - Beschleunigung</div>
+                <div class="warning-box">
+                    <h4>📏 Leg-Size Analysis</h4>
+                    <p>Nach mehreren Legs in eine Richtung, besonders wenn sie <strong>in der Größe beschleunigen</strong>, steigt die Wahrscheinlichkeit einer Umkehr.</p>
+                    <p style="margin-top: 15px;"><strong>Beispiel:</strong></p>
+                    <p>Leg 1: +$10 → Leg 2: +$15 → Leg 3: +$25 → Leg 4: +$40</p>
+                    <p style="margin-top: 10px; color: #d69e2e; font-weight: 600;">Die Beschleunigung deutet auf Überhitzung hin!</p>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">🔴 Signal 3: Counter-News oder fundamentaler Shift</div>
+                <div class="danger-box">
+                    <h4>📰 News gegen den Trend</h4>
+                    <p>Breaking News oder fundamentale Katalysatoren, die <strong>gegen den aktuellen Trend</strong> laufen, können ihn stoppen.</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li style="margin: 8px 0;">📉 Earnings Miss nach Uptrend</li>
+                        <li style="margin: 8px 0;">🏛️ Regulatory Challenges</li>
+                        <li style="margin: 8px 0;">💼 Management Changes</li>
+                        <li style="margin: 8px 0;">📊 Guidance Cuts</li>
+                    </ul>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">🔴 Signal 4: Keine Konsolidierung</div>
+                <div class="warning-box">
+                    <h4>⏸️ Fehlende Preis-Akzeptanz</h4>
+                    <p><strong>Konsolidierung = Preis-Akzeptanz</strong></p>
+                    <p style="margin-top: 10px;">Der Markt findet ein Equilibrium, wo Preise "agreed upon" sind.</p>
+                    <p style="margin-top: 15px; color: #d69e2e; font-weight: 600;"><strong>Wenn es KEINE Konsolidierung gibt:</strong> Der Move ist zu schnell, zu instabil. Oft folgt eine scharfe Umkehr!</p>
+                </div>
+
+                <div class="section-subtitle" style="margin-top: 30px;">🔴 Signal 5: Break of Trend Structure</div>
+                <div class="danger-box">
+                    <h4>📉 Lower Highs & Lower Lows</h4>
+                    <p>Wenn ein Uptrend plötzlich <strong>Lower Highs oder Lower Lows</strong> macht, ist das ein Warnsignal!</p>
+                    <p style="margin-top: 15px;"><strong>Beispiele:</strong></p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>Break unter VWAP</li>
+                        <li>Break unter Moving Average</li>
+                        <li>Break der Trend Line</li>
+                        <li>Break von Prior Bar Lows (bei Uptrends)</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎓 Lance's Weisheit über Trend-Enden</h4>
+                    <p><strong>"Mein Lieblings-Signal für ein Trend-Ende ist Kapitulation."</strong></p>
+                    <p style="margin-top: 15px;">Massive Volumen + Preis Extension + Peak Emotion = Der Trend ist am Ende und bereit für Reversal!</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="markComplete('section7')">✓ Trend-Enden identifiziert</button>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="content-card fade-in">
+            <div class="quiz-container">
+                <div class="quiz-title">🧠 Teste dein Trend-Wissen!</div>
+                
+                <div class="quiz-question">
+                    <h4>1. Was ist die Definition eines Trends?</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q1"> Eine Aktie, die seitwärts handelt</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q1"> Eine Aktie, die neue Preise erreicht (Steigung ≠ 0)</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q1"> Eine Aktie mit hohem Volumen</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Was ist das Higher Highs & Higher Lows Pattern?</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q2"> Ein Downtrend-Pattern</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q2"> Ein Uptrend-Pattern mit steigenden Tiefs und Hochs</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q2"> Ein Range-bound Pattern</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Lance's VWAP-Regel besagt:</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q3"> Immer mit VWAP traden, egal in welche Richtung</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q3"> Nie long wenn stetig unter VWAP, nie short wenn stetig über VWAP (außer Kapitulation)</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q3"> VWAP ist unwichtig für Trend-Trading</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>4. Wann solltest du Counter-Trend Trades eingehen?</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q4"> Sofort wenn der Preis überextended aussieht</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q4"> Erst nachdem der Counter-Trend begonnen hat (z.B. Break of Prior Bar Highs)</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q4"> Niemals, Counter-Trend Trading ist zu gefährlich</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>5. Was ist das stärkste Signal für einen Trend-Start?</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q5"> Nur technischer Breakout</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q5"> Nur fundamentaler Katalyst</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q5"> Kombination aus technischem Breakout, fundamentalem Katalyst und Multiple Timeframe Alignment</label>
+                    </div>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>6. Lance's Lieblings-Signal für ein Trend-Ende ist:</h4>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q6"> Ein kleiner Pullback</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, true)">
+                        <label><input type="radio" name="q6"> Kapitulation mit extremem Volumen und Preis Extension</label>
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, false)">
+                        <label><input type="radio" name="q6"> Eine rote Kerze</label>
+                    </div>
+                </div>
+
+                <button class="btn btn-success" onclick="checkQuiz()" style="margin-top: 20px;">Quiz auswerten</button>
+                <div id="quizResult" style="margin-top: 20px; font-size: 1.2em; font-weight: 600; text-align: center;"></div>
+            </div>
+        </div>
+
+        <!-- Homework Assignments -->
+        <div class="content-card fade-in">
+            <div class="homework-box">
+                <h3>📝 Deine Homework-Assignments</h3>
+                
+                <div class="homework-item">
+                    <h4>📋 Assignment 1: Definiere DEINE Trends</h4>
+                    <p>Mache eine Liste aller Wege, wie <strong>DU</strong> persönlich einen Trend definierst:</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>Welche Indikatoren nutzt du? (VWAP, MAs, Trend Lines, etc.)</li>
+                        <li>Welche Patterns erkennst du? (Higher Highs/Lows, etc.)</li>
+                        <li>Welche Timeframes schaust du an?</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #6a1b9a; font-weight: 600;">📊 Dokumentiere es mit ECHTEN CHARTS aus deinen Trades!</p>
+                </div>
+
+                <div class="homework-item">
+                    <h4>📋 Assignment 2: Baue Trading-Regeln</h4>
+                    <p>Erstelle konkrete Regeln basierend auf Trends:</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li><strong>Wann gehst du long?</strong> (z.B. nur über VWAP)</li>
+                        <li><strong>Wann gehst du short?</strong> (z.B. nur unter VWAP)</li>
+                        <li><strong>Wann tradest du NICHT?</strong> (z.B. Range-bound Stocks)</li>
+                        <li><strong>Was ist Kapitulation für dich?</strong> (definiere es!)</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #6a1b9a; font-weight: 600;">📝 Schreibe es DETAILLIERT auf mit Beispielen!</p>
+                </div>
+
+                <div class="homework-item">
+                    <h4>📋 Assignment 3: Trend-Starts & Trend-Enden</h4>
+                    <p>Systemisiere die Gründe, warum Trends für <strong>DICH</strong> beginnen und enden:</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li><strong>Trend-Starts:</strong> Welche Katalysatoren erkennst du?</li>
+                        <li><strong>Trend-Enden:</strong> Welche Signale nutzt du?</li>
+                        <li><strong>Deine eigenen Patterns:</strong> Was ist einzigartig für dein System?</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #6a1b9a; font-weight: 600;">🔍 Je detaillierter, desto kraftvoller für dein Trading!</p>
+                </div>
+
+                <div class="homework-item">
+                    <h4>📋 Assignment 4: Analyse deiner eigenen Trades</h4>
+                    <p>Das große Projekt - disseziere dein eigenes Trading:</p>
+                    <ul style="padding-left: 20px; margin-top: 10px;">
+                        <li>📈 <strong>Beste Trades:</strong> Haben sie sofort funktioniert? War der Trend auf deiner Seite?</li>
+                        <li>📉 <strong>Schlechteste Trades:</strong> Hast du gegen den Trend gekämpft?</li>
+                        <li>🎯 <strong>Optimierungen:</strong> Wo kannst du besser mit dem Trend sein?</li>
+                        <li>🛑 <strong>Vermeidungen:</strong> Wo kannst du aufhören, gegen den Trend zu kämpfen?</li>
+                    </ul>
+                    <p style="margin-top: 15px; color: #6a1b9a; font-weight: 600;">📚 DOCUMENT, DOCUMENT, DOCUMENT - mit Charts und ausführlichen Write-Ups!</p>
+                </div>
+
+                <div class="checkbox-item" onclick="toggleHomework(this, 'hw1')">
+                    <input type="checkbox" id="hw1">
+                    <label for="hw1">Assignment 1 abgeschlossen</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleHomework(this, 'hw2')">
+                    <input type="checkbox" id="hw2">
+                    <label for="hw2">Assignment 2 abgeschlossen</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleHomework(this, 'hw3')">
+                    <input type="checkbox" id="hw3">
+                    <label for="hw3">Assignment 3 abgeschlossen</label>
+                </div>
+                <div class="checkbox-item" onclick="toggleHomework(this, 'hw4')">
+                    <input type="checkbox" id="hw4">
+                    <label for="hw4">Assignment 4 abgeschlossen</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="content-card fade-in">
+            <div style="background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%); padding: 2rem; border-radius: 15px; margin: 2rem 0; border: 2px solid #38a169;">
+                <h2 style="text-align: center; color: #155724; margin-bottom: 1.5rem;">📋 KEY TAKEAWAYS</h2>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>1.</strong> The trend is your friend - das wichtigste Trading-Prinzip überhaupt</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>2.</strong> Deine besten Trades funktionieren sofort - wenn nicht, kämpfst du vielleicht gegen den Trend</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>3.</strong> Ein Trend ist definiert durch neue Preise (Steigung ≠ 0), nicht durch Seitwärtsbewegung</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>4.</strong> Higher Highs & Higher Lows sind das klassische Uptrend-Pattern - das Stairstep-Pattern</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>5.</strong> VWAP ist einer der wichtigsten Trend-Indikatoren - nie long unter VWAP, nie short über VWAP (ohne Kapitulation)</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>6.</strong> Multiple Timeframe Alignment ist die ultimative Power - wenn alle auf deiner Seite sind</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>7.</strong> Counter-Trend Trading ist gefährlich - warte immer auf den Counter-Trend, bevor du gegen den Haupttrend tradest</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>8.</strong> Vermeide Range-bound Stocks - warte auf den Breakout, dann beginnt der echte Trend</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>9.</strong> Die stärksten Trends beginnen bei Kombination aus fundamentalem Katalyst, technischem Breakout und Timeframe Alignment</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>10.</strong> Kapitulation (extreme Volumen + Preis Extension) ist Lance's Lieblings-Signal für Trend-Enden</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>11.</strong> Definiere Trends für DEIN System - es gibt viele Tools (VWAP, MAs, Trend Lines, Prior Bars, Reference Price)</p>
+            </div>
+
+            <div style="background: white; padding: 1rem; margin: 0.5rem 0; border-left: 4px solid #38a169; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <p style="margin: 0; font-size: 16px; line-height: 1.6;"><strong>12.</strong> Document, document, document - mit Charts und detaillierten Write-Ups. Das ist der Weg zur Mastery!</p>
+            </div>
+        </div>
+
+        <!-- Final Quote -->
+        <div class="content-card fade-in" style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; text-align: center;">
+            <h2 style="color: white; font-size: 2.5em; margin-bottom: 20px;">🎯 Remember</h2>
+            <p style="font-size: 1.8em; font-style: italic; line-height: 1.6;">
+                "The trend is your friend."
+            </p>
+            <p style="font-size: 1.2em; margin-top: 20px; color: #f4e97b;">
+                — Jesse Livermore
+            </p>
+            <p style="font-size: 1.1em; margin-top: 30px;">
+                Egal welcher Timeframe, egal welches Experience Level - <br>
+                <strong>Mit dem Trend zu sein ist das wichtigste Prinzip im Trading.</strong>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Progress tracking
+        let completedSections = JSON.parse(localStorage.getItem('definingTrendProgress')) || [];
+
+        function updateProgress() {
+            const totalSections = 7;
+            const completed = completedSections.length;
+            const percentage = Math.round((completed / totalSections) * 100);
+            
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+            
+            progressBar.style.width = percentage + '%';
+            progressText.textContent = percentage + '%';
+        }
+
+        function markComplete(sectionId) {
+            if (!completedSections.includes(sectionId)) {
+                completedSections.push(sectionId);
+                localStorage.setItem('definingTrendProgress', JSON.stringify(completedSections));
+                updateProgress();
+                
+                // Visual feedback
+                event.target.textContent = '✓ Abgeschlossen!';
+                event.target.style.background = 'linear-gradient(135deg, #38a169 0%, #48bb78 100%)';
+            }
+        }
+
+        // Toggle expandable sections
+        function toggleSection(header) {
+            const expandable = header.parentElement;
+            expandable.classList.toggle('active');
+        }
+
+        // Quiz functionality
+        function selectOption(element, isCorrect) {
+            // Store the correct answer status
+            element.dataset.correct = isCorrect;
+            
+            // Remove selected class from siblings
+            const siblings = element.parentElement.querySelectorAll('.quiz-option');
+            siblings.forEach(sib => sib.classList.remove('selected'));
+            
+            // Add selected class to clicked option
+            element.classList.add('selected');
+            
+            // Check the radio button
+            const radio = element.querySelector('input[type="radio"]');
+            if (radio) radio.checked = true;
+        }
+
+        function checkQuiz() {
+            let score = 0;
+            const totalQuestions = 6;
+            
+            // Check all selected options
+            const allOptions = document.querySelectorAll('.quiz-option.selected');
+            
+            allOptions.forEach(option => {
+                if (option.dataset.correct === 'true') {
+                    score++;
+                    option.classList.add('correct');
+                    option.classList.remove('incorrect');
+                } else {
+                    option.classList.add('incorrect');
+                    option.classList.remove('correct');
+                }
+            });
+            
+            // Show result
+            const resultDiv = document.getElementById('quizResult');
+            const percentage = Math.round((score / totalQuestions) * 100);
+            
+            let message = '';
+            let color = '';
+            
+            if (percentage === 100) {
+                message = `🎉 Perfekt! ${score}/${totalQuestions} - Du bist ein Trend-Master!`;
+                color = '#38a169';
+            } else if (percentage >= 70) {
+                message = `👍 Gut gemacht! ${score}/${totalQuestions} - Du verstehst die Konzepte!`;
+                color = '#daa520';
+            } else {
+                message = `📖 ${score}/${totalQuestions} - Lies das Modul nochmal durch!`;
+                color = '#d69e2e';
+            }
+            
+            resultDiv.innerHTML = message;
+            resultDiv.style.color = color;
+            
+            // Mark quiz as complete if score is good
+            if (percentage >= 70) {
+                markComplete('quiz');
+            }
+        }
+
+        // Homework checkbox functionality
+        function toggleHomework(element, checkboxId) {
+            const checkbox = document.getElementById(checkboxId);
+            checkbox.checked = !checkbox.checked;
+            
+            if (checkbox.checked) {
+                element.classList.add('checked');
+                localStorage.setItem(checkboxId, 'true');
+            } else {
+                element.classList.remove('checked');
+                localStorage.removeItem(checkboxId);
+            }
+            
+            // Check if all homework is complete
+            checkAllHomeworkComplete();
+        }
+
+        function checkAllHomeworkComplete() {
+            const hw1 = localStorage.getItem('hw1');
+            const hw2 = localStorage.getItem('hw2');
+            const hw3 = localStorage.getItem('hw3');
+            const hw4 = localStorage.getItem('hw4');
+            
+            if (hw1 && hw2 && hw3 && hw4) {
+                markComplete('homework');
+            }
+        }
+
+        // Load saved homework state
+        window.addEventListener('load', function() {
+            ['hw1', 'hw2', 'hw3', 'hw4'].forEach(hwId => {
+                const checkbox = document.getElementById(hwId);
+                const checkboxItem = checkbox.closest('.checkbox-item');
+                
+                if (localStorage.getItem(hwId) === 'true') {
+                    checkbox.checked = true;
+                    checkboxItem.classList.add('checked');
+                }
+            });
+            
+            updateProgress();
+            checkAllHomeworkComplete();
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+
