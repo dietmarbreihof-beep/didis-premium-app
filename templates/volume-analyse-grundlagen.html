@@ -1727,6 +1727,71 @@
             }
         }
     </script>
+
+    <!-- Navigation -->
+    <style>
+        /* Navigation Styles */
+        .module-navigation {
+            text-align: center;
+            margin: 40px 0 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .module-navigation a {
+            color: #b8860b;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .module-navigation a:hover {
+            color: #daa520;
+            background: #f7f7f7;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .module-navigation a {
+                display: block;
+                margin: 10px auto;
+                max-width: 250px;
+            }
+        }
+
+        /* Footer */
+        .module-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+    <!-- Hauptnavigation -->
+    <div class="container">
+        <div class="module-navigation">
+            <a href="/">🏠 Startseite</a>
+            <a href="/modules">📚 Alle Module</a>
+            <a href="https://didis-trading-club.streamlit.app/" target="_blank">🚀 Zur Hauptapp</a>
+        </div>
+
+        <!-- Footer -->
+        <div class="module-footer">
+            <p><strong>Didis Premium Trading Academy</strong></p>
+            <p>📍 Heidelberg | 📊 30+ Jahre Börsenerfahrung</p>
+        </div>
+    </div>
+
 </body>
 </html>
 
