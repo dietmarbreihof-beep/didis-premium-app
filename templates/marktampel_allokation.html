@@ -66,6 +66,7 @@
     /* Glasmorphismus Metric Cards */
     .metric-card {
         background: rgba(255, 255, 255, 0.95);
+        -webkit-backdrop-filter: blur(10px);
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.2);
         padding: 20px;
@@ -486,16 +487,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <!-- Main Header -->
-    <div class="main-header">
-        <h1>📈 {{ module.title if module else 'Marktampel & Allokation' }}</h1>
-        <p>Professionelle Trading-Analyse & Portfolio-Management</p>
-    </div>
+<div class="marktampel-page">
+    <div class="container-fluid">
+        <!-- Main Header -->
+        <div class="main-header">
+            <h1>📈 {{ module.title if module else 'Marktampel & Allokation' }}</h1>
+            <p>Professionelle Trading-Analyse & Portfolio-Management</p>
+        </div>
 
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-3">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3">
             <h4>🧭 Navigation</h4>
             <hr>
             
@@ -532,7 +534,7 @@
                 <div class="content-card">
                     <h2>0.1 Marktampel & Allokation</h2>
                     <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 30px;">
-                        Optimieren Sie Ihr Portfolio basierend auf verschiedenen Marktregimen und maximieren Sie Ihre Rendite bei kontrolliertem Risiko.
+                        Optimiere dein Portfolio basierend auf verschiedenen Marktregimen und maximiere deine Rendite bei kontrolliertem Risiko.
                     </p>
                 </div>
                 
@@ -583,10 +585,10 @@
                         <div class="content-card">
                             <h4>📊 Market Regime Analysis</h4>
                             <p style="color: #6b7280; margin-bottom: 20px;">
-                                Wählen Sie das aktuelle Marktregime aus, um die optimale Asset-Allokation zu ermitteln.
+                                Wähle das aktuelle Marktregime aus, um die optimale Asset-Allokation zu ermitteln.
                             </p>
                             
-                            <select id="regime-select" class="form-control mb-3" onchange="updateRegimeAnalysis()" style="margin-bottom: 30px;">
+                            <select id="regime-select" class="form-control mb-3" onchange="updateRegimeAnalysis()" style="margin-bottom: 30px;" title="Marktregime auswählen" aria-label="Wähle das aktuelle Marktregime">
                                 <option value="Goldilocks">🌟 Goldilocks - Ideale Bedingungen</option>
                                 <option value="Reflation">🚀 Reflation - Wirtschaftswachstum</option>
                                 <option value="Inflation">🔥 Inflation - Steigende Preise</option>
@@ -625,7 +627,7 @@
                 <div class="content-card">
                     <h4 id="regime-title">🎯 Goldilocks Regime Analysis</h4>
                     <p style="color: #6b7280; margin-bottom: 30px;">
-                        Diese Analyse zeigt Ihnen, welche Asset-Klassen in dem gewählten Marktregime bevorzugt, neutral oder gemieden werden sollten.
+                        Diese Analyse zeigt dir, welche Asset-Klassen in dem gewählten Marktregime bevorzugt, neutral oder gemieden werden sollten.
                     </p>
                     <div class="row" id="regime-indicators">
                         <!-- Wird durch JavaScript gefüllt -->
