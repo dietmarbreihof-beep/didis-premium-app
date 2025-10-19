@@ -10,6 +10,7 @@ import os
 
 # Migrations importieren
 from migrations.add_symmetrie_module import add_symmetrie_module
+from migrations.register_risikomanagement import register_risikomanagement_module
 
 def run_all_migrations():
     """Führt alle Migrationen aus"""
@@ -19,6 +20,7 @@ def run_all_migrations():
     
     migrations = [
         ('add_symmetrie_module', add_symmetrie_module),
+        ('register_risikomanagement_module', register_risikomanagement_module),
         # Weitere Migrationen hier hinzufügen
     ]
     
@@ -54,6 +56,7 @@ def run_all_migrations():
 if __name__ == '__main__':
     success = run_all_migrations()
     sys.exit(0 if success else 1)
+
 
 
 

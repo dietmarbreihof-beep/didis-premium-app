@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Risikomanagement - Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .risikomanagement-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.4em;
+            color: #f4e97b;
+            margin-bottom: 30px;
+        }
+
+        .hero-quote {
+            font-size: 1.3em;
+            font-style: italic;
+            margin: 30px 0;
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border-left: 5px solid #daa520;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Critical Warning Box */
+        .critical-warning {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px 0;
+            box-shadow: 0 8px 30px rgba(229, 62, 62, 0.3);
+        }
+
+        .critical-warning h2 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .critical-warning p {
+            font-size: 1.2em;
+            line-height: 1.8;
+        }
+
+        /* Loss Recovery Chart */
+        .loss-chart-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .loss-chart-section h2 {
+            color: #e53e3e;
+            font-size: 2em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-image {
+            width: 100%;
+            max-width: 1000px;
+            margin: 30px auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-explanation {
+            background: linear-gradient(135deg, #fff5f5 0%, #fee);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 25px;
+            border-left: 4px solid #e53e3e;
+        }
+
+        .chart-explanation h3 {
+            color: #c53030;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .chart-explanation ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .chart-explanation li {
+            padding: 10px 0;
+            font-size: 1.1em;
+            display: flex;
+            align-items: start;
+            gap: 10px;
+        }
+
+        .chart-explanation li::before {
+            content: "⚠️";
+            font-size: 1.3em;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+            border-left: 4px solid #daa520;
+            transition: all 0.3s ease;
+        }
+
+        .content-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.2);
+        }
+
+        .content-card h2 {
+            color: #b8860b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .content-card h3 {
+            color: #1a1a1a;
+            font-size: 1.5em;
+            margin: 30px 0 15px 0;
+        }
+
+        .content-card p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #b8860b;
+        }
+
+        .highlight-box h4 {
+            color: #1a1a1a;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .highlight-box p {
+            color: #1a1a1a;
+            font-size: 1.1em;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #38a169;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .success-box ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .success-box li {
+            padding: 8px 0;
+            font-size: 1.05em;
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            color: #155724;
+        }
+
+        .success-box li::before {
+            content: "✅";
+            font-size: 1.2em;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #d69e2e;
+        }
+
+        .warning-box h4 {
+            color: #856404;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .warning-box p {
+            color: #856404;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        /* List Styling */
+        .content-card ul,
+        .content-card ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .content-card li {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        /* Best Practices Grid */
+        .practices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .practice-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #daa520;
+            transition: all 0.3s ease;
+        }
+
+        .practice-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(184, 134, 11, 0.2);
+        }
+
+        .practice-card h4 {
+            color: #b8860b;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .practice-card p {
+            font-size: 1.05em;
+            color: #333;
+            line-height: 1.7;
+        }
+
+        /* Interactive Loss Calculator */
+        .calculator-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 40px 0;
+            border-left: 4px solid #b8860b;
+        }
+
+        .calculator-section h2 {
+            color: #b8860b;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .calculator-input {
+            margin: 25px 0;
+        }
+
+        .calculator-input label {
+            display: block;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .calculator-input input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #daa520;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .calculator-input input:focus {
+            outline: none;
+            border-color: #b8860b;
+            box-shadow: 0 0 0 3px rgba(184, 134, 11, 0.1);
+        }
+
+        .calculator-result {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .calculator-result h3 {
+            color: #1a1a1a;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+
+        .calculator-result .result-value {
+            font-size: 3em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 20px 0;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 2px solid #38a169;
+        }
+
+        .key-takeaways h2 {
+            text-align: center;
+            color: #155724;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #38a169;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .takeaway-item p {
+            margin: 0;
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: #155724;
+        }
+
+        .takeaway-number {
+            display: inline-block;
+            background: #38a169;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 15px;
+            font-weight: 700;
+        }
+
+        /* Gold Button */
+        .gold-button {
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+
+        .gold-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .risikomanagement-wrapper {
+                padding: 10px;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .hero-section h1 {
+                font-size: 2em;
+            }
+
+            .hero-quote {
+                font-size: 1.1em;
+                padding: 20px;
+            }
+
+            .content-card {
+                padding: 25px;
+            }
+
+            .content-card h2 {
+                font-size: 1.6em;
+            }
+
+            .practices-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calculator-result .result-value {
+                font-size: 2em;
+            }
+        }
+
+        /* Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-card,
+        .practice-card,
+        .takeaway-item {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="risikomanagement-wrapper">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>⚡ Risikomanagement: Dein Überlebensguide im Trading</h1>
+            <p class="subtitle">Die nicht verhandelbare Grundlage für langfristigen Erfolg</p>
+            <div class="hero-quote">
+                "Der Markt kann länger irrational bleiben, als du solvent bleiben kannst."
+                <div class="hero-author">- John Maynard Keynes</div>
+            </div>
+        </div>
+
+        <!-- Critical Warning -->
+        <div class="critical-warning">
+            <h2>🚨 Ohne Risikomanagement: GAME OVER</h2>
+            <p>
+                Trading kommt schnell auf dich zu, und es gibt keinen Undo-Button. Keine Mulligans. Keine zweiten Chancen. 
+                Keine Sympathie vom Markt. <strong>Wenn du dich nicht selbst schützt, wird es nicht lange dauern, 
+                bis du am eigenen Leib erfährst, dass jede Bewegung noch irrationaler werden kann.</strong>
+            </p>
+        </div>
+
+        <!-- Loss Recovery Chart Section -->
+        <div class="loss-chart-section">
+            <h2>⚠️ Die brutale Mathematik des Verlierens</h2>
+            <img src="{{ url_for('static', filename='screenshots/Gewinn_Verlust_Lance.jpg') }}" 
+                 alt="Loss vs Recovery Chart" 
+                 class="chart-image"
+                 title="Wie viel Gewinn du brauchst, um Verluste auszugleichen">
+            
+            <div class="chart-explanation">
+                <h3>📊 Was diese Grafik dir sagt:</h3>
+                <ul>
+                    <li><strong>50% Verlust = 100% Gewinn benötigt:</strong> Wenn du die Hälfte verlierst, musst du dein Kapital verdoppeln!</li>
+                    <li><strong>70% Verlust = 233% Gewinn benötigt:</strong> Der Weg zurück wird exponentiell härter</li>
+                    <li><strong>90% Verlust = 900% Gewinn benötigt:</strong> Praktisch unmöglich zurückzukommen</li>
+                    <li><strong>100% Verlust = GAME OVER:</strong> Keine Wiederkehr mehr möglich</li>
+                </ul>
+                <p style="margin-top: 20px; font-size: 1.2em; font-weight: 700; color: #c53030;">
+                    💡 Die Lektion: Kapitalerhalt ist WICHTIGER als Gewinnmaximierung!
+                </p>
+            </div>
+        </div>
+
+        <!-- Was ist Risikomanagement -->
+        <div class="content-card">
+            <h2>🎯 Was ist Risikomanagement?</h2>
+            <p>
+                Risikomanagement umfasst die <strong>Regeln, Systeme und Prozesse</strong>, die du einsetzt, 
+                um dich davor zu schützen, mehr P&L zu verlieren oder zurückzugeben, als du beabsichtigt hättest.
+            </p>
+            
+            <div class="highlight-box">
+                <h4>💭 Warum ist das so wichtig?</h4>
+                <p>
+                    Es gibt Zeiten, in denen du auf Tilt bist und Racheschläge durchführst. Es gibt Zeiten, 
+                    in denen du einen Trade falsch liest. Und es gibt Zeiten, in denen verrückte Multi-Sigma-Ereignisse 
+                    auftreten, die du dir nicht einmal vorstellen konntest (denk an einige der verrückten Bewegungen während Covid).
+                </p>
+            </div>
+
+            <p>
+                <strong>Der einzige Weg, dich vor dem Unbekannten zu schützen, ist durch voreingestellte Sicherheitsmaßnahmen,</strong> 
+                bei denen du es akzeptierst und den Verlust nimmst – egal was passiert.
+            </p>
+        </div>
+
+        <!-- Best Practices für Anfänger -->
+        <div class="content-card">
+            <h2>🎓 Best Practices für Anfänger</h2>
+            
+            <div class="practices-grid">
+                <div class="practice-card">
+                    <h4>📊 Demo-Trading ist OK</h4>
+                    <p>
+                        Unterschätze niemals den Wert von Demo-Trading oder dem Handel mit nur einer Aktie. 
+                        Millionen von Dollar gehen jedes Jahr durch Anfänger verloren, die ohne bewährte Edge handeln. 
+                        <strong>Es gibt keine Schande in Demo!</strong>
+                    </p>
+                </div>
+
+                <div class="practice-card">
+                    <h4>🎰 Denk wie ein Pokerspieler</h4>
+                    <p>
+                        Wenn du neu im Poker bist, würdest du am $5/$10 Tisch sitzen? Nein! Du würdest kostenlos spielen 
+                        oder um Pennies wetten, während du das Spiel lernst und deine Fähigkeiten aufbaust.
+                    </p>
+                </div>
+
+                <div class="practice-card">
+                    <h4>⛔ Predefinierte Stops sind Pflicht</h4>
+                    <p>
+                        Jeder einzelne Trade muss einem System mit einem vordefinierten Stop folgen. 
+                        Du musst <strong>IMMER</strong> den maximalen Betrag kennen, den du in einem Trade riskierst.
+                    </p>
+                </div>
+
+                <div class="practice-card">
+                    <h4>📏 Position Sizing ist der Schlüssel</h4>
+                    <p>
+                        Die Art und Weise, Risiko zu kontrollieren, ist eine Mischung aus einem Stop und dann Position Sizing. 
+                        Zu viele Anfänger machen den fatalen Fehler, langweilige Aktien ohne Edge zu handeln, 
+                        weil sie Angst vor volatilen In-Play-Aktien haben.
+                    </p>
+                </div>
+
+                <div class="practice-card">
+                    <h4>🚫 Maximales Tageslimit ist nicht verhandelbar</h4>
+                    <p>
+                        Jeder einzelne Trader braucht ein maximales Tageslimit. Es ist <strong>nicht verhandelbar.</strong> 
+                        Idealerweise solltest du dies so stark wie möglich in dein System hardcoden. 
+                        Frag deinen Broker, ob er es in die Software programmieren kann.
+                    </p>
+                </div>
+
+                <div class="practice-card">
+                    <h4>🎯 Reps sind wichtiger als P&L</h4>
+                    <p>
+                        In den frühen Phasen hilft es deiner Lernkurve nicht, wenn du dein tägliches Verlustlimit 
+                        in einem Trade verlierst. <strong>Wiederholungen sind SO wichtig!</strong> Gib dir mindestens 
+                        Raum für 10 Trades pro Tag.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loss Limits im Detail -->
+        <div class="content-card">
+            <h2>🛡️ Loss Limits: Deine Lebensversicherung</h2>
+            
+            <div class="warning-box">
+                <h4>⚠️ Warum Loss Limits?</h4>
+                <p>
+                    Ich kenne keinen einzigen Elite-Trader, der dieses kritische Sicherheitsnetz nicht als Teil seines 
+                    Tradings hat. Aber ich kenne einen Friedhof voller unzähliger Trader, die dachten, sie bräuchten sie nicht.
+                </p>
+            </div>
+
+            <h3>📅 Tägliche Loss Limits</h3>
+            <p>
+                Ein tägliches Loss Limit ist der <strong>maximale Betrag, den du bereit bist, an einem einzigen Tag zu verlieren.</strong> 
+                Diese Grenze hilft, das Spiralisieren aus dem Zwang zu verhindern, zurück auf Break-even zu traden – 
+                eine häufige Falle, die oft zu größeren Verlusten führt.
+            </p>
+
+            <div class="success-box">
+                <h4>✅ Für Anfänger: Einzeltrade-Limits</h4>
+                <ul>
+                    <li>Verliere niemals dein gesamtes Tageslimit in einem Trade</li>
+                    <li>Riskiere 5% oder weniger deines täglichen Limits pro Trade</li>
+                    <li>Reps sind in der Anfangsphase wichtiger als P&L</li>
+                    <li>Mindestens 10 Trading-Gelegenheiten pro Tag offen halten</li>
+                </ul>
+            </div>
+
+            <h3>📆 Wöchentliche Loss Limits</h3>
+            <p>
+                Wöchentliche Loss Limits dienen als Checkpoint zur Bewertung deiner Wochenperformance. 
+                Diese breitere Perspektive ermöglicht strategischere Anpassungen und hilft, die Fallstricke einer 
+                schlechten Trading-Woche zu vermeiden, die noch schlimmer wird.
+            </p>
+
+            <div class="highlight-box">
+                <h4>💡 Der wahre Vorteil</h4>
+                <p>
+                    Zu oft machen Trader keine ordentlichen wöchentlichen Reviews, und es dauert einen ganzen Monat, 
+                    um während ihres monatlichen Reviews den Fehler zu erkennen, den sie machen. Aber der angerichtete 
+                    Schaden ist größer, als er hätte sein müssen, wenn sie die schlechte Gewohnheit früher erkannt hätten.
+                </p>
+            </div>
+
+            <h3>📊 Monatliche Loss Limits</h3>
+            <p>
+                Monatliche Loss Limits gehen ums große Ganze und bieten eine Makrosicht auf die Performance eines Traders. 
+                Sie ermöglichen es Tradern, die Effektivität ihrer Strategie über einen längeren Zeitraum zu bewerten 
+                und dabei den natürlichen Auf und Ab der Marktbedingungen zu berücksichtigen.
+            </p>
+        </div>
+
+        <!-- Interactive Loss Calculator -->
+        <div class="calculator-section">
+            <h2>🧮 Interaktiver Verlust-Recovery-Rechner</h2>
+            <p style="text-align: center; font-size: 1.1em; margin-bottom: 30px;">
+                Berechne, wie viel Gewinn du brauchst, um einen Verlust auszugleichen
+            </p>
+
+            <div class="calculator-input">
+                <label for="loss-percentage">Dein Verlust in Prozent:</label>
+                <input type="number" 
+                       id="loss-percentage" 
+                       min="1" 
+                       max="99" 
+                       value="50" 
+                       placeholder="z.B. 50">
+            </div>
+
+            <div class="calculator-result" id="result-box">
+                <h3>Du benötigst einen Gewinn von:</h3>
+                <div class="result-value" id="result-value">100%</div>
+                <p id="result-explanation">Um von einem 50% Verlust zurückzukommen, musst du dein verbleibendes Kapital verdoppeln!</p>
+            </div>
+        </div>
+
+        <!-- Psychologie des Risikomanagements -->
+        <div class="content-card">
+            <h2>🧠 Die psychologische Dimension</h2>
+            
+            <p>
+                So viel von dem, was die Lernkurve hart macht, sind die <strong>negativen Feedback-Schleifen</strong>, 
+                die auftreten können. Ich habe es immer wieder gesehen: Ein neuer Trader erleidet einen übergroßen Verlust, 
+                und es zerschmettert sein Selbstvertrauen und schneit in einer Weise, die dann seinen Prozess ruiniert.
+            </p>
+
+            <div class="warning-box">
+                <h4>🎭 Der Motivations-Killer</h4>
+                <p>
+                    Sie sind nicht mehr so motiviert oder hungrig und verlieren das Vertrauen in ihre Fähigkeit, 
+                    erfolgreich zu sein. Teil davon ist zu erkennen, dass einen Gewinn von 20% zu machen NICHT denselben 
+                    psychologischen Effekt hat wie ein 20% Drawdown die meisten Trader beeinflusst.
+                </p>
+            </div>
+
+            <h3>🎯 Dein maximales Risiko pro Trade</h3>
+            <p>
+                <strong>Der maximale Betrag, den du jemals in einem Trade riskieren solltest, ist weniger als der Betrag, 
+                der deine Psychologie negativ beeinflussen würde.</strong>
+            </p>
+
+            <div class="success-box">
+                <h4>✅ Warum diese Metrik?</h4>
+                <ul>
+                    <li>Deine Mentalität ist ein mächtiges Werkzeug im Trading</li>
+                    <li>Ein Verlust, der dein Selbstvertrauen erschüttert, kann nachfolgende Entscheidungen beeinträchtigen</li>
+                    <li>Er kann die positive Feedback-Schleife des Fortschritts stören</li>
+                    <li>Trader schlagen sich oft selbst, weil sie nicht mehr riskiert haben, wenn Trades funktionieren</li>
+                    <li>Aber sie spielen nicht durch, was passieren würde, wenn sie mehr riskiert hätten und der Trade nicht geklappt hätte</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>💭 Introspektion ist der Schlüssel</h4>
+                <p>
+                    Frag dich selbst: <strong>Welche Verlustgröße würde mich dazu bringen, meine Fähigkeiten in Frage zu stellen? 
+                    Wie viel könnte ich verlieren, ohne mich entmutigt oder demotiviert zu fühlen?</strong>
+                </p>
+                <p style="margin-top: 15px;">
+                    Bedenke, dass sich diese Beträge im Laufe der Zeit ändern werden. Sie ändern sich, wenn du wächst, 
+                    widerstandsfähiger wirst und auch basierend auf dem Marktumfeld.
+                </p>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways">
+            <h2>📋 Key Takeaways</h2>
+            
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">1</span>
+                    <strong>Risikomanagement ist nicht optional:</strong> Es ist auf allen Ebenen des Tradings essentiell, 
+                    um zu gewährleisten, dass du dein Konto nicht sprengst.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">2</span>
+                    <strong>Demo-Trading ist wertvoll:</strong> Unterschätze niemals den Wert von Demo-Trading oder 
+                    dem Handel mit einer Aktie, während du deine Edge entwickelst.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">3</span>
+                    <strong>Predefinierte Stops sind Pflicht:</strong> Jeder Trade muss einem System mit einem 
+                    vordefinierten Stop folgen. Kenne immer dein maximales Risiko.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">4</span>
+                    <strong>Loss Limits schützen dich:</strong> Tägliche, wöchentliche und monatliche Loss Limits 
+                    sind nicht verhandelbare Komponenten einer erfolgreichen Trading-Strategie.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">5</span>
+                    <strong>Psychologie ist kritisch:</strong> Schütze deine mentale und emotionale Kapital genauso 
+                    wie dein finanzielles Kapital – sie sind gleich wichtig für den Erfolg.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">6</span>
+                    <strong>Die asymmetrische Natur von Verlusten:</strong> Einen Verlust von 20% zu erleben hat 
+                    einen viel größeren psychologischen Impact als einen Gewinn von 20% zu machen.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">7</span>
+                    <strong>Reps über P&L:</strong> In den frühen Phasen sind Wiederholungen und Lernen wichtiger 
+                    als das tatsächliche P&L. Gib dir selbst die längste Runway zum Erfolg.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">8</span>
+                    <strong>Recovery ist exponentiell schwerer:</strong> Je größer dein Verlust, desto exponentiell 
+                    schwieriger wird es, zurückzukommen. Ein 50% Verlust benötigt 100% Gewinn zur Wiederherstellung!
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">9</span>
+                    <strong>Dynamische Anpassungen:</strong> Deine Risiko-Limits sollten sich basierend auf deiner 
+                    Entwicklung, deinem mentalen Zustand und dem Marktumfeld anpassen.
+                </p>
+            </div>
+
+            <div class="takeaway-item">
+                <p>
+                    <span class="takeaway-number">10</span>
+                    <strong>Der Markt zeigt keine Gnade:</strong> Es gibt keine Undo-Buttons, keine Mulligans, 
+                    keine zweiten Chancen. Nur dein Risikomanagement schützt dich vor dem Unbekannten.
+                </p>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div style="text-align: center; margin: 60px 0;">
+            <a href="/modules" class="gold-button">
+                🎯 Zurück zu allen Modulen
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Interactive Loss Recovery Calculator
+        const lossInput = document.getElementById('loss-percentage');
+        const resultValue = document.getElementById('result-value');
+        const resultExplanation = document.getElementById('result-explanation');
+        const resultBox = document.getElementById('result-box');
+
+        function calculateRecovery(lossPercent) {
+            const recovery = (lossPercent / (100 - lossPercent) * 100).toFixed(1);
+            return recovery;
+        }
+
+        function updateExplanation(loss, recovery) {
+            if (loss < 10) {
+                return `Ein kleiner ${loss}% Verlust ist relativ leicht zu überwinden.`;
+            } else if (loss < 30) {
+                return `Ein ${loss}% Verlust benötigt ${recovery}% Gewinn - das ist machbar mit Disziplin!`;
+            } else if (loss < 50) {
+                return `Ein ${loss}% Verlust ist ernst! Du benötigst ${recovery}% Gewinn zum Ausgleich.`;
+            } else if (loss < 70) {
+                return `⚠️ Ein ${loss}% Verlust ist gefährlich! ${recovery}% Gewinn zur Wiederherstellung ist extrem schwer.`;
+            } else if (loss < 90) {
+                return `🚨 Ein ${loss}% Verlust ist verheerend! ${recovery}% Gewinn zur Wiederherstellung ist fast unmöglich.`;
+            } else {
+                return `❌ Ein ${loss}% Verlust bedeutet praktisch GAME OVER! ${recovery}% Gewinn ist unrealistisch.`;
+            }
+        }
+
+        function updateCalculator() {
+            const loss = parseFloat(lossInput.value) || 50;
+            const recovery = calculateRecovery(loss);
+            
+            resultValue.textContent = recovery + '%';
+            resultExplanation.textContent = updateExplanation(loss, recovery);
+
+            // Change color based on severity
+            if (loss < 30) {
+                resultBox.style.background = 'linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%)';
+            } else if (loss < 50) {
+                resultBox.style.background = 'linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%)';
+            } else if (loss < 70) {
+                resultBox.style.background = 'linear-gradient(135deg, #ffe5e5 0%, #ffcccc 100%)';
+            } else {
+                resultBox.style.background = 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)';
+                resultBox.style.color = 'white';
+            }
+        }
+
+        lossInput.addEventListener('input', updateCalculator);
+        lossInput.addEventListener('change', updateCalculator);
+
+        // Initialize on page load
+        updateCalculator();
+
+        // Smooth scroll animation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.content-card, .practice-card, .takeaway-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(30px)';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+

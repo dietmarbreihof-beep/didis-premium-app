@@ -241,6 +241,16 @@ Kategorie: "Technische Analyse"
 Features: Interactive Charts, Quiz, Key Takeaways
 ```
 
+**Beispiel 1a: Risikomanagement Modul (Erfolgreich erstellt!)**
+```
+@new-module-page Risikomanagement
+- HTML-Seite: templates/risikomanagement.html ✅
+- Screenshot integriert: Gewinn_Verlust_Lance.jpg ✅
+- Kategorie: 4. Risikomanagement ✅
+- Lead-Magnet: Ja (für alle verfügbar) ✅
+- Features: Interaktiver Loss-Recovery-Rechner, Key Takeaways, Progressive Disclosure
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
@@ -267,4 +277,5 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 **Zuletzt aktualisiert:** 17. Oktober 2025  
 **Projekt:** Didis Premium Trading Academy  
 **Version:** 1.0
+
 
