@@ -32,8 +32,10 @@ def run_all_migrations():
     # Migrations NACH db.create_all() importieren
     from migrations.add_symmetrie_module import add_symmetrie_module
     from migrations.register_risikomanagement import register_risikomanagement_module
+    from migrations.register_all_core_modules import register_all_core_modules
     
     migrations = [
+        ('register_all_core_modules', register_all_core_modules),  # WICHTIG: Zuerst alle Core-Module!
         ('add_symmetrie_module', add_symmetrie_module),
         ('register_risikomanagement_module', register_risikomanagement_module),
         # Weitere Migrationen hier hinzufügen
