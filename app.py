@@ -864,6 +864,17 @@ def module_view(slug):
         # Streamlit-Module: Weiterleitung zur Streamlit-App
         return redirect(module.external_url)
     elif module.template_file:
+        # Prüfe ob es eine standalone HTML-Seite ist (z.B. better-volume-lernseite.html)
+        # Diese Seiten haben DOCTYPE und sind komplett eigenständig
+        if module.template_file in ['better-volume-lernseite.html']:
+            # Standalone HTML direkt ausliefern ohne Template-Engine
+            try:
+                return send_from_directory('templates', module.template_file)
+            except Exception as e:
+                # Fallback: Versuche als reguläres Template
+                print(f"Fehler beim Laden von standalone HTML: {e}")
+                pass
+        
         # Bestehende HTML-Templates nutzen (wie magic_line.html)
         # Navigation-Daten ermitteln
         prev_module, next_module = get_module_navigation(module)
