@@ -8,18 +8,16 @@ Wird automatisch beim Railway-Deployment ausgeführt
 import sys
 import os
 
-# Migrations importieren
-from migrations.add_symmetrie_module import add_symmetrie_module
-from migrations.register_risikomanagement import register_risikomanagement_module
-
 def run_all_migrations():
     """Führt alle Migrationen aus"""
     print("=" * 60)
     print("RAILWAY DEPLOYMENT: Starte Migrations")
     print("=" * 60)
     
-    # WICHTIG: Zuerst Tabellen erstellen falls sie nicht existieren
+    # WICHTIG: Import erst HIER um zirkuläre Imports zu vermeiden
     from app import app, db
+    
+    # WICHTIG: Zuerst Tabellen erstellen falls sie nicht existieren
     with app.app_context():
         try:
             print("\n[DATABASE] Erstelle Tabellen falls nicht vorhanden...")
@@ -27,7 +25,13 @@ def run_all_migrations():
             print("[OK] Datenbank-Tabellen sind bereit!")
         except Exception as e:
             print(f"[ERROR] Fehler beim Erstellen der Tabellen: {e}")
+            import traceback
+            traceback.print_exc()
             return False
+    
+    # Migrations NACH db.create_all() importieren
+    from migrations.add_symmetrie_module import add_symmetrie_module
+    from migrations.register_risikomanagement import register_risikomanagement_module
     
     migrations = [
         ('add_symmetrie_module', add_symmetrie_module),

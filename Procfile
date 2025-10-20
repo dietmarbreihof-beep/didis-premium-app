@@ -1,1 +1,1 @@
-web: python run_migrations.py && gunicorn --bind 0.0.0.0:$PORT --workers 2 app:app
+web: bash start.sh
