@@ -4,4 +4,4 @@ builder = "nixpacks"
 [deploy]
 restartPolicyType = "ON_FAILURE"
 restartPolicyMaxRetries = 10
-startCommand = "chmod +x start.sh && ./start.sh"
+startCommand = "python start.py"
