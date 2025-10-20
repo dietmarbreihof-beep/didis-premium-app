@@ -24,7 +24,18 @@ app.config.update(
 
 # Database-Pfad konfigurieren
 basedir = os.path.abspath(os.path.dirname(__file__))
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'didis_academy.db')
+
+# Nutze PostgreSQL wenn DATABASE_URL gesetzt ist (Railway), sonst SQLite
+database_url = os.environ.get('DATABASE_URL')
+if database_url:
+    # Fix: Railway nutzt postgres://, aber SQLAlchemy braucht postgresql://
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
+else:
+    # Lokales SQLite
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'didis_academy.db')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisieren
