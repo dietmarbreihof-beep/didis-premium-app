@@ -23,21 +23,12 @@ app.config.update(
 )
 
 # Database-Konfiguration
-# Nutzt PostgreSQL wenn DATABASE_URL gesetzt ist (Railway), sonst SQLite lokal
+# TEMPORÄR: Zurück zu SQLite (PostgreSQL-Migration hatte Probleme)
 basedir = os.path.abspath(os.path.dirname(__file__))
-database_url = os.environ.get('DATABASE_URL')
 
-if database_url:
-    # Railway PostgreSQL
-    # Fix: Railway nutzt postgres://, aber SQLAlchemy braucht postgresql://
-    if database_url.startswith('postgres://'):
-        database_url = database_url.replace('postgres://', 'postgresql://', 1)
-    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
-    print(f"[DATABASE] Nutze PostgreSQL auf Railway")
-else:
-    # Lokales SQLite für Entwicklung
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'didis_academy.db')
-    print(f"[DATABASE] Nutze lokales SQLite: {os.path.join(basedir, 'didis_academy.db')}")
+# Immer SQLite nutzen (auch auf Railway)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'didis_academy.db')
+print(f"[DATABASE] Nutze SQLite: {os.path.join(basedir, 'didis_academy.db')}")
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
