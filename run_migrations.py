@@ -18,6 +18,17 @@ def run_all_migrations():
     print("RAILWAY DEPLOYMENT: Starte Migrations")
     print("=" * 60)
     
+    # WICHTIG: Zuerst Tabellen erstellen falls sie nicht existieren
+    from app import app, db
+    with app.app_context():
+        try:
+            print("\n[DATABASE] Erstelle Tabellen falls nicht vorhanden...")
+            db.create_all()
+            print("[OK] Datenbank-Tabellen sind bereit!")
+        except Exception as e:
+            print(f"[ERROR] Fehler beim Erstellen der Tabellen: {e}")
+            return False
+    
     migrations = [
         ('add_symmetrie_module', add_symmetrie_module),
         ('register_risikomanagement_module', register_risikomanagement_module),
