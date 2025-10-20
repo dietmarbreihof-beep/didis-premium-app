@@ -1,5 +1,23 @@
 # Cursor Rules für PROJEKT: Didis Trading Academy - Flask Premium Frontend
 
+## 🚫 **ABSOLUTES VERBOT: NIEMALS EIGENMÄCHTIG MODULE/KATEGORIEN ERSTELLEN**
+
+**KRITISCHE REGEL:**
+- ❌ **NIEMALS** eigenmächtig neue Module erstellen ohne explizite Zustimmung des Users
+- ❌ **NIEMALS** eigenmächtig Kategorien oder Unterkategorien erstellen
+- ❌ **NIEMALS** Demo-Module oder Beispiel-Module hinzufügen
+- ❌ **NIEMALS** automatische Migrations ausführen die Module/Kategorien ändern
+- ✅ **IMMER** User fragen BEVOR ein neues Modul/Kategorie erstellt wird
+- ✅ **NUR** explizit angeforderte Module erstellen (z.B. "@new-module-page Risikomanagement")
+- ✅ **NUR** HTML-Templates erstellen, Datenbank-Registrierung manuell durch User via /admin/auto-register-modules
+
+**Beispiele:**
+- ❌ FALSCH: Migration erstellen die "Die 2% Regel" Modul hinzufügt
+- ✅ RICHTIG: Nur risikomanagement.html erstellen, User registriert es manuell
+
+**Konsequenz bei Verstoß:**
+Der User muss manuell aufräumen und ist verärgert! Module/Kategorien sind Teil der Content-Strategie!
+
 ## 🚨 **KRITISCHE SICHERHEITSMÄNGEL**
 
 ### 1. **Passwort-Sicherheit**

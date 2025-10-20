@@ -3509,22 +3509,6 @@ def init_demo_modules():
     )
     db.session.add(lead_magnet1)
     
-    # Lead-Magnet: Risikomanagement Basics
-    lead_magnet2 = LearningModule(
-        category_id=cat3.id,
-        subcategory_id=sub3_1.id,
-        title='Die 2% Regel',
-        slug='zwei-prozent-regel',
-        description='Grundlagen des Risikomanagements - Nie mehr als 2% pro Trade riskieren (KOSTENLOS)',
-        icon='⚠️',
-        is_published=True,
-        is_lead_magnet=True,
-        estimated_duration=30,
-        difficulty_level='beginner',
-        sort_order=1
-    )
-    db.session.add(lead_magnet2)
-    
     # Kelly-Kriterium Modul (Premium)
     kelly_module = LearningModule(
         category_id=cat3.id,  # Risikomanagement
