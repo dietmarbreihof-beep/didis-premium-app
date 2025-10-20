@@ -22,14 +22,9 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
 )
 
-# Database-Konfiguration
-# TEMPORÄR: Zurück zu SQLite (PostgreSQL-Migration hatte Probleme)
+# Database-Pfad konfigurieren
 basedir = os.path.abspath(os.path.dirname(__file__))
-
-# Immer SQLite nutzen (auch auf Railway)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'didis_academy.db')
-print(f"[DATABASE] Nutze SQLite: {os.path.join(basedir, 'didis_academy.db')}")
-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisieren

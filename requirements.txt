@@ -32,7 +32,7 @@ gunicorn==21.2.0
 cryptography>=41.0.0
 
 # Database Driver (für PostgreSQL in Produktion)
-psycopg2-binary==2.9.7  # Aktiviert für Railway PostgreSQL
+# psycopg2-binary==2.9.7  # Auskommentiert - nur für PostgreSQL nötig
 
 # Monitoring (optional für Produktion)
 # sentry-sdk[flask]==1.38.0  # Auskommentiert - für Error Tracking

@@ -11,36 +11,13 @@ import os
 def run_all_migrations():
     """Führt alle Migrationen aus"""
     print("=" * 60)
-    print("RAILWAY DEPLOYMENT: Starte Migrations")
+    print("INFO: Keine automatischen Migrationen konfiguriert")
+    print("Nutze /admin/auto-register-modules zum Registrieren neuer Module")
     print("=" * 60)
     
-    # WICHTIG: Import erst HIER um zirkuläre Imports zu vermeiden
-    from app import app, db
-    
-    # WICHTIG: Zuerst Tabellen erstellen falls sie nicht existieren
-    with app.app_context():
-        try:
-            print("\n[DATABASE] Erstelle Tabellen falls nicht vorhanden...")
-            db.create_all()
-            print("[OK] Datenbank-Tabellen sind bereit!")
-        except Exception as e:
-            print(f"[ERROR] Fehler beim Erstellen der Tabellen: {e}")
-            import traceback
-            traceback.print_exc()
-            return False
-    
-    # Migrations NACH db.create_all() importieren
-    from migrations.add_symmetrie_module import add_symmetrie_module
-    from migrations.register_risikomanagement import register_risikomanagement_module
-    # DEAKTIVIERT: register_all_core_modules - hatte Bugs
-    # from migrations.register_all_core_modules import register_all_core_modules
-    
-    migrations = [
-        # ('register_all_core_modules', register_all_core_modules),  # DEAKTIVIERT - Bugs!
-        ('add_symmetrie_module', add_symmetrie_module),
-        ('register_risikomanagement_module', register_risikomanagement_module),
-        # Weitere Migrationen hier hinzufügen
-    ]
+    # Keine Migrations mehr - zu riskant
+    # Alles wird manuell über /admin/auto-register-modules registriert
+    return True
     
     failed = []
     succeeded = []
