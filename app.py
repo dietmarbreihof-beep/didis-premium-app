@@ -891,6 +891,24 @@ def module_view(slug):
                              prev_module=prev_module, 
                              next_module=next_module)
 
+@app.route('/module/better-volume-indicator')
+def better_volume_indicator():
+    """Better Volume Indicator - Standalone HTML Page (Lead Magnet)"""
+    # Kein Login erforderlich - Lead Magnet
+    import os
+    try:
+        # Lese die HTML-Datei direkt
+        template_path = os.path.join(app.root_path, 'templates', 'better-volume-lernseite.html')
+        with open(template_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+        
+        from flask import Response
+        return Response(html_content, mimetype='text/html')
+    except Exception as e:
+        print(f"Error loading Better Volume page: {e}")
+        flash('Modul konnte nicht geladen werden.', 'error')
+        return redirect(url_for('home'))
+
 @app.route('/upgrade-required/<module_slug>')
 def upgrade_required(module_slug):
     """Upgrade-Seite für gesperrte Module"""
