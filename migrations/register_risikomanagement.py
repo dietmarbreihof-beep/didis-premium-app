@@ -25,7 +25,23 @@ def register_risikomanagement_module():
             # 1. Prüfe ob Modul bereits existiert
             existing = LearningModule.query.filter_by(slug='risikomanagement').first()
             if existing:
-                print(f"[OK] Modul existiert bereits: {existing.title}")
+                print(f"[INFO] Modul existiert bereits - aktualisiere Einstellungen...")
+                
+                # Update existing module
+                existing.title = 'Risikomanagement: Dein Überlebensguide'
+                existing.icon = '⚡'  # Blitz-Emoji
+                existing.is_lead_magnet = False  # NICHT als Lead-Magnet
+                existing.required_subscription_levels = json.dumps(["elite", "masterclass"])
+                existing.description = 'Lerne die essenziellen Prinzipien des Risikomanagements für langfristigen Trading-Erfolg. Verstehe Loss Limits, Position Sizing, die brutale Mathematik des Verlierens und die Psychologie des Risikomanagements.'
+                existing.estimated_duration = 45
+                existing.difficulty_level = 'beginner'
+                existing.template_file = 'risikomanagement.html'
+                
+                db.session.commit()
+                print(f"[OK] Modul aktualisiert: {existing.title}")
+                print(f"  Icon: {existing.icon}")
+                print(f"  Lead-Magnet: {existing.is_lead_magnet}")
+                print(f"  Subscription: {existing.required_subscription_levels}")
                 return True
             
             # 2. Finde "Risikomanagement" Kategorie
@@ -57,15 +73,15 @@ def register_risikomanagement_module():
             module = LearningModule(
                 category_id=category.id,
                 subcategory_id=None,  # Keine Unterkategorie
-                title='Risikomanagement: Dein Ueberlebensguide',
+                title='Risikomanagement: Dein Überlebensguide',
                 slug='risikomanagement',
-                description='Lerne die essenziellen Prinzipien des Risikomanagements fuer langfristigen Trading-Erfolg. Verstehe Loss Limits, Position Sizing, die brutale Mathematik des Verlierens und die Psychologie des Risikomanagements.',
-                icon='warning',
+                description='Lerne die essenziellen Prinzipien des Risikomanagements für langfristigen Trading-Erfolg. Verstehe Loss Limits, Position Sizing, die brutale Mathematik des Verlierens und die Psychologie des Risikomanagements.',
+                icon='⚡',  # Blitz-Emoji
                 template_file='risikomanagement.html',
                 content_type='html',
                 is_published=True,
-                is_lead_magnet=True,  # Als Lead-Magnet fuer alle verfuegbar
-                required_subscription_levels=json.dumps(["free", "basic", "premium", "elite", "masterclass"]),
+                is_lead_magnet=False,  # NICHT als Lead-Magnet - nur fuer Elite
+                required_subscription_levels=json.dumps(["elite", "masterclass"]),  # Nur Elite und Masterclass
                 sort_order=5,
                 estimated_duration=45,  # 45 Minuten geschaetzt
                 difficulty_level='beginner',  # Fuer Anfaenger geeignet
