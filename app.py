@@ -523,17 +523,77 @@ def health_check():
     try:
         # Prüfe Datenbank-Verbindung
         db.session.execute('SELECT 1')
+        
+        # Prüfe ob Demo-User existieren (für Railway-Deployment)
+        user_count = User.query.count()
+        
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.utcnow().isoformat(),
             'service': 'Didis Premium Trading Academy',
-            'version': '1.0.0'
+            'version': '1.0.0',
+            'users_in_db': user_count
         }), 200
     except Exception as e:
         return jsonify({
             'status': 'unhealthy',
             'error': str(e),
             'timestamp': datetime.utcnow().isoformat()
+        }), 500
+
+@app.route('/setup-demo-users')
+def setup_demo_users():
+    """🔧 Einmalige Demo-User-Erstellung für Railway (öffentlich zugänglich)"""
+    try:
+        # Prüfe ob bereits User existieren
+        existing_count = User.query.count()
+        if existing_count > 0:
+            return jsonify({
+                'status': 'already_exists',
+                'message': f'{existing_count} Benutzer bereits in Datenbank',
+                'info': 'Demo-User wurden bereits erstellt'
+            }), 200
+        
+        # Erstelle Demo-User
+        demo_users = [
+            {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
+             'first_name': 'Admin', 'last_name': 'User'},
+            {'username': 'didi', 'email': 'didi@didis-academy.com', 'password': 'didi',
+             'first_name': 'Dietmar', 'last_name': 'Breihof'},
+            {'username': 'premium', 'email': 'premium@didis-academy.com', 'password': 'premium',
+             'first_name': 'Premium', 'last_name': 'User'},
+            {'username': 'test', 'email': 'test@didis-academy.com', 'password': 'test',
+             'first_name': 'Test', 'last_name': 'User'}
+        ]
+        
+        created_users = []
+        for user_data in demo_users:
+            user = User(
+                username=user_data['username'],
+                email=user_data['email'],
+                first_name=user_data['first_name'],
+                last_name=user_data['last_name'],
+                is_active=True,
+                email_verified=True
+            )
+            user.set_password(user_data['password'])
+            db.session.add(user)
+            created_users.append(user_data['username'])
+        
+        db.session.commit()
+        
+        return jsonify({
+            'status': 'success',
+            'message': f'{len(created_users)} Demo-Benutzer erfolgreich erstellt',
+            'users': created_users,
+            'info': 'Sie können sich jetzt mit admin/admin oder didi/didi anmelden'
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({
+            'status': 'error',
+            'message': str(e)
         }), 500
 
 @app.route('/')
