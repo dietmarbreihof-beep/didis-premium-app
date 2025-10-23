@@ -603,12 +603,9 @@ def home():
         # Ensure database is initialized
         db.create_all()
         
-        # Initialize demo modules if database is empty
-        if not LearningModule.query.first():
-            init_demo_modules()
-        
-        # Auto-sync: Check if local modules need to be synced to Railway
-        sync_modules_from_local()
+        # WICHTIG: Keine automatische Sync mehr!
+        # Module werden nur beim ersten Start (leere DB) oder manuell via Admin geladen
+        # Siehe: /admin/sync-modules-from-code für manuelle Sync
         
         # Lead-Magnete für nicht-eingeloggte User
         if not session.get('logged_in'):
@@ -779,22 +776,27 @@ def logout():
 
 @app.route('/admin/init-demo-data')
 def admin_init_demo_data():
-    """Admin-Only: Initialize demo modules and data"""
+    """⚠️ GEFÄHRLICH: Erstellt Demo-Module (kann bestehende überschreiben!)"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Nur Admins können Demo-Daten initialisieren.', 'error')
         return redirect(url_for('login'))
+    
+    # Sicherheitsabfrage
+    if not request.args.get('confirm') == 'yes':
+        flash('⚠️ WARNUNG: Diese Aktion kann bestehende Module überschreiben!', 'warning')
+        flash('Fügen Sie ?confirm=yes zur URL hinzu um fortzufahren', 'info')
+        return redirect(url_for('admin_modules'))
     
     try:
         # Force database initialization
         db.create_all()
         
-        # Force re-initialization by clearing existing demo modules
-        print("[INFO] Clearing existing demo modules for fresh initialization...")
+        print("[ADMIN] ⚠️ Demo-Module werden erstellt (kann Duplikate erzeugen)")
         
-        # Initialize demo modules (always runs, even if modules exist)
+        # Initialize demo modules
         result = init_demo_modules()
         
-        flash('✅ Demo-Module erfolgreich erstellt/aktualisiert!', 'success')
+        flash('✅ Demo-Module erstellt! Prüfen Sie auf Duplikate!', 'warning')
         return redirect(url_for('modules_overview'))
         
     except Exception as e:
@@ -804,24 +806,32 @@ def admin_init_demo_data():
 
 @app.route('/admin/force-reload-modules')  
 def admin_force_reload_modules():
-    """Admin-Only: Force reload all demo modules"""
+    """⚠️ EXTREM GEFÄHRLICH: Löscht ALLE Module und lädt Demo-Module neu!"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Nur Admins können Module neu laden.', 'error')
         return redirect(url_for('login'))
     
+    # Doppelte Sicherheitsabfrage
+    if not request.args.get('confirm') == 'DELETE-ALL-MODULES':
+        flash('⚠️⚠️⚠️ WARNUNG: Diese Aktion LÖSCHT ALLE Kategorien und Module!', 'error')
+        flash('Alle manuellen Änderungen gehen unwiderruflich verloren!', 'error')
+        flash('Fügen Sie ?confirm=DELETE-ALL-MODULES zur URL hinzu um fortzufahren', 'warning')
+        return redirect(url_for('admin_modules'))
+    
     try:
         # Clear all existing modules and categories
-        print("[INFO] Clearing existing modules and categories...")
+        print("[ADMIN] ⚠️⚠️⚠️ LÖSCHEN ALLER MODULE UND KATEGORIEN!")
         LearningModule.query.delete()
         ModuleSubcategory.query.delete() 
         ModuleCategory.query.delete()
         db.session.commit()
         
         # Reinitialize everything
-        print("[INFO] Reinitializing all demo modules...")
+        print("[ADMIN] Lade Demo-Module neu...")
         init_demo_modules()
         
-        flash('✅ Alle Module wurden neu geladen!', 'success')
+        flash('⚠️ ALLE Module wurden gelöscht und auf Demo-Stand zurückgesetzt!', 'error')
+        flash('Alle manuellen Änderungen sind verloren!', 'warning')
         return redirect(url_for('modules_overview'))
         
     except Exception as e:
@@ -2509,17 +2519,14 @@ def admin_init_database():
 
 @app.route('/admin/force-sync-templates')
 def force_sync_templates():
-    """🔄 Erzwingt komplette Synchronisation aller Templates"""
+    """🔄 Scannt Templates OHNE bestehende Module zu überschreiben"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('home'))
     
     try:
-        # Stelle sicher dass "Neue Module" Kategorie existiert
-        sync_modules_from_local()
-        db.session.commit()
-        
-        # Führe Auto-Registrierung aus
+        # NUR Template-Scan, KEINE Sync von hart-codierten Modulen!
+        flash('⚠️ HINWEIS: Diese Funktion überschreibt KEINE bestehenden Module', 'info')
         return auto_register_modules()
         
     except Exception as e:
