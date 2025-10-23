@@ -167,6 +167,7 @@ app_backup_*.py
 config.py
 settings.py
 secrets.json
+.secret_key
 
 # OneDrive specific
 .sync

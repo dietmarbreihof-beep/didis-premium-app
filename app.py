@@ -13,13 +13,41 @@ load_dotenv()
 # App-Konfiguration
 app = Flask(__name__)
 
-# Sicherheitskonfiguration
-app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+# Sicherheitskonfiguration - Persistent Secret Key
+SECRET_KEY_FILE = os.path.join(os.path.dirname(__file__), '.secret_key')
+
+# Secret Key aus ENV, File oder neu generieren
+if os.environ.get('SECRET_KEY'):
+    app.secret_key = os.environ.get('SECRET_KEY')
+    print("[CONFIG] Secret Key aus Environment Variable geladen")
+elif os.path.exists(SECRET_KEY_FILE):
+    try:
+        with open(SECRET_KEY_FILE, 'r') as f:
+            app.secret_key = f.read().strip()
+        print("[CONFIG] Secret Key aus .secret_key Datei geladen")
+    except Exception as e:
+        print(f"[WARNING] Fehler beim Laden des Secret Keys: {e}")
+        app.secret_key = secrets.token_hex(32)
+else:
+    # Neuen Secret Key generieren und speichern
+    app.secret_key = secrets.token_hex(32)
+    try:
+        with open(SECRET_KEY_FILE, 'w') as f:
+            f.write(app.secret_key)
+        # Nur Owner lesbar/schreibbar (Unix-Systeme)
+        if os.name != 'nt':  # Nicht Windows
+            os.chmod(SECRET_KEY_FILE, 0o600)
+        print(f"[CONFIG] Neuer Secret Key generiert und gespeichert in {SECRET_KEY_FILE}")
+    except Exception as e:
+        print(f"[WARNING] Konnte Secret Key nicht speichern: {e}")
+
+# Session-Konfiguration
 app.config.update(
-    SESSION_COOKIE_SECURE=False,  # Für Development - in Produktion auf True setzen
+    SESSION_COOKIE_SECURE=True if os.environ.get('RAILWAY_ENVIRONMENT') else False,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
+    SESSION_REFRESH_EACH_REQUEST=True
 )
 
 # Database-Pfad konfigurieren
@@ -40,6 +68,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisieren
 db = SQLAlchemy(app)
+
+# CSRF-Schutz initialisieren
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect(app)
+print("[SECURITY] CSRF-Schutz aktiviert")
 
 # Analytics-Modell direkt definieren (für korrekte db-Instanz)
 class VisitorAnalytics(db.Model):
@@ -164,72 +197,93 @@ def track_visitor():
 app.before_request(track_visitor)
 print("Analytics-Tracking aktiviert")
 
-# === AUTO-SYNC ON STARTUP ===
+# === SMART INITIALIZATION (NUR beim ersten Start!) ===
 def init_modules_on_startup():
-    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
-    import os
-    import time
+    """
+    Smart Initialization - lädt Module NUR beim ersten Start
     
-    # Persistenter Check via File (funktioniert über Worker hinweg!)
-    sync_flag_file = '.modules_synced'
+    WICHTIG: 
+    - Prüft ob Datenbank bereits Module enthält
+    - Wenn leer: Lädt Seed-Daten (siehe init_demo_modules)
+    - Wenn nicht leer: Nur Validierung, KEINE Überschreibung!
     
-    # Prüfe ob kürzlich synchronisiert wurde
-    if os.path.exists(sync_flag_file):
-        try:
-            file_age = time.time() - os.path.getmtime(sync_flag_file)
-            # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
-            if file_age < 3600:
-                print(f"ℹ️ Module-Sync übersprungen (zuletzt vor {int(file_age/60)} Minuten)")
-                return True
-        except Exception as e:
-            print(f"⚠️ Fehler beim Lesen des Sync-Flags: {e}")
-    
+    Admin-Route für manuelle Sync: /admin/sync-modules-from-code
+    """
     try:
         with app.app_context():
-            print("\n" + "="*60)
-            print("🚀 MODULE AUTO-SYNC BEIM START")
-            print("="*60)
-            
-            # 1. Kategorien synchronisieren (inkl. "Neue Module")
-            print("📋 Synchronisiere Kategorien...")
-            sync_modules_from_local()
-            db.session.commit()
-            print("✅ Kategorien synchronisiert")
-            
-            # 2. Module aus JSON-Backup wiederherstellen
-            print("📥 Prüfe JSON-Backup...")
-            restored_count = restore_modules_from_json()
-            if restored_count > 0:
-                print(f"✅ {restored_count} Module aus Backup wiederhergestellt")
-            
-            # 3. Templates scannen und neue Module registrieren
-            print("🔍 Scanne Templates nach neuen Modulen...")
-            print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
-            
-            print("="*60)
-            print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
-            print("="*60 + "\n")
-            
-            # Setze Flag-Datei (persistent über Worker!)
+            # Prüfe ob Module existieren
             try:
-                with open(sync_flag_file, 'w') as f:
-                    from datetime import datetime
-                    f.write(datetime.utcnow().isoformat())
-                print(f"💾 Sync-Flag gesetzt: {sync_flag_file}")
-            except Exception as flag_error:
-                print(f"⚠️ Konnte Sync-Flag nicht setzen: {flag_error}")
+                module_count = LearningModule.query.count()
+                category_count = ModuleCategory.query.count()
+            except Exception as db_error:
+                print(f"[DB] Datenbank-Fehler beim Zählen: {db_error}")
+                # Tabellen existieren nicht - erstellen
+                db.create_all()
+                module_count = 0
+                category_count = 0
+            
+            if module_count == 0 and category_count == 0:
+                # Erste Installation: Seed Daten laden
+                print("\n" + "="*60)
+                print("[INIT] Erste Installation erkannt - lade Seed-Daten")
+                print("="*60)
+                init_demo_modules()
+                db.session.commit()
+                print("[INIT] Seed-Daten erfolgreich geladen")
+                print("="*60 + "\n")
+            else:
+                # Normale Operation: Nur Status ausgeben
+                print(f"[INIT] Datenbank bereits initialisiert:")
+                print(f"       - {category_count} Kategorien")
+                print(f"       - {module_count} Module")
+                print(f"[INIT] Keine automatische Sync - Admin-Änderungen bleiben erhalten")
+                
+                # Optional: Validiere Datenkonsistenz
+                validate_module_integrity()
         
         return True
         
     except Exception as e:
-        print(f"⚠️ Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
+        print(f"[ERROR] Fehler bei Init: {str(e)}")
         import traceback
         traceback.print_exc()
         return False
 
-# ❌ ENTFERNT: @app.before_request Hook
-# Grund: Läuft bei JEDEM Request (CSS, JS, Images) - zu oft!
-# Lösung: Nur beim App-Start aufrufen (siehe unten bei __main__)
+def validate_module_integrity():
+    """
+    Validiert die Integrität der Modul-Daten
+    Prüft auf verwaiste Module, fehlende Kategorien etc.
+    """
+    try:
+        # Prüfe auf Module ohne Kategorie
+        orphaned_modules = LearningModule.query.filter_by(category_id=None).all()
+        if orphaned_modules:
+            print(f"[WARNING] {len(orphaned_modules)} Module ohne Kategorie gefunden")
+        
+        # Prüfe auf Module mit ungültiger Kategorie
+        all_modules = LearningModule.query.all()
+        all_category_ids = {cat.id for cat in ModuleCategory.query.all()}
+        
+        invalid_category_modules = []
+        for mod in all_modules:
+            if mod.category_id and mod.category_id not in all_category_ids:
+                invalid_category_modules.append(mod.title)
+        
+        if invalid_category_modules:
+            print(f"[WARNING] {len(invalid_category_modules)} Module mit ungültiger Kategorie:")
+            for title in invalid_category_modules[:5]:  # Nur erste 5 zeigen
+                print(f"           - {title}")
+        
+        if not orphaned_modules and not invalid_category_modules:
+            print("[VALIDATION] Modul-Integrität OK")
+            
+    except Exception as e:
+        print(f"[WARNING] Validierung fehlgeschlagen: {e}")
+
+# ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
+# Grund: Überschreibt Admin-Änderungen in der Datenbank!
+# Lösung: Nur beim ersten Start (leere DB) werden Seed-Daten geladen
+# Für manuelle Sync: Admin-Route /admin/sync-modules-from-code verwenden
 
 # === USER MODELS ===
 
@@ -557,12 +611,17 @@ def register():
             email = request.form['email'].lower().strip()
             username = request.form['username'].strip()
             password = request.form['password']
+            password_confirm = request.form.get('password_confirm', '')
             first_name = request.form.get('first_name', '').strip()
             last_name = request.form.get('last_name', '').strip()
             
             # Validierung
             if len(password) < 8:
                 flash('Passwort muss mindestens 8 Zeichen lang sein.', 'error')
+                return render_template('auth/register.html')
+            
+            if password != password_confirm:
+                flash('Die Passwörter stimmen nicht überein.', 'error')
                 return render_template('auth/register.html')
             
             # Prüfen ob E-Mail bereits existiert
@@ -617,14 +676,25 @@ def login():
             user = User.query.filter_by(username=email_or_username).first()
         
         if user and user.check_password(password) and user.is_active:
-            # Echter User Login
+            # Erfolgreicher DB-User Login
             session['logged_in'] = True
             session['user_id'] = str(user.id)
+            
+            # Bestimme Membership (Standard: elite für admin/didi, sonst premium für Test-User)
+            if user.username in ['admin', 'didi']:
+                membership = 'elite'
+            elif user.username in ['premium', 'test']:
+                membership = 'premium'
+            else:
+                # Für echte registrierte User: Prüfe Subscription-System
+                # Vorerst default auf 'free'
+                membership = 'free'
+            
             session['user'] = {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
-                'membership': user.subscription_type.value
+                'membership': membership
             }
             
             # Last Login aktualisieren
@@ -635,35 +705,8 @@ def login():
             
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
-        
-        # Fallback: Demo-User (bestehende Logik)
-        demo_users = {
-            'admin': {'password': 'admin', 'membership': 'elite', 'first_name': 'Admin'},
-            'didi': {'password': 'didi', 'membership': 'elite', 'first_name': 'Dietmar'},
-            'premium': {'password': 'premium', 'membership': 'premium', 'first_name': 'Premium User'},
-            'test': {'password': 'test', 'membership': 'premium', 'first_name': 'Test User'}
-        }
-        
-        if email_or_username in demo_users and demo_users[email_or_username]['password'] == password:
-            user_data = demo_users[email_or_username]
-            
-            # Session setzen
-            session['logged_in'] = True
-            session['user_id'] = email_or_username
-            session['user'] = {
-                'id': email_or_username,
-                'username': email_or_username,
-                'email': f'{email_or_username}@didis-academy.com',
-                'membership': user_data['membership']
-            }
-            
-            flash(f'Willkommen zurück, {user_data["first_name"]}!', 'success')
-            
-            # Redirect zu gewünschter Seite oder Home
-            next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Ungültige Anmeldedaten.', 'error')
+            flash('Ungültige Anmeldedaten. Bitte prüfe Username/Email und Passwort.', 'error')
     
     return render_template('auth/login.html')
 
@@ -2652,6 +2695,46 @@ def register_missing_modules():
     except Exception as e:
         db.session.rollback()
         flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_modules'))
+
+@app.route('/admin/sync-modules-from-code')
+def admin_sync_modules_from_code():
+    """
+    🔄 Manuelle Synchronisation von hart-codierten Modulen aus dem Code
+    
+    ACHTUNG: Diese Funktion synchronisiert Module aus dem Code in die Datenbank.
+    Verwende dies nur wenn du bewusst Code-Änderungen übernehmen willst!
+    """
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        print("\n" + "="*60)
+        print("[ADMIN] Manuelle Code-zu-DB Synchronisation gestartet")
+        print("="*60)
+        
+        # Rufe die sync_modules_from_local Funktion auf
+        sync_modules_from_local()
+        db.session.commit()
+        
+        # Zähle Ergebnisse
+        module_count = LearningModule.query.count()
+        category_count = ModuleCategory.query.count()
+        
+        flash(f'✅ Synchronisation erfolgreich abgeschlossen!', 'success')
+        flash(f'📊 Aktuelle Datenbank: {category_count} Kategorien, {module_count} Module', 'info')
+        
+        print(f"[ADMIN] Sync abgeschlossen: {category_count} Kategorien, {module_count} Module")
+        print("="*60 + "\n")
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler bei Synchronisation: {str(e)}', 'error')
+        print(f"[ERROR] Sync fehlgeschlagen: {str(e)}")
+        import traceback
+        traceback.print_exc()
     
     return redirect(url_for('admin_modules'))
 
