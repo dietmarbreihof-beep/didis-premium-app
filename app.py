@@ -247,6 +247,9 @@ def init_modules_on_startup():
                 print("[INIT] Keine Benutzer gefunden - erstelle Demo-User...")
                 create_demo_users_on_startup()
                 print("[INIT] ✅ Demo-User erstellt")
+            
+            # WICHTIG: Stelle sicher dass "Neue Module" Kategorie IMMER existiert
+            ensure_neue_module_category()
         
         return True
         
@@ -322,6 +325,61 @@ def create_demo_users_on_startup():
     
     db.session.commit()
 
+def ensure_neue_module_category():
+    """
+    Stellt sicher dass die geschützte 'Neue Module' Kategorie existiert
+    Diese Kategorie wird für unkategorisierte Module verwendet
+    """
+    neue_module = ModuleCategory.query.filter_by(slug='neue-module').first()
+    
+    if not neue_module:
+        print("[INIT] Erstelle geschützte 'Neue Module' Kategorie...")
+        neue_module = ModuleCategory(
+            name='🆕 Neue Module',
+            slug='neue-module',
+            icon='🆕',
+            description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
+            sort_order=999,
+            is_active=True,
+            is_protected=True  # Geschützt - kann nicht gelöscht werden!
+        )
+        db.session.add(neue_module)
+        db.session.commit()
+        print("[INIT] ✅ 'Neue Module' Kategorie erstellt (geschützt)")
+    elif not neue_module.is_protected:
+        # Falls existiert aber nicht geschützt: Schutz aktivieren
+        neue_module.is_protected = True
+        db.session.commit()
+        print("[INIT] ✅ 'Neue Module' Kategorie jetzt geschützt")
+    else:
+        print("[INIT] ✅ 'Neue Module' Kategorie bereits vorhanden und geschützt")
+    
+    return neue_module
+
+# === AUTO-ZUORDNUNG: Module ohne Kategorie ===
+from sqlalchemy import event, text
+
+@event.listens_for(LearningModule, 'before_insert')
+def auto_assign_neue_module_category(mapper, connection, target):
+    """
+    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
+    Verhindert dass Module "verloren" gehen
+    """
+    if target.category_id is None:
+        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
+        
+        # Finde "Neue Module" Kategorie ID (direkt via SQL weil wir in before_insert Hook sind)
+        result = connection.execute(
+            text("SELECT id FROM module_categories WHERE slug = :slug"),
+            {"slug": "neue-module"}
+        ).first()
+        
+        if result:
+            target.category_id = result[0]
+            print(f"[AUTO-ASSIGN] ✅ Modul '{target.title}' → Neue Module (ID: {result[0]})")
+        else:
+            print(f"[WARNING] 'Neue Module' Kategorie nicht gefunden! Modul bleibt ohne Kategorie.")
+
 # ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
 # Grund: Überschreibt Admin-Änderungen in der Datenbank!
 # Lösung: Nur beim ersten Start (leere DB) werden Seed-Daten geladen
@@ -378,14 +436,24 @@ class ModuleCategory(db.Model):
     description = db.Column(db.Text)
     sort_order = db.Column(db.Integer, default=100)
     is_active = db.Column(db.Boolean, default=True)
+    is_protected = db.Column(db.Boolean, default=False)  # Geschützte Kategorien (z.B. "Neue Module")
     
     # Relationships
     subcategories = db.relationship('ModuleSubcategory', backref='category', lazy=True)
     modules = db.relationship('LearningModule', backref='category', lazy=True)
     
-    def to_dict(self):
-        # Alle veröffentlichten Module in dieser Kategorie
-        all_modules = [mod for mod in self.modules if mod.is_published]
+    def to_dict(self, include_unpublished=False):
+        """
+        Konvertiert Kategorie zu Dictionary
+        
+        Args:
+            include_unpublished (bool): Wenn True, werden auch unpublished Module inkludiert (für Admin)
+        """
+        # Alle Module in dieser Kategorie (published oder alle)
+        if include_unpublished:
+            all_modules = self.modules
+        else:
+            all_modules = [mod for mod in self.modules if mod.is_published]
         
         # Module ohne Unterkategorie (direkte Module)
         direct_modules = [mod for mod in all_modules if mod.subcategory_id is None]
@@ -397,7 +465,8 @@ class ModuleCategory(db.Model):
             'icon': self.icon,
             'description': self.description,
             'sort_order': self.sort_order,
-            'subcategories': [sub.to_dict() for sub in self.subcategories if sub.is_active],
+            'is_protected': self.is_protected,
+            'subcategories': [sub.to_dict(include_unpublished) for sub in self.subcategories if sub.is_active],
             'modules': [mod.to_dict() for mod in all_modules],
             'direct_modules': [mod.to_dict() for mod in direct_modules]
         }
@@ -418,7 +487,18 @@ class ModuleSubcategory(db.Model):
     # Relationships
     modules = db.relationship('LearningModule', backref='subcategory', lazy=True)
     
-    def to_dict(self):
+    def to_dict(self, include_unpublished=False):
+        """
+        Konvertiert Unterkategorie zu Dictionary
+        
+        Args:
+            include_unpublished (bool): Wenn True, werden auch unpublished Module inkludiert (für Admin)
+        """
+        if include_unpublished:
+            modules = self.modules
+        else:
+            modules = [mod for mod in self.modules if mod.is_published]
+        
         return {
             'id': self.id,
             'name': self.name,
@@ -426,7 +506,7 @@ class ModuleSubcategory(db.Model):
             'description': self.description,
             'icon': self.icon,
             'sort_order': self.sort_order,
-            'modules': [mod.to_dict() for mod in self.modules if mod.is_published]
+            'modules': [mod.to_dict() for mod in modules]
         }
 
 class LearningModule(db.Model):
@@ -449,7 +529,7 @@ class LearningModule(db.Model):
     external_url = db.Column(db.String(500))  # Für Streamlit-Integration
     
     # Access Control
-    is_published = db.Column(db.Boolean, default=False)
+    is_published = db.Column(db.Boolean, default=True)  # GEÄNDERT: Default TRUE (Module sofort sichtbar für Admins)
     is_lead_magnet = db.Column(db.Boolean, default=False)
     required_subscription_levels = db.Column(db.JSON, default=list)  # ["premium", "elite"]
     
@@ -856,6 +936,9 @@ def admin_force_reload_modules():
         print("[ADMIN] Lade Demo-Module neu...")
         init_demo_modules()
         
+        # WICHTIG: Stelle sicher dass "Neue Module" wieder existiert
+        ensure_neue_module_category()
+        
         flash('⚠️ ALLE Module wurden gelöscht und auf Demo-Stand zurückgesetzt!', 'error')
         flash('Alle manuellen Änderungen sind verloren!', 'warning')
         return redirect(url_for('modules_overview'))
@@ -905,14 +988,22 @@ def modules():
         menu_structure = []
         
         for category in categories:
-            cat_data = category.to_dict()
+            # Admin sieht ALLE Module (published + unpublished)
+            cat_data = category.to_dict(include_unpublished=is_admin)
             
             # Direkte Module (ohne Unterkategorie) hinzufügen
-            direct_modules = LearningModule.query.filter_by(
-                category_id=category.id, 
-                subcategory_id=None,
-                is_published=True
-            ).order_by(LearningModule.sort_order).all()
+            # ADMIN-MODUS: Admins sehen ALLE Module (auch unpublished)
+            if is_admin:
+                direct_modules = LearningModule.query.filter_by(
+                    category_id=category.id, 
+                    subcategory_id=None
+                ).order_by(LearningModule.sort_order).all()
+            else:
+                direct_modules = LearningModule.query.filter_by(
+                    category_id=category.id, 
+                    subcategory_id=None,
+                    is_published=True
+                ).order_by(LearningModule.sort_order).all()
             
             cat_data['direct_modules'] = []
             for module in direct_modules:
@@ -2628,7 +2719,8 @@ def auto_register_modules():
                         icon='🆕',
                         description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
                         sort_order=999,
-                        is_active=True
+                        is_active=True,
+                        is_protected=True  # Geschützt!
                     )
                     db.session.add(neue_module_category)
                     db.session.flush()
@@ -2790,6 +2882,87 @@ def register_missing_modules():
         flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
     
     return redirect(url_for('admin_modules'))
+
+@app.route('/admin/publish-all-modules')
+def publish_all_modules():
+    """Publiziert ALLE unpublished Module auf einmal"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        flash('Admin-Zugriff erforderlich.', 'error')
+        return redirect(url_for('home'))
+    
+    try:
+        unpublished_modules = LearningModule.query.filter_by(is_published=False).all()
+        count = len(unpublished_modules)
+        
+        if count == 0:
+            flash('Alle Module sind bereits veröffentlicht!', 'info')
+            return redirect(url_for('admin_modules'))
+        
+        for module in unpublished_modules:
+            module.is_published = True
+        
+        db.session.commit()
+        flash(f'✅ {count} Module erfolgreich veröffentlicht!', 'success')
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Publizieren: {str(e)}', 'error')
+    
+    return redirect(url_for('admin_modules'))
+
+@app.route('/admin/debug-modules')
+def debug_modules():
+    """Debug-Informationen über Module und Kategorien"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'error': 'Admin-Zugriff erforderlich'}), 401
+    
+    try:
+        # Basis-Statistiken
+        total_modules = LearningModule.query.count()
+        published = LearningModule.query.filter_by(is_published=True).count()
+        unpublished = LearningModule.query.filter_by(is_published=False).count()
+        
+        # Kategorien-Statistiken
+        total_categories = ModuleCategory.query.count()
+        protected_categories = ModuleCategory.query.filter_by(is_protected=True).count()
+        
+        # Module in "Neue Module"
+        neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+        in_neue_module = 0
+        if neue_module_cat:
+            in_neue_module = LearningModule.query.filter_by(category_id=neue_module_cat.id).count()
+        
+        # Module ohne Kategorie (sollte 0 sein durch Auto-Assign!)
+        no_category = LearningModule.query.filter_by(category_id=None).count()
+        
+        # Module ohne Template
+        no_template = LearningModule.query.filter_by(template_file=None).count()
+        
+        stats = {
+            'modules': {
+                'total': total_modules,
+                'published': published,
+                'unpublished': unpublished,
+                'no_category': no_category,
+                'in_neue_module': in_neue_module,
+                'no_template': no_template
+            },
+            'categories': {
+                'total': total_categories,
+                'protected': protected_categories,
+                'neue_module_exists': neue_module_cat is not None
+            },
+            'health': {
+                'all_modules_have_category': no_category == 0,
+                'neue_module_category_exists': neue_module_cat is not None,
+                'neue_module_is_protected': neue_module_cat.is_protected if neue_module_cat else False
+            }
+        }
+        
+        return jsonify(stats)
+        
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/admin/sync-modules-from-code')
 def admin_sync_modules_from_code():
@@ -3549,7 +3722,8 @@ def init_demo_modules():
         slug='grundlagen',
         icon='🎓',
         description='Fundamentale Konzepte und Frameworks für erfolgreiches Trading und Investieren',
-        sort_order=0
+        sort_order=0,
+        is_protected=True  # Geschützt - Core Content
     )
     db.session.add(cat0)
     db.session.flush()
@@ -4607,6 +4781,13 @@ def admin_delete_category(category_id):
         category = ModuleCategory.query.get(category_id)
         if not category:
             return jsonify({'success': False, 'error': 'Kategorie nicht gefunden'})
+        
+        # SCHUTZ: Geschützte Kategorien können nicht gelöscht werden!
+        if category.is_protected:
+            return jsonify({
+                'success': False, 
+                'error': f'Die Kategorie "{category.name}" ist geschützt und kann nicht gelöscht werden!'
+            }), 403
         
         # Alle Module in dieser Kategorie auf "nicht zugeordnet" setzen
         modules = LearningModule.query.filter_by(category_id=category_id).all()

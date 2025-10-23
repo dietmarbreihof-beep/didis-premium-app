@@ -121,6 +121,9 @@
                         <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
                         
                         <div class="module-badges">
+                            {% if not module.is_published %}
+                                <span class="badge" style="background: #f59e0b; color: white;">📝 ENTWURF</span>
+                            {% endif %}
                             {% if module.is_lead_magnet %}
                                 <span class="badge badge-free">🎁 KOSTENLOS</span>
                             {% else %}
@@ -175,6 +178,9 @@
                     <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
                     
                     <div class="module-badges">
+                        {% if not module.is_published %}
+                            <span class="badge" style="background: #f59e0b; color: white;">📝 ENTWURF</span>
+                        {% endif %}
                         {% if module.is_lead_magnet %}
                             <span class="badge badge-free">🎁 KOSTENLOS</span>
                         {% else %}
