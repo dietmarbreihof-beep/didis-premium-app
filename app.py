@@ -356,30 +356,6 @@ def ensure_neue_module_category():
     
     return neue_module
 
-# === AUTO-ZUORDNUNG: Module ohne Kategorie ===
-from sqlalchemy import event, text
-
-@event.listens_for(LearningModule, 'before_insert')
-def auto_assign_neue_module_category(mapper, connection, target):
-    """
-    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
-    Verhindert dass Module "verloren" gehen
-    """
-    if target.category_id is None:
-        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
-        
-        # Finde "Neue Module" Kategorie ID (direkt via SQL weil wir in before_insert Hook sind)
-        result = connection.execute(
-            text("SELECT id FROM module_categories WHERE slug = :slug"),
-            {"slug": "neue-module"}
-        ).first()
-        
-        if result:
-            target.category_id = result[0]
-            print(f"[AUTO-ASSIGN] ✅ Modul '{target.title}' → Neue Module (ID: {result[0]})")
-        else:
-            print(f"[WARNING] 'Neue Module' Kategorie nicht gefunden! Modul bleibt ohne Kategorie.")
-
 # ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
 # Grund: Überschreibt Admin-Änderungen in der Datenbank!
 # Lösung: Nur beim ersten Start (leere DB) werden Seed-Daten geladen
@@ -583,6 +559,30 @@ class ModuleProgress(db.Model):
     started_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+# === AUTO-ZUORDNUNG: Module ohne Kategorie (NACH Model-Definitionen!) ===
+from sqlalchemy import event, text
+
+@event.listens_for(LearningModule, 'before_insert')
+def auto_assign_neue_module_category(mapper, connection, target):
+    """
+    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
+    Verhindert dass Module "verloren" gehen
+    """
+    if target.category_id is None:
+        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
+        
+        # Finde "Neue Module" Kategorie ID (direkt via SQL weil wir in before_insert Hook sind)
+        result = connection.execute(
+            text("SELECT id FROM module_categories WHERE slug = :slug"),
+            {"slug": "neue-module"}
+        ).first()
+        
+        if result:
+            target.category_id = result[0]
+            print(f"[AUTO-ASSIGN] ✅ Modul '{target.title}' → Neue Module (ID: {result[0]})")
+        else:
+            print(f"[WARNING] 'Neue Module' Kategorie nicht gefunden! Modul bleibt ohne Kategorie.")
 
 # === MENÜ HELPER FUNCTIONS ===
 
