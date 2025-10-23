@@ -240,6 +240,13 @@ def init_modules_on_startup():
                 
                 # Optional: Validiere Datenkonsistenz
                 validate_module_integrity()
+            
+            # Prüfe ob Demo-User existieren (wichtig für Railway!)
+            user_count = User.query.count()
+            if user_count == 0:
+                print("[INIT] Keine Benutzer gefunden - erstelle Demo-User...")
+                create_demo_users_on_startup()
+                print("[INIT] ✅ Demo-User erstellt")
         
         return True
         
@@ -279,6 +286,41 @@ def validate_module_integrity():
             
     except Exception as e:
         print(f"[WARNING] Validierung fehlgeschlagen: {e}")
+
+def create_demo_users_on_startup():
+    """
+    Erstellt Demo-User automatisch beim ersten Start
+    Wird von init_modules_on_startup() aufgerufen wenn keine User existieren
+    """
+    demo_users_data = [
+        {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
+         'first_name': 'Admin', 'last_name': 'User'},
+        {'username': 'didi', 'email': 'didi@didis-academy.com', 'password': 'didi',
+         'first_name': 'Dietmar', 'last_name': 'Breihof'},
+        {'username': 'premium', 'email': 'premium@didis-academy.com', 'password': 'premium',
+         'first_name': 'Premium', 'last_name': 'User'},
+        {'username': 'test', 'email': 'test@didis-academy.com', 'password': 'test',
+         'first_name': 'Test', 'last_name': 'User'}
+    ]
+    
+    for user_data in demo_users_data:
+        try:
+            user = User(
+                username=user_data['username'],
+                email=user_data['email'],
+                first_name=user_data['first_name'],
+                last_name=user_data['last_name'],
+                is_active=True,
+                email_verified=True
+            )
+            user.set_password(user_data['password'])
+            db.session.add(user)
+            print(f"[INIT]    - {user_data['username']} erstellt")
+        except Exception as e:
+            print(f"[WARNING] Fehler beim Erstellen von {user_data['username']}: {e}")
+            continue
+    
+    db.session.commit()
 
 # ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
 # Grund: Überschreibt Admin-Änderungen in der Datenbank!
@@ -544,7 +586,12 @@ def health_check():
 
 @app.route('/setup-demo-users')
 def setup_demo_users():
-    """🔧 Einmalige Demo-User-Erstellung für Railway (öffentlich zugänglich)"""
+    """
+    🔧 VERALTET: Demo-User werden jetzt automatisch beim Start erstellt!
+    
+    Diese Route existiert nur noch als Fallback für manuelle Erstellung.
+    Normalerweise werden Demo-User automatisch erstellt wenn die DB leer ist.
+    """
     try:
         # Prüfe ob bereits User existieren
         existing_count = User.query.count()
@@ -552,42 +599,20 @@ def setup_demo_users():
             return jsonify({
                 'status': 'already_exists',
                 'message': f'{existing_count} Benutzer bereits in Datenbank',
-                'info': 'Demo-User wurden bereits erstellt'
+                'info': 'Demo-User wurden bereits automatisch erstellt beim App-Start',
+                'note': 'Diese Route ist nicht mehr notwendig - Demo-User werden automatisch erstellt!'
             }), 200
         
-        # Erstelle Demo-User
-        demo_users = [
-            {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
-             'first_name': 'Admin', 'last_name': 'User'},
-            {'username': 'didi', 'email': 'didi@didis-academy.com', 'password': 'didi',
-             'first_name': 'Dietmar', 'last_name': 'Breihof'},
-            {'username': 'premium', 'email': 'premium@didis-academy.com', 'password': 'premium',
-             'first_name': 'Premium', 'last_name': 'User'},
-            {'username': 'test', 'email': 'test@didis-academy.com', 'password': 'test',
-             'first_name': 'Test', 'last_name': 'User'}
-        ]
-        
-        created_users = []
-        for user_data in demo_users:
-            user = User(
-                username=user_data['username'],
-                email=user_data['email'],
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'],
-                is_active=True,
-                email_verified=True
-            )
-            user.set_password(user_data['password'])
-            db.session.add(user)
-            created_users.append(user_data['username'])
-        
-        db.session.commit()
+        # Fallback: Erstelle Demo-User manuell
+        print("[MANUAL] Erstelle Demo-User manuell via /setup-demo-users Route")
+        create_demo_users_on_startup()
         
         return jsonify({
             'status': 'success',
-            'message': f'{len(created_users)} Demo-Benutzer erfolgreich erstellt',
-            'users': created_users,
-            'info': 'Sie können sich jetzt mit admin/admin oder didi/didi anmelden'
+            'message': '4 Demo-Benutzer erfolgreich erstellt',
+            'users': ['admin', 'didi', 'premium', 'test'],
+            'info': 'Sie können sich jetzt mit admin/admin oder didi/didi anmelden',
+            'note': 'Zukünftig werden Demo-User automatisch beim App-Start erstellt!'
         }), 200
         
     except Exception as e:
