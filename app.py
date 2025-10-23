@@ -521,8 +521,9 @@ def inject_menu():
 def health_check():
     """Health check endpoint für Deployment-Monitoring"""
     try:
-        # Prüfe Datenbank-Verbindung
-        db.session.execute('SELECT 1')
+        # Prüfe Datenbank-Verbindung (SQLAlchemy 2.0 kompatibel)
+        from sqlalchemy import text
+        db.session.execute(text('SELECT 1'))
         
         # Prüfe ob Demo-User existieren (für Railway-Deployment)
         user_count = User.query.count()
