@@ -868,7 +868,15 @@ def change_password():
                 flash('Session abgelaufen. Bitte melden Sie sich erneut an.', 'error')
                 return redirect(url_for('login'))
 
-            user = User.query.get(int(user_id))
+            # Prüfe ob Demo-User (user_id ist nicht numerisch)
+            try:
+                user_id_int = int(user_id)
+            except ValueError:
+                # Demo-User (z.B. 'admin', 'didi')
+                flash('Demo-Benutzer können ihr Passwort nicht ändern. Bitte registrieren Sie einen echten Account.', 'warning')
+                return render_template('account/change_password.html')
+
+            user = User.query.get(user_id_int)
             if not user:
                 flash('Benutzer nicht gefunden.', 'error')
                 return redirect(url_for('login'))
