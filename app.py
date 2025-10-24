@@ -211,14 +211,18 @@ def init_modules_on_startup():
     """
     try:
         with app.app_context():
+            # KRITISCH: Erst Tabellen erstellen (idempotent)
+            print("[DB] Erstelle Tabellen falls nicht vorhanden...")
+            db.create_all()
+            print("[DB] Tabellen bereit")
+            
             # Prüfe ob Module existieren
             try:
                 module_count = LearningModule.query.count()
                 category_count = ModuleCategory.query.count()
+                print(f"[DB] Gezählt: {category_count} Kategorien, {module_count} Module")
             except Exception as db_error:
-                print(f"[DB] Datenbank-Fehler beim Zählen: {db_error}")
-                # Tabellen existieren nicht - erstellen
-                db.create_all()
+                print(f"[DB] Fehler beim Zählen: {db_error}")
                 module_count = 0
                 category_count = 0
             
