@@ -4425,32 +4425,81 @@ def csrf_error(error):
 
 # === APP STARTEN ===
 
+def migrate_user_subscription_fields():
+    """Migration: Fügt subscription_type Felder zu existierenden User-Tabellen hinzu"""
+    try:
+        # Prüfe ob Migration nötig ist
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        columns = [col['name'] for col in inspector.get_columns('users')]
+
+        if 'subscription_type' in columns:
+            print("[INFO] User subscription_type Felder bereits vorhanden - Migration übersprungen")
+            return True
+
+        print("[MIGRATION] Füge subscription_type Felder zu users Tabelle hinzu...")
+
+        # PostgreSQL Migration
+        if 'postgresql' in str(db.engine.url):
+            # Erstelle ENUM Type falls nicht vorhanden
+            db.engine.execute("""
+                DO $$ BEGIN
+                    CREATE TYPE subscriptiontype AS ENUM ('free', 'premium', 'elite', 'elite_pro');
+                EXCEPTION
+                    WHEN duplicate_object THEN null;
+                END $$;
+            """)
+
+            # Füge Felder hinzu
+            db.engine.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_type subscriptiontype DEFAULT 'free' NOT NULL;")
+            db.engine.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_updated_at TIMESTAMP;")
+            db.engine.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS subscription_updated_by VARCHAR(80);")
+
+            print("[OK] PostgreSQL Migration erfolgreich!")
+
+        # SQLite Migration (für lokale Entwicklung)
+        else:
+            db.engine.execute("ALTER TABLE users ADD COLUMN subscription_type VARCHAR(20) DEFAULT 'free' NOT NULL;")
+            db.engine.execute("ALTER TABLE users ADD COLUMN subscription_updated_at TIMESTAMP;")
+            db.engine.execute("ALTER TABLE users ADD COLUMN subscription_updated_by VARCHAR(80);")
+
+            print("[OK] SQLite Migration erfolgreich!")
+
+        return True
+
+    except Exception as e:
+        print(f"[WARNING] User-Migration fehlgeschlagen (kann ignoriert werden wenn bereits durchgeführt): {e}")
+        return False
+
 def init_database():
     """Initialisiert die Database mit allen Tabellen"""
     try:
         # Alle Tabellen erstellen
         db.create_all()
         print("[OK] Database-Tabellen erstellt!")
-        
+
+        # Migration: User subscription_type Felder
+        migrate_user_subscription_fields()
+
         # User-Tabelle prüfen
         try:
             user_count = User.query.count()
             print(f"[INFO] Anzahl User in Database: {user_count}")
         except Exception as e:
             print(f"[INFO] User-Tabelle wird erstellt: {e}")
-        
+
         # Demo-Module erstellen (nur beim ersten Mal)
         if not ModuleCategory.query.first():
             init_demo_modules()
             print("[OK] Demo-Module erstellt!")
-        
+
         # Didis Streamlit-Module migrieren (einmalig)
         if not LearningModule.query.filter_by(content_type="streamlit").first():
             migrate_didis_streamlit_modules()
             print("[OK] Streamlit-Module migriert!")
-            
+
         return True
-        
+
     except Exception as e:
         print(f"[ERROR] Database-Initialisierung fehlgeschlagen: {e}")
         return False
