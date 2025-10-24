@@ -207,10 +207,14 @@ print("Analytics-Tracking aktiviert")
 
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
-    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
+    """🚀 AUTO-SYNC DEAKTIVIERT - Module werden nur über Admin-UI verwaltet"""
+    print("[INFO] Module Auto-Sync ist DEAKTIVIERT - Module werden über Admin-UI verwaltet")
+    return True  # Early return - sync würde User-erstellte Module überschreiben!
+
+    # DEAKTIVIERTER CODE (nicht mehr benutzt):
     import os
     import time
-    
+
     # Persistenter Check via File (funktioniert über Worker hinweg!)
     sync_flag_file = '.modules_synced'
     
@@ -704,10 +708,10 @@ def home():
         # Initialize demo modules if database is empty
         if not LearningModule.query.first():
             init_demo_modules()
-        
-        # Auto-sync: Check if local modules need to be synced to Railway
-        sync_modules_from_local()
-        
+
+        # Auto-sync DEAKTIVIERT - Module werden nur über Admin-UI verwaltet
+        # sync_modules_from_local()  # ← DEAKTIVIERT: Überschreibt User-erstellte Module!
+
         # Lead-Magnete für nicht-eingeloggte User
         if not session.get('logged_in'):
             try:
@@ -2376,12 +2380,14 @@ def add_module():
         # Subscription Levels
         required_levels = []
         if not is_lead_magnet:
-            if 'req_basic' in request.form:
-                required_levels.append('basic')
+            if 'req_free' in request.form:
+                required_levels.append('free')
             if 'req_premium' in request.form:
                 required_levels.append('premium')
             if 'req_elite' in request.form:
                 required_levels.append('elite')
+            if 'req_elite_pro' in request.form:
+                required_levels.append('elite_pro')
         
         if not category_id or not title or not description:
             flash('Kategorie, Titel und Beschreibung sind erforderlich.', 'error')
