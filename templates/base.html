@@ -200,6 +200,10 @@
             <strong>👤 Eingeloggt als:</strong> {{ session.user.username }} 
             <strong>| 💎 Membership:</strong> {{ session.user.membership.title() }}
             <div style="float: right;">
+                <a href="{{ url_for('change_password') }}" style="color: var(--gold-dark); margin-right: 15px;">🔒 Passwort ändern</a>
+                {% if session.user.username in ['admin', 'didi'] %}
+                <a href="/admin/modules" style="color: var(--gold-dark); margin-right: 15px;">⚙️ Admin</a>
+                {% endif %}
                 <a href="/logout" style="color: #dc2626;">Logout</a>
             </div>
             <div style="clear: both;"></div>
