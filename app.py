@@ -293,7 +293,7 @@ def validate_module_integrity():
 def create_demo_users_on_startup():
     """
     Erstellt Demo-User automatisch beim ersten Start
-    Wird von init_modules_on_startup() aufgerufen wenn keine User existieren
+    ROBUST: UPSERT-Logik verhindert Duplikate und Fehler
     """
     demo_users_data = [
         {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
@@ -306,8 +306,18 @@ def create_demo_users_on_startup():
          'first_name': 'Test', 'last_name': 'User'}
     ]
     
+    created_count = 0
+    
     for user_data in demo_users_data:
         try:
+            # UPSERT: Prüfe ob User bereits existiert
+            existing_user = User.query.filter_by(username=user_data['username']).first()
+            
+            if existing_user:
+                print(f"[INIT]    - {user_data['username']} existiert bereits")
+                continue
+            
+            # Erstelle neuen User
             user = User(
                 username=user_data['username'],
                 email=user_data['email'],
@@ -318,12 +328,21 @@ def create_demo_users_on_startup():
             )
             user.set_password(user_data['password'])
             db.session.add(user)
+            created_count += 1
             print(f"[INIT]    - {user_data['username']} erstellt")
         except Exception as e:
             print(f"[WARNING] Fehler beim Erstellen von {user_data['username']}: {e}")
+            db.session.rollback()
             continue
     
-    db.session.commit()
+    try:
+        db.session.commit()
+        print(f"[INIT] Demo-User Erstellung: {created_count} neu erstellt")
+        return created_count > 0
+    except Exception as e:
+        print(f"[ERROR] Demo-User Commit fehlgeschlagen: {e}")
+        db.session.rollback()
+        return False
 
 def ensure_neue_module_category():
     """
