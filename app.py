@@ -14,10 +14,33 @@ load_dotenv()
 # App-Konfiguration
 app = Flask(__name__)
 
-# Sicherheitskonfiguration
-app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+# === KRITISCHE SICHERHEITSKONFIGURATION ===
+
+# 1. SECRET_KEY Validierung (PRODUCTION-KRITISCH!)
+secret_key = os.environ.get('SECRET_KEY')
+flask_env = os.environ.get('FLASK_ENV', 'development')
+
+if flask_env == 'production' and not secret_key:
+    raise ValueError(
+        "KRITISCHER FEHLER: SECRET_KEY muss in Production gesetzt sein!\n"
+        "Setzen Sie SECRET_KEY in der .env Datei oder als Umgebungsvariable.\n"
+        "Generieren Sie einen sicheren Key mit: python -c 'import secrets; print(secrets.token_hex(32))'"
+    )
+
+# In Development: Fallback zu generiertem Key (mit Warnung)
+if not secret_key:
+    secret_key = secrets.token_hex(32)
+    print("⚠️  WARNING: Kein SECRET_KEY gesetzt. Verwende temporären Key für Development.")
+    print("⚠️  Sessions werden bei jedem Neustart ungültig!")
+    print("⚠️  Für Production: Setzen Sie SECRET_KEY in .env")
+
+app.secret_key = secret_key
+
+# 2. Session-Security basierend auf Umgebung
+is_production = flask_env == 'production'
+
 app.config.update(
-    SESSION_COOKIE_SECURE=False,  # Für Development - in Produktion auf True setzen
+    SESSION_COOKIE_SECURE=is_production,  # HTTPS-only in Production
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
     PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
@@ -5139,5 +5162,17 @@ if __name__ == '__main__':
     print("   - test/test (Premium Access)")
     print("[INFO] Admin-Panel: http://localhost:5000/admin/modules")
     print("[INFO] Zum Beenden: Ctrl+C")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    # 3. DEBUG-Mode absichern (NIEMALS debug=True in Production!)
+    flask_debug = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1', 'yes']
+
+    if flask_env == 'production' and flask_debug:
+        print("❌ FEHLER: DEBUG-Mode ist in Production aktiviert!")
+        print("❌ Dies ist ein kritisches Sicherheitsrisiko!")
+        print("❌ Setzen Sie FLASK_DEBUG=False in Production")
+        flask_debug = False  # Force disable in production
+
+    if flask_debug:
+        print("⚠️  DEBUG-Mode aktiviert (nur für Development!)")
+
+    app.run(debug=flask_debug, host='0.0.0.0', port=5000)
