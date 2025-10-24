@@ -1,6 +1,7 @@
 # app.py - Didis Premium Trading Academy mit Menüsystem
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 import os
 import enum
 import secrets
@@ -19,7 +20,24 @@ app.config.update(
     SESSION_COOKIE_SECURE=False,  # Für Development - in Produktion auf True setzen
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
+    WTF_CSRF_ENABLED=True,
+    WTF_CSRF_TIME_LIMIT=None  # CSRF-Token läuft nicht ab (Session-basiert)
+)
+
+# CSRF-Schutz aktivieren
+csrf = CSRFProtect(app)
+
+# Rate Limiting aktivieren (Schutz vor Brute-Force)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",  # In-Memory für Development, für Production: Redis
+    strategy="fixed-window"
 )
 
 # Database-Pfad konfigurieren
@@ -230,6 +248,84 @@ def init_modules_on_startup():
 # ❌ ENTFERNT: @app.before_request Hook
 # Grund: Läuft bei JEDEM Request (CSS, JS, Images) - zu oft!
 # Lösung: Nur beim App-Start aufrufen (siehe unten bei __main__)
+
+# === AUTHENTICATION DECORATORS ===
+
+from functools import wraps
+import re
+
+def login_required(f):
+    """Decorator: Route erfordert Login"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            flash('Bitte melden Sie sich an, um auf diese Seite zuzugreifen.', 'warning')
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    """Decorator: Route erfordert Admin-Rechte"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            flash('Bitte melden Sie sich an.', 'warning')
+            return redirect(url_for('login', next=request.url))
+
+        username = session.get('user', {}).get('username')
+        if username not in ['admin', 'didi']:
+            flash('Zugriff verweigert: Admin-Rechte erforderlich.', 'error')
+            return redirect(url_for('home'))
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+# === PASSWORD VALIDATION ===
+
+def validate_password_strength(password):
+    """
+    Validiert Passwort-Komplexität für erhöhte Sicherheit.
+
+    Returns:
+        (bool, str): (is_valid, error_message)
+    """
+    if len(password) < 8:
+        return False, "Passwort muss mindestens 8 Zeichen lang sein."
+
+    if len(password) > 128:
+        return False, "Passwort darf maximal 128 Zeichen lang sein."
+
+    # Mindestens ein Großbuchstabe
+    if not re.search(r'[A-Z]', password):
+        return False, "Passwort muss mindestens einen Großbuchstaben enthalten."
+
+    # Mindestens ein Kleinbuchstabe
+    if not re.search(r'[a-z]', password):
+        return False, "Passwort muss mindestens einen Kleinbuchstaben enthalten."
+
+    # Mindestens eine Ziffer
+    if not re.search(r'\d', password):
+        return False, "Passwort muss mindestens eine Ziffer enthalten."
+
+    # Mindestens ein Sonderzeichen
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/;\'`~]', password):
+        return False, "Passwort muss mindestens ein Sonderzeichen enthalten (!@#$%^&* etc.)."
+
+    # Check gegen häufige Passwörter
+    common_passwords = [
+        'password', '12345678', 'qwerty', 'abc123', 'password1',
+        'Password1', 'password123', 'Qwerty123', '123456789',
+        'welcome', 'admin123', 'letmein', 'monkey', 'dragon'
+    ]
+
+    if password.lower() in [p.lower() for p in common_passwords]:
+        return False, "Dieses Passwort ist zu häufig verwendet. Bitte wählen Sie ein einzigartigeres Passwort."
+
+    # Keine einfachen Wiederholungen (z.B. "aaaa", "1111")
+    if re.search(r'(.)\1{3,}', password):
+        return False, "Passwort darf keine sich wiederholenden Zeichen enthalten (z.B. 'aaaa')."
+
+    return True, "Passwort OK"
 
 # === USER MODELS ===
 
@@ -599,6 +695,8 @@ def home():
         """
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("3 per minute", methods=["POST"])  # Max 3 Registrierungen pro Minute
+@limiter.limit("10 per hour", methods=["POST"])   # Max 10 Registrierungen pro Stunde
 def register():
     """Einfache Benutzer-Registrierung ohne E-Mail-Verifizierung"""
     if request.method == 'POST':
@@ -609,12 +707,13 @@ def register():
             password = request.form['password']
             first_name = request.form.get('first_name', '').strip()
             last_name = request.form.get('last_name', '').strip()
-            
-            # Validierung
-            if len(password) < 8:
-                flash('Passwort muss mindestens 8 Zeichen lang sein.', 'error')
+
+            # Passwort-Stärke validieren
+            is_valid, error_msg = validate_password_strength(password)
+            if not is_valid:
+                flash(error_msg, 'error')
                 return render_template('auth/register.html')
-            
+
             # Prüfen ob E-Mail bereits existiert
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
@@ -651,6 +750,8 @@ def register():
     return render_template('auth/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute", methods=["POST"])  # Max 5 Login-Versuche pro Minute
+@limiter.limit("20 per hour", methods=["POST"])   # Max 20 Login-Versuche pro Stunde
 def login():
     """Benutzer-Login - erweitert für echte User"""
     if request.method == 'POST':
@@ -724,13 +825,62 @@ def logout():
     flash('Du wurdest erfolgreich abgemeldet.', 'success')
     return redirect(url_for('home'))
 
+@app.route('/account/change-password', methods=['GET', 'POST'])
+@login_required
+@limiter.limit("3 per minute", methods=["POST"])  # Max 3 Passwort-Änderungen pro Minute
+def change_password():
+    """Passwort ändern für eingeloggte User"""
+    if request.method == 'POST':
+        try:
+            old_password = request.form.get('old_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+
+            # User aus Session laden
+            user_id = session.get('user_id')
+            if not user_id:
+                flash('Session abgelaufen. Bitte melden Sie sich erneut an.', 'error')
+                return redirect(url_for('login'))
+
+            user = User.query.get(int(user_id))
+            if not user:
+                flash('Benutzer nicht gefunden.', 'error')
+                return redirect(url_for('login'))
+
+            # Altes Passwort prüfen
+            if not user.check_password(old_password):
+                flash('Altes Passwort ist falsch.', 'error')
+                return render_template('account/change_password.html')
+
+            # Neues Passwort validieren
+            if new_password != confirm_password:
+                flash('Passwörter stimmen nicht überein.', 'error')
+                return render_template('account/change_password.html')
+
+            # Passwort-Stärke validieren
+            is_valid, error_msg = validate_password_strength(new_password)
+            if not is_valid:
+                flash(error_msg, 'error')
+                return render_template('account/change_password.html')
+
+            # Neues Passwort setzen
+            user.set_password(new_password)
+            db.session.commit()
+
+            flash('Passwort erfolgreich geändert!', 'success')
+            return redirect(url_for('home'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Fehler beim Ändern des Passworts: {str(e)}', 'error')
+            return render_template('account/change_password.html')
+
+    return render_template('account/change_password.html')
+
 @app.route('/admin/init-demo-data')
+@admin_required
 def admin_init_demo_data():
     """Admin-Only: Initialize demo modules and data"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Nur Admins können Demo-Daten initialisieren.', 'error')
-        return redirect(url_for('login'))
-    
     try:
         # Force database initialization
         db.create_all()
@@ -749,13 +899,10 @@ def admin_init_demo_data():
         print(f"[ERROR] Admin init error: {str(e)}")
         return redirect(url_for('home'))
 
-@app.route('/admin/force-reload-modules')  
+@app.route('/admin/force-reload-modules')
+@admin_required
 def admin_force_reload_modules():
     """Admin-Only: Force reload all demo modules"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Nur Admins können Module neu laden.', 'error')
-        return redirect(url_for('login'))
-    
     try:
         # Clear all existing modules and categories
         print("[INFO] Clearing existing modules and categories...")
@@ -1862,12 +2009,9 @@ def debug_session():
 # === ADMIN ROUTES ===
 
 @app.route('/admin/modules')
+@admin_required
 def admin_modules():
     """Admin-Interface für Modul-Management"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Zugriff verweigert.', 'error')
-        return redirect(url_for('home'))
-    
     try:
         modules = LearningModule.query.order_by(
             LearningModule.category_id, 
@@ -1884,10 +2028,9 @@ def admin_modules():
     return render_template('admin/modules.html', modules=modules, categories=categories)
 
 @app.route('/admin/toggle-lead-magnet/<int:module_id>')
+@admin_required
 def toggle_lead_magnet(module_id):
     """Toggle Lead-Magnet Status eines Moduls"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'})
     
     try:
         module = LearningModule.query.get_or_404(module_id)
@@ -4199,6 +4342,12 @@ def internal_error(error):
     except:
         pass
     return render_template('errors/500.html'), 500
+
+@app.errorhandler(400)
+def csrf_error(error):
+    """Handler für CSRF-Fehler"""
+    flash('Sicherheitsfehler: CSRF-Token ungültig. Bitte versuchen Sie es erneut.', 'error')
+    return redirect(request.referrer or url_for('home'))
 
 # === APP STARTEN ===
 
