@@ -31,6 +31,7 @@ gunicorn==21.2.0
 
 # Security (für Produktion)
 cryptography>=41.0.0
+Flask-Limiter==3.5.0
 
 # Database Driver (für PostgreSQL in Produktion)
 psycopg2-binary==2.9.7

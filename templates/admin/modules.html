@@ -499,6 +499,7 @@
     <div class="modal-content">
         <h3>➕ Hauptkategorie hinzufügen</h3>
         <form action="{{ url_for('admin_add_category') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="form-group">
                 <label class="form-label">Name *</label>
                 <input type="text" name="name" class="form-input" placeholder="z.B. Technische Analyse" required>
@@ -528,6 +529,7 @@
     <div class="modal-content">
         <h3>➕ Unterkategorie hinzufügen</h3>
         <form action="{{ url_for('admin_add_subcategory') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label class="form-label">Hauptkategorie *</label>
                 <select name="category_id" class="form-select" required>
@@ -562,6 +564,7 @@
     <div class="modal-content large">
         <h3>📄 Neues Flask HTML-Modul hinzufügen</h3>
         <form action="{{ url_for('add_module') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-grid">
                 <div class="form-group">
                     <label class="form-label">Titel *</label>
@@ -656,6 +659,7 @@
     <div class="modal-content">
         <h3>✏️ Kategorie bearbeiten</h3>
         <form action="{{ url_for('admin_edit_category') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="category_id" id="edit_category_id">
             <div class="form-group">
                 <label class="form-label">Name *</label>
@@ -686,6 +690,7 @@
     <div class="modal-content">
         <h3>✏️ Unterkategorie bearbeiten</h3>
         <form action="{{ url_for('admin_edit_subcategory') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="subcategory_id" id="edit_subcategory_id">
             <div class="form-group">
                 <label class="form-label">Hauptkategorie *</label>
@@ -720,6 +725,7 @@
     <div class="modal-content">
         <h3>📁 Modul verschieben</h3>
         <form action="{{ url_for('admin_move_module') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="module_id" id="move_module_id">
             <div class="form-group">
                 <label class="form-label">Ziel-Kategorie *</label>
