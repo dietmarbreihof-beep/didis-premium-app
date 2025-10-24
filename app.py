@@ -193,9 +193,9 @@ def track_visitor():
         print(f"Analytics Tracking Error: {e}")
         db.session.rollback()
 
-# Registriere die Tracking-Funktion
-app.before_request(track_visitor)
-print("Analytics-Tracking aktiviert")
+# TEMPORÄR DEAKTIVIERT: Analytics-Tracking (verursacht Internal Server Errors)
+# app.before_request(track_visitor)
+print("Analytics-Tracking DEAKTIVIERT (temporär für Debugging)")
 
 # === SMART INITIALIZATION (NUR beim ersten Start!) ===
 def init_modules_on_startup():
