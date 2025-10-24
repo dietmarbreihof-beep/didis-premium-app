@@ -69,18 +69,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database initialisieren
 db = SQLAlchemy(app)
 
-# CSRF-Schutz initialisieren (mit Exemptions für API-Routes)
+# CSRF-Schutz initialisieren
 from flask_wtf.csrf import CSRFProtect
 csrf = CSRFProtect(app)
-
-# Exempt API und JSON-Routes von CSRF (werden via andere Methoden geschützt)
-csrf.exempt('health_check')
-csrf.exempt('setup_demo_users')
-csrf.exempt('emergency_admin_setup')
-csrf.exempt('debug_modules')
-csrf.exempt('api_modules_search')
-
-print("[SECURITY] CSRF-Schutz aktiviert (mit API-Exemptions)")
+print("[SECURITY] CSRF-Schutz aktiviert")
 
 # Analytics-Modell direkt definieren (für korrekte db-Instanz)
 class VisitorAnalytics(db.Model):
@@ -193,15 +185,13 @@ def track_visitor():
             os='Unknown'
         )
         
-        # KRITISCHER FIX: Verwende separate Transaktion für Analytics
-        # Verhindert dass Analytics-Fehler andere Transaktionen zerstören!
         db.session.add(analytics_entry)
-        db.session.flush()  # Nur flush, kein commit - wird am Ende des Requests committed
+        db.session.commit()
         
     except Exception as e:
-        # WICHTIG: NUR Analytics-Eintrag wird zurückgerollt, NICHT die gesamte Transaktion!
+        # Fehler beim Tracking sollen die App nicht crashen
         print(f"Analytics Tracking Error: {e}")
-        # KEIN db.session.rollback() mehr - das würde User-Erstellung zerstören!
+        db.session.rollback()
 
 # Registriere die Tracking-Funktion
 app.before_request(track_visitor)
@@ -303,7 +293,7 @@ def validate_module_integrity():
 def create_demo_users_on_startup():
     """
     Erstellt Demo-User automatisch beim ersten Start
-    ROBUST: UPSERT-Logik, detaillierte Fehlerbehandlung, garantierte Admin-Erstellung
+    Wird von init_modules_on_startup() aufgerufen wenn keine User existieren
     """
     demo_users_data = [
         {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
@@ -316,22 +306,8 @@ def create_demo_users_on_startup():
          'first_name': 'Test', 'last_name': 'User'}
     ]
     
-    created_count = 0
-    updated_count = 0
-    
     for user_data in demo_users_data:
         try:
-            # UPSERT: Prüfe ob User bereits existiert
-            existing_user = User.query.filter_by(username=user_data['username']).first()
-            
-            if existing_user:
-                print(f"[INIT]    - {user_data['username']} existiert bereits (ID: {existing_user.id})")
-                # Optional: Passwort aktualisieren (für Development)
-                # existing_user.set_password(user_data['password'])
-                # updated_count += 1
-                continue
-            
-            # Erstelle neuen User
             user = User(
                 username=user_data['username'],
                 email=user_data['email'],
@@ -342,22 +318,12 @@ def create_demo_users_on_startup():
             )
             user.set_password(user_data['password'])
             db.session.add(user)
-            created_count += 1
-            print(f"[INIT]    - {user_data['username']} ✅ NEU erstellt")
-            
+            print(f"[INIT]    - {user_data['username']} erstellt")
         except Exception as e:
-            print(f"[ERROR] Fehler beim Erstellen von {user_data['username']}: {e}")
-            db.session.rollback()
+            print(f"[WARNING] Fehler beim Erstellen von {user_data['username']}: {e}")
             continue
     
-    try:
-        db.session.commit()
-        print(f"[INIT] Demo-User Erstellung abgeschlossen: {created_count} neu, {updated_count} aktualisiert")
-        return True
-    except Exception as e:
-        print(f"[ERROR] Demo-User Commit fehlgeschlagen: {e}")
-        db.session.rollback()
-        return False
+    db.session.commit()
 
 def ensure_neue_module_category():
     """
@@ -389,6 +355,30 @@ def ensure_neue_module_category():
         print("[INIT] ✅ 'Neue Module' Kategorie bereits vorhanden und geschützt")
     
     return neue_module
+
+# === AUTO-ZUORDNUNG: Module ohne Kategorie ===
+from sqlalchemy import event, text
+
+@event.listens_for(LearningModule, 'before_insert')
+def auto_assign_neue_module_category(mapper, connection, target):
+    """
+    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
+    Verhindert dass Module "verloren" gehen
+    """
+    if target.category_id is None:
+        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
+        
+        # Finde "Neue Module" Kategorie ID (direkt via SQL weil wir in before_insert Hook sind)
+        result = connection.execute(
+            text("SELECT id FROM module_categories WHERE slug = :slug"),
+            {"slug": "neue-module"}
+        ).first()
+        
+        if result:
+            target.category_id = result[0]
+            print(f"[AUTO-ASSIGN] ✅ Modul '{target.title}' → Neue Module (ID: {result[0]})")
+        else:
+            print(f"[WARNING] 'Neue Module' Kategorie nicht gefunden! Modul bleibt ohne Kategorie.")
 
 # ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
 # Grund: Überschreibt Admin-Änderungen in der Datenbank!
@@ -463,7 +453,7 @@ class ModuleCategory(db.Model):
         if include_unpublished:
             all_modules = self.modules
         else:
-        all_modules = [mod for mod in self.modules if mod.is_published]
+            all_modules = [mod for mod in self.modules if mod.is_published]
         
         # Module ohne Unterkategorie (direkte Module)
         direct_modules = [mod for mod in all_modules if mod.subcategory_id is None]
@@ -594,30 +584,6 @@ class ModuleProgress(db.Model):
     completed_at = db.Column(db.DateTime, nullable=True)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-# === AUTO-ZUORDNUNG: Module ohne Kategorie (NACH Model-Definitionen!) ===
-from sqlalchemy import event, text
-
-@event.listens_for(LearningModule, 'before_insert')
-def auto_assign_neue_module_category(mapper, connection, target):
-    """
-    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
-    Verhindert dass Module "verloren" gehen
-    """
-    if target.category_id is None:
-        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
-        
-        # Finde "Neue Module" Kategorie ID (direkt via SQL weil wir in before_insert Hook sind)
-        result = connection.execute(
-            text("SELECT id FROM module_categories WHERE slug = :slug"),
-            {"slug": "neue-module"}
-        ).first()
-        
-        if result:
-            target.category_id = result[0]
-            print(f"[AUTO-ASSIGN] ✅ Modul '{target.title}' → Neue Module (ID: {result[0]})")
-        else:
-            print(f"[WARNING] 'Neue Module' Kategorie nicht gefunden! Modul bleibt ohne Kategorie.")
-
 # === MENÜ HELPER FUNCTIONS ===
 
 def get_menu_structure():
@@ -684,90 +650,18 @@ def health_check():
         # Prüfe ob Demo-User existieren (für Railway-Deployment)
         user_count = User.query.count()
         
-        # KRITISCH: Prüfe ob Admin-User existiert
-        admin_user = User.query.filter_by(username='admin').first()
-        admin_exists = admin_user is not None
-        admin_active = admin_user.is_active if admin_user else False
-        
-        # Modul-Statistiken
-        module_count = LearningModule.query.count()
-        category_count = ModuleCategory.query.count()
-        
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.utcnow().isoformat(),
             'service': 'Didis Premium Trading Academy',
-            'version': '1.1.0',
-            'database': {
-                'users': user_count,
-                'modules': module_count,
-                'categories': category_count
-            },
-            'auth': {
-                'admin_exists': admin_exists,
-                'admin_active': admin_active,
-                'can_login': admin_exists and admin_active
-            }
+            'version': '1.0.0',
+            'users_in_db': user_count
         }), 200
     except Exception as e:
         return jsonify({
             'status': 'unhealthy',
             'error': str(e),
             'timestamp': datetime.utcnow().isoformat()
-        }), 500
-
-@app.route('/emergency-admin-setup', methods=['GET', 'POST'])
-def emergency_admin_setup():
-    """
-    🚨 NOTFALL: Erstellt Admin-User wenn DB komplett leer ist
-    Nur verfügbar wenn KEINE User existieren (Sicherheit!)
-    """
-    try:
-        user_count = User.query.count()
-        
-        if user_count > 0:
-            return jsonify({
-                'error': 'Sicherheits-Sperre: User existieren bereits!',
-                'user_count': user_count,
-                'hint': 'Diese Route ist nur verfügbar wenn die Datenbank komplett leer ist.'
-            }), 403
-        
-        if request.method == 'POST':
-            admin_password = request.form.get('password', 'admin')  # Default: admin
-            
-            # Erstelle Admin-User
-            admin = User(
-                username='admin',
-                email='admin@didis-academy.com',
-                first_name='Admin',
-                last_name='User',
-                is_active=True,
-                email_verified=True
-            )
-            admin.set_password(admin_password)
-            db.session.add(admin)
-            db.session.commit()
-            
-            print(f"[EMERGENCY] Admin-User erstellt via Emergency-Setup")
-            
-            return jsonify({
-                'success': True,
-                'message': 'Admin-User erfolgreich erstellt!',
-                'username': 'admin',
-                'next_step': 'Bitte melden Sie sich jetzt an: /login'
-            }), 200
-        
-        # GET: Zeige Formular
-        return jsonify({
-            'info': 'Emergency Admin Setup verfügbar',
-            'users_in_db': user_count,
-            'instructions': 'POST mit "password" Parameter um Admin zu erstellen'
-        }), 200
-        
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({
-            'error': str(e)
         }), 500
 
 @app.route('/setup-demo-users')
@@ -919,8 +813,6 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            print(f"[REGISTER] ✅ Neuer User '{username}' erfolgreich erstellt und committed")
-            
             flash('Registrierung erfolgreich! Sie können sich jetzt anmelden.', 'success')
             return redirect(url_for('login'))
             
@@ -932,148 +824,54 @@ def register():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """Benutzer-Login - erweitert für echte User mit Debug-Logging"""
+    """Benutzer-Login - erweitert für echte User"""
     if request.method == 'POST':
         email_or_username = request.form['email_or_username']
         password = request.form['password']
-        
-        print(f"[LOGIN] Login-Versuch: {email_or_username}")
         
         # Zuerst echte User prüfen
         user = None
         if '@' in email_or_username:
             # E-Mail-Login
             user = User.query.filter_by(email=email_or_username.lower()).first()
-            print(f"[LOGIN] Email-Suche: {'User gefunden' if user else 'NICHT gefunden'}")
         else:
             # Username-Login
             user = User.query.filter_by(username=email_or_username).first()
-            print(f"[LOGIN] Username-Suche: {'User gefunden' if user else 'NICHT gefunden'}")
         
-        if not user:
-            print(f"[LOGIN] ❌ FEHLER: User '{email_or_username}' nicht in Datenbank!")
-            print(f"[LOGIN] Tipp: Verfügbare User: {[u.username for u in User.query.limit(10).all()]}")
-            flash('Ungültige Anmeldedaten. Benutzer nicht gefunden.', 'error')
-            return render_template('auth/login.html')
-        
-        if not user.is_active:
-            print(f"[LOGIN] ❌ FEHLER: User '{user.username}' ist deaktiviert!")
-            flash('Ihr Account wurde deaktiviert. Bitte kontaktieren Sie den Support.', 'error')
-            return render_template('auth/login.html')
-        
-        if not user.check_password(password):
-            print(f"[LOGIN] ❌ FEHLER: Falsches Passwort für User '{user.username}'")
-            flash('Ungültige Anmeldedaten. Falsches Passwort.', 'error')
-            return render_template('auth/login.html')
-        
-        # Erfolgreicher DB-User Login
-        print(f"[LOGIN] ✅ SUCCESS: User '{user.username}' erfolgreich authentifiziert")
-        
+        if user and user.check_password(password) and user.is_active:
+            # Erfolgreicher DB-User Login
             session['logged_in'] = True
             session['user_id'] = str(user.id)
-        
-        # Bestimme Membership (Standard: elite für admin/didi, sonst premium für Test-User)
-        if user.username in ['admin', 'didi']:
-            membership = 'elite'
-        elif user.username in ['premium', 'test']:
-            membership = 'premium'
-        else:
-            # Für echte registrierte User: Prüfe Subscription-System
-            # Vorerst default auf 'free'
-            membership = 'free'
-        
-        print(f"[LOGIN] Membership: {membership}")
-        
+            
+            # Bestimme Membership (Standard: elite für admin/didi, sonst premium für Test-User)
+            if user.username in ['admin', 'didi']:
+                membership = 'elite'
+            elif user.username in ['premium', 'test']:
+                membership = 'premium'
+            else:
+                # Für echte registrierte User: Prüfe Subscription-System
+                # Vorerst default auf 'free'
+                membership = 'free'
+            
             session['user'] = {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
-            'membership': membership
+                'membership': membership
             }
             
             # Last Login aktualisieren
-        try:
             user.last_login = datetime.utcnow()
             db.session.commit()
-            print(f"[LOGIN] ✅ Last-Login aktualisiert und committed")
-        except Exception as e:
-            print(f"[WARNING] Fehler beim Last-Login-Update: {e}")
-            db.session.rollback()
-        
-        # WICHTIG: Session wird NACH DB-Commit gesetzt
-        # Verhindert dass Session existiert aber User in DB fehlt
-        print(f"[LOGIN] Session gesetzt für User '{user.username}'")
             
             flash(f'Willkommen zurück, {user.first_name or user.username}!', 'success')
             
             next_page = request.args.get('next')
-        redirect_url = next_page if next_page else url_for('home')
-        print(f"[LOGIN] Redirect zu: {redirect_url}")
-        return redirect(redirect_url)
-        
+            return redirect(next_page) if next_page else redirect(url_for('home'))
+        else:
+            flash('Ungültige Anmeldedaten. Bitte prüfe Username/Email und Passwort.', 'error')
+    
     return render_template('auth/login.html')
-
-@app.route('/account/change-password', methods=['GET', 'POST'])
-def change_password():
-    """Passwort ändern für eingeloggte User"""
-    if not session.get('logged_in'):
-        flash('Bitte melden Sie sich an.', 'error')
-        return redirect(url_for('login'))
-    
-    if request.method == 'POST':
-        user_id = session.get('user_id')
-        user = User.query.get(user_id)
-        
-        if not user:
-            flash('Benutzer nicht gefunden.', 'error')
-            return redirect(url_for('home'))
-        
-        old_password = request.form.get('old_password', '')
-        new_password = request.form.get('new_password', '')
-        confirm_password = request.form.get('confirm_password', '')
-        
-        # Validierung: Altes Passwort korrekt
-        if not user.check_password(old_password):
-            flash('Altes Passwort ist falsch.', 'error')
-            return render_template('account/change_password.html')
-        
-        # Validierung: Neue Passwörter identisch
-        if new_password != confirm_password:
-            flash('Die neuen Passwörter stimmen nicht überein.', 'error')
-            return render_template('account/change_password.html')
-        
-        # Validierung: Mindestlänge
-        if len(new_password) < 8:
-            flash('Neues Passwort muss mindestens 8 Zeichen lang sein.', 'error')
-            return render_template('account/change_password.html')
-        
-        # Validierung: Nicht identisch mit altem Passwort
-        if old_password == new_password:
-            flash('Neues Passwort muss sich vom alten unterscheiden.', 'error')
-            return render_template('account/change_password.html')
-        
-        # Passwort ändern
-        try:
-            user.set_password(new_password)
-            db.session.commit()
-            
-            print(f"[PASSWORD] User '{user.username}' hat Passwort erfolgreich geändert")
-            flash('✅ Passwort erfolgreich geändert!', 'success')
-            flash('Sie können sich jetzt mit Ihrem neuen Passwort anmelden.', 'info')
-            
-            # Optional: Session beenden und Neuanmeldung erzwingen
-            # session.clear()
-            # return redirect(url_for('login'))
-            
-            return redirect(url_for('home'))
-            
-        except Exception as e:
-            db.session.rollback()
-            print(f"[ERROR] Passwort-Änderung fehlgeschlagen: {e}")
-            flash(f'Fehler beim Ändern des Passworts: {str(e)}', 'error')
-            return render_template('account/change_password.html')
-    
-    return render_template('account/change_password.html')
 
 @app.route('/logout')
 def logout():
@@ -1201,11 +999,11 @@ def modules():
                     subcategory_id=None
                 ).order_by(LearningModule.sort_order).all()
             else:
-            direct_modules = LearningModule.query.filter_by(
-                category_id=category.id, 
-                subcategory_id=None,
-                is_published=True
-            ).order_by(LearningModule.sort_order).all()
+                direct_modules = LearningModule.query.filter_by(
+                    category_id=category.id, 
+                    subcategory_id=None,
+                    is_published=True
+                ).order_by(LearningModule.sort_order).all()
             
             cat_data['direct_modules'] = []
             for module in direct_modules:
