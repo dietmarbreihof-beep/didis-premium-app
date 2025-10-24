@@ -201,7 +201,8 @@
             <strong>| 💎 Membership:</strong> {{ session.user.membership.title() }}
             <div style="float: right;">
                 {% if session.user.username in ['admin', 'didi'] %}
-                <a href="/admin/modules" style="color: var(--gold-dark); margin-right: 15px;">⚙️ Admin</a>
+                <a href="/admin/modules" style="color: var(--gold-dark); margin-right: 15px;">📚 Module</a>
+                <a href="/admin/users" style="color: var(--gold-dark); margin-right: 15px;">👥 User</a>
                 {% endif %}
                 <a href="/logout" style="color: #dc2626;">Logout</a>
             </div>
@@ -219,7 +220,8 @@
                 <a href="/modules">📚 Alle Module</a>
                 <a href="/magic-line">🎯 Magic Line</a>
                 {% if session.get('user', {}).get('username') in ['admin', 'didi'] %}
-                    <a href="/admin/modules">🔧 Admin</a>
+                    <a href="/admin/modules">📚 Module Admin</a>
+                    <a href="/admin/users">👥 User Admin</a>
                 {% endif %}
             {% else %}
                 <a href="/login">🔐 Login</a>
