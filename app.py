@@ -69,10 +69,18 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database initialisieren
 db = SQLAlchemy(app)
 
-# CSRF-Schutz initialisieren
+# CSRF-Schutz initialisieren (mit Exemptions für API-Routes)
 from flask_wtf.csrf import CSRFProtect
 csrf = CSRFProtect(app)
-print("[SECURITY] CSRF-Schutz aktiviert")
+
+# Exempt API und JSON-Routes von CSRF (werden via andere Methoden geschützt)
+csrf.exempt('health_check')
+csrf.exempt('setup_demo_users')
+csrf.exempt('emergency_admin_setup')
+csrf.exempt('debug_modules')
+csrf.exempt('api_modules_search')
+
+print("[SECURITY] CSRF-Schutz aktiviert (mit API-Exemptions)")
 
 # Analytics-Modell direkt definieren (für korrekte db-Instanz)
 class VisitorAnalytics(db.Model):
