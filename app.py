@@ -13,41 +13,13 @@ load_dotenv()
 # App-Konfiguration
 app = Flask(__name__)
 
-# Sicherheitskonfiguration - Persistent Secret Key
-SECRET_KEY_FILE = os.path.join(os.path.dirname(__file__), '.secret_key')
-
-# Secret Key aus ENV, File oder neu generieren
-if os.environ.get('SECRET_KEY'):
-    app.secret_key = os.environ.get('SECRET_KEY')
-    print("[CONFIG] Secret Key aus Environment Variable geladen")
-elif os.path.exists(SECRET_KEY_FILE):
-    try:
-        with open(SECRET_KEY_FILE, 'r') as f:
-            app.secret_key = f.read().strip()
-        print("[CONFIG] Secret Key aus .secret_key Datei geladen")
-    except Exception as e:
-        print(f"[WARNING] Fehler beim Laden des Secret Keys: {e}")
-        app.secret_key = secrets.token_hex(32)
-else:
-    # Neuen Secret Key generieren und speichern
-    app.secret_key = secrets.token_hex(32)
-    try:
-        with open(SECRET_KEY_FILE, 'w') as f:
-            f.write(app.secret_key)
-        # Nur Owner lesbar/schreibbar (Unix-Systeme)
-        if os.name != 'nt':  # Nicht Windows
-            os.chmod(SECRET_KEY_FILE, 0o600)
-        print(f"[CONFIG] Neuer Secret Key generiert und gespeichert in {SECRET_KEY_FILE}")
-    except Exception as e:
-        print(f"[WARNING] Konnte Secret Key nicht speichern: {e}")
-
-# Session-Konfiguration
+# Sicherheitskonfiguration
+app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 app.config.update(
-    SESSION_COOKIE_SECURE=True if os.environ.get('RAILWAY_ENVIRONMENT') else False,
+    SESSION_COOKIE_SECURE=False,  # Für Development - in Produktion auf True setzen
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
-    SESSION_REFRESH_EACH_REQUEST=True
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
 )
 
 # Database-Pfad konfigurieren
@@ -68,11 +40,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Database initialisieren
 db = SQLAlchemy(app)
-
-# CSRF-Schutz initialisieren
-from flask_wtf.csrf import CSRFProtect
-csrf = CSRFProtect(app)
-print("[SECURITY] CSRF-Schutz aktiviert")
 
 # Analytics-Modell direkt definieren (für korrekte db-Instanz)
 class VisitorAnalytics(db.Model):
@@ -193,196 +160,76 @@ def track_visitor():
         print(f"Analytics Tracking Error: {e}")
         db.session.rollback()
 
-# TEMPORÄR DEAKTIVIERT: Analytics-Tracking (verursacht Internal Server Errors)
-# app.before_request(track_visitor)
-print("Analytics-Tracking DEAKTIVIERT (temporär für Debugging)")
+# Registriere die Tracking-Funktion
+app.before_request(track_visitor)
+print("Analytics-Tracking aktiviert")
 
-# === SMART INITIALIZATION (NUR beim ersten Start!) ===
+# === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
-    """
-    Smart Initialization - lädt Module NUR beim ersten Start
+    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
+    import os
+    import time
     
-    WICHTIG: 
-    - Prüft ob Datenbank bereits Module enthält
-    - Wenn leer: Lädt Seed-Daten (siehe init_demo_modules)
-    - Wenn nicht leer: Nur Validierung, KEINE Überschreibung!
+    # Persistenter Check via File (funktioniert über Worker hinweg!)
+    sync_flag_file = '.modules_synced'
     
-    Admin-Route für manuelle Sync: /admin/sync-modules-from-code
-    """
+    # Prüfe ob kürzlich synchronisiert wurde
+    if os.path.exists(sync_flag_file):
+        try:
+            file_age = time.time() - os.path.getmtime(sync_flag_file)
+            # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
+            if file_age < 3600:
+                print(f"ℹ️ Module-Sync übersprungen (zuletzt vor {int(file_age/60)} Minuten)")
+                return True
+        except Exception as e:
+            print(f"⚠️ Fehler beim Lesen des Sync-Flags: {e}")
+    
     try:
         with app.app_context():
-            # KRITISCH: Erst Tabellen erstellen (idempotent)
-            print("[DB] Erstelle Tabellen falls nicht vorhanden...")
-            db.create_all()
-            print("[DB] Tabellen bereit")
+            print("\n" + "="*60)
+            print("🚀 MODULE AUTO-SYNC BEIM START")
+            print("="*60)
             
-            # Prüfe ob Module existieren
+            # 1. Kategorien synchronisieren (inkl. "Neue Module")
+            print("📋 Synchronisiere Kategorien...")
+            sync_modules_from_local()
+            db.session.commit()
+            print("✅ Kategorien synchronisiert")
+            
+            # 2. Module aus JSON-Backup wiederherstellen
+            print("📥 Prüfe JSON-Backup...")
+            restored_count = restore_modules_from_json()
+            if restored_count > 0:
+                print(f"✅ {restored_count} Module aus Backup wiederhergestellt")
+            
+            # 3. Templates scannen und neue Module registrieren
+            print("🔍 Scanne Templates nach neuen Modulen...")
+            print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
+            
+            print("="*60)
+            print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
+            print("="*60 + "\n")
+            
+            # Setze Flag-Datei (persistent über Worker!)
             try:
-                module_count = LearningModule.query.count()
-                category_count = ModuleCategory.query.count()
-                print(f"[DB] Gezählt: {category_count} Kategorien, {module_count} Module")
-            except Exception as db_error:
-                print(f"[DB] Fehler beim Zählen: {db_error}")
-                module_count = 0
-                category_count = 0
-            
-            if module_count == 0 and category_count == 0:
-                # Erste Installation: Seed Daten laden
-                print("\n" + "="*60)
-                print("[INIT] Erste Installation erkannt - lade Seed-Daten")
-                print("="*60)
-                init_demo_modules()
-                db.session.commit()
-                print("[INIT] Seed-Daten erfolgreich geladen")
-                print("="*60 + "\n")
-            else:
-                # Normale Operation: Nur Status ausgeben
-                print(f"[INIT] Datenbank bereits initialisiert:")
-                print(f"       - {category_count} Kategorien")
-                print(f"       - {module_count} Module")
-                print(f"[INIT] Keine automatische Sync - Admin-Änderungen bleiben erhalten")
-                
-                # Optional: Validiere Datenkonsistenz
-                validate_module_integrity()
-            
-            # Prüfe ob Demo-User existieren (wichtig für Railway!)
-            user_count = User.query.count()
-            if user_count == 0:
-                print("[INIT] Keine Benutzer gefunden - erstelle Demo-User...")
-                create_demo_users_on_startup()
-                print("[INIT] ✅ Demo-User erstellt")
-            
-            # WICHTIG: Stelle sicher dass "Neue Module" Kategorie IMMER existiert
-            ensure_neue_module_category()
+                with open(sync_flag_file, 'w') as f:
+                    from datetime import datetime
+                    f.write(datetime.utcnow().isoformat())
+                print(f"💾 Sync-Flag gesetzt: {sync_flag_file}")
+            except Exception as flag_error:
+                print(f"⚠️ Konnte Sync-Flag nicht setzen: {flag_error}")
         
         return True
         
     except Exception as e:
-        print(f"[ERROR] Fehler bei Init: {str(e)}")
+        print(f"⚠️ Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
         import traceback
         traceback.print_exc()
         return False
 
-def validate_module_integrity():
-    """
-    Validiert die Integrität der Modul-Daten
-    Prüft auf verwaiste Module, fehlende Kategorien etc.
-    """
-    try:
-        # Prüfe auf Module ohne Kategorie
-        orphaned_modules = LearningModule.query.filter_by(category_id=None).all()
-        if orphaned_modules:
-            print(f"[WARNING] {len(orphaned_modules)} Module ohne Kategorie gefunden")
-        
-        # Prüfe auf Module mit ungültiger Kategorie
-        all_modules = LearningModule.query.all()
-        all_category_ids = {cat.id for cat in ModuleCategory.query.all()}
-        
-        invalid_category_modules = []
-        for mod in all_modules:
-            if mod.category_id and mod.category_id not in all_category_ids:
-                invalid_category_modules.append(mod.title)
-        
-        if invalid_category_modules:
-            print(f"[WARNING] {len(invalid_category_modules)} Module mit ungültiger Kategorie:")
-            for title in invalid_category_modules[:5]:  # Nur erste 5 zeigen
-                print(f"           - {title}")
-        
-        if not orphaned_modules and not invalid_category_modules:
-            print("[VALIDATION] Modul-Integrität OK")
-            
-    except Exception as e:
-        print(f"[WARNING] Validierung fehlgeschlagen: {e}")
-
-def create_demo_users_on_startup():
-    """
-    Erstellt Demo-User automatisch beim ersten Start
-    ROBUST: UPSERT-Logik verhindert Duplikate und Fehler
-    """
-    demo_users_data = [
-        {'username': 'admin', 'email': 'admin@didis-academy.com', 'password': 'admin', 
-         'first_name': 'Admin', 'last_name': 'User'},
-        {'username': 'didi', 'email': 'didi@didis-academy.com', 'password': 'didi',
-         'first_name': 'Dietmar', 'last_name': 'Breihof'},
-        {'username': 'premium', 'email': 'premium@didis-academy.com', 'password': 'premium',
-         'first_name': 'Premium', 'last_name': 'User'},
-        {'username': 'test', 'email': 'test@didis-academy.com', 'password': 'test',
-         'first_name': 'Test', 'last_name': 'User'}
-    ]
-    
-    created_count = 0
-    
-    for user_data in demo_users_data:
-        try:
-            # UPSERT: Prüfe ob User bereits existiert
-            existing_user = User.query.filter_by(username=user_data['username']).first()
-            
-            if existing_user:
-                print(f"[INIT]    - {user_data['username']} existiert bereits")
-                continue
-            
-            # Erstelle neuen User
-            user = User(
-                username=user_data['username'],
-                email=user_data['email'],
-                first_name=user_data['first_name'],
-                last_name=user_data['last_name'],
-                is_active=True,
-                email_verified=True
-            )
-            user.set_password(user_data['password'])
-            db.session.add(user)
-            created_count += 1
-            print(f"[INIT]    - {user_data['username']} erstellt")
-        except Exception as e:
-            print(f"[WARNING] Fehler beim Erstellen von {user_data['username']}: {e}")
-            db.session.rollback()
-            continue
-    
-    try:
-        db.session.commit()
-        print(f"[INIT] Demo-User Erstellung: {created_count} neu erstellt")
-        return created_count > 0
-    except Exception as e:
-        print(f"[ERROR] Demo-User Commit fehlgeschlagen: {e}")
-        db.session.rollback()
-        return False
-
-def ensure_neue_module_category():
-    """
-    Stellt sicher dass die geschützte 'Neue Module' Kategorie existiert
-    Diese Kategorie wird für unkategorisierte Module verwendet
-    """
-    neue_module = ModuleCategory.query.filter_by(slug='neue-module').first()
-    
-    if not neue_module:
-        print("[INIT] Erstelle geschützte 'Neue Module' Kategorie...")
-        neue_module = ModuleCategory(
-            name='🆕 Neue Module',
-            slug='neue-module',
-            icon='🆕',
-            description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
-            sort_order=999,
-            is_active=True,
-            is_protected=True  # Geschützt - kann nicht gelöscht werden!
-        )
-        db.session.add(neue_module)
-        db.session.commit()
-        print("[INIT] ✅ 'Neue Module' Kategorie erstellt (geschützt)")
-    elif not neue_module.is_protected:
-        # Falls existiert aber nicht geschützt: Schutz aktivieren
-        neue_module.is_protected = True
-        db.session.commit()
-        print("[INIT] ✅ 'Neue Module' Kategorie jetzt geschützt")
-    else:
-        print("[INIT] ✅ 'Neue Module' Kategorie bereits vorhanden und geschützt")
-    
-    return neue_module
-
-# ❌ WICHTIG: Automatische Sync bei Startup wurde DEAKTIVIERT
-# Grund: Überschreibt Admin-Änderungen in der Datenbank!
-# Lösung: Nur beim ersten Start (leere DB) werden Seed-Daten geladen
-# Für manuelle Sync: Admin-Route /admin/sync-modules-from-code verwenden
+# ❌ ENTFERNT: @app.before_request Hook
+# Grund: Läuft bei JEDEM Request (CSS, JS, Images) - zu oft!
+# Lösung: Nur beim App-Start aufrufen (siehe unten bei __main__)
 
 # === USER MODELS ===
 
@@ -435,24 +282,14 @@ class ModuleCategory(db.Model):
     description = db.Column(db.Text)
     sort_order = db.Column(db.Integer, default=100)
     is_active = db.Column(db.Boolean, default=True)
-    is_protected = db.Column(db.Boolean, default=False)  # Geschützte Kategorien (z.B. "Neue Module")
     
     # Relationships
     subcategories = db.relationship('ModuleSubcategory', backref='category', lazy=True)
     modules = db.relationship('LearningModule', backref='category', lazy=True)
     
-    def to_dict(self, include_unpublished=False):
-        """
-        Konvertiert Kategorie zu Dictionary
-        
-        Args:
-            include_unpublished (bool): Wenn True, werden auch unpublished Module inkludiert (für Admin)
-        """
-        # Alle Module in dieser Kategorie (published oder alle)
-        if include_unpublished:
-            all_modules = self.modules
-        else:
-            all_modules = [mod for mod in self.modules if mod.is_published]
+    def to_dict(self):
+        # Alle veröffentlichten Module in dieser Kategorie
+        all_modules = [mod for mod in self.modules if mod.is_published]
         
         # Module ohne Unterkategorie (direkte Module)
         direct_modules = [mod for mod in all_modules if mod.subcategory_id is None]
@@ -464,8 +301,7 @@ class ModuleCategory(db.Model):
             'icon': self.icon,
             'description': self.description,
             'sort_order': self.sort_order,
-            'is_protected': self.is_protected,
-            'subcategories': [sub.to_dict(include_unpublished) for sub in self.subcategories if sub.is_active],
+            'subcategories': [sub.to_dict() for sub in self.subcategories if sub.is_active],
             'modules': [mod.to_dict() for mod in all_modules],
             'direct_modules': [mod.to_dict() for mod in direct_modules]
         }
@@ -486,18 +322,7 @@ class ModuleSubcategory(db.Model):
     # Relationships
     modules = db.relationship('LearningModule', backref='subcategory', lazy=True)
     
-    def to_dict(self, include_unpublished=False):
-        """
-        Konvertiert Unterkategorie zu Dictionary
-        
-        Args:
-            include_unpublished (bool): Wenn True, werden auch unpublished Module inkludiert (für Admin)
-        """
-        if include_unpublished:
-            modules = self.modules
-        else:
-            modules = [mod for mod in self.modules if mod.is_published]
-        
+    def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
@@ -505,7 +330,7 @@ class ModuleSubcategory(db.Model):
             'description': self.description,
             'icon': self.icon,
             'sort_order': self.sort_order,
-            'modules': [mod.to_dict() for mod in modules]
+            'modules': [mod.to_dict() for mod in self.modules if mod.is_published]
         }
 
 class LearningModule(db.Model):
@@ -528,7 +353,7 @@ class LearningModule(db.Model):
     external_url = db.Column(db.String(500))  # Für Streamlit-Integration
     
     # Access Control
-    is_published = db.Column(db.Boolean, default=True)  # GEÄNDERT: Default TRUE (Module sofort sichtbar für Admins)
+    is_published = db.Column(db.Boolean, default=False)
     is_lead_magnet = db.Column(db.Boolean, default=False)
     required_subscription_levels = db.Column(db.JSON, default=list)  # ["premium", "elite"]
     
@@ -582,30 +407,6 @@ class ModuleProgress(db.Model):
     started_at = db.Column(db.DateTime, default=datetime.utcnow)
     completed_at = db.Column(db.DateTime, nullable=True)
     last_accessed = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
-# === AUTO-ZUORDNUNG: Module ohne Kategorie (NACH Model-Definitionen!) ===
-from sqlalchemy import event, text
-
-@event.listens_for(LearningModule, 'before_insert')
-def auto_assign_neue_module_category(mapper, connection, target):
-    """
-    Ordnet Module ohne Kategorie automatisch zu 'Neue Module' zu
-    Verhindert dass Module "verloren" gehen
-    """
-    if target.category_id is None:
-        print(f"[AUTO-ASSIGN] Modul '{target.title}' ohne Kategorie - ordne zu 'Neue Module' zu")
-        
-        # Finde "Neue Module" Kategorie ID
-        result = connection.execute(
-            text("SELECT id FROM module_categories WHERE slug = :slug"),
-            {"slug": "neue-module"}
-        ).first()
-        
-        if result:
-            target.category_id = result[0]
-            print(f"[AUTO-ASSIGN] Modul zu Neue Module zugeordnet (ID: {result[0]})")
-        else:
-            print(f"[WARNING] Neue Module Kategorie nicht gefunden!")
 
 # === MENÜ HELPER FUNCTIONS ===
 
@@ -666,19 +467,14 @@ def inject_menu():
 def health_check():
     """Health check endpoint für Deployment-Monitoring"""
     try:
-        # Prüfe Datenbank-Verbindung (SQLAlchemy 2.0 kompatibel)
+        # Prüfe Datenbank-Verbindung
         from sqlalchemy import text
         db.session.execute(text('SELECT 1'))
-        
-        # Prüfe ob Demo-User existieren (für Railway-Deployment)
-        user_count = User.query.count()
-        
         return jsonify({
             'status': 'healthy',
             'timestamp': datetime.utcnow().isoformat(),
             'service': 'Didis Premium Trading Academy',
-            'version': '1.0.0',
-            'users_in_db': user_count
+            'version': '1.0.0'
         }), 200
     except Exception as e:
         return jsonify({
@@ -687,42 +483,53 @@ def health_check():
             'timestamp': datetime.utcnow().isoformat()
         }), 500
 
-@app.route('/setup-demo-users')
-def setup_demo_users():
-    """
-    🔧 VERALTET: Demo-User werden jetzt automatisch beim Start erstellt!
-    
-    Diese Route existiert nur noch als Fallback für manuelle Erstellung.
-    Normalerweise werden Demo-User automatisch erstellt wenn die DB leer ist.
-    """
+@app.route('/init-database')
+def init_database_route():
+    """EINMALIG: Initialisiert Datenbank auf Railway"""
     try:
-        # Prüfe ob bereits User existieren
-        existing_count = User.query.count()
-        if existing_count > 0:
-            return jsonify({
-                'status': 'already_exists',
-                'message': f'{existing_count} Benutzer bereits in Datenbank',
-                'info': 'Demo-User wurden bereits automatisch erstellt beim App-Start',
-                'note': 'Diese Route ist nicht mehr notwendig - Demo-User werden automatisch erstellt!'
-            }), 200
+        # Tabellen erstellen
+        db.create_all()
         
-        # Fallback: Erstelle Demo-User manuell
-        print("[MANUAL] Erstelle Demo-User manuell via /setup-demo-users Route")
-        create_demo_users_on_startup()
+        # Demo-User erstellen
+        demo_users = [
+            ('admin', 'admin', 'Admin', 'User'),
+            ('didi', 'didi', 'Dietmar', 'Breihof'),
+            ('premium', 'premium', 'Premium', 'User'),
+            ('test', 'test', 'Test', 'User')
+        ]
+        
+        created = []
+        for username, password, first_name, last_name in demo_users:
+            existing = User.query.filter_by(username=username).first()
+            if not existing:
+                user = User(
+                    username=username,
+                    email=f'{username}@didis-academy.com',
+                    first_name=first_name,
+                    last_name=last_name,
+                    is_active=True,
+                    email_verified=True
+                )
+                user.set_password(password)
+                db.session.add(user)
+                created.append(username)
+        
+        db.session.commit()
+        
+        # Module erstellen falls leer
+        if LearningModule.query.count() == 0:
+            init_demo_modules()
         
         return jsonify({
-            'status': 'success',
-            'message': '4 Demo-Benutzer erfolgreich erstellt',
-            'users': ['admin', 'didi', 'premium', 'test'],
-            'info': 'Sie können sich jetzt mit admin/admin oder didi/didi anmelden',
-            'note': 'Zukünftig werden Demo-User automatisch beim App-Start erstellt!'
-        }), 200
+            'success': True,
+            'created_users': created,
+            'message': 'Datenbank initialisiert'
+        })
         
     except Exception as e:
         db.session.rollback()
         return jsonify({
-            'status': 'error',
-            'message': str(e)
+            'error': str(e)
         }), 500
 
 @app.route('/')
@@ -732,9 +539,12 @@ def home():
         # Ensure database is initialized
         db.create_all()
         
-        # WICHTIG: Keine automatische Sync mehr!
-        # Module werden nur beim ersten Start (leere DB) oder manuell via Admin geladen
-        # Siehe: /admin/sync-modules-from-code für manuelle Sync
+        # Initialize demo modules if database is empty
+        if not LearningModule.query.first():
+            init_demo_modules()
+        
+        # Auto-sync: Check if local modules need to be synced to Railway
+        sync_modules_from_local()
         
         # Lead-Magnete für nicht-eingeloggte User
         if not session.get('logged_in'):
@@ -797,17 +607,12 @@ def register():
             email = request.form['email'].lower().strip()
             username = request.form['username'].strip()
             password = request.form['password']
-            password_confirm = request.form.get('password_confirm', '')
             first_name = request.form.get('first_name', '').strip()
             last_name = request.form.get('last_name', '').strip()
             
             # Validierung
             if len(password) < 8:
                 flash('Passwort muss mindestens 8 Zeichen lang sein.', 'error')
-                return render_template('auth/register.html')
-            
-            if password != password_confirm:
-                flash('Die Passwörter stimmen nicht überein.', 'error')
                 return render_template('auth/register.html')
             
             # Prüfen ob E-Mail bereits existiert
@@ -862,25 +667,14 @@ def login():
             user = User.query.filter_by(username=email_or_username).first()
         
         if user and user.check_password(password) and user.is_active:
-            # Erfolgreicher DB-User Login
+            # Echter User Login
             session['logged_in'] = True
             session['user_id'] = str(user.id)
-            
-            # Bestimme Membership (Standard: elite für admin/didi, sonst premium für Test-User)
-            if user.username in ['admin', 'didi']:
-                membership = 'elite'
-            elif user.username in ['premium', 'test']:
-                membership = 'premium'
-            else:
-                # Für echte registrierte User: Prüfe Subscription-System
-                # Vorerst default auf 'free'
-                membership = 'free'
-            
             session['user'] = {
                 'id': user.id,
                 'username': user.username,
                 'email': user.email,
-                'membership': membership
+                'membership': user.subscription_type.value
             }
             
             # Last Login aktualisieren
@@ -891,8 +685,35 @@ def login():
             
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
+        
+        # Fallback: Demo-User (bestehende Logik)
+        demo_users = {
+            'admin': {'password': 'admin', 'membership': 'elite', 'first_name': 'Admin'},
+            'didi': {'password': 'didi', 'membership': 'elite', 'first_name': 'Dietmar'},
+            'premium': {'password': 'premium', 'membership': 'premium', 'first_name': 'Premium User'},
+            'test': {'password': 'test', 'membership': 'premium', 'first_name': 'Test User'}
+        }
+        
+        if email_or_username in demo_users and demo_users[email_or_username]['password'] == password:
+            user_data = demo_users[email_or_username]
+            
+            # Session setzen
+            session['logged_in'] = True
+            session['user_id'] = email_or_username
+            session['user'] = {
+                'id': email_or_username,
+                'username': email_or_username,
+                'email': f'{email_or_username}@didis-academy.com',
+                'membership': user_data['membership']
+            }
+            
+            flash(f'Willkommen zurück, {user_data["first_name"]}!', 'success')
+            
+            # Redirect zu gewünschter Seite oder Home
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         else:
-            flash('Ungültige Anmeldedaten. Bitte prüfe Username/Email und Passwort.', 'error')
+            flash('Ungültige Anmeldedaten.', 'error')
     
     return render_template('auth/login.html')
 
@@ -905,27 +726,22 @@ def logout():
 
 @app.route('/admin/init-demo-data')
 def admin_init_demo_data():
-    """⚠️ GEFÄHRLICH: Erstellt Demo-Module (kann bestehende überschreiben!)"""
+    """Admin-Only: Initialize demo modules and data"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Nur Admins können Demo-Daten initialisieren.', 'error')
         return redirect(url_for('login'))
-    
-    # Sicherheitsabfrage
-    if not request.args.get('confirm') == 'yes':
-        flash('⚠️ WARNUNG: Diese Aktion kann bestehende Module überschreiben!', 'warning')
-        flash('Fügen Sie ?confirm=yes zur URL hinzu um fortzufahren', 'info')
-        return redirect(url_for('admin_modules'))
     
     try:
         # Force database initialization
         db.create_all()
         
-        print("[ADMIN] ⚠️ Demo-Module werden erstellt (kann Duplikate erzeugen)")
+        # Force re-initialization by clearing existing demo modules
+        print("[INFO] Clearing existing demo modules for fresh initialization...")
         
-        # Initialize demo modules
+        # Initialize demo modules (always runs, even if modules exist)
         result = init_demo_modules()
         
-        flash('✅ Demo-Module erstellt! Prüfen Sie auf Duplikate!', 'warning')
+        flash('✅ Demo-Module erfolgreich erstellt/aktualisiert!', 'success')
         return redirect(url_for('modules_overview'))
         
     except Exception as e:
@@ -935,35 +751,24 @@ def admin_init_demo_data():
 
 @app.route('/admin/force-reload-modules')  
 def admin_force_reload_modules():
-    """⚠️ EXTREM GEFÄHRLICH: Löscht ALLE Module und lädt Demo-Module neu!"""
+    """Admin-Only: Force reload all demo modules"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Nur Admins können Module neu laden.', 'error')
         return redirect(url_for('login'))
     
-    # Doppelte Sicherheitsabfrage
-    if not request.args.get('confirm') == 'DELETE-ALL-MODULES':
-        flash('⚠️⚠️⚠️ WARNUNG: Diese Aktion LÖSCHT ALLE Kategorien und Module!', 'error')
-        flash('Alle manuellen Änderungen gehen unwiderruflich verloren!', 'error')
-        flash('Fügen Sie ?confirm=DELETE-ALL-MODULES zur URL hinzu um fortzufahren', 'warning')
-        return redirect(url_for('admin_modules'))
-    
     try:
         # Clear all existing modules and categories
-        print("[ADMIN] ⚠️⚠️⚠️ LÖSCHEN ALLER MODULE UND KATEGORIEN!")
+        print("[INFO] Clearing existing modules and categories...")
         LearningModule.query.delete()
         ModuleSubcategory.query.delete() 
         ModuleCategory.query.delete()
         db.session.commit()
         
         # Reinitialize everything
-        print("[ADMIN] Lade Demo-Module neu...")
+        print("[INFO] Reinitializing all demo modules...")
         init_demo_modules()
         
-        # WICHTIG: Stelle sicher dass "Neue Module" wieder existiert
-        ensure_neue_module_category()
-        
-        flash('⚠️ ALLE Module wurden gelöscht und auf Demo-Stand zurückgesetzt!', 'error')
-        flash('Alle manuellen Änderungen sind verloren!', 'warning')
+        flash('✅ Alle Module wurden neu geladen!', 'success')
         return redirect(url_for('modules_overview'))
         
     except Exception as e:
@@ -1011,22 +816,14 @@ def modules():
         menu_structure = []
         
         for category in categories:
-            # Admin sieht ALLE Module (published + unpublished)
-            cat_data = category.to_dict(include_unpublished=is_admin)
+            cat_data = category.to_dict()
             
             # Direkte Module (ohne Unterkategorie) hinzufügen
-            # ADMIN-MODUS: Admins sehen ALLE Module (auch unpublished)
-            if is_admin:
-                direct_modules = LearningModule.query.filter_by(
-                    category_id=category.id, 
-                    subcategory_id=None
-                ).order_by(LearningModule.sort_order).all()
-            else:
-                direct_modules = LearningModule.query.filter_by(
-                    category_id=category.id, 
-                    subcategory_id=None,
-                    is_published=True
-                ).order_by(LearningModule.sort_order).all()
+            direct_modules = LearningModule.query.filter_by(
+                category_id=category.id, 
+                subcategory_id=None,
+                is_published=True
+            ).order_by(LearningModule.sort_order).all()
             
             cat_data['direct_modules'] = []
             for module in direct_modules:
@@ -2659,14 +2456,17 @@ def admin_init_database():
 
 @app.route('/admin/force-sync-templates')
 def force_sync_templates():
-    """🔄 Scannt Templates OHNE bestehende Module zu überschreiben"""
+    """🔄 Erzwingt komplette Synchronisation aller Templates"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('home'))
     
     try:
-        # NUR Template-Scan, KEINE Sync von hart-codierten Modulen!
-        flash('⚠️ HINWEIS: Diese Funktion überschreibt KEINE bestehenden Module', 'info')
+        # Stelle sicher dass "Neue Module" Kategorie existiert
+        sync_modules_from_local()
+        db.session.commit()
+        
+        # Führe Auto-Registrierung aus
         return auto_register_modules()
         
     except Exception as e:
@@ -2742,8 +2542,7 @@ def auto_register_modules():
                         icon='🆕',
                         description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
                         sort_order=999,
-                        is_active=True,
-                        is_protected=True  # Geschützt!
+                        is_active=True
                     )
                     db.session.add(neue_module_category)
                     db.session.flush()
@@ -2903,127 +2702,6 @@ def register_missing_modules():
     except Exception as e:
         db.session.rollback()
         flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
-    
-    return redirect(url_for('admin_modules'))
-
-@app.route('/admin/publish-all-modules')
-def publish_all_modules():
-    """Publiziert ALLE unpublished Module auf einmal"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        unpublished_modules = LearningModule.query.filter_by(is_published=False).all()
-        count = len(unpublished_modules)
-        
-        if count == 0:
-            flash('Alle Module sind bereits veröffentlicht!', 'info')
-            return redirect(url_for('admin_modules'))
-        
-        for module in unpublished_modules:
-            module.is_published = True
-        
-        db.session.commit()
-        flash(f'✅ {count} Module erfolgreich veröffentlicht!', 'success')
-        
-    except Exception as e:
-        db.session.rollback()
-        flash(f'❌ Fehler beim Publizieren: {str(e)}', 'error')
-    
-    return redirect(url_for('admin_modules'))
-
-@app.route('/admin/debug-modules')
-def debug_modules():
-    """Debug-Informationen über Module und Kategorien"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        return jsonify({'error': 'Admin-Zugriff erforderlich'}), 401
-    
-    try:
-        # Basis-Statistiken
-        total_modules = LearningModule.query.count()
-        published = LearningModule.query.filter_by(is_published=True).count()
-        unpublished = LearningModule.query.filter_by(is_published=False).count()
-        
-        # Kategorien-Statistiken
-        total_categories = ModuleCategory.query.count()
-        protected_categories = ModuleCategory.query.filter_by(is_protected=True).count()
-        
-        # Module in "Neue Module"
-        neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
-        in_neue_module = 0
-        if neue_module_cat:
-            in_neue_module = LearningModule.query.filter_by(category_id=neue_module_cat.id).count()
-        
-        # Module ohne Kategorie (sollte 0 sein durch Auto-Assign!)
-        no_category = LearningModule.query.filter_by(category_id=None).count()
-        
-        # Module ohne Template
-        no_template = LearningModule.query.filter_by(template_file=None).count()
-        
-        stats = {
-            'modules': {
-                'total': total_modules,
-                'published': published,
-                'unpublished': unpublished,
-                'no_category': no_category,
-                'in_neue_module': in_neue_module,
-                'no_template': no_template
-            },
-            'categories': {
-                'total': total_categories,
-                'protected': protected_categories,
-                'neue_module_exists': neue_module_cat is not None
-            },
-            'health': {
-                'all_modules_have_category': no_category == 0,
-                'neue_module_category_exists': neue_module_cat is not None,
-                'neue_module_is_protected': neue_module_cat.is_protected if neue_module_cat else False
-            }
-        }
-        
-        return jsonify(stats)
-        
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-
-@app.route('/admin/sync-modules-from-code')
-def admin_sync_modules_from_code():
-    """
-    🔄 Manuelle Synchronisation von hart-codierten Modulen aus dem Code
-    
-    ACHTUNG: Diese Funktion synchronisiert Module aus dem Code in die Datenbank.
-    Verwende dies nur wenn du bewusst Code-Änderungen übernehmen willst!
-    """
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        print("\n" + "="*60)
-        print("[ADMIN] Manuelle Code-zu-DB Synchronisation gestartet")
-        print("="*60)
-        
-        # Rufe die sync_modules_from_local Funktion auf
-        sync_modules_from_local()
-        db.session.commit()
-        
-        # Zähle Ergebnisse
-        module_count = LearningModule.query.count()
-        category_count = ModuleCategory.query.count()
-        
-        flash(f'✅ Synchronisation erfolgreich abgeschlossen!', 'success')
-        flash(f'📊 Aktuelle Datenbank: {category_count} Kategorien, {module_count} Module', 'info')
-        
-        print(f"[ADMIN] Sync abgeschlossen: {category_count} Kategorien, {module_count} Module")
-        print("="*60 + "\n")
-        
-    except Exception as e:
-        db.session.rollback()
-        flash(f'❌ Fehler bei Synchronisation: {str(e)}', 'error')
-        print(f"[ERROR] Sync fehlgeschlagen: {str(e)}")
-        import traceback
-        traceback.print_exc()
     
     return redirect(url_for('admin_modules'))
 
@@ -3745,8 +3423,7 @@ def init_demo_modules():
         slug='grundlagen',
         icon='🎓',
         description='Fundamentale Konzepte und Frameworks für erfolgreiches Trading und Investieren',
-        sort_order=0,
-        is_protected=True  # Geschützt - Core Content
+        sort_order=0
     )
     db.session.add(cat0)
     db.session.flush()
@@ -4804,13 +4481,6 @@ def admin_delete_category(category_id):
         category = ModuleCategory.query.get(category_id)
         if not category:
             return jsonify({'success': False, 'error': 'Kategorie nicht gefunden'})
-        
-        # SCHUTZ: Geschützte Kategorien können nicht gelöscht werden!
-        if category.is_protected:
-            return jsonify({
-                'success': False, 
-                'error': f'Die Kategorie "{category.name}" ist geschützt und kann nicht gelöscht werden!'
-            }), 403
         
         # Alle Module in dieser Kategorie auf "nicht zugeordnet" setzen
         modules = LearningModule.query.filter_by(category_id=category_id).all()
