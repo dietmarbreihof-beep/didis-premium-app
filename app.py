@@ -234,11 +234,11 @@ def init_modules_on_startup():
             
             if module_count == 0 and category_count == 0:
                 # Erste Installation: Seed Daten laden
-            print("\n" + "="*60)
+                print("\n" + "="*60)
                 print("[INIT] Erste Installation erkannt - lade Seed-Daten")
-            print("="*60)
+                print("="*60)
                 init_demo_modules()
-            db.session.commit()
+                db.session.commit()
                 print("[INIT] Seed-Daten erfolgreich geladen")
                 print("="*60 + "\n")
             else:
