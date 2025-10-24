@@ -562,21 +562,24 @@ def get_accessible_modules_count(user_subscription="free"):
 @app.context_processor
 def inject_menu():
     """Template-Kontext für alle Templates verfügbar machen"""
+    from flask_wtf.csrf import generate_csrf
+
     menu_structure = get_menu_structure()
-    
+
     # User Subscription ermitteln
     user_subscription = "free"
     if session.get('logged_in'):
         user_subscription = session.get('user', {}).get('membership', 'free')
-    
+
     # Modul-Statistiken
     stats = get_accessible_modules_count(user_subscription)
-    
+
     return {
         'menu_structure': menu_structure,
         'total_modules': stats['total'],
         'accessible_modules': stats['accessible'],
-        'lead_magnets': stats['lead_magnets']
+        'lead_magnets': stats['lead_magnets'],
+        'csrf_token': generate_csrf  # CSRF-Token für alle Templates verfügbar machen
     }
 
 # === ROUTES ===
