@@ -193,13 +193,15 @@ def track_visitor():
             os='Unknown'
         )
         
+        # KRITISCHER FIX: Verwende separate Transaktion für Analytics
+        # Verhindert dass Analytics-Fehler andere Transaktionen zerstören!
         db.session.add(analytics_entry)
-        db.session.commit()
+        db.session.flush()  # Nur flush, kein commit - wird am Ende des Requests committed
         
     except Exception as e:
-        # Fehler beim Tracking sollen die App nicht crashen
+        # WICHTIG: NUR Analytics-Eintrag wird zurückgerollt, NICHT die gesamte Transaktion!
         print(f"Analytics Tracking Error: {e}")
-        db.session.rollback()
+        # KEIN db.session.rollback() mehr - das würde User-Erstellung zerstören!
 
 # Registriere die Tracking-Funktion
 app.before_request(track_visitor)
@@ -232,11 +234,11 @@ def init_modules_on_startup():
             
             if module_count == 0 and category_count == 0:
                 # Erste Installation: Seed Daten laden
-                print("\n" + "="*60)
+            print("\n" + "="*60)
                 print("[INIT] Erste Installation erkannt - lade Seed-Daten")
-                print("="*60)
+            print("="*60)
                 init_demo_modules()
-                db.session.commit()
+            db.session.commit()
                 print("[INIT] Seed-Daten erfolgreich geladen")
                 print("="*60 + "\n")
             else:
@@ -461,7 +463,7 @@ class ModuleCategory(db.Model):
         if include_unpublished:
             all_modules = self.modules
         else:
-            all_modules = [mod for mod in self.modules if mod.is_published]
+        all_modules = [mod for mod in self.modules if mod.is_published]
         
         # Module ohne Unterkategorie (direkte Module)
         direct_modules = [mod for mod in all_modules if mod.subcategory_id is None]
@@ -965,8 +967,8 @@ def login():
         # Erfolgreicher DB-User Login
         print(f"[LOGIN] ✅ SUCCESS: User '{user.username}' erfolgreich authentifiziert")
         
-        session['logged_in'] = True
-        session['user_id'] = str(user.id)
+            session['logged_in'] = True
+            session['user_id'] = str(user.id)
         
         # Bestimme Membership (Standard: elite für admin/didi, sonst premium für Test-User)
         if user.username in ['admin', 'didi']:
@@ -980,25 +982,25 @@ def login():
         
         print(f"[LOGIN] Membership: {membership}")
         
-        session['user'] = {
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
+            session['user'] = {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
             'membership': membership
-        }
-        
-        # Last Login aktualisieren
+            }
+            
+            # Last Login aktualisieren
         try:
             user.last_login = datetime.utcnow()
             db.session.commit()
         except Exception as e:
             print(f"[WARNING] Fehler beim Last-Login-Update: {e}")
+            
+            flash(f'Willkommen zurück, {user.first_name or user.username}!', 'success')
+            
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('home'))
         
-        flash(f'Willkommen zurück, {user.first_name or user.username}!', 'success')
-        
-        next_page = request.args.get('next')
-        return redirect(next_page) if next_page else redirect(url_for('home'))
-    
     return render_template('auth/login.html')
 
 @app.route('/account/change-password', methods=['GET', 'POST'])
@@ -1189,11 +1191,11 @@ def modules():
                     subcategory_id=None
                 ).order_by(LearningModule.sort_order).all()
             else:
-                direct_modules = LearningModule.query.filter_by(
-                    category_id=category.id, 
-                    subcategory_id=None,
-                    is_published=True
-                ).order_by(LearningModule.sort_order).all()
+            direct_modules = LearningModule.query.filter_by(
+                category_id=category.id, 
+                subcategory_id=None,
+                is_published=True
+            ).order_by(LearningModule.sort_order).all()
             
             cat_data['direct_modules'] = []
             for module in direct_modules:
