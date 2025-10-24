@@ -919,6 +919,8 @@ def register():
             db.session.add(user)
             db.session.commit()
             
+            print(f"[REGISTER] ✅ Neuer User '{username}' erfolgreich erstellt und committed")
+            
             flash('Registrierung erfolgreich! Sie können sich jetzt anmelden.', 'success')
             return redirect(url_for('login'))
             
@@ -993,13 +995,21 @@ def login():
         try:
             user.last_login = datetime.utcnow()
             db.session.commit()
+            print(f"[LOGIN] ✅ Last-Login aktualisiert und committed")
         except Exception as e:
             print(f"[WARNING] Fehler beim Last-Login-Update: {e}")
+            db.session.rollback()
+        
+        # WICHTIG: Session wird NACH DB-Commit gesetzt
+        # Verhindert dass Session existiert aber User in DB fehlt
+        print(f"[LOGIN] Session gesetzt für User '{user.username}'")
             
             flash(f'Willkommen zurück, {user.first_name or user.username}!', 'success')
             
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('home'))
+        redirect_url = next_page if next_page else url_for('home')
+        print(f"[LOGIN] Redirect zu: {redirect_url}")
+        return redirect(redirect_url)
         
     return render_template('auth/login.html')
 
