@@ -4282,6 +4282,59 @@ def sync_modules_from_local():
                 'estimated_duration': 40,
                 'difficulty_level': 'beginner',
                 'sort_order': 3
+            },
+            # 🆕 Neu gefundene Module - automatisch in "Neue Module" einsortiert
+            {
+                'title': 'Better Volume Indicator',
+                'slug': 'better-volume-lernseite',
+                'category_slug': 'neue-module',
+                'description': 'Interaktive Präsentation zum Better Volume Indicator - Verstehe Volumen-Patterns im Detail',
+                'icon': '📊',
+                'template_file': 'better-volume-lernseite.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 60,
+                'difficulty_level': 'intermediate',
+                'sort_order': 1
+            },
+            {
+                'title': 'Defining Trend',
+                'slug': 'defining-trend',
+                'category_slug': 'neue-module',
+                'description': 'Die Kunst, Trends richtig zu identifizieren und zu definieren',
+                'icon': '📈',
+                'template_file': 'defining-trend.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 75,
+                'difficulty_level': 'intermediate',
+                'sort_order': 2
+            },
+            {
+                'title': 'Risikomanagement',
+                'slug': 'risikomanagement',
+                'category_slug': 'neue-module',
+                'description': 'Umfassender Guide zum professionellen Risikomanagement im Trading',
+                'icon': '⚠️',
+                'template_file': 'risikomanagement.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 90,
+                'difficulty_level': 'intermediate',
+                'sort_order': 3
+            },
+            {
+                'title': '99% Noise vs. 0,1% Edge',
+                'slug': 'noise-vs-edge',
+                'category_slug': 'neue-module',
+                'description': 'Die Kunst der Setup-Selektion - Erkenne den Unterschied zwischen Noise und echtem Edge',
+                'icon': '🔍',
+                'template_file': 'noise-vs-edge.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['elite'],
+                'estimated_duration': 80,
+                'difficulty_level': 'advanced',
+                'sort_order': 4
             }
             # 🆕 NEUE MODULE HIER HINZUFÜGEN → Automatisch online!
         ]
