@@ -52,11 +52,11 @@
         <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, #10b981, #059669);">
             🚀 Module auto-registrieren
         </button>
-        <a href="{{ url_for('register_missing_modules') }}" 
-           class="btn" 
-           style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white;"
-           onclick="return confirm('🚨 Kritische fehlende Module registrieren?\n\nDies fügt wichtige Module wie Tirone Levels, EV Calculator etc. hinzu.')">
-            🚨 Fehlende Module reparieren
+        <a href="{{ url_for('admin_register_missing_modules') }}"
+           class="btn"
+           style="background: linear-gradient(135deg, #10b981, #059669); color: white;"
+           onclick="return confirm('🔍 Fehlende Module suchen?\n\nDies scannt den templates-Ordner und fügt alle noch nicht registrierten Module zur Kategorie \'🆕 Neue Module\' hinzu.')">
+            🔍 Fehlende Module finden
         </a>
         <a href="{{ url_for('admin_analytics') }}" 
            class="btn" 

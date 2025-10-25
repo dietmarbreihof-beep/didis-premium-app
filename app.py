@@ -5432,6 +5432,105 @@ def admin_delete_user(user_id):
 
     return redirect(url_for('admin_users'))
 
+# === MODUL AUTO-REGISTRIERUNG ===
+
+@app.route('/admin/register-missing-modules')
+@admin_required
+def admin_register_missing_modules():
+    """Scannt templates-Ordner und registriert fehlende Module in 'Neue Module' Kategorie"""
+    import os
+    import glob
+
+    try:
+        # 1. Alle HTML-Dateien im templates-Ordner finden
+        templates_dir = os.path.join(os.path.dirname(__file__), 'templates')
+        all_templates = []
+
+        for html_file in glob.glob(os.path.join(templates_dir, '*.html')):
+            filename = os.path.basename(html_file)
+
+            # Ignore base templates, admin, auth, errors
+            if filename in ['base.html', 'home.html', 'modules_overview.html', '_navigation.html']:
+                continue
+
+            all_templates.append(filename)
+
+        # 2. Existierende Module aus DB laden
+        existing_modules = LearningModule.query.all()
+        existing_template_files = {m.template_file for m in existing_modules if m.template_file}
+
+        # 3. Fehlende Templates finden
+        missing_templates = [t for t in all_templates if t not in existing_template_files]
+
+        if not missing_templates:
+            flash(f'✅ Keine fehlenden Module gefunden! Alle {len(all_templates)} Templates sind bereits registriert.', 'success')
+            return redirect(url_for('admin_modules'))
+
+        # 4. "Neue Module" Kategorie finden oder erstellen
+        neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+
+        if not neue_module_cat:
+            # Kategorie erstellen
+            neue_module_cat = ModuleCategory(
+                name='🆕 Neue Module',
+                slug='neue-module',
+                icon='🆕',
+                description='Neu gefundene Module die noch kategorisiert werden müssen',
+                sort_order=999,
+                is_active=True
+            )
+            db.session.add(neue_module_cat)
+            db.session.flush()
+
+        # 5. Fehlende Module registrieren
+        registered = []
+
+        for template_file in missing_templates:
+            # Titel aus Dateinamen generieren
+            title = template_file.replace('.html', '').replace('_', ' ').replace('-', ' ').title()
+            slug = template_file.replace('.html', '').replace('_', '-').lower()
+
+            # Prüfe ob Slug bereits existiert
+            if LearningModule.query.filter_by(slug=slug).first():
+                slug = f"{slug}-{len(registered) + 1}"
+
+            # Modul erstellen
+            module = LearningModule(
+                category_id=neue_module_cat.id,
+                title=title,
+                slug=slug,
+                description=f'Automatisch gefundenes Modul aus Template: {template_file}',
+                icon='📄',
+                template_file=template_file,
+                content_type='html',
+                is_published=False,  # Nicht veröffentlicht - muss manuell aktiviert werden
+                is_lead_magnet=False,
+                required_subscription_levels=['premium', 'elite', 'elite_pro'],  # Standard
+                sort_order=len(registered) + 1,
+                estimated_duration=30,
+                difficulty_level='intermediate'
+            )
+
+            db.session.add(module)
+            registered.append(title)
+
+        db.session.commit()
+
+        flash(f'✅ Erfolgreich {len(registered)} fehlende Module in Kategorie "🆕 Neue Module" registriert! Bitte kategorisieren Sie diese manuell.', 'success')
+
+        # Zeige Liste der registrierten Module
+        modules_list = ", ".join(registered[:10])
+        if len(registered) > 10:
+            modules_list += f" ... und {len(registered) - 10} weitere"
+
+        flash(f'📋 Registrierte Module: {modules_list}', 'info')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Registrieren fehlender Module: {str(e)}', 'error')
+
+    return redirect(url_for('admin_modules'))
+
 if __name__ == '__main__':
     with app.app_context():
         # Module-Sync beim Start (verhindert dass bei jedem Request läuft!)
