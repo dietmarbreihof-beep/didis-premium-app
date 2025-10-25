@@ -4957,6 +4957,199 @@ def admin_analytics_api():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    """Admin-Interface für User-Verwaltung"""
+    try:
+        # Query-Parameter für Suche und Filter
+        search = request.args.get('search', '').strip()
+        filter_subscription = request.args.get('subscription', '')
+        filter_status = request.args.get('status', '')
+
+        # Basis-Query
+        query = User.query
+
+        # Suche nach Username oder Email
+        if search:
+            query = query.filter(
+                db.or_(
+                    User.username.ilike(f'%{search}%'),
+                    User.email.ilike(f'%{search}%'),
+                    User.first_name.ilike(f'%{search}%'),
+                    User.last_name.ilike(f'%{search}%')
+                )
+            )
+
+        # Filter nach Subscription
+        if filter_subscription:
+            try:
+                sub_type = SubscriptionType(filter_subscription)
+                query = query.filter(User.subscription_type == sub_type)
+            except ValueError:
+                pass
+
+        # Filter nach Status
+        if filter_status == 'active':
+            query = query.filter(User.is_active == True)
+        elif filter_status == 'inactive':
+            query = query.filter(User.is_active == False)
+
+        # Sortierung
+        users = query.order_by(User.created_at.desc()).all()
+
+        # Statistiken
+        total_users = User.query.count()
+        active_users = User.query.filter_by(is_active=True).count()
+        subscription_stats = {
+            'free': User.query.filter_by(subscription_type=SubscriptionType.FREE).count(),
+            'premium': User.query.filter_by(subscription_type=SubscriptionType.PREMIUM).count(),
+            'elite': User.query.filter_by(subscription_type=SubscriptionType.ELITE).count(),
+            'elite_pro': User.query.filter_by(subscription_type=SubscriptionType.ELITE_PRO).count(),
+        }
+
+        # Letzte Audit-Logs
+        recent_logs = AdminAuditLog.query.order_by(AdminAuditLog.timestamp.desc()).limit(10).all()
+
+    except Exception as e:
+        flash(f'Fehler beim Laden der User: {str(e)}', 'error')
+        users = []
+        total_users = 0
+        active_users = 0
+        subscription_stats = {}
+        recent_logs = []
+
+    return render_template('admin/users.html',
+                         users=users,
+                         total_users=total_users,
+                         active_users=active_users,
+                         subscription_stats=subscription_stats,
+                         recent_logs=recent_logs,
+                         SubscriptionType=SubscriptionType)
+
+@app.route('/admin/users/<int:user_id>/subscription', methods=['POST'])
+@admin_required
+def admin_change_subscription(user_id):
+    """Ändert die Subscription eines Users"""
+    try:
+        user = User.query.get_or_404(user_id)
+        new_subscription = request.form.get('subscription')
+
+        if not new_subscription:
+            flash('Keine Subscription ausgewählt.', 'error')
+            return redirect(url_for('admin_users'))
+
+        try:
+            new_sub_type = SubscriptionType(new_subscription)
+        except ValueError:
+            flash(f'Ungültige Subscription: {new_subscription}', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Alte Subscription speichern für Audit-Log
+        old_subscription = user.subscription_type.value
+
+        # Subscription ändern
+        user.subscription_type = new_sub_type
+        user.subscription_updated_at = datetime.utcnow()
+        user.subscription_updated_by = session.get('user', {}).get('username')
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='subscription_change',
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value=old_subscription,
+            new_value=new_subscription,
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.commit()
+
+        flash(f'Subscription von {user.username} erfolgreich geändert: {old_subscription} → {new_subscription}', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Ändern der Subscription: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/<int:user_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_toggle_user_status(user_id):
+    """Aktiviert oder deaktiviert einen User"""
+    try:
+        user = User.query.get_or_404(user_id)
+
+        # Status umkehren
+        user.is_active = not user.is_active
+        action_type = 'user_activate' if user.is_active else 'user_deactivate'
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type=action_type,
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value='inactive' if user.is_active else 'active',
+            new_value='active' if user.is_active else 'inactive',
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.commit()
+
+        status_text = 'aktiviert' if user.is_active else 'deaktiviert'
+        flash(f'User {user.username} erfolgreich {status_text}!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Ändern des Status: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_user(user_id):
+    """Löscht einen User (mit Bestätigung)"""
+    try:
+        user = User.query.get_or_404(user_id)
+        username = user.username
+
+        # Verhindere, dass Admins sich selbst löschen
+        current_username = session.get('user', {}).get('username')
+        if user.username == current_username:
+            flash('Du kannst dich nicht selbst löschen!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Audit-Log erstellen BEVOR User gelöscht wird
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='user_delete',
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value=f'{user.email} | {user.subscription_type.value}',
+            new_value='DELETED',
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.delete(user)
+        db.session.commit()
+
+        flash(f'User {username} erfolgreich gelöscht!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Löschen des Users: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+
 
 if __name__ == '__main__':
     with app.app_context():
