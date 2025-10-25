@@ -642,3 +642,347 @@ app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
 4. **Woche 3-4:** Testing und Security-Hardening
 
 Soll ich Ihnen bei der Implementierung einer sicheren Benutzerverwaltung helfen? Ich kann konkrete Code-Beispiele für die kritischen Bereiche erstellen.
+
+---
+
+## 🤝 **PARALLELE ENTWICKLUNG: CURSOR + CLAUDE CODE**
+
+### 🎯 **Übersicht**
+Um Merge-Konflikte und Inkonsistenzen zu vermeiden, wenn parallel mit Cursor und Claude Code gearbeitet wird.
+
+**Grundprinzip:** Claude Code Änderungen haben VORRANG!
+
+---
+
+### 📍 **KONFLIKTPOTENTIALE IN APP.PY**
+
+#### **Kritischer Bereich: Routes zwischen Zeile 1198-1210**
+
+**Aktuelle Struktur:**
+```
+Zeile 1198: @app.route('/symmetrie-trading')          # Lead-Magnet Route
+Zeile 1209: (Ende der Route)
+Zeile 1210: # Legacy Routes (kompatibel mit bestehender App)
+Zeile 1212: @app.route('/marktampel-allokation')      # Erste Legacy Route
+```
+
+**Konfliktzone:**
+- Neue Routes zwischen `symmetrie-trading` (1198) und Legacy-Kommentar (1210)
+- Zeilennummern verschieben sich bei jeder Änderung
+- Mehrere Entwicklungstools = Merge-Konflikte
+
+---
+
+### 🛡️ **CURSOR REGELN FÜR APP.PY**
+
+#### **1. Route-Hinzufügung: STRENGE POSITIONIERUNG**
+
+**❌ VERBOTEN:**
+```python
+# Keine Routes zwischen symmetrie-trading und # Legacy Routes einfügen!
+```
+
+**✅ ERLAUBT - Option A: Nach Legacy Routes**
+```python
+@app.route('/symmetrie-trading')
+def symmetrie_trading():
+    ...
+
+# Legacy Routes (kompatibel mit bestehender App)  ← NICHT BERÜHREN
+
+@app.route('/marktampel-allokation')
+def marktampel_allokation():
+    ...
+
+# ✅ HIER neue Premium-Routes einfügen (nach allen Legacy Routes)
+@app.route('/position-vergroessern')  # Cursor-Route
+def position_vergroessern():
+    """Position vergrößern - Lance's Expected-Value-Methode"""
+    track_visitor()
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    is_admin = username in ['admin', 'didi']
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='position-vergroessern'))
+    return render_template('position-vergroessern.html')
+```
+
+**✅ ERLAUBT - Option B: Vor symmetrie-trading (für Lead-Magnets)**
+```python
+@app.route('/volume-analyse-grundlagen')
+def volume_analyse_grundlagen():
+    ...
+
+# ✅ HIER neue Lead-Magnet Routes einfügen
+@app.route('/neue-lead-magnet-route')
+def neue_lead_magnet():
+    track_visitor()
+    return render_template('neue-route.html')
+
+@app.route('/symmetrie-trading')  # Letzte Lead-Magnet Route
+def symmetrie_trading():
+    ...
+```
+
+---
+
+### 🔧 **ROUTE-PATTERNS: WELCHES VERWENDEN?**
+
+#### **Pattern 1: Lead-Magnet (Öffentlich zugänglich)**
+```python
+@app.route('/modul-name')
+def modul_name():
+    """Beschreibung"""
+    track_visitor()  # Analytics
+    return render_template('modul-name.html')
+```
+
+**Verwendung:** Kostenlose Module, Marketinginhalte
+**Position:** VOR symmetrie-trading (Zeile ~1186-1198)
+
+---
+
+#### **Pattern 2: Premium Direct (Ohne DB-Dependency)**
+```python
+@app.route('/modul-name')
+def modul_name():
+    """Beschreibung"""
+    track_visitor()  # Analytics
+
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='modul-name'))
+
+    return render_template('modul-name.html')
+```
+
+**Verwendung:** Premium-Module ohne DB-Integration
+**Position:** NACH allen Legacy Routes (Zeile >1270)
+**Beispiele:** `/expected-value`, `/position-vergroessern`
+
+---
+
+#### **Pattern 3: Legacy mit DB-Integration (Komplex)**
+```python
+@app.route('/modul-name')
+def modul_name():
+    """Beschreibung"""
+    module_slug = 'modul-name'
+
+    try:
+        module = LearningModule.query.filter_by(slug=module_slug, is_published=True).first()
+    except:
+        module = None
+
+    # Zugriff prüfen (falls über Modul-System)
+    if module:
+        user_subscription = "free"
+        username = None
+        if session.get('logged_in'):
+            user_subscription = session.get('user', {}).get('membership', 'free')
+            username = session.get('user', {}).get('username')
+
+        is_admin = username in ['admin', 'didi']
+
+        if not is_admin and not module.user_has_access(user_subscription):
+            flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+            return redirect(url_for('upgrade_required', module_slug=module_slug))
+
+        # Progress tracking
+        if session.get('logged_in'):
+            user_id = session.get('user_id', 'anonymous')
+            # ... Progress Logic
+
+    return render_template('modul-name.html')
+```
+
+**Verwendung:** Legacy-Module mit DB-Anbindung
+**Position:** Legacy Routes Bereich (Zeile 1212-1270)
+**Beispiele:** `/marktampel-allokation`
+
+---
+
+### ⚠️ **KRITISCHE REGELN**
+
+#### **1. NIEMALS diese Zeilen ändern:**
+```python
+# Zeile 1210 - Wichtiger Orientierungspunkt
+# Legacy Routes (kompatibil mit bestehender App)
+```
+
+#### **2. NIEMALS zwischen diesen Routen einfügen:**
+- `@app.route('/symmetrie-trading')` (Zeile 1198)
+- `# Legacy Routes` Kommentar (Zeile 1210)
+- Nur 11 Zeilen Abstand = extrem konfliktanfällig!
+
+#### **3. Route-Reihenfolge beibehalten:**
+```
+[Lead-Magnet Routes]
+    ↓
+@app.route('/symmetrie-trading')  ← LETZTE Lead-Magnet Route
+    ↓
+# Legacy Routes  ← MARKER (nicht verschieben!)
+    ↓
+[Legacy Routes mit DB-Integration]
+    ↓
+[Premium Direct Routes]  ← CURSOR fügt hier ein
+    ↓
+[Admin Routes]
+```
+
+---
+
+### 🚨 **MERGE-KONFLIKT-VERMEIDUNG**
+
+#### **Vor dem Commit:**
+
+1. **Git Status prüfen:**
+```bash
+git status
+git diff app.py
+```
+
+2. **Claude Code Änderungen fetchen:**
+```bash
+git fetch origin
+git log origin/claude/... --oneline -5  # Neueste Claude Commits
+```
+
+3. **Nur lokale Änderungen committen wenn:**
+   - ✅ Keine parallelen Claude Code Commits in app.py
+   - ✅ Eigene Routes in sicheren Bereichen (NACH Legacy Routes)
+   - ✅ Keine Zeilenverschiebungen im Konfliktbereich (1198-1210)
+
+4. **Bei Unsicherheit:**
+```bash
+# Änderungen stashen
+git stash
+
+# Claude Änderungen pullen
+git pull origin <claude-branch>
+
+# Eigene Änderungen wieder anwenden
+git stash pop
+
+# Konflikte manuell lösen
+```
+
+---
+
+### 📋 **CHECKLISTE: NEUE ROUTE HINZUFÜGEN (CURSOR)**
+
+- [ ] **Route-Typ bestimmt:** Lead-Magnet, Premium Direct oder Legacy?
+- [ ] **Position gewählt:**
+  - Lead-Magnet → VOR symmetrie-trading (Zeile <1198)
+  - Premium Direct → NACH Legacy Routes (Zeile >1270)
+  - Legacy → Im Legacy-Bereich (1212-1270) - nur wenn nötig!
+- [ ] **Pattern korrekt verwendet:**
+  - Lead-Magnet: `track_visitor()` + `render_template()`
+  - Premium: Admin-Check + Subscription-Check
+  - Legacy: DB-Query + Progress Tracking
+- [ ] **Template existiert:** `templates/modul-name.html` erstellt
+- [ ] **Migration vorbereitet:** `migrations/register_*.py` erstellt
+- [ ] **Admin-Bypass implementiert:** `is_admin = username in ['admin', 'didi']`
+- [ ] **Analytics aktiviert:** `track_visitor()` aufgerufen
+- [ ] **Git Check durchgeführt:**
+  - `git fetch origin` ausgeführt
+  - Keine parallelen Claude Commits in app.py
+  - Diff geprüft: `git diff app.py`
+- [ ] **Commit Message klar:** "feat(cursor): Add [Modul-Name] route"
+
+---
+
+### 💡 **BESTE PRAKTIKEN**
+
+#### **1. Kommunikation über Git:**
+```bash
+# Guter Commit-Titel (Cursor)
+git commit -m "feat(cursor): Add position-vergroessern module"
+
+# Guter Commit-Titel (Claude Code)
+git commit -m "feat(claude): Add trading-archetypen module"
+```
+
+#### **2. Separate Branches für experimentelle Features:**
+```bash
+# Cursor experimentiert
+git checkout -b cursor/experiment-feature
+
+# Claude Code bleibt auf Main-Branch
+# Merge erst nach Abstimmung
+```
+
+#### **3. Regelmäßig synchronisieren:**
+```bash
+# Alle 30 Minuten
+git fetch origin
+git status
+```
+
+---
+
+### 🎯 **DEIN CURSOR-MODUL: position-vergroessern**
+
+**Status:** ✅ Pattern korrekt, aber Position konfliktanfällig
+
+**Aktuell geplante Position (Cursor):**
+```
+Zeile 1198: @app.route('/symmetrie-trading')
+Zeile 1209: (Ende symmetrie-trading)
+Zeile 1028-1048: @app.route('/position-vergroessern')  ← KONFLIKTZONE!
+Zeile 1210: # Legacy Routes
+```
+
+**🚨 PROBLEM:** Du versuchst zwischen Zeile 1209 und 1210 einzufügen - nur 1 Zeile Abstand!
+
+**✅ LÖSUNG:** Route NACH allen Legacy Routes verschieben
+
+**Empfohlene Position:**
+```
+# Nach /expected-value (Zeile ~1330)
+@app.route('/position-vergroessern')
+def position_vergroessern():
+    """Position vergrößern - Lance's Expected-Value-Methode"""
+    track_visitor()
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    is_admin = username in ['admin', 'didi']
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='position-vergroessern'))
+    return render_template('position-vergroessern.html')
+```
+
+**Position:** Nach `/expected-value` (Zeile ~1330) oder nach `/ev-calculator` (Zeile ~1350)
+
+---
+
+### 📊 **ZUSAMMENFASSUNG**
+
+**Konfliktpotential:** 🔴 HOCH (wenn in Zeile 1198-1210 eingefügt)
+
+**Empfohlene Maßnahmen:**
+1. ✅ Route NACH Legacy Routes verschieben (Zeile >1330)
+2. ✅ Pattern "Premium Direct" beibehalten (ist korrekt)
+3. ✅ Vor Commit: `git fetch && git diff app.py` prüfen
+4. ✅ Klare Commit-Message: `feat(cursor): Add position-vergroessern module`
+
+**Mit diesen Regeln: Konfliktpotential → 🟢 NIEDRIG**
