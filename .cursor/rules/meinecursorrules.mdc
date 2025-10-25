@@ -5,6 +5,305 @@ alwaysApply: true
 
 # Cursor Rules für PROJEKT: Didis Trading Academy - Flask Premium Frontend
 
+---
+
+## ⚠️ **KRITISCH: CLAUDE CODE HAT VORRANG**
+
+**Diese Rules enthalten kritische Änderungen durch Claude Code (`claude/prepare-production-release-011CURveFMwP9fPGmGZ2NeWN`).
+Claude Code Implementierungen haben ABSOLUTE PRIORITÄT und dürfen NICHT durch Cursor überschrieben werden!**
+
+---
+
+## 🚨 **KRITISCHE REGELN VON CLAUDE CODE - NIEMALS ÄNDERN**
+
+### 1. ❌ AUTO-SYNC IST PERMANENT DEAKTIVIERT
+
+**Was Claude Code geändert hat:**
+- `init_modules_on_startup()` (app.py:209-212) hat ein **Early Return** und ist deaktiviert
+- `sync_modules_from_local()` wird NICHT mehr in Routes aufgerufen
+- **Grund:** Auto-Sync hat User-erstellte Module überschrieben
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ Auto-Sync reaktivieren
+- ❌ Early Return in `init_modules_on_startup()` entfernen
+- ❌ `sync_modules_from_local()` in Routes aufrufen
+- ❌ Module programmatisch synchronisieren
+
+**CURSOR MUSS:**
+- ✅ Module NUR über Admin-UI oder `/admin/register-missing-modules` verwalten
+- ✅ Kommentare über deaktivierten Auto-Sync beibehalten
+
+---
+
+### 2. ✅ 4-TIER SUBSCRIPTION SYSTEM (PRODUCTION-READY)
+
+**Implementiert:** FREE, PREMIUM, ELITE, ELITE_PRO (app.py:362-381)
+
+**CURSOR DARF NICHT:**
+- ❌ Subscription Levels reduzieren
+- ❌ User Model Felder `subscription_type`, `subscription_updated_at`, `subscription_updated_by` entfernen
+
+**CURSOR MUSS:**
+- ✅ Alle 4 Levels bei neuen Features unterstützen
+- ✅ `can_access_module()` für Zugriffsprüfung verwenden
+- ✅ Admin-Audit-Log bei Subscription-Änderungen nutzen
+
+---
+
+### 3. 🔍 FEHLENDE MODULE AUTO-DETECTION
+
+**Route:** `/admin/register-missing-modules` (app.py:5437-5532)
+
+**CURSOR DARF NICHT:**
+- ❌ Route löschen oder umbenennen
+- ❌ "Neue Module" Kategorie (slug: `neue-module`) ändern
+- ❌ Auto-Detection Logik entfernen
+
+**CURSOR MUSS:**
+- ✅ Fehlende Module als `is_published=False` registrieren
+- ✅ System-Templates ignorieren (base.html, home.html, admin/*, auth/*)
+
+---
+
+### 4. 👥 USER MANAGEMENT & AUDIT LOGGING
+
+**Interface:** `/admin/users` + `AdminAuditLog` Model
+
+**CURSOR MUSS:**
+- ✅ Audit-Log bei ALLEN User-Änderungen erstellen:
+```python
+audit_entry = AdminAuditLog(
+    admin_username=session['username'],
+    action_type='subscription_change',
+    target_user_id=user.id,
+    old_value=old_value,
+    new_value=new_value
+)
+```
+
+---
+
+## ⚠️ KONFLIKT-PRÄVENTION
+
+**Bei diesen Änderungen STOPPEN und User fragen:**
+1. Module-Sync wiederherstellen
+2. Subscription Levels reduzieren
+3. User Model Schema ändern
+4. Admin-Routes löschen/ändern
+5. Auto-Detection Logik modifizieren
+6. Audit-Logging deaktivieren
+
+**✅ Sichere Bereiche:**
+- Templates/Frontend (außer admin/users.html, admin/modules.html)
+- Neue Features (ohne Core-Funktionen zu überschreiben)
+- Styling/CSS
+- Neue Lernmodule
+
+---
+
+## 📋 **MODUL-VERWALTUNG - AKTUELLER WORKFLOW**
+
+### **Philosophie: Einfachheit über Komplexität**
+- ✅ **Manuelle Kontrolle** statt fehleranfällige Automatisierung
+- ✅ **Ein zuverlässiger Workflow**: Scan → Verschieben → Publishen
+- ✅ **Admin hat volle Kontrolle**: Keine versteckten Auto-Prozesse
+
+### **Kern-Workflow für neue Module:**
+
+**Schritt-für-Schritt:**
+```
+1. HTML-Datei in /templates/*.html speichern
+2. Commit & Push zu GitHub
+3. Nach Deployment: /admin/modules aufrufen
+4. Button "🔄 Neue Module scannen" klicken
+5. Modul erscheint in "🆕 Neue Module" (is_published=False)
+6. Modul in richtige Kategorie verschieben
+7. Optional: publishen (is_published=True)
+```
+
+### **Scan-Funktion: `/admin/scan-new-modules`**
+
+**Was die Route tut:**
+- Scannt `templates/*.html` (ausgenommen System-Dateien)
+- Findet Module, die NICHT in der DB sind
+- Fügt sie zur "🆕 Neue Module" Kategorie hinzu
+- Setzt `is_published=False` (unsichtbar für User)
+- Zeigt klare Erfolgsmeldung mit Anzahl neuer Module
+
+**System-Dateien die NICHT gescannt werden:**
+```python
+system_templates = {
+    'base.html', 'login.html', 'register.html', 'index.html',
+    'modules_overview.html', 'module_detail.html', 'admin_modules.html',
+    '_navigation.html', 'home.html', 'upgrade_required.html'
+    # Alle admin/*, auth/*, errors/* Templates
+}
+```
+
+### **Admin-Interface Buttons (NUR 8 - NICHT MEHR!)**
+
+**✅ BEHALTEN (die einzigen erlaubten):**
+1. ➕ Hauptkategorie hinzufügen
+2. ➕ Unterkategorie hinzufügen
+3. 📄 Neues Modul hinzufügen
+4. 🔄 Neue Module scannen (**HAUPT-FUNKTION!**)
+5. ☑️ Bulk-Auswahl
+6. 🗂️ Module-Übersicht
+7. 🔄 Seite neu laden
+8. 💾 Datenbank sichern
+
+**❌ ENTFERNT (waren nicht zuverlässig - NICHT wieder hinzufügen!):**
+- ❌ Auto-Sync bei Startup
+- ❌ Komplexe Synchronisations-Routinen
+- ❌ 60-Minuten-Timer mit Flag-Dateien
+- ❌ Mehrere verschiedene Sync-Buttons
+- ❌ Automatische Module-Registrierung
+
+### **Wichtige Code-Locations (NICHT MODIFIZIEREN ohne User):**
+- **Scan-Route:** `app.py` Zeile ~2634-2721
+- **Admin-Buttons:** `templates/admin/modules.html` Zeile ~33-70
+- **User Model:** `app.py` Zeile ~331-364
+- **SubscriptionType Enum:** `app.py` Zeile ~332 (MUSS VOR User Model sein!)
+- **Empty Subcategories:** `templates/modules_overview.html` Zeile ~89-105
+
+### **Leere Unterkategorien-Regel (NUR für Admin sichtbar):**
+```html
+{% if subcategory.modules or (session.get('user', {}).get('username') in ['admin', 'didi']) %}
+    <!-- Zeige Unterkategorie -->
+    {% if not subcategory.modules %}
+        <!-- Gelbes Banner nur für Admin -->
+        <div style="background: #fef3c7; color: #92400e;">
+            📭 Leere Unterkategorie (nur für Admin sichtbar)
+        </div>
+    {% endif %}
+{% endif %}
+```
+
+---
+
+## ⚠️ **KRITISCHE DATENBANK-REIHENFOLGE**
+
+**ABSOLUT BEACHTEN - SONST CRASH BEI DEPLOYMENT!**
+
+```python
+# ✅ RICHTIGE REIHENFOLGE:
+
+# 1. SubscriptionType Enum ZUERST (Zeile ~332)
+class SubscriptionType(enum.Enum):
+    FREE = "free"
+    PREMIUM = "premium"
+    ELITE = "elite"
+    ELITE_PRO = "elite_pro"
+    MASTERCLASS = "masterclass"
+
+# 2. User Model DANACH (Zeile ~331-364)
+class User(db.Model):
+    subscription_type = db.Column(db.Enum(SubscriptionType),  # Verwendet Enum von oben!
+                                  default=SubscriptionType.FREE,
+                                  nullable=False)
+    subscription_updated_at = db.Column(db.DateTime)
+    subscription_updated_by = db.Column(db.String(80))
+
+# 3. Module Models ZULETZT
+class ModuleCategory(db.Model): ...
+class ModuleSubcategory(db.Model): ...
+class LearningModule(db.Model): ...
+```
+
+**❌ HÄUFIGER FEHLER - FÜHRT ZU RAILWAY CRASH:**
+```python
+# ❌ FALSCH: User Model vor SubscriptionType Enum
+class User(db.Model):
+    subscription_type = db.Column(db.Enum(SubscriptionType))  # NameError!
+    
+class SubscriptionType(enum.Enum):  # Zu spät definiert!
+    FREE = "free"
+```
+
+**❌ WEITERER HÄUFIGER FEHLER:**
+```python
+# ❌ FALSCH: subscription_type als @property statt DB-Feld
+@property
+def subscription_type(self):
+    return self._subscription_type  # Wird nicht in DB gespeichert!
+
+# ✅ RICHTIG: Als db.Column
+subscription_type = db.Column(db.Enum(SubscriptionType), ...)
+```
+
+---
+
+## 🔧 **RAILWAY DEPLOYMENT - KRITISCHE CHECKS**
+
+### **Bei Merge-Konflikten:**
+
+**WICHTIG:** Immer die funktionierende Version aus vorheriger Session übernehmen statt neu zu implementieren!
+
+**Beispiel:**
+```
+Problem: User-Verwaltung ging verloren nach Merge
+❌ FALSCH: Neu implementieren (fehleranfällig, unterschiedlich)
+✅ RICHTIG: Code aus funktionierendem Branch übernehmen
+→ git checkout claude/prepare-production-release -- app.py
+→ Nur relevante Teile übernehmen
+```
+
+### **Syntax-Check VOR jedem Commit:**
+
+```bash
+# IMMER ausführen vor git commit:
+python3 -m py_compile app.py
+
+# Falls Fehler: NICHT committen!
+# Erst Fehler beheben, dann erneut prüfen
+```
+
+### **Testing nach Deployment (Checkliste):**
+
+```bash
+# 1. Modul-Scan testen
+✅ /admin/modules → "🔄 Neue Module scannen" klicken
+✅ Neue Module erscheinen in "🆕 Neue Module"
+
+# 2. User-Management testen
+✅ /admin/users → User mit verschiedenen Subscriptions hinzufügen
+✅ Subscription-Änderungen funktionieren
+✅ Audit-Log wird erstellt
+
+# 3. Modul-Ansicht testen
+✅ /modules → Leere Kategorien nur als Admin sichtbar
+✅ Module basierend auf Subscription richtig angezeigt
+```
+
+---
+
+## ✅ **BEST PRACTICES AUS DER PRAXIS**
+
+### **DO's:**
+- ✅ Einfache, zuverlässige Lösungen bevorzugen
+- ✅ Admin behält manuelle Kontrolle
+- ✅ Klare, verständliche Fehlermeldungen
+- ✅ Bei Code-Restaurierung: Funktionierende Version aus Git übernehmen
+- ✅ Syntax-Check vor jedem Commit: `python3 -m py_compile app.py`
+- ✅ SubscriptionType Enum IMMER vor User Model
+- ✅ Nur 8 Admin-Buttons (nicht mehr!)
+- ✅ Scan-Funktion als Haupt-Tool für neue Module
+- ✅ Routes in sicheren Zonen platzieren (>Zeile 1330)
+- ✅ Vor app.py Änderungen: `git pull origin main`
+
+### **DON'Ts:**
+- ❌ Keine komplexen Auto-Sync-Routinen
+- ❌ Keine 60-Minuten-Timer mit Flag-Dateien
+- ❌ Keine read-only Properties für subscription_type
+- ❌ Nicht mehrere SubscriptionType Enum Definitionen
+- ❌ User Model NICHT vor SubscriptionType Enum
+- ❌ Keine 14+ Buttons im Admin-Interface
+- ❌ Keine automatische Module-Registrierung bei Startup
+- ❌ Routes NICHT in Zeilen 1198-1210 einfügen (Konfliktzone)
+- ❌ Ändern ohne vorheriges `git pull`
+
+---
+
 ## Projekt-Übersicht
 - Flask-basierte Web-App für Trading-Akademie
 - Streamlit-Integration für interaktive Module
