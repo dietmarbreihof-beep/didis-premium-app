@@ -207,63 +207,37 @@ print("Analytics-Tracking aktiviert")
 
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
-    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
-    import os
-    import time
-    
-    # Persistenter Check via File (funktioniert über Worker hinweg!)
-    sync_flag_file = '.modules_synced'
-    
-    # Prüfe ob kürzlich synchronisiert wurde
-    if os.path.exists(sync_flag_file):
-        try:
-            file_age = time.time() - os.path.getmtime(sync_flag_file)
-            # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
-            if file_age < 3600:
-                print(f"ℹ️ Module-Sync übersprungen (zuletzt vor {int(file_age/60)} Minuten)")
-                return True
-        except Exception as e:
-            print(f"⚠️ Fehler beim Lesen des Sync-Flags: {e}")
-    
+    """🚀 VEREINFACHTE Startup-Logik: Stelle nur "Neue Module" Kategorie sicher"""
     try:
         with app.app_context():
             print("\n" + "="*60)
-            print("🚀 MODULE AUTO-SYNC BEIM START")
+            print("🚀 MODULE SETUP BEIM START")
             print("="*60)
-            
-            # 1. Kategorien synchronisieren (inkl. "Neue Module")
-            print("📋 Synchronisiere Kategorien...")
-            sync_modules_from_local()
-            db.session.commit()
-            print("✅ Kategorien synchronisiert")
-            
-            # 2. Module aus JSON-Backup wiederherstellen
-            print("📥 Prüfe JSON-Backup...")
-            restored_count = restore_modules_from_json()
-            if restored_count > 0:
-                print(f"✅ {restored_count} Module aus Backup wiederhergestellt")
-            
-            # 3. Templates scannen und neue Module registrieren
-            print("🔍 Scanne Templates nach neuen Modulen...")
-            print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
-            
-            print("="*60)
-            print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
+
+            # Stelle sicher dass "Neue Module" Kategorie existiert
+            neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+            if not neue_module_cat:
+                neue_module_cat = ModuleCategory(
+                    name='🆕 Neue Module',
+                    slug='neue-module',
+                    icon='🆕',
+                    description='Neu gefundene Module - Bitte in richtige Kategorie verschieben',
+                    sort_order=999,
+                    is_active=True
+                )
+                db.session.add(neue_module_cat)
+                db.session.commit()
+                print("✅ Kategorie '🆕 Neue Module' erstellt")
+            else:
+                print("✅ Kategorie '🆕 Neue Module' bereits vorhanden")
+
+            print("ℹ️  Nutze Admin-Panel → '🔄 Neue Module scannen' um fehlende Module zu finden")
             print("="*60 + "\n")
-            
-            # Setze Flag-Datei (persistent über Worker!)
-            try:
-                with open(sync_flag_file, 'w') as f:
-                    from datetime import datetime
-                    f.write(datetime.utcnow().isoformat())
-                print(f"💾 Sync-Flag gesetzt: {sync_flag_file}")
-            except Exception as flag_error:
-                print(f"⚠️ Konnte Sync-Flag nicht setzen: {flag_error}")
-        
+
         return True
-        
+
     except Exception as e:
-        print(f"⚠️ Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
+        print(f"⚠️ Fehler beim Module-Setup (nicht kritisch): {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -2631,355 +2605,102 @@ def admin_init_database():
     
     return redirect(url_for('admin_modules'))
 
-@app.route('/admin/force-sync-templates')
-def force_sync_templates():
-    """🔄 Erzwingt komplette Synchronisation aller Templates"""
+@app.route('/admin/scan-new-modules')
+def scan_new_modules():
+    """🔄 NEUE EINFACHE LÖSUNG: Scannt Templates und fügt fehlende Module in 'Neue Module' ein"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('home'))
-    
-    try:
-        # Stelle sicher dass "Neue Module" Kategorie existiert
-        sync_modules_from_local()
-        db.session.commit()
-        
-        # Führe Auto-Registrierung aus
-        return auto_register_modules()
-        
-    except Exception as e:
-        flash(f'❌ Fehler bei Template-Synchronisation: {str(e)}', 'error')
-        return redirect(url_for('admin_modules'))
 
-@app.route('/admin/auto-register-modules')
-def auto_register_modules():
-    """🚀 Automatische Registrierung neuer HTML-Templates"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
     try:
+        import os
         from pathlib import Path
-        import re
-        
-        templates_dir = Path("templates")
-        registered_count = 0
-        updated_count = 0
-        errors = []
-        
-        print("🔍 AUTO-REGISTRIERUNG GESTARTET")
-        print("=" * 50)
-        
-        # Debug-Info für Flash-Messages
-        flash('🔍 Auto-Registrierung gestartet...', 'info')
-        
-        # Alle HTML-Dateien finden (außer System-Templates)
-        excluded_patterns = [
+
+        # 1. Stelle sicher dass "Neue Module" Kategorie existiert
+        neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+        if not neue_module_cat:
+            neue_module_cat = ModuleCategory(
+                name='🆕 Neue Module',
+                slug='neue-module',
+                icon='🆕',
+                description='Neu gefundene Module - Bitte in richtige Kategorie verschieben',
+                sort_order=999,
+                is_active=True
+            )
+            db.session.add(neue_module_cat)
+            db.session.commit()
+            flash('✅ Kategorie "🆕 Neue Module" erstellt', 'success')
+
+        # 2. System-Templates die wir ignorieren
+        excluded_files = {
             'base.html', 'home.html', 'login.html', 'register.html',
             'modules_overview.html', 'upgrade_required.html', 'module_default.html',
             '_navigation.html', 'Banner5.html'
-        ]
-        
-        excluded_dirs = ['admin', 'auth', 'errors', 'account', 'templates']
-        
-        html_files = []
-        for html_file in templates_dir.glob("*.html"):
-            if any(pattern in html_file.name for pattern in excluded_patterns):
-                continue
-            if any(excluded_dir in str(html_file) for excluded_dir in excluded_dirs):
-                continue
-            html_files.append(html_file)
-        
-        print(f"📄 Gefundene HTML-Templates: {len(html_files)}")
-        flash(f'📄 {len(html_files)} HTML-Templates gefunden', 'info')
-        
-        for html_file in html_files:
-            try:
-                print(f"\n🔍 Analysiere: {html_file.name}")
-                
-                # Prüfen ob bereits registriert
-                existing_module = LearningModule.query.filter_by(
-                    template_file=html_file.name
-                ).first()
-                
-                if existing_module:
-                    print(f"[OK] Bereits registriert: {existing_module.title}")
-                    continue
-                
-                # Meta-Daten aus HTML extrahieren
-                module_info = extract_module_metadata(html_file)
-                
-                # WICHTIG: Alle automatisch gescannten Module gehen in "Neue Module" Kategorie
-                neue_module_category = ModuleCategory.query.filter_by(slug='neue-module').first()
-                
-                if not neue_module_category:
-                    # Fallback: "Neue Module" Kategorie erstellen falls nicht vorhanden
-                    neue_module_category = ModuleCategory(
-                        name='🆕 Neue Module',
-                        slug='neue-module',
-                        icon='🆕',
-                        description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
-                        sort_order=999,
-                        is_active=True
-                    )
-                    db.session.add(neue_module_category)
-                    db.session.flush()
-                
-                # Speichere den erkannten Kategorie-Vorschlag in der Description
-                suggested_category = module_info.get('category', 'technische-analyse')
-                module_info['description'] += f" [Vorschlag: {suggested_category}]"
-                
-                # Neues Modul erstellen in "Neue Module" Kategorie
-                create_auto_module(html_file, module_info, neue_module_category)
-                registered_count += 1
-                
-                print(f"[OK] REGISTRIERT: {module_info['title']} → 🆕 Neue Module (Vorschlag: {suggested_category})")
-                
-            except Exception as e:
-                error_msg = f"Fehler bei {html_file.name}: {str(e)}"
-                errors.append(error_msg)
-                print(f"[ERROR] {error_msg}")
-        
-        db.session.commit()
-        
-        # Flash-Nachricht für Frontend
-        if registered_count > 0:
-            flash(f'✅ {registered_count} neue Module automatisch registriert! Bitte Details im Admin-Panel anpassen.', 'success')
-        elif len(html_files) == 0:
-            flash('📄 Keine HTML-Templates gefunden.', 'info')
-        else:
-            flash('📋 Alle verfügbaren Module bereits registriert.', 'info')
-        
-        if errors:
-            flash(f'⚠️ {len(errors)} Fehler bei der Registrierung. Details in der Konsole.', 'warning')
-        
-        print("\n" + "=" * 50)
-        print("[SUMMARY] ZUSAMMENFASSUNG")
-        print("=" * 50)
-        print(f"[OK] Neue Module: {registered_count}")
-        print(f"[ERROR] Fehler: {len(errors)}")
-        print("[INFO] Nächste Schritte:")
-        print("   1. Admin-Panel öffnen")
-        print("   2. Module-Details anpassen")
-        print("   3. Module veröffentlichen")
-        
-    except Exception as e:
-        flash(f'❌ Fehler bei automatischer Registrierung: {str(e)}', 'error')
-        print(f"💥 Hauptfehler: {str(e)}")
-    
-    return redirect(url_for('admin_modules'))
+        }
 
-@app.route('/admin/register-missing-modules')
-def register_missing_modules():
-    """🚀 Registriert die wichtigsten fehlenden Module direkt"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        # Wichtige Module die oft fehlen
-        critical_modules = [
-            {
-                'title': 'Tirone Levels und Quadrant Lines',
-                'slug': 'tirone-quadrant-lines',
-                'template_file': 'tirone_quadrant_lines.html',
-                'description': 'Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen',
-                'category_slug': 'technische-analyse',
-                'icon': '📊',
-                'duration': 75,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Expected Value Calculator',
-                'slug': 'expected-value-calc',
-                'template_file': 'ev_calculator.html',
-                'description': 'Interaktiver Expected Value Rechner für Trading-Entscheidungen',
-                'category_slug': 'risikomanagement',
-                'icon': '🧮',
-                'duration': 45,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Trading Tools Collection',
-                'slug': 'trading-tools-collection',
-                'template_file': 'trading_tools.html',
-                'description': 'Sammlung professioneller Trading-Werkzeuge und Kalkulatoren',
-                'category_slug': 'technische-analyse',
-                'icon': '🛠️',
-                'duration': 30,
-                'difficulty': 'beginner'
-            },
-            {
-                'title': 'Börsencrash März 2025 Analyse',
-                'slug': 'boersencrash-maerz-2025',
-                'template_file': 'boersencrash_maerz_2025.html',
-                'description': 'Detaillierte Analyse des Börsencrashs vom März 2025',
-                'category_slug': 'fundamentalanalyse',
-                'icon': '💥',
-                'duration': 60,
-                'difficulty': 'advanced'
-            },
-            {
-                'title': 'Trading-Playbook Grundlagen - Metalearning & The Process',
-                'slug': 'trading-playbook-masterclass',
-                'template_file': 'trading_playbook_masterclass.html',
-                'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',
-                'category_slug': 'elite-system-iii',
-                'icon': '👑',
-                'duration': 120,
-                'difficulty': 'advanced'
-            },
-            # Neu gefundene Module
-            {
-                'title': 'Better Volume Indicator',
-                'slug': 'better-volume-lernseite',
-                'template_file': 'better-volume-lernseite.html',
-                'description': 'Interaktive Präsentation zum Better Volume Indicator - Verstehe Volumen-Patterns im Detail',
-                'category_slug': 'neue-module',
-                'icon': '📊',
-                'duration': 60,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Defining Trend',
-                'slug': 'defining-trend',
-                'template_file': 'defining-trend.html',
-                'description': 'Die Kunst, Trends richtig zu identifizieren und zu definieren',
-                'category_slug': 'neue-module',
-                'icon': '📈',
-                'duration': 75,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Risikomanagement',
-                'slug': 'risikomanagement',
-                'template_file': 'risikomanagement.html',
-                'description': 'Umfassender Guide zum professionellen Risikomanagement im Trading',
-                'category_slug': 'neue-module',
-                'icon': '⚠️',
-                'duration': 90,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': '99% Noise vs. 0,1% Edge',
-                'slug': 'noise-vs-edge',
-                'template_file': 'noise-vs-edge.html',
-                'description': 'Die Kunst der Setup-Selektion - Erkenne den Unterschied zwischen Noise und echtem Edge',
-                'category_slug': 'neue-module',
-                'icon': '🔍',
-                'duration': 80,
-                'difficulty': 'advanced'
-            }
-        ]
-        
-        registered_count = 0
-        
-        for module_data in critical_modules:
-            # Prüfen ob bereits existiert
-            existing = LearningModule.query.filter_by(slug=module_data['slug']).first()
-            if existing:
-                flash(f'⚠️ {module_data["title"]} bereits vorhanden', 'warning')
-                continue
-            
-            # Template-Datei prüfen
-            import os
-            template_path = os.path.join('templates', module_data['template_file'])
-            if not os.path.exists(template_path):
-                flash(f'❌ Template nicht gefunden: {module_data["template_file"]}', 'error')
-                continue
-            
-            # Kategorie finden
-            category = ModuleCategory.query.filter_by(slug=module_data['category_slug']).first()
-            if not category:
-                flash(f'❌ Kategorie nicht gefunden: {module_data["category_slug"]}', 'error')
-                continue
-            
-            # Modul erstellen
-            module = LearningModule(
-                category_id=category.id,
-                title=module_data['title'],
-                slug=module_data['slug'],
-                description=module_data['description'],
-                icon=module_data['icon'],
-                template_file=module_data['template_file'],
-                content_type='html',
-                is_published=True,
-                is_lead_magnet=False,
-                required_subscription_levels=['premium', 'elite'],
-                estimated_duration=module_data['duration'],
-                difficulty_level=module_data['difficulty'],
-                sort_order=100 + registered_count
-            )
-            
-            db.session.add(module)
-            registered_count += 1
-            flash(f'✅ REGISTRIERT: {module_data["title"]}', 'success')
-        
-        db.session.commit()
-        flash(f'🎉 {registered_count} kritische Module erfolgreich registriert!', 'success')
-        
+        # 3. Scanne templates/*.html
+        templates_dir = Path('templates')
+        all_html_files = list(templates_dir.glob('*.html'))
+
+        # 4. Filtere System-Dateien
+        module_templates = [f for f in all_html_files if f.name not in excluded_files]
+
+        # 5. Finde fehlende Module
+        new_modules = []
+        for template_file in module_templates:
+            # Prüfe ob bereits in DB
+            existing = LearningModule.query.filter_by(template_file=template_file.name).first()
+            if not existing:
+                new_modules.append(template_file.name)
+
+        # 6. Füge fehlende Module ein
+        if new_modules:
+            for idx, template_name in enumerate(new_modules):
+                # Erstelle einfachen Titel aus Dateiname
+                title = template_name.replace('.html', '').replace('_', ' ').replace('-', ' ').title()
+                slug = template_name.replace('.html', '')
+
+                new_module = LearningModule(
+                    category_id=neue_module_cat.id,
+                    title=title,
+                    slug=slug,
+                    description=f'Automatisch gefunden: {template_name} - Bitte Details ergänzen',
+                    icon='📄',
+                    template_file=template_name,
+                    content_type='html',
+                    is_published=False,  # Nicht veröffentlicht bis Admin prüft
+                    is_lead_magnet=False,
+                    required_subscription_levels=['premium', 'elite'],
+                    estimated_duration=30,
+                    difficulty_level='intermediate',
+                    sort_order=100 + idx
+                )
+                db.session.add(new_module)
+
+            db.session.commit()
+            flash(f'✅ {len(new_modules)} neue Module gefunden und in "🆕 Neue Module" eingefügt!', 'success')
+            for module_name in new_modules:
+                flash(f'  ➕ {module_name}', 'info')
+        else:
+            flash('ℹ️ Keine neuen Module gefunden - alle Templates sind bereits registriert', 'info')
+
+        flash(f'📊 Gescannt: {len(module_templates)} Templates (ohne System-Dateien)', 'info')
+
     except Exception as e:
         db.session.rollback()
-        flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
-    
+        flash(f'❌ Fehler beim Scannen: {str(e)}', 'error')
+        import traceback
+        print(f"Fehler beim Module-Scan:\n{traceback.format_exc()}")
+
     return redirect(url_for('admin_modules'))
 
-@app.route('/admin/fix-duplicate-categories')
-def fix_duplicate_categories():
-    """🔧 Behebt doppelte Kategorien in der Datenbank"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        # Doppelte Kategorien finden und zusammenführen
-        categories = ModuleCategory.query.all()
-        category_groups = {}
-        
-        # Kategorien nach Name gruppieren
-        for category in categories:
-            name = category.name
-            if name in category_groups:
-                category_groups[name].append(category)
-            else:
-                category_groups[name] = [category]
-        
-        merged_count = 0
-        deleted_count = 0
-        
-        for name, cat_list in category_groups.items():
-            if len(cat_list) > 1:
-                flash(f'🔍 Doppelte Kategorie gefunden: {name} ({len(cat_list)}x)', 'info')
-                
-                # Erste Kategorie als Master behalten
-                master_category = cat_list[0]
-                
-                # Module von anderen Kategorien zur Master-Kategorie verschieben
-                for duplicate_cat in cat_list[1:]:
-                    modules_to_move = LearningModule.query.filter_by(category_id=duplicate_cat.id).all()
-                    
-                    for module in modules_to_move:
-                        module.category_id = master_category.id
-                        flash(f'📦 Modul verschoben: {module.title} → {master_category.name}', 'info')
-                    
-                    # Doppelte Kategorie löschen
-                    db.session.delete(duplicate_cat)
-                    deleted_count += 1
-                    flash(f'🗑️ Doppelte Kategorie gelöscht: {duplicate_cat.name} (ID: {duplicate_cat.id})', 'warning')
-                
-                merged_count += 1
-        
-        db.session.commit()
-        
-        if merged_count > 0:
-            flash(f'✅ {merged_count} doppelte Kategorien zusammengeführt, {deleted_count} Duplikate entfernt!', 'success')
-        else:
-            flash('✅ Keine doppelten Kategorien gefunden - alles sauber!', 'success')
-        
-    except Exception as e:
-        db.session.rollback()
-        flash(f'❌ Fehler beim Bereinigen der Kategorien: {str(e)}', 'error')
-    
-    return redirect(url_for('admin_modules'))
+# ❌ ALTE ROUTEN ENTFERNT - Ersetzt durch /admin/scan-new-modules
+# Die folgenden komplexen Routen wurden entfernt und durch eine einfache Lösung ersetzt:
+# - auto_register_modules() - zu komplex
+# - register_missing_modules() - zu spezifisch
+# Nutze stattdessen: /admin/scan-new-modules (Zeile 2634)
+
+# Alte Routen jetzt durch /admin/scan-new-modules ersetzt - siehe Kommentar oben
 
 def extract_module_metadata(html_file):
     """Extrahiert Meta-Informationen aus HTML-Template"""
