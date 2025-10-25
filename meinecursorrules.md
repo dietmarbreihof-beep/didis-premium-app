@@ -1,5 +1,274 @@
 # Cursor Rules für PROJEKT: Didis Trading Academy - Flask Premium Frontend
 
+---
+
+## ⚠️ **WICHTIG: CLAUDE CODE HAT VORRANG**
+
+**Diese Rules enthalten kritische Änderungen durch Claude Code (`claude/prepare-production-release-011CURveFMwP9fPGmGZ2NeWN`).
+Claude Code Implementierungen haben ABSOLUTE PRIORITÄT und dürfen NICHT durch Cursor überschrieben werden!**
+
+---
+
+## 🚨 **KRITISCHE REGELN VON CLAUDE CODE - NIEMALS ÄNDERN**
+
+### 1. ❌ AUTO-SYNC IST PERMANENT DEAKTIVIERT
+
+**Was Claude Code geändert hat:**
+- `init_modules_on_startup()` (app.py:209-212) hat ein **Early Return** und ist deaktiviert
+- `sync_modules_from_local()` wird NICHT mehr in Routes aufgerufen
+- **Grund:** Auto-Sync hat User-erstellte Module überschrieben
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ Auto-Sync reaktivieren
+- ❌ Early Return in `init_modules_on_startup()` entfernen
+- ❌ `sync_modules_from_local()` in Routes aufrufen (z.B. in home())
+- ❌ Module programmatisch synchronisieren/überschreiben
+
+**CURSOR MUSS:**
+- ✅ Module-Verwaltung NUR über Admin-UI belassen
+- ✅ Beim Hinzufügen neuer Module die Admin-UI oder `/admin/register-missing-modules` nutzen
+- ✅ Kommentare über deaktivierten Auto-Sync beibehalten
+
+**Betroffener Code:**
+```python
+# app.py:209-212
+def init_modules_on_startup():
+    """🚀 AUTO-SYNC DEAKTIVIERT - Module werden nur über Admin-UI verwaltet"""
+    print("[INFO] Module Auto-Sync ist DEAKTIVIERT - Module werden über Admin-UI verwaltet")
+    return True  # Early return - DO NOT REMOVE!
+```
+
+---
+
+### 2. ✅ 4-TIER SUBSCRIPTION SYSTEM (PRODUCTION-READY)
+
+**Was Claude Code implementiert hat:**
+- SubscriptionType Enum erweitert auf 4 Levels: `FREE, PREMIUM, ELITE, ELITE_PRO` (app.py:362-381)
+- User Model mit neuen Feldern: `subscription_type`, `subscription_updated_at`, `subscription_updated_by`
+- Hierarchie-Logik mit `hierarchy()` und `can_access()` Methoden
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ Subscription Levels reduzieren (z.B. zurück auf 3 Levels)
+- ❌ User Model Felder `subscription_type`, `subscription_updated_at`, `subscription_updated_by` entfernen
+- ❌ SubscriptionType Enum ändern oder umbenennen
+- ❌ Hierarchie-Logik modifizieren ohne Rücksprache
+
+**CURSOR MUSS:**
+- ✅ Alle 4 Subscription Levels bei neuen Features unterstützen
+- ✅ Bei Modul-Erstellung alle 4 Levels anbieten (free, premium, elite, elite_pro)
+- ✅ `can_access_module()` Methode verwenden für Zugriffsprüfung
+- ✅ Admin-Audit-Log nutzen bei Subscription-Änderungen
+
+**Betroffener Code:**
+```python
+# app.py:362-381 - SubscriptionType Enum
+class SubscriptionType(enum.Enum):
+    FREE = "free"
+    PREMIUM = "premium"
+    ELITE = "elite"
+    ELITE_PRO = "elite_pro"
+    
+    def hierarchy(self):
+        """Hierarchie-Wert für Zugriffsprüfung (höher = mehr Zugriff)"""
+        return {
+            'free': 0,
+            'premium': 1,
+            'elite': 2,
+            'elite_pro': 3
+        }.get(self.value, 0)
+
+# app.py:399-402 - User Model Felder
+subscription_type = db.Column(db.Enum(SubscriptionType), default=SubscriptionType.FREE, nullable=False)
+subscription_updated_at = db.Column(db.DateTime)
+subscription_updated_by = db.Column(db.String(80))
+
+# app.py:410-416 - Zugriffsprüfung
+def can_access_module(self, module):
+    """Check if user can access a specific module based on subscription"""
+    if module.is_lead_magnet:
+        return True
+    if not module.required_subscription_levels:
+        return True
+    return self.subscription_type.value in module.required_subscription_levels
+```
+
+**Template-Checkboxen (ALLE 4!):**
+```html
+<!-- templates/admin/modules.html:624-649 -->
+<input type="checkbox" name="req_free"> 🆓 Free
+<input type="checkbox" name="req_premium" checked> ⭐ Premium
+<input type="checkbox" name="req_elite" checked> 💎 Elite
+<input type="checkbox" name="req_elite_pro" checked> 👑 Elite Pro
+```
+
+---
+
+### 3. 🔍 FEHLENDE MODULE AUTO-DETECTION
+
+**Was Claude Code implementiert hat:**
+- Neue Admin-Route: `/admin/register-missing-modules` (app.py:5437-5532)
+- Scannt templates-Ordner nach unregistrierten .html Dateien
+- Registriert fehlende Module automatisch in "🆕 Neue Module" Kategorie
+- Button im Admin-Interface: "🔍 Fehlende Module finden"
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ Route `/admin/register-missing-modules` löschen oder umbenennen
+- ❌ "Neue Module" Kategorie (slug: `neue-module`) löschen oder ändern
+- ❌ Auto-Detection Logik entfernen
+- ❌ Button im Admin-Interface entfernen
+
+**CURSOR MUSS:**
+- ✅ Fehlende Module als `is_published=False` registrieren
+- ✅ Auto-generierte Module in "Neue Module" Kategorie einordnen
+- ✅ Templates-Ignorierung beibehalten
+- ✅ Bei neuen System-Templates diese zur Ignorier-Liste hinzufügen
+
+**Ignore-Pattern (System-Templates):**
+```python
+# Diese Templates ignorieren:
+if filename in ['base.html', 'home.html', 'modules_overview.html', '_navigation.html']:
+    continue
+# Auch ignorieren: admin/*, auth/*, errors/*
+```
+
+---
+
+### 4. 👥 USER MANAGEMENT SYSTEM (PRODUCTION-READY)
+
+**Was Claude Code implementiert hat:**
+- Komplettes User-Management-Interface: `/admin/users` (app.py:5188-5433)
+- Neue Template: `templates/admin/users.html` (388 Zeilen)
+- Admin Audit Log für alle User-Änderungen (AdminAuditLog Model)
+- Navigation erweitert in `templates/base.html`
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ Admin-Routes löschen: `/admin/users`, `/admin/users/<id>/subscription`, `/admin/users/<id>/toggle-status`, `/admin/users/<id>/delete`
+- ❌ AdminAuditLog Model ändern oder entfernen
+- ❌ Audit-Logging deaktivieren
+- ❌ User-Management-Template löschen
+
+**CURSOR MUSS:**
+- ✅ Audit-Logging nutzen bei allen User-Änderungen
+- ✅ Subscription-Updates über Admin-Routes durchführen
+- ✅ User-Status-Änderungen über `is_active` Boolean verwalten
+
+**Audit-Log Beispiel (IMMER verwenden bei User-Änderungen!):**
+```python
+# Bei User-Änderungen immer Audit-Log erstellen
+audit_entry = AdminAuditLog(
+    admin_username=session['username'],
+    action_type='subscription_change',  # oder 'user_activate', 'user_deactivate', 'user_delete'
+    target_user_id=user.id,
+    target_username=user.username,
+    old_value=old_subscription.value,
+    new_value=new_subscription.value,
+    ip_address=request.remote_addr
+)
+db.session.add(audit_entry)
+db.session.commit()
+```
+
+---
+
+### 5. 🗄️ POSTGRESQL IN PRODUCTION
+
+**Was Claude Code konfiguriert hat:**
+- DATABASE_URL verwendet PostgreSQL auf Railway (app.py:69-78)
+- Auto-Fix für `postgres://` → `postgresql://` implementiert
+- Migration für `subscription_type` Felder erstellt
+
+**CURSOR DARF ABSOLUT NICHT:**
+- ❌ DATABASE_URL Logik ändern
+- ❌ Auto-Fix für postgres:// entfernen
+- ❌ SQLite für Production nutzen
+
+**CURSOR MUSS:**
+- ✅ Neue Migrationen für Schema-Änderungen erstellen
+- ✅ Bei neuen User-Feldern Migration bereitstellen
+- ✅ PostgreSQL-Kompatibilität sicherstellen
+
+---
+
+### 6. 🔒 SECURITY FEATURES (PRODUCTION-READY)
+
+**Was Claude Code implementiert hat und NICHT geändert werden darf:**
+- CSRF-Protection (app.py:47-52)
+- Rate Limiting (app.py:54-64)
+- Password Validation (app.py:307-355)
+- Session Security Config (app.py:39-49)
+- SECRET_KEY Validierung (app.py:17-37)
+
+**CURSOR MUSS:**
+- ✅ CSRF-Token in allen Forms nutzen
+- ✅ Rate Limiting für Login-Routes beibehalten
+- ✅ Password-Validierung bei Registrierung/Änderung nutzen
+
+---
+
+## ⚠️ KONFLIKT-PRÄVENTION MIT CLAUDE CODE
+
+### Bei folgenden Änderungen CURSOR MUSS STOPPEN und User fragen:
+
+1. **Module-Sync wiederherstellen** → Claude Code hat das bewusst deaktiviert
+2. **Subscription Levels reduzieren** → 4-Tier System ist Production-Standard
+3. **User Model Schema ändern** → Migration erforderlich + Claude Code Konsultation
+4. **Admin-Routes löschen/ändern** → Core-Funktionalität von Claude Code
+5. **Auto-Detection Logik modifizieren** → Kritische Funktion für Modul-Recovery
+6. **Audit-Logging deaktivieren** → Compliance-Anforderung
+
+### ✅ Sichere Bereiche für Cursor-Entwicklung:
+
+- ✅ **Templates/Frontend** (außer admin/users.html, admin/modules.html Subscription-Checkboxen)
+- ✅ **Neue Features** (solange keine Core-Funktionen überschrieben werden)
+- ✅ **Styling/CSS** (keine Einschränkungen)
+- ✅ **Analytics** (VisitorAnalytics Model und Tracking)
+- ✅ **Neue Routes** (außer /admin/* Namespace)
+- ✅ **Lernmodule** (Templates in templates/*.html)
+
+---
+
+## 📚 KRITISCHE FILE-LOCATIONS (CLAUDE CODE)
+
+**Von Claude Code geänderte Files - VORSICHT!:**
+- `app.py` (Zeilen: 209-212, 362-381, 399-402, 2376-2386, 5188-5532)
+- `templates/admin/users.html` (NEU, 388 Zeilen) - NICHT LÖSCHEN
+- `templates/admin/modules.html` (Zeilen: 55-60, 624-649) - Checkboxen nicht ändern
+- `templates/base.html` (User-Link in Navigation)
+
+**Kritische Funktionen (NICHT MODIFIZIEREN):**
+- `init_modules_on_startup()` - app.py:209
+- `sync_modules_from_local()` - app.py:3938
+- `admin_register_missing_modules()` - app.py:5437
+- `SubscriptionType` Enum - app.py:362
+- `User.can_access_module()` - app.py:410
+- `AdminAuditLog` Model - app.py:418
+
+---
+
+## 🎯 ZUSAMMENFASSUNG: CLAUDE CODE CHANGES
+
+**Claude Code hat implementiert (PRODUCTION-READY):**
+1. ✅ 4-Tier Subscription System (FREE, PREMIUM, ELITE, ELITE_PRO)
+2. ✅ User Management mit Admin-UI
+3. ✅ Persistentes Modul-Management (Auto-Sync DEAKTIVIERT)
+4. ✅ Automatische Erkennung fehlender Module
+5. ✅ Admin Audit Logging
+6. ✅ PostgreSQL Migration
+7. ✅ Security Hardening (CSRF, Rate Limiting, Password Validation)
+
+**Git Branch:**
+- Production Branch: `claude/prepare-production-release-011CURveFMwP9fPGmGZ2NeWN`
+
+**Letzte Claude Code Commits:**
+```
+26a6bee - feat(admin): Auto-Detection fehlender Module mit Neue-Module-Kategorie
+f220e59 - feat(modules): Robustes Modul-Management - Module bleiben persistent
+8ded385 - feat(migration): Auto-Migration für User subscription_type Felder
+388daed - feat(admin): Implementiere User-Verwaltung mit 4-Tier-Subscription-System
+```
+
+---
+
 ## 🚫 **ABSOLUTES VERBOT: NIEMALS EIGENMÄCHTIG MODULE/KATEGORIEN ERSTELLEN**
 
 **KRITISCHE REGEL:**
