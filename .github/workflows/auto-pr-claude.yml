@@ -1,0 +1,57 @@
+name: Auto-Create PR for Claude Branches
+
+on:
+  push:
+    branches:
+      - 'claude/**'
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    # Nur ausführen wenn noch kein PR existiert
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if PR already exists
+        id: check_pr
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Prüfe ob PR für diesen Branch bereits existiert
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          PR_EXISTS=$(gh pr list --head "$BRANCH_NAME" --json number --jq length)
+
+          if [ "$PR_EXISTS" -gt 0 ]; then
+            echo "pr_exists=true" >> $GITHUB_OUTPUT
+            echo "ℹ️ PR bereits vorhanden für Branch: $BRANCH_NAME"
+          else
+            echo "pr_exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Kein PR gefunden - wird erstellt"
+          fi
+
+      - name: Create Pull Request
+        if: steps.check_pr.outputs.pr_exists == 'false'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+
+          # Lese letzten Commit-Titel für PR-Titel
+          COMMIT_TITLE=$(git log -1 --pretty=format:'%s')
+
+          # Lese letzten Commit-Body für PR-Beschreibung
+          COMMIT_BODY=$(git log -1 --pretty=format:'%b')
+
+          # Erstelle PR
+          gh pr create \
+            --title "$COMMIT_TITLE" \
+            --body "$COMMIT_BODY" \
+            --base main \
+            --head "$BRANCH_NAME"
+
+          echo "✅ Pull Request erstellt für Branch: $BRANCH_NAME"
