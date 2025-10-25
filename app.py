@@ -328,6 +328,15 @@ def validate_password_strength(password):
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Subscription Types - MUSS VOR User Model definiert werden
+class SubscriptionType(enum.Enum):
+    FREE = "free"
+    BASIC = "basic"
+    PREMIUM = "premium"  # 30-Minuten-Depot
+    ELITE = "elite"      # 5-Minuten-Depot + VIP
+    ELITE_PRO = "elite_pro"  # Elite Pro
+    MASTERCLASS = "masterclass"
+
 class User(db.Model):
     __tablename__ = 'users'
 
@@ -381,14 +390,6 @@ class AdminAuditLog(db.Model):
         return f'<AdminAuditLog {self.admin_username} {self.action_type} on {self.target_username}>'
 
 # === MENÜSYSTEM MODELS ===
-
-class SubscriptionType(enum.Enum):
-    FREE = "free"
-    BASIC = "basic"
-    PREMIUM = "premium"  # 30-Minuten-Depot
-    ELITE = "elite"      # 5-Minuten-Depot + VIP
-    ELITE_PRO = "elite_pro"  # Elite Pro
-    MASTERCLASS = "masterclass"
 
 class ModuleCategory(db.Model):
     """Hauptkategorien wie 'Fundamentalanalyse', 'Technische Analyse'"""
