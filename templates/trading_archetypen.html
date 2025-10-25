@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modul 3: Trading-Methoden Vertiefung | didis-CHARTS Elite Trader Kurs</title>
+    <style>
+        :root {
+            /* didis-CHARTS Corporate Identity - Korrekte Farben */
+            --primary-color: #1a1a1a;
+            --secondary-color: #2d2d2d;
+            --accent-color: #b8860b;
+            --gold-accent: #daa520;
+            --text-color: #1a1a1a;
+            --background-color: #F5F5F5;
+            --card-background: #FFFFFF;
+            --success-color: #2E7D5A;
+            --warning-color: #D4943A;
+            --error-color: #D64545;
+
+            /* Brand Colors */
+            --dark-primary: #1a1a1a;
+            --dark-secondary: #2d2d2d;
+            --gold-bronze: #b8860b;
+            --gold-light: #daa520;
+            --light-gray: #F5F5F5;
+
+            /* Design System */
+            --blue-accent: #3182ce;
+            --green-accent: #38a169;
+            --border-radius: 12px;
+            --shadow: 0 4px 20px rgba(26, 26, 26, 0.1);
+            --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            --gradient-gold: linear-gradient(135deg, var(--accent-color), var(--gold-accent));
+            --gradient-blue: linear-gradient(135deg, var(--blue-accent), #4299e1);
+            --gradient-green: linear-gradient(135deg, var(--green-accent), #48bb78);
+            --gradient-dark: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .course-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .course-header {
+            background: var(--gradient-primary);
+            color: white !important;
+            padding: 40px;
+            border-radius: var(--border-radius);
+            margin-bottom: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        /* Header-Überschriften - alle weiß */
+        .course-header * {
+            color: white !important;
+        }
+
+        .course-header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: white !important;
+        }
+
+        .course-header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            color: white !important;
+        }
+
+        .course-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        /* Section-Header - alle Elemente weiß */
+        .stat-item * {
+            color: white !important;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: white !important;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            color: white !important;
+        }
+
+        .progress-container {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin: 25px 0;
+        }
+
+        /* Progress Container - alle Texte weiß */
+        .progress-container * {
+            color: white !important;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gold-accent);
+            width: 75%;
+            transition: width 0.5s ease;
+        }
+
+        .main-content {
+            display: grid;
+            gap: 30px;
+        }
+
+        .intro-section {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .intro-section h3 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .intro-section p {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .method-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .method-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(26, 26, 26, 0.15);
+            border-color: var(--accent-color);
+        }
+
+        .method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid var(--accent-color);
+        }
+
+        .method-icon {
+            font-size: 3em;
+            margin-right: 20px;
+        }
+
+        .method-title {
+            flex: 1;
+        }
+
+        .method-title h2 {
+            color: var(--primary-color) !important;
+            font-size: 2em;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .method-subtitle {
+            color: var(--accent-color) !important;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: linear-gradient(135deg, #f8f8f8, #ffffff);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            border-left: 5px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+            border-left-color: var(--gold-accent);
+        }
+
+        .info-card h4 {
+            color: var(--primary-color) !important;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .info-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .comparison-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            margin: 30px 0;
+            overflow-x: auto;
+        }
+
+        .comparison-section h3 {
+            text-align: center;
+            color: var(--primary-color) !important;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: var(--gradient-primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+
+        .comparison-table tr:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .highlight-box {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            margin: 25px 0;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .highlight-box h4 {
+            color: var(--primary-color) !important;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .risk-warning {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: var(--error-color);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            border: 2px solid var(--error-color);
+            margin: 25px 0;
+        }
+
+        .risk-warning h4 {
+            color: var(--error-color);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        .interactive-section {
+            background: var(--gradient-dark);
+            color: white !important;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        /* Interactive Section - alle Elemente weiß */
+        .interactive-section * {
+            color: white !important;
+        }
+
+        .interactive-section h4 {
+            color: white !important;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .quiz-preview {
+            background: var(--gradient-gold);
+            color: var(--primary-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin: 30px 0;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        .quiz-preview h3 {
+            color: var(--primary-color) !important;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .btn {
+            background: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: var(--gold-accent);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #247a52;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #b8821e;
+        }
+
+        .navigation-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding: 25px;
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--accent-color);
+        }
+
+        .cta-section {
+            background: var(--card-background);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin-top: 30px;
+            border: 2px solid var(--accent-color);
+        }
+
+        .cta-section h3 {
+            color: var(--primary-color) !important;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .course-container {
+                padding: 10px;
+            }
+
+            .course-header h1 {
+                font-size: 2em;
+            }
+
+            .course-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .method-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .method-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .navigation-footer {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="course-container">
+        <!-- Header mit didis-CHARTS CI -->
+        <div class="course-header fade-in">
+            <h1>🎯 Modul 3: Trading-Methoden Vertiefung</h1>
+            <p>Verstehe die drei Säulen erfolgreichen Tradings und finde deinen Edge</p>
+
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+                <p style="margin-top: 10px;"><strong>Fortschritt:</strong> 75% | <strong>Geschätzte Lernzeit:</strong> 20-25 Minuten</p>
+            </div>
+
+            <div class="course-stats">
+                <div class="stat-item">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">Trading-Methoden</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">Kernkonzepte</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1</div>
+                    <div class="stat-label">Keulen-Kombi-System</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Einführung -->
+            <div class="intro-section fade-in">
+                <h3>🚀 Didis Edge: Der Keulen-Kombi-Prozess</h3>
+                <p><strong>Erfolgreiche Trader haben einen EDGE - einen systematischen Vorteil.</strong></p>
+                <p>In diesem Modul lernst du die drei bewährten Trading-Methoden kennen und verstehen, wie sie sich optimal ergänzen.</p>
+            </div>
+
+            <!-- Buy & Hold -->
+            <div class="method-section fade-in">
+                <div class="method-header">
+                    <div class="method-icon">🐘</div>
+                    <div class="method-title">
+                        <h2>Buy & Hold - Der geduldige Investor</h2>
+                        <div class="method-subtitle">Haltedauer: 5-10 Jahre | Rendite: potentiell 12-18% p.a.*</div>
+                    </div>
+                </div>
+
+                <div class="method-grid">
+                    <div class="info-card">
+                        <h4>📊 Charakteristika</h4>
+                        <ul class="info-list">
+                            <li>Kleine Positionen (1-3% Depotgewicht)</li>
+                            <li>Breite Streuung</li>
+                            <li>Dollar-Cost-Average (DCA)</li>
+                            <li>Käufe in mehreren Tranchen</li>
+                            <li>Kein oder sehr weiter Stop-Loss</li>
+                            <li>High Conviction Titel</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>🎯 Aktienselektion</h4>
+                        <ul class="info-list">
+                            <li>Long-term Compounder Growth Stocks</li>
+                            <li>Etabliertes Wachstumsschwungrad</li>
+                            <li>Level 5 Management (Jim Collins)</li>
+                            <li>Starker Burggraben (Economic Moat)</li>
+                            <li>Wachstumsmarkt mit Tailwind</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🔍 Magic Line Verkaufssystem (Siehe Mastertrader Kurs)</h4>
+                    <p><strong>Verkaufssignal:</strong> Magic Line Break auf Wochenbasis nach 4-6 maligem Berühren der Linie. Durchschnittlich alle 10-12 Wochen trifft eine Superstock auf die Magic Line.</p>
+                    <p><strong>Anpassung:</strong> WMA 5, 10, 20, 30 oder krumme Zahlen - solange alle Kerzen oberhalb oder genau an der Linie schließen.</p>
+                    <p><strong>Details:</strong> (siehe Mastertrader Kurs)</p>
+                </div>
+            </div>
+
+            <!-- Position Trading -->
+            <div class="method-section fade-in">
+                <div class="method-header">
+                    <div class="method-icon">🐆</div>
+                    <div class="method-title">
+                        <h2>Position Trading - Der strategische Jäger</h2>
+                        <div class="method-subtitle">Haltedauer: 3-9 Monate | Rendite: potentiell 15-25% p.a.*</div>
+                    </div>
+                </div>
+
+                <div class="method-grid">
+                    <div class="info-card">
+                        <h4>📊 Charakteristika</h4>
+                        <ul class="info-list">
+                            <li>Mittlere Positionen (3-5% Depotgewicht)</li>
+                            <li>Stage 2 Trades (Stan Weinstein)</li>
+                            <li>Käufe in mehreren Tranchen</li>
+                            <li>Fundamentale + Technische Analyse</li>
+                            <li>Risikomanagement mit Stop-Loss</li>
+                            <li>Marktzyklen beachten</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>🎯 Timing & Entry</h4>
+                        <ul class="info-list">
+                            <li>Low-Risk Entry Points</li>
+                            <li>Ausbruch aus Konsolidierung</li>
+                            <li>Insider-Käufe als Katalysator</li>
+                            <li>Starkes institutionelles Interesse</li>
+                            <li>Makroökonomischer Tailwind</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="risk-warning">
+                    <h4>⚠️ Wichtiger Hinweis</h4>
+                    <p>Position Trading erfordert Disziplin beim Verkaufen. <strong>Niemals in einem Bärenmarkt oder bei Stage 4 Signalen halten!</strong> Kapitalerhalt geht vor Gewinnmaximierung.</p>
+                </div>
+            </div>
+
+            <!-- Swing Trading -->
+            <div class="method-section fade-in">
+                <div class="method-header">
+                    <div class="method-icon">🐝</div>
+                    <div class="method-title">
+                        <h2>Swing Trading - Der taktische Sprinter</h2>
+                        <div class="method-subtitle">Haltedauer: 2-14 Tage | Rendite: potentiell 20-35% p.a.*</div>
+                    </div>
+                </div>
+
+                <div class="method-grid">
+                    <div class="info-card">
+                        <h4>📊 Charakteristika</h4>
+                        <ul class="info-list">
+                            <li>Keulen-Positionen (5-15% Depotgewicht)</li>
+                            <li>Wenige, konzentrierte Aktien</li>
+                            <li>1 bis 2 Käufe (konzentriert)</li>
+                            <li>Bracket Orders (automatisiert)</li>
+                            <li>Enger Stop-Loss</li>
+                            <li>Kurze Haltedauer</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>🎯 Setup & Execution</h4>
+                        <ul class="info-list">
+                            <li>High Momentum Breakouts</li>
+                            <li>Earnings Plays</li>
+                            <li>Gap-Up/Gap-Down Trades</li>
+                            <li>Volume-basierte Signale</li>
+                            <li>Schnelle Gewinnmitnahme</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Keulen-Kombi-Prozess</h4>
+                    <p><strong>1. Schritt:</strong> Große Position an Low-Risk Entry Point</p>
+                    <p><strong>2. Schritt:</strong> Bei Erfolg - Runner als Position Trade ins LFD verschieben</p>
+                    <p><strong>Vorteil:</strong> Maximale Gewinnoptimierung bei kontrolliertem Risiko</p>
+                </div>
+            </div>
+
+            <!-- Vergleichstabelle -->
+            <div class="comparison-section fade-in">
+                <h3>📊 Direkter Methodenvergleich</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspekt</th>
+                            <th>🐘 Buy & Hold</th>
+                            <th>🐆 Position Trading</th>
+                            <th>🐝 Swing Trading</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Zeitaufwand/Tag</strong></td>
+                            <td>10-20 Minuten</td>
+                            <td>30-60 Minuten</td>
+                            <td>1-3 Stunden</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stress-Level</strong></td>
+                            <td>Niedrig</td>
+                            <td>Mittel</td>
+                            <td>Hoch</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Positionsgröße</strong></td>
+                            <td>1-3% (bis 10% bei Top-Picks)</td>
+                            <td>3-5%</td>
+                            <td>5-15%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Stop-Loss</strong></td>
+                            <td>Sehr weit/Keiner</td>
+                            <td>15-25%</td>
+                            <td>5-10%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Analysetiefe</strong></td>
+                            <td>Sehr tief (Fundamental)</td>
+                            <td>Mittel (Fundamental + Technisch)</td>
+                            <td>Oberflächlich (Technisch)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Erfolgsfaktor</strong></td>
+                            <td>Geduld & Qualitätsauswahl</td>
+                            <td>Timing & Marktverständnis</td>
+                            <td>Schnelligkeit & Disziplin</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Marktzyklen -->
+            <div class="method-section fade-in">
+                <div class="method-header">
+                    <div class="method-icon">📈</div>
+                    <div class="method-title">
+                        <h2>Marktzyklen verstehen</h2>
+                        <div class="method-subtitle">97% der S&P 500 Performance entsteht in RISK-ON Phasen</div>
+                    </div>
+                </div>
+
+                <div class="method-grid">
+                    <div class="info-card">
+                        <h4>✅ Positive Regime</h4>
+                        <ul class="info-list">
+                            <li><strong>Goldilocks:</strong> Moderates Wachstum, niedrige Inflation</li>
+                            <li><strong>Reflation:</strong> Steigendes Wachstum, steigende Inflation</li>
+                            <li>FED-Politik unterstützend</li>
+                            <li>Risiko wird belohnt</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>❌ Negative Regime</h4>
+                        <ul class="info-list">
+                            <li><strong>Inflation:</strong> Hohe Inflation, schwaches Wachstum</li>
+                            <li><strong>Deflation:</strong> Fallende Preise, Rezession</li>
+                            <li>FED-Politik restriktiv</li>
+                            <li>Cash ist King</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Buffetts Weisheit</h4>
+                    <p><strong>"Wenn andere gierig sind, musst du geizig werden. Wenn andere ängstlich sind, musst du gierig werden."</strong></p>
+                    <p>Das Timing der Marktzyklen ist schwieriger als die Richtung zu erkennen. Bescheidenheit und kontinuierliches Lernen sind entscheidend.</p>
+                </div>
+            </div>
+
+            <!-- Risk Management -->
+            <div class="method-section fade-in">
+                <div class="method-header">
+                    <div class="method-icon">🛡️</div>
+                    <div class="method-title">
+                        <h2>Risk Management Regeln</h2>
+                        <div class="method-subtitle">Der wichtigste Baustein für langfristigen Erfolg</div>
+                    </div>
+                </div>
+
+                <div class="method-grid">
+                    <div class="info-card">
+                        <h4>💰 Die 1%-Regel</h4>
+                        <ul class="info-list">
+                            <li>Maximal 1% des Gesamtdepots pro Trade riskieren</li>
+                            <li>Bei 50.000€ Depot = max. 500€ Risiko</li>
+                            <li>Stop-Loss bestimmt Positionsgröße</li>
+                            <li>Emotionen werden ausgeschaltet</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>📊 Chance-Risiko-Verhältnis</h4>
+                        <ul class="info-list">
+                            <li>Minimum 1:2 (Risiko:Chance)</li>
+                            <li>Optimal 1:3 oder besser</li>
+                            <li>Profitabel auch bei 40% Trefferquote</li>
+                            <li>Systematische Herangehensweise</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="risk-warning">
+                    <h4>⚠️ Drawdown Wahrheit</h4>
+                    <p><strong>-50% Verlust = +100% nötig für Break-Even!</strong></p>
+                    <p>Deshalb ist Kapitalerhalt wichtiger als Gewinnmaximierung. Kleinere, kontrollierte Verluste sind der Schlüssel zum langfristigen Erfolg.</p>
+                </div>
+            </div>
+
+            <!-- Quiz Vorschau -->
+            <div class="quiz-preview fade-in">
+                <h3>🧠 Bereit für das Abschluss-Quiz?</h3>
+                <p>Teste dein Wissen über die drei Trading-Methoden und deren optimale Anwendung.</p>
+                <p><strong>Das Quiz enthält:</strong> 8 Fragen | Sofortiges Feedback | Persönliche Empfehlungen</p>
+                <a href="{{ url_for('modules') }}" class="btn btn-success">🚀 Zurück zur Modulübersicht</a>
+            </div>
+
+            <!-- Interaktives Element -->
+            <div class="interactive-section fade-in">
+                <h4>📚 Weiteres Lernen</h4>
+                <p>Vertiefen Sie Ihr Wissen mit weiteren Modulen und Kursen</p>
+            </div>
+
+            <!-- Navigation Footer -->
+            <div class="navigation-footer">
+                <a href="{{ url_for('modules') }}" class="btn btn-primary">← Zurück zur Übersicht</a>
+                <div>
+                    <p><strong>Nächstes Modul:</strong> Praktische Anwendung der Trading-Methoden</p>
+                </div>
+                <a href="{{ url_for('modules') }}" class="btn btn-warning">Weiter lernen →</a>
+            </div>
+
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h3>🎓 Bereit für den nächsten Schritt?</h3>
+                <p>Vertiefen Sie Ihr Wissen mit unserem Elite Trader Programm</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('modules') }}" class="btn btn-success">Weitere Module entdecken</a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Zum Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Progress tracking
+        window.addEventListener('scroll', function() {
+            const scrollPercentage = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+            document.querySelector('.progress-fill').style.width = scrollPercentage + '%';
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.method-section, .comparison-section').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
