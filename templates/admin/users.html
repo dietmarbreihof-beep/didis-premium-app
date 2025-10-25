@@ -88,7 +88,7 @@
                     <th style="padding: 12px;">Email</th>
                     <th style="padding: 12px;">Name</th>
                     <th style="padding: 12px;">Subscription</th>
-                    <th style="padding: 12px;">Status</th>
+                    <th style="padding: 12px; min-width: 100px;">Status</th>
                     <th style="padding: 12px;">Registriert</th>
                     <th style="padding: 12px;">Letzter Login</th>
                     <th style="padding: 12px; text-align: center;">Aktionen</th>
@@ -125,7 +125,7 @@
                             </select>
                         </form>
                     </td>
-                    <td style="padding: 12px;">
+                    <td style="padding: 12px; min-width: 100px; white-space: nowrap;">
                         {% if user.is_active %}
                         <span style="background: var(--success); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.875rem;">✓ Aktiv</span>
                         {% else %}
