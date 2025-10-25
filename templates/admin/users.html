@@ -288,7 +288,8 @@ table {
 }
 
 .modal-content {
-    background-color: var(--bg-primary);
+    background-color: #ffffff;
+    color: #1a1a1a;
     margin: 5% auto;
     padding: 30px;
     border-radius: 12px;
@@ -308,11 +309,11 @@ table {
     font-size: 28px;
     font-weight: bold;
     cursor: pointer;
-    color: var(--text-secondary);
+    color: #666;
 }
 
 .close:hover {
-    color: var(--text-primary);
+    color: #1a1a1a;
 }
 
 .form-group {
@@ -328,6 +329,18 @@ table {
 .form-group input,
 .form-group select {
     width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #1a1a1a;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
 }
 </style>
 
