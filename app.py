@@ -5027,6 +5027,78 @@ def admin_users():
                          recent_logs=recent_logs,
                          SubscriptionType=SubscriptionType)
 
+@app.route('/admin/users/add', methods=['POST'])
+@admin_required
+def admin_add_user():
+    """Erstellt einen neuen User"""
+    try:
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        subscription_type = request.form.get('subscription_type', 'free')
+
+        # Validierung
+        if not username or not email or not password:
+            flash('Username, Email und Passwort sind erforderlich!', 'error')
+            return redirect(url_for('admin_users'))
+
+        if len(password) < 6:
+            flash('Passwort muss mindestens 6 Zeichen lang sein!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Prüfe ob Username oder Email bereits existiert
+        if User.query.filter_by(username=username).first():
+            flash(f'Username "{username}" existiert bereits!', 'error')
+            return redirect(url_for('admin_users'))
+
+        if User.query.filter_by(email=email).first():
+            flash(f'Email "{email}" ist bereits registriert!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Subscription Type validieren
+        try:
+            sub_type = SubscriptionType(subscription_type)
+        except ValueError:
+            sub_type = SubscriptionType.FREE
+
+        # Neuen User erstellen
+        new_user = User(
+            username=username,
+            email=email,
+            first_name=first_name if first_name else None,
+            last_name=last_name if last_name else None,
+            subscription_type=sub_type,
+            is_active=True
+        )
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='user_create',
+            target_user_id=new_user.id,
+            target_username=new_user.username,
+            old_value='—',
+            new_value=f'{email} | {sub_type.value}',
+            ip_address=request.remote_addr
+        )
+        db.session.add(audit_log)
+        db.session.commit()
+
+        flash(f'✅ User "{username}" erfolgreich erstellt!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Erstellen des Users: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
 @app.route('/admin/users/<int:user_id>/subscription', methods=['POST'])
 @admin_required
 def admin_change_subscription(user_id):
