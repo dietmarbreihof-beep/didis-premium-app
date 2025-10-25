@@ -2827,6 +2827,47 @@ def register_missing_modules():
                 'icon': '👑',
                 'duration': 120,
                 'difficulty': 'advanced'
+            },
+            # Neu gefundene Module
+            {
+                'title': 'Better Volume Indicator',
+                'slug': 'better-volume-lernseite',
+                'template_file': 'better-volume-lernseite.html',
+                'description': 'Interaktive Präsentation zum Better Volume Indicator - Verstehe Volumen-Patterns im Detail',
+                'category_slug': 'neue-module',
+                'icon': '📊',
+                'duration': 60,
+                'difficulty': 'intermediate'
+            },
+            {
+                'title': 'Defining Trend',
+                'slug': 'defining-trend',
+                'template_file': 'defining-trend.html',
+                'description': 'Die Kunst, Trends richtig zu identifizieren und zu definieren',
+                'category_slug': 'neue-module',
+                'icon': '📈',
+                'duration': 75,
+                'difficulty': 'intermediate'
+            },
+            {
+                'title': 'Risikomanagement',
+                'slug': 'risikomanagement',
+                'template_file': 'risikomanagement.html',
+                'description': 'Umfassender Guide zum professionellen Risikomanagement im Trading',
+                'category_slug': 'neue-module',
+                'icon': '⚠️',
+                'duration': 90,
+                'difficulty': 'intermediate'
+            },
+            {
+                'title': '99% Noise vs. 0,1% Edge',
+                'slug': 'noise-vs-edge',
+                'template_file': 'noise-vs-edge.html',
+                'description': 'Die Kunst der Setup-Selektion - Erkenne den Unterschied zwischen Noise und echtem Edge',
+                'category_slug': 'neue-module',
+                'icon': '🔍',
+                'duration': 80,
+                'difficulty': 'advanced'
             }
         ]
         
