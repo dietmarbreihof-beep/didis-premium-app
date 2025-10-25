@@ -330,38 +330,71 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
     __tablename__ = 'users'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    
+
     # Account Status
     is_active = db.Column(db.Boolean, default=True)
     email_verified = db.Column(db.Boolean, default=True)  # Für einfache Registrierung
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
-    
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
+
+    # Subscription Type - jetzt als DB-Feld statt Property
+    _subscription_type = db.Column('subscription_type', db.String(20), default='free')
+
     @property
     def subscription_type(self):
-        """Gibt den aktuellen Subscription-Typ zurück - für Demo FREE"""
+        """Gibt den aktuellen Subscription-Typ als Enum zurück"""
+        if self._subscription_type:
+            try:
+                return SubscriptionType(self._subscription_type)
+            except ValueError:
+                return SubscriptionType.FREE
         return SubscriptionType.FREE
+
+    @subscription_type.setter
+    def subscription_type(self, value):
+        """Setzt den Subscription-Typ (akzeptiert Enum oder String)"""
+        if isinstance(value, SubscriptionType):
+            self._subscription_type = value.value
+        elif isinstance(value, str):
+            self._subscription_type = value
+        else:
+            self._subscription_type = 'free'
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+class AdminAuditLog(db.Model):
+    """Audit-Log für Admin-Aktionen"""
+    __tablename__ = 'admin_audit_logs'
+
+    id = db.Column(db.Integer, primary_key=True)
+    admin_username = db.Column(db.String(80), nullable=False)
+    action_type = db.Column(db.String(50), nullable=False)  # user_create, user_delete, subscription_change, etc.
+    target_user_id = db.Column(db.Integer)
+    target_username = db.Column(db.String(80))
+    old_value = db.Column(db.Text)
+    new_value = db.Column(db.Text)
+    ip_address = db.Column(db.String(50))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 # === MENÜSYSTEM MODELS ===
 
 class SubscriptionType(enum.Enum):
     FREE = "free"
-    BASIC = "basic" 
+    BASIC = "basic"
     PREMIUM = "premium"  # 30-Minuten-Depot
     ELITE = "elite"      # 5-Minuten-Depot + VIP
+    ELITE_PRO = "elite_pro"  # Elite Pro
     MASTERCLASS = "masterclass"
 
 class ModuleCategory(db.Model):
@@ -4983,11 +5016,8 @@ def admin_users():
 
         # Filter nach Subscription
         if filter_subscription:
-            try:
-                sub_type = SubscriptionType(filter_subscription)
-                query = query.filter(User.subscription_type == sub_type)
-            except ValueError:
-                pass
+            # Filtere nach dem String-Wert in der DB
+            query = query.filter(User._subscription_type == filter_subscription)
 
         # Filter nach Status
         if filter_status == 'active':
@@ -5002,10 +5032,10 @@ def admin_users():
         total_users = User.query.count()
         active_users = User.query.filter_by(is_active=True).count()
         subscription_stats = {
-            'free': User.query.filter_by(subscription_type=SubscriptionType.FREE).count(),
-            'premium': User.query.filter_by(subscription_type=SubscriptionType.PREMIUM).count(),
-            'elite': User.query.filter_by(subscription_type=SubscriptionType.ELITE).count(),
-            'elite_pro': User.query.filter_by(subscription_type=SubscriptionType.ELITE_PRO).count(),
+            'free': User.query.filter_by(_subscription_type='free').count(),
+            'premium': User.query.filter_by(_subscription_type='premium').count(),
+            'elite': User.query.filter_by(_subscription_type='elite').count(),
+            'elite_pro': User.query.filter_by(_subscription_type='elite_pro').count(),
         }
 
         # Letzte Audit-Logs
@@ -5122,8 +5152,6 @@ def admin_change_subscription(user_id):
 
         # Subscription ändern
         user.subscription_type = new_sub_type
-        user.subscription_updated_at = datetime.utcnow()
-        user.subscription_updated_by = session.get('user', {}).get('username')
 
         # Audit-Log erstellen
         admin_username = session.get('user', {}).get('username', 'unknown')
