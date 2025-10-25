@@ -179,35 +179,35 @@ def init_modules_on_startup():
             file_age = time.time() - os.path.getmtime(sync_flag_file)
             # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
             if file_age < 3600:
-                print(f"ℹ️ Module-Sync übersprungen (zuletzt vor {int(file_age/60)} Minuten)")
+                print(f"INFO: Module-Sync uebersprungen (zuletzt vor {int(file_age/60)} Minuten)")
                 return True
         except Exception as e:
-            print(f"⚠️ Fehler beim Lesen des Sync-Flags: {e}")
+            print(f"WARNUNG: Fehler beim Lesen des Sync-Flags: {e}")
     
     try:
         with app.app_context():
             print("\n" + "="*60)
-            print("🚀 MODULE AUTO-SYNC BEIM START")
+            print("MODULE AUTO-SYNC BEIM START")
             print("="*60)
             
             # 1. Kategorien synchronisieren (inkl. "Neue Module")
-            print("📋 Synchronisiere Kategorien...")
+            print("Synchronisiere Kategorien...")
             sync_modules_from_local()
             db.session.commit()
-            print("✅ Kategorien synchronisiert")
+            print("OK: Kategorien synchronisiert")
             
             # 2. Module aus JSON-Backup wiederherstellen
-            print("📥 Prüfe JSON-Backup...")
+            print("Pruefe JSON-Backup...")
             restored_count = restore_modules_from_json()
             if restored_count > 0:
-                print(f"✅ {restored_count} Module aus Backup wiederhergestellt")
+                print(f"OK: {restored_count} Module aus Backup wiederhergestellt")
             
             # 3. Templates scannen und neue Module registrieren
-            print("🔍 Scanne Templates nach neuen Modulen...")
-            print("ℹ️ Template-Scan: Nutze /admin/force-sync-templates für komplette Sync")
+            print("Scanne Templates nach neuen Modulen...")
+            print("INFO: Template-Scan - Nutze /admin/force-sync-templates fuer komplette Sync")
             
             print("="*60)
-            print("✅ MODULE AUTO-SYNC ABGESCHLOSSEN")
+            print("OK: MODULE AUTO-SYNC ABGESCHLOSSEN")
             print("="*60 + "\n")
             
             # Setze Flag-Datei (persistent über Worker!)
@@ -215,14 +215,14 @@ def init_modules_on_startup():
                 with open(sync_flag_file, 'w') as f:
                     from datetime import datetime
                     f.write(datetime.utcnow().isoformat())
-                print(f"💾 Sync-Flag gesetzt: {sync_flag_file}")
+                print(f"Sync-Flag gesetzt: {sync_flag_file}")
             except Exception as flag_error:
-                print(f"⚠️ Konnte Sync-Flag nicht setzen: {flag_error}")
+                print(f"WARNUNG: Konnte Sync-Flag nicht setzen: {flag_error}")
         
         return True
         
     except Exception as e:
-        print(f"⚠️ Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
+        print(f"WARNUNG: Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -1024,6 +1024,28 @@ def symmetrie_trading():
     #     return redirect(url_for('login'))
     
     return render_template('symmetrie-trading.html')
+
+@app.route('/position-vergroessern')
+def position_vergroessern():
+    """Position vergrößern - Lance's Expected-Value-Methode"""
+    track_visitor()  # Analytics
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='position-vergroessern'))
+    
+    return render_template('position-vergroessern.html')
 
 # Legacy Routes (kompatibel mit bestehender App)
 

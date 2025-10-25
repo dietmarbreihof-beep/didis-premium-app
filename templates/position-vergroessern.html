@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position vergrößern - Die Expected-Value-Methode</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .position-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.4em;
+            color: #f4e97b;
+            margin-bottom: 30px;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Step Sections */
+        .step-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+            border-left: 4px solid #daa520;
+            display: none;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .step-section.visible {
+            display: block;
+        }
+
+        .step-section h2 {
+            color: #b8860b;
+            font-size: 2em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .step-section h3 {
+            color: #1a1a1a;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+        }
+
+        .step-section p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin: 15px 0;
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #b8860b;
+        }
+
+        .highlight-box h4 {
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #d69e2e;
+        }
+
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .critical-warning {
+            background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px 0;
+            box-shadow: 0 8px 30px rgba(229, 62, 62, 0.3);
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+            border-left: 4px solid #38a169;
+        }
+
+        .success-box h4 {
+            color: #155724;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        /* Comparison Cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-card {
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .amateur-card {
+            background: linear-gradient(135deg, #fee 0%, #fdd 100%);
+            border: 3px solid #dc2626;
+        }
+
+        .professional-card {
+            background: linear-gradient(135deg, #efe 0%, #dfd 100%);
+            border: 3px solid #059669;
+        }
+
+        .comparison-card h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .comparison-card .emoji {
+            font-size: 4em;
+            display: block;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            background: linear-gradient(135deg, #fff5f5 0%, #e8f5e8 100%);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border: 2px solid #daa520;
+        }
+
+        .quiz-container h3 {
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 4px solid #b8860b;
+        }
+
+        .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .quiz-option {
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fffbf0;
+        }
+
+        .quiz-option.selected {
+            border-color: #b8860b;
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 50%);
+            color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #e8f5e8;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        /* Buttons */
+        .gold-button {
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            color: white;
+            padding: 18px 45px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.2em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+            display: inline-block;
+            margin: 20px 0;
+            text-decoration: none;
+        }
+
+        .gold-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(184, 134, 11, 0.4);
+        }
+
+        .gold-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Interactive Example */
+        .interactive-example {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 30px 0;
+        }
+
+        .scenario-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .scenario-button {
+            padding: 15px 30px;
+            border-radius: 8px;
+            border: 2px solid #daa520;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .scenario-button:hover {
+            background: #fffbf0;
+            transform: translateY(-2px);
+        }
+
+        .scenario-button.active {
+            background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            color: white;
+        }
+
+        .scenario-result {
+            padding: 25px;
+            margin-top: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .scenario-result.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 2px solid #38a169;
+        }
+
+        .key-takeaways h2 {
+            color: #155724;
+            font-size: 2em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .takeaway-item {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #38a169;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Checklist */
+        .checklist-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .checklist-item {
+            padding: 15px;
+            margin: 10px 0;
+            background: #f7f7f7;
+            border-radius: 8px;
+            border-left: 4px solid #daa520;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item:hover {
+            background: #fff9e6;
+            transform: translateX(5px);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            accent-color: #b8860b;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            font-size: 1.05em;
+            flex: 1;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .position-wrapper {
+                padding: 10px;
+            }
+
+            .hero-section {
+                padding: 40px 20px;
+            }
+
+            .hero-section h1 {
+                font-size: 2em;
+            }
+
+            .step-section {
+                padding: 25px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .gold-button {
+                padding: 15px 30px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="position-wrapper">
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <h1>📊 Position vergrößern: Die Expected-Value-Methode</h1>
+            <p class="subtitle">Professionelles Aufstocken basierend auf Mathematik, nicht auf Emotionen</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-container">
+            <h3 style="margin-bottom: 15px; text-align: center;">Dein Lernfortschritt</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <p style="text-align: center; margin-top: 10px; color: #666;">
+                Schritt <span id="currentStepDisplay">0</span> von 6
+            </p>
+        </div>
+
+        <!-- Step 1: Der Grundsatz -->
+        <div class="step-section visible" id="step1">
+            <h2>🎯 Schritt 1: Der Grundsatz des Expected Value</h2>
+            
+            <div class="highlight-box">
+                <h4>💡 Die fundamentale Regel:</h4>
+                <p style="font-size: 1.15em; color: #1a1a1a; font-weight: 600;">
+                    Alle Handelsentscheidungen, einschließlich des Aufstockens von Positionen, 
+                    müssen auf dem <strong>Expected Value (Erwartungswert)</strong> basieren.
+                </p>
+            </div>
+
+            <p>
+                Lance's Regel ist kristallklar: Er fügt nur dann zu einer Position hinzu, wenn die neue 
+                Exposition ein <strong>unabhängiger Trade</strong> wäre, unabhängig von seiner aktuellen Position.
+            </p>
+
+            <div class="warning-box">
+                <h4>⚠️ Warum ist das so wichtig?</h4>
+                <p style="color: #856404;">
+                    Momente mit einem bedeutsamen positiven Erwartungswert sind <strong>zeitlich sehr spezifisch</strong>. 
+                    Sie kommen und gehen schnell. Wenn du aufstockst, nur weil du "mehr Aktien hättest kaufen sollen", 
+                    ist das oft schon zu spät – der optimale Expected Value ist bereits verflogen.
+                </p>
+            </div>
+
+            <h3>📐 Was ist Expected Value?</h3>
+            <p>
+                Der Expected Value (EV) ist die mathematische Grundlage des Tradings. 
+                Er berechnet sich aus:
+            </p>
+
+            <div class="highlight-box">
+                <p style="font-size: 1.2em; text-align: center; color: #1a1a1a; font-weight: 700; margin: 20px 0;">
+                    EV = (Win-Rate × Durchschnitts-Gewinn) - (Loss-Rate × Durchschnitts-Verlust)
+                </p>
+                <p style="text-align: center; color: #1a1a1a; margin-top: 15px;">
+                    <strong>Beispiel:</strong> 60% Win-Rate, $200 durchschnittlicher Gewinn, $100 durchschnittlicher Verlust<br>
+                    EV = (0.60 × $200) - (0.40 × $100) = $120 - $40 = <strong style="color: #059669;">$80 positiv</strong>
+                </p>
+            </div>
+
+            <button class="gold-button" onclick="nextStep(2)">✅ Expected Value verstanden - Weiter zu Schritt 2</button>
+        </div>
+
+        <!-- Step 2: Amateur vs. Professional -->
+        <div class="step-section" id="step2">
+            <h2>⚔️ Schritt 2: Amateur vs. Professional Trader</h2>
+            
+            <div class="comparison-grid">
+                <div class="comparison-card amateur-card">
+                    <span class="emoji">🎲</span>
+                    <h3>Amateur-Trader</h3>
+                    <ul style="list-style: none; padding: 0; font-size: 1.05em; line-height: 1.8;">
+                        <li>❌ Stockt auf, wenn Trade <strong>bereits profitabel</strong> ist</li>
+                        <li>❌ Motiviert durch <strong>Bedauern</strong> ("Hätte mehr kaufen sollen!")</li>
+                        <li>❌ Sucht <strong>psychologischen Komfort</strong></li>
+                        <li>❌ Ignoriert, dass <strong>Expected Value sinkt</strong></li>
+                        <li>❌ Verschlechtert Durchschnittspreis</li>
+                        <li>❌ Verdirbt gute Trades durch schlechte Hinzufügungen</li>
+                    </ul>
+                </div>
+
+                <div class="comparison-card professional-card">
+                    <span class="emoji">🎯</span>
+                    <h3>Professional Trader</h3>
+                    <ul style="list-style: none; padding: 0; font-size: 1.05em; line-height: 1.8;">
+                        <li>✅ Stockt nur bei <strong>neuem Setup</strong> auf</li>
+                        <li>✅ Motiviert durch <strong>Expected Value</strong></li>
+                        <li>✅ Ignoriert <strong>psychologischen Komfort</strong></li>
+                        <li>✅ Prüft, ob EV <strong>immer noch hoch</strong> ist</li>
+                        <li>✅ Behandelt jede Position unabhängig</li>
+                        <li>✅ Jedes Add ist ein eigenständiger Trade</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="critical-warning">
+                <h3 style="color: white; margin-bottom: 15px;">🚨 Das Problem mit Amateur-Aufstockungen</h3>
+                <p style="color: white;">
+                    Der Expected Value <strong>sinkt in den meisten Fällen</strong>, während ein Trade zu deinen 
+                    Gunsten läuft. Warum? Weil der perfekte Entry-Punkt bereits vorbei ist! Du kaufst jetzt 
+                    zu schlechteren Preisen, mit weniger Upside und mehr Downside-Risiko.
+                </p>
+                <p style="color: white; margin-top: 15px; font-weight: 600;">
+                    Das Ergebnis: Du verdirbst einen ursprünglich guten Trade durch mittelmäßige oder schlechte 
+                    Hinzufügungen, was oft zu einem vorzeitigen Ausstieg führt.
+                </p>
+            </div>
+
+            <!-- Quiz 1 -->
+            <div class="quiz-container">
+                <h3>🧠 Quiz: Amateur vs. Professional</h3>
+                
+                <div class="quiz-question">
+                    <p>1. Wann stockt ein Amateur-Trader typischerweise auf?</p>
+                    <div class="quiz-option" data-quiz="1" data-question="1" data-correct="true">A) Wenn der Trade bereits profitabel ist</div>
+                    <div class="quiz-option" data-quiz="1" data-question="1" data-correct="false">B) Bei einem neuen Setup mit hohem Expected Value</div>
+                    <div class="quiz-option" data-quiz="1" data-question="1" data-correct="false">C) Niemals</div>
+                </div>
+
+                <div class="quiz-question">
+                    <p>2. Was passiert mit dem Expected Value während ein Trade läuft?</p>
+                    <div class="quiz-option" data-quiz="1" data-question="2" data-correct="false">A) Er steigt kontinuierlich</div>
+                    <div class="quiz-option" data-quiz="1" data-question="2" data-correct="true">B) Er sinkt in den meisten Fällen</div>
+                    <div class="quiz-option" data-quiz="1" data-question="2" data-correct="false">C) Er bleibt konstant</div>
+                </div>
+
+                <button class="gold-button" onclick="checkQuiz(1)">Quiz prüfen</button>
+                <div id="quiz1Feedback"></div>
+            </div>
+
+            <button class="gold-button" onclick="nextStep(3)">✅ Verstanden - Weiter zu Schritt 3</button>
+        </div>
+
+        <!-- Step 3: Lance's Ansatz -->
+        <div class="step-section" id="step3">
+            <h2>🎓 Schritt 3: Lance's professioneller Ansatz</h2>
+            
+            <div class="success-box">
+                <h4>✅ Wann Lance aufstockt:</h4>
+                <p style="color: #155724; font-size: 1.1em; line-height: 1.8;">
+                    Nur dann, wenn der Chart ein Setup bietet, das <strong>unabhängig von seiner aktuellen Position</strong> 
+                    einen echten Einstieg für sein Handelssystem darstellen würde.
+                </p>
+            </div>
+
+            <h3>📍 Beispiele für valide Add-Punkte:</h3>
+            
+            <div class="interactive-example">
+                <h4 style="margin-bottom: 20px;">💼 Interaktive Szenarien</h4>
+                <p>Klicke auf ein Szenario, um zu sehen, ob es ein valider Add-Punkt ist:</p>
+                
+                <div class="scenario-selector">
+                    <button class="scenario-button" onclick="showScenario(1)">Exakte Ausbruchslevel</button>
+                    <button class="scenario-button" onclick="showScenario(2)">Durchbruch früherer Hochs</button>
+                    <button class="scenario-button" onclick="showScenario(3)">Eilmeldungen (Breaking News)</button>
+                    <button class="scenario-button" onclick="showScenario(4)">Mean-Reversion Trendbruch</button>
+                    <button class="scenario-button" onclick="showScenario(5)">Einfach "mehr Shares"</button>
+                </div>
+
+                <div class="scenario-result" id="scenario1">
+                    <div class="highlight-box">
+                        <h4>✅ Valider Add-Punkt: Exakte Ausbruchslevel</h4>
+                        <p><strong>Situation:</strong> Du hast eine Position bei $100. Die Aktie konsolidiert und bricht dann klar über $110 (wichtiges Resistance-Level).</p>
+                        <p><strong>Warum es funktioniert:</strong> Der Breakout über $110 ist ein eigenständiges Setup mit neuem Expected Value. Du würdest diesen Trade auch ohne bestehende Position eingehen.</p>
+                        <p><strong>Lance's Regel:</strong> ✅ Das ist ein unabhängiger Entry-Punkt.</p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="scenario2">
+                    <div class="highlight-box">
+                        <h4>✅ Valider Add-Punkt: Durchbruch früherer Hochs</h4>
+                        <p><strong>Situation:</strong> Du bist long bei $50. Nach Konsolidierung durchbricht die Aktie das frühere All-Time-High von $60.</p>
+                        <p><strong>Warum es funktioniert:</strong> ATH-Breakouts sind starke Momentum-Signale. Neuer ungetesteter Preisraum = neues Setup.</p>
+                        <p><strong>Lance's Regel:</strong> ✅ Unabhängiges Setup mit hohem EV.</p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="scenario3">
+                    <div class="highlight-box">
+                        <h4>✅ Valider Add-Punkt: Breaking News</h4>
+                        <p><strong>Situation:</strong> Du hast eine Position. Plötzlich kommt eine FDA-Approval oder Major Partnership-Announcement.</p>
+                        <p><strong>Warum es funktioniert:</strong> Fundamentaler Katalysator ändert die gesamte These. Neuer Expected Value durch neue Information.</p>
+                        <p><strong>Lance's Regel:</strong> ✅ Schnell handeln bei extremem EV.</p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="scenario4">
+                    <div class="highlight-box">
+                        <h4>✅ Valider Add-Punkt: Mean-Reversion Trendbruch</h4>
+                        <p><strong>Situation:</strong> Du kaufst intra-bar bei hohem EV für Mean-Reversion. Dann bricht der Trend tatsächlich (Trendlinien-Bruch, frühere Hochs).</p>
+                        <p><strong>Warum es funktioniert:</strong> Die erste Position war "Anticipation", die zweite ist "Confirmation". Beide sind eigenständige Setups.</p>
+                        <p><strong>Lance's Regel:</strong> ✅ Aber nur, wenn EV immer noch extrem günstig ist.</p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="scenario5">
+                    <div class="warning-box">
+                        <h4>❌ KEIN valider Add-Punkt: "Mehr Shares"</h4>
+                        <p style="color: #856404;"><strong>Situation:</strong> Dein Trade ist +5% im Gewinn. Du denkst: "Hätte mehr kaufen sollen!" und kaufst nach.</p>
+                        <p style="color: #856404;"><strong>Warum es NICHT funktioniert:</strong> Kein neues Setup. Keine neuen Informationen. Nur psychologisches Bedauern.</p>
+                        <p style="color: #856404;"><strong>Lance's Regel:</strong> ❌ Das ist emotionales Trading, kein Expected-Value-Trading.</p>
+                        <p style="color: #856404; font-weight: 700; margin-top: 15px;">Resultat: Du kaufst zu schlechteren Preisen, verschlechterst deinen Average, und riskierst einen vorzeitigen Exit!</p>
+                    </div>
+                </div>
+            </div>
+
+            <button class="gold-button" onclick="nextStep(4)">✅ Verstanden - Weiter zu Schritt 4</button>
+        </div>
+
+        <!-- Step 4: Unabhängige Behandlung -->
+        <div class="step-section" id="step4">
+            <h2>🔄 Schritt 4: Unabhängige Behandlung von Positionen</h2>
+            
+            <div class="highlight-box">
+                <h4>💡 Die Schlüsselstrategie:</h4>
+                <p style="color: #1a1a1a; font-size: 1.15em; font-weight: 600;">
+                    Jede hinzugefügte Position wird <strong>vollständig unabhängig</strong> als eigener Trade behandelt.
+                </p>
+            </div>
+
+            <h3>📋 Wie das in der Praxis aussieht:</h3>
+
+            <div class="success-box">
+                <h4>✅ Beispiel: Swing + Scalp</h4>
+                <ul style="color: #155724; list-style-position: inside; line-height: 1.8; font-size: 1.05em;">
+                    <li><strong>Position 1:</strong> 100 Shares als Swing-Trade bei $100 gekauft
+                        <br><span style="margin-left: 20px;">→ Wird nach Swing-Regeln gehalten (Target: $120, Stop: $95)</span>
+                    </li>
+                    <li style="margin-top: 15px;"><strong>Position 2:</strong> 50 Shares als Scalp bei $110 Breakout hinzugefügt
+                        <br><span style="margin-left: 20px;">→ Wird nach Scalp-Regeln gehandelt (Target: $112, Stop: $109)</span>
+                    </li>
+                </ul>
+                <p style="color: #155724; margin-top: 20px; font-weight: 600;">
+                    Keine Sorge um "Durchschnittspreis" oder "richtigen Stop-Loss" – jede Position hat ihre 
+                    klaren, präzisen Ein- und Ausstiegsregeln!
+                </p>
+            </div>
+
+            <h3>🎯 Vorteile dieser Methode:</h3>
+
+            <div class="checklist-container">
+                <div class="checklist-item">
+                    <input type="checkbox" id="benefit1" disabled checked>
+                    <label for="benefit1"><strong>Klarheit:</strong> Jede Position hat eindeutige Regeln</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="benefit2" disabled checked>
+                    <label for="benefit2"><strong>Einfachheit:</strong> Keine Verwirrung über Durchschnittspreis</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="benefit3" disabled checked>
+                    <label for="benefit3"><strong>Flexibilität:</strong> Verschiedene Timeframes für verschiedene Adds</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="benefit4" disabled checked>
+                    <label for="benefit4"><strong>Disziplin:</strong> Emotionale Entscheidungen werden eliminiert</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="benefit5" disabled checked>
+                    <label for="benefit5"><strong>Optimierung:</strong> Jedes Add basiert auf etablierten Strategien</label>
+                </div>
+            </div>
+
+            <!-- Quiz 2 -->
+            <div class="quiz-container">
+                <h3>🧠 Quiz: Unabhängige Positionen</h3>
+                
+                <div class="quiz-question">
+                    <p>1. Wie solltest du hinzugefügte Positionen behandeln?</p>
+                    <div class="quiz-option" data-quiz="2" data-question="1" data-correct="false">A) Alle zusammen als eine große Position</div>
+                    <div class="quiz-option" data-quiz="2" data-question="1" data-correct="true">B) Jede vollständig unabhängig als eigenen Trade</div>
+                    <div class="quiz-option" data-quiz="2" data-question="1" data-correct="false">C) Mit einem gemeinsamen Durchschnittspreis</div>
+                </div>
+
+                <div class="quiz-question">
+                    <p>2. Was ist der Hauptvorteil der unabhängigen Behandlung?</p>
+                    <div class="quiz-option" data-quiz="2" data-question="2" data-correct="false">A) Größere Positionen</div>
+                    <div class="quiz-option" data-quiz="2" data-question="2" data-correct="true">B) Klare Regeln für jede Position, keine emotionalen Entscheidungen</div>
+                    <div class="quiz-option" data-quiz="2" data-question="2" data-correct="false">C) Niedrigerer Durchschnittspreis</div>
+                </div>
+
+                <button class="gold-button" onclick="checkQuiz(2)">Quiz prüfen</button>
+                <div id="quiz2Feedback"></div>
+            </div>
+
+            <button class="gold-button" onclick="nextStep(5)">✅ Verstanden - Weiter zu Schritt 5</button>
+        </div>
+
+        <!-- Step 5: Datenanalyse -->
+        <div class="step-section" id="step5">
+            <h2>📊 Schritt 5: Die Macht der Datenanalyse</h2>
+            
+            <div class="warning-box">
+                <h4>⚠️ Lance's persönliche Erfahrung:</h4>
+                <p style="color: #856404;">
+                    Er entwickelte diese Best Practices durch <strong>objektive Analyse seiner eigenen Handelsdaten</strong>, 
+                    nachdem er festgestellt hatte, dass seine eigenen Aufstockungen ursprünglich psychologisch motiviert 
+                    waren und seine Gesamtperformance <strong>belasteten</strong>.
+                </p>
+            </div>
+
+            <h3>🔍 Empfohlene Datenanalyse:</h3>
+
+            <div class="success-box">
+                <h4>✅ Was du tracken solltest:</h4>
+                <ul style="color: #155724; list-style-position: inside; line-height: 1.8; font-size: 1.05em;">
+                    <li><strong>Entry-Price:</strong> Ursprünglicher Entry vs. Add-Entries</li>
+                    <li><strong>P&L pro Position:</strong> Wie profitabel ist jedes Add separat?</li>
+                    <li><strong>Expected Value:</strong> Was war der EV bei jedem Add?</li>
+                    <li><strong>Setup-Typ:</strong> War es ein valides Setup oder emotionales Trading?</li>
+                    <li><strong>Win-Rate:</strong> Ursprüngliche Entries vs. Adds</li>
+                </ul>
+            </div>
+
+            <h3>📈 Auswertung der Daten:</h3>
+
+            <div class="interactive-example">
+                <h4>💡 Drei mögliche Szenarien:</h4>
+                
+                <div class="scenario-selector">
+                    <button class="scenario-button" onclick="showAnalysisScenario(1)">Aufstockungen verlieren Geld</button>
+                    <button class="scenario-button" onclick="showAnalysisScenario(2)">Aufstockungen profitabel, aber weniger</button>
+                    <button class="scenario-button" onclick="showAnalysisScenario(3)">Aufstockungen gleichwertig profitabel</button>
+                </div>
+
+                <div class="scenario-result" id="analysis1">
+                    <div class="critical-warning">
+                        <h4 style="color: white;">🚨 Szenario 1: Aufstockungen verlieren Geld</h4>
+                        <p style="color: white;"><strong>Beispiel-Daten:</strong></p>
+                        <ul style="color: white; margin-left: 25px; line-height: 1.8;">
+                            <li>Ursprüngliche Entries: +$500 durchschnittlich pro Trade</li>
+                            <li>Aufstockungen: -$200 durchschnittlich pro Trade</li>
+                        </ul>
+                        <p style="color: white; font-weight: 700; margin-top: 20px; font-size: 1.1em;">
+                            ➡️ AKTION: Eliminiere alle Aufstockungen sofort! Sie zerstören deinen Expected Value.
+                        </p>
+                        <p style="color: white; margin-top: 15px;">
+                            Du tradest besser, wenn du NUR die ursprünglichen Entries machst und keine Adds.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="analysis2">
+                    <div class="warning-box">
+                        <h4>⚠️ Szenario 2: Aufstockungen profitabel, aber deutlich weniger</h4>
+                        <p style="color: #856404;"><strong>Beispiel-Daten:</strong></p>
+                        <ul style="color: #856404; margin-left: 25px; line-height: 1.8;">
+                            <li>Ursprüngliche Entries: +$500 durchschnittlich pro Trade</li>
+                            <li>Aufstockungen: +$100 durchschnittlich pro Trade</li>
+                        </ul>
+                        <p style="color: #856404; font-weight: 700; margin-top: 20px; font-size: 1.1em;">
+                            ➡️ AKTION: Verlagere mehr Kapital in die ursprünglichen Einstiege!
+                        </p>
+                        <p style="color: #856404; margin-top: 15px;">
+                            Statt 100 Shares ursprünglich + 50 Shares Add → Trade 150 Shares nur beim ursprünglichen Entry, 
+                            wo der Expected Value am höchsten ist.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="scenario-result" id="analysis3">
+                    <div class="success-box">
+                        <h4>✅ Szenario 3: Aufstockungen gleichwertig profitabel</h4>
+                        <p style="color: #155724;"><strong>Beispiel-Daten:</strong></p>
+                        <ul style="color: #155724; margin-left: 25px; line-height: 1.8;">
+                            <li>Ursprüngliche Entries: +$500 durchschnittlich pro Trade</li>
+                            <li>Aufstockungen: +$480 durchschnittlich pro Trade</li>
+                        </ul>
+                        <p style="color: #155724; font-weight: 700; margin-top: 20px; font-size: 1.1em;">
+                            ➡️ GRATULATION: Du tradest professionell!
+                        </p>
+                        <p style="color: #155724; margin-top: 15px;">
+                            Deine Aufstockungen basieren auf echten Setups mit hohem Expected Value. 
+                            Mach weiter so – du folgst bereits Lance's Ansatz!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h4>💡 Das Fazit:</h4>
+                <p style="color: #1a1a1a; font-size: 1.1em;">
+                    Objektive, detaillierte Datenanalyse ist <strong>entscheidend für echtes Wachstum</strong> 
+                    und Fortschritt im Handel. Nur so findest du deine individuellen, optimalen Regeln.
+                </p>
+            </div>
+
+            <button class="gold-button" onclick="nextStep(6)">✅ Verstanden - Zu den Key Takeaways</button>
+        </div>
+
+        <!-- Step 6: Key Takeaways -->
+        <div class="step-section" id="step6">
+            <div class="key-takeaways">
+                <h2>🎯 KEY TAKEAWAYS</h2>
+                
+                <div class="takeaway-item">
+                    <p><strong>1. Expected Value ist König:</strong> Alle Aufstockungen müssen auf Expected Value basieren, 
+                    nicht auf psychologischem Komfort oder Bedauern.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>2. EV sinkt meist während Trade läuft:</strong> Der perfekte Entry-Punkt ist oft schon vorbei. 
+                    Aufstocken aus Emotion verschlechtert deinen Durchschnittspreis.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>3. Nur bei neuen Setups aufstocken:</strong> Exakte Ausbruchslevel, Durchbruch früherer Hochs, 
+                    Breaking News – das sind valide Add-Punkte.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>4. Jedes Add ist ein unabhängiger Trade:</strong> Behandle jede Position separat mit eigenen 
+                    Entry/Exit-Regeln. Keine Durchschnittspreise!</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>5. Swing vs. Scalp:</strong> Eine als Swing gehaltene Position folgt Swing-Regeln, 
+                    eine als Scalp hinzugefügte folgt Scalp-Regeln.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>6. Tracke deine Daten:</strong> Vergleiche P&L von ursprünglichen Entries vs. Adds. 
+                    Wenn Adds weniger profitabel sind, fokussiere mehr Kapital auf die ursprünglichen Entries.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>7. Psychologie vs. Mathematik:</strong> Lass dich nicht von Komfort oder Unbehagen leiten. 
+                    Verlasse dich auf die objektive Mathematik des Expected Value.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>8. Lance's Lektion:</strong> Selbst erfahrene Trader müssen ihre eigenen Daten analysieren, 
+                    um zu erkennen, ob ihre Aufstockungen wirklich profitabel sind.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>9. Momente sind zeitlich spezifisch:</strong> Hoher Expected Value kommt und geht schnell. 
+                    Verpasse nicht den optimalen Moment durch emotionale Verzögerung.</p>
+                </div>
+
+                <div class="takeaway-item">
+                    <p><strong>10. Objektive Regeln finden:</strong> Nutze Datenanalyse um DEINE individuellen, 
+                    optimalen Aufstockungs-Regeln zu entwickeln.</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 60px 0;">
+                <button class="gold-button" onclick="resetProgress()">🔄 Modul neu starten</button>
+                <a href="/modules" class="gold-button" style="text-decoration: none; margin-left: 20px;">
+                    🎯 Zurück zu allen Modulen
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Progress tracking
+        let currentStep = parseInt(localStorage.getItem('positionVergroessernStep')) || 1;
+        const totalSteps = 6;
+        const quizResults = {};
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            showStep(currentStep);
+            updateProgress();
+        });
+
+        function showStep(step) {
+            // Hide all steps
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                if (stepEl) {
+                    stepEl.classList.remove('visible');
+                }
+            }
+            
+            // Show all steps up to current
+            for (let i = 1; i <= step; i++) {
+                const stepEl = document.getElementById(`step${i}`);
+                if (stepEl) {
+                    stepEl.classList.add('visible');
+                }
+            }
+            
+            // Scroll to current step
+            setTimeout(() => {
+                const currentStepEl = document.getElementById(`step${step}`);
+                if (currentStepEl) {
+                    currentStepEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 100);
+        }
+
+        function nextStep(step) {
+            currentStep = step;
+            localStorage.setItem('positionVergroessernStep', currentStep);
+            showStep(currentStep);
+            updateProgress();
+            
+            // Celebration for completion
+            if (step === totalSteps) {
+                setTimeout(() => {
+                    const celebration = document.createElement('div');
+                    celebration.innerHTML = '🎉';
+                    celebration.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; animation: fadeIn 1s ease;';
+                    document.body.appendChild(celebration);
+                    setTimeout(() => celebration.remove(), 2000);
+                }, 500);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = Math.round((currentStep / totalSteps) * 100);
+            const progressFill = document.getElementById('progressFill');
+            const currentStepDisplay = document.getElementById('currentStepDisplay');
+            
+            if (progressFill) {
+                progressFill.style.width = percentage + '%';
+                progressFill.textContent = percentage + '%';
+            }
+            
+            if (currentStepDisplay) {
+                currentStepDisplay.textContent = currentStep;
+            }
+        }
+
+        function checkQuiz(quizNumber) {
+            const questions = document.querySelectorAll(`[data-quiz="${quizNumber}"]`);
+            let correctAnswers = 0;
+            let totalQuestions = 0;
+            const questionNumbers = new Set();
+            
+            // Count questions
+            questions.forEach(q => questionNumbers.add(q.dataset.question));
+            totalQuestions = questionNumbers.size;
+            
+            // Check each question
+            questionNumbers.forEach(qNum => {
+                const options = document.querySelectorAll(`[data-quiz="${quizNumber}"][data-question="${qNum}"]`);
+                const selected = Array.from(options).find(opt => opt.classList.contains('selected'));
+                
+                if (selected && selected.dataset.correct === 'true') {
+                    correctAnswers++;
+                    selected.classList.add('correct');
+                } else if (selected) {
+                    selected.classList.add('incorrect');
+                }
+                
+                // Show correct answer
+                options.forEach(opt => {
+                    if (opt.dataset.correct === 'true') {
+                        opt.classList.add('correct');
+                    }
+                });
+            });
+            
+            // Show feedback
+            const feedbackEl = document.getElementById(`quiz${quizNumber}Feedback`);
+            const percentage = Math.round((correctAnswers / totalQuestions) * 100);
+            let message = '';
+            let className = '';
+            
+            if (percentage === 100) {
+                message = `🎉 Perfekt! ${correctAnswers}/${totalQuestions} richtig! Du hast es drauf!`;
+                className = 'success-box';
+            } else if (percentage >= 50) {
+                message = `👍 ${correctAnswers}/${totalQuestions} richtig! Fast perfekt!`;
+                className = 'success-box';
+            } else {
+                message = `📖 ${correctAnswers}/${totalQuestions} richtig. Lies den Abschnitt nochmal durch!`;
+                className = 'warning-box';
+            }
+            
+            feedbackEl.innerHTML = `<div class="${className}" style="margin-top: 20px; padding: 20px;">${message}</div>`;
+            
+            // Store result
+            quizResults[quizNumber] = { correct: correctAnswers, total: totalQuestions };
+        }
+
+        function resetProgress() {
+            if (confirm('Möchtest du wirklich von vorne beginnen? Dein Fortschritt wird zurückgesetzt.')) {
+                localStorage.removeItem('positionVergroessernStep');
+                currentStep = 1;
+                showStep(1);
+                updateProgress();
+                
+                // Reset all quiz answers
+                document.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Clear feedback
+                for (let i = 1; i <= 6; i++) {
+                    const feedbackEl = document.getElementById(`quiz${i}Feedback`);
+                    if (feedbackEl) feedbackEl.innerHTML = '';
+                }
+                
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // Quiz option selection
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('quiz-option')) {
+                const quiz = e.target.dataset.quiz;
+                const question = e.target.dataset.question;
+                
+                // Remove selection from other options in same question
+                document.querySelectorAll(`[data-quiz="${quiz}"][data-question="${question}"]`).forEach(opt => {
+                    opt.classList.remove('selected');
+                });
+                
+                // Select clicked option
+                e.target.classList.add('selected');
+            }
+        });
+
+        // Interactive Scenarios
+        function showScenario(num) {
+            // Hide all scenarios
+            for (let i = 1; i <= 5; i++) {
+                const scenario = document.getElementById(`scenario${i}`);
+                if (scenario) {
+                    scenario.classList.remove('show');
+                }
+            }
+            
+            // Show selected scenario
+            const selectedScenario = document.getElementById(`scenario${num}`);
+            if (selectedScenario) {
+                selectedScenario.classList.add('show');
+            }
+            
+            // Update button states
+            document.querySelectorAll('.scenario-button').forEach((btn, index) => {
+                btn.classList.remove('active');
+                if (index + 1 === num) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        // Analysis Scenarios
+        function showAnalysisScenario(num) {
+            // Hide all analysis scenarios
+            for (let i = 1; i <= 3; i++) {
+                const scenario = document.getElementById(`analysis${i}`);
+                if (scenario) {
+                    scenario.classList.remove('show');
+                }
+            }
+            
+            // Show selected scenario
+            const selectedScenario = document.getElementById(`analysis${num}`);
+            if (selectedScenario) {
+                selectedScenario.classList.add('show');
+            }
+            
+            // Update button states in Step 5
+            const buttons = document.querySelectorAll('#step5 .scenario-button');
+            buttons.forEach((btn, index) => {
+                btn.classList.remove('active');
+                if (index + 1 === num) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
+

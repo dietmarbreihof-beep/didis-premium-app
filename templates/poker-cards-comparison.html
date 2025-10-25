@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poker Trading Analogie</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a4d2e 0%, #1a5c3d 50%, #0a4d2e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .card-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card-section:hover {
+            transform: translateY(-10px);
+        }
+
+        .section-title {
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .d-trade .section-title {
+            color: #e53e3e;
+        }
+
+        .a-trade .section-title {
+            color: #38a169;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 1.3em;
+            color: #fff;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .poker-table {
+            background: radial-gradient(ellipse at center, #1a5c3d 0%, #0d3d26 100%);
+            border-radius: 200px;
+            padding: 60px 40px;
+            border: 8px solid #8B4513;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6),
+                        inset 0 0 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .poker-table::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            height: 85%;
+            border: 2px dashed rgba(255, 215, 0, 0.2);
+            border-radius: 200px;
+        }
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .playing-card {
+            width: 140px;
+            height: 200px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .playing-card:hover {
+            transform: translateY(-15px) rotate(2deg);
+        }
+
+        .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .card-suit {
+            font-size: 2em;
+            line-height: 1;
+        }
+
+        .card-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4em;
+        }
+
+        .red {
+            color: #e53e3e;
+        }
+
+        .black {
+            color: #1a1a1a;
+        }
+
+        .stats-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 6px solid;
+        }
+
+        .d-trade .stats-box {
+            border-left-color: #e53e3e;
+        }
+
+        .a-trade .stats-box {
+            border-left-color: #38a169;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .stat-value {
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+
+        .d-trade .stat-value {
+            color: #e53e3e;
+        }
+
+        .a-trade .stat-value {
+            color: #38a169;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.2), rgba(229, 62, 62, 0.1));
+            border: 2px solid #e53e3e;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.2), rgba(56, 161, 105, 0.1));
+            border: 2px solid #38a169;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            color: white;
+        }
+
+        .emphasis {
+            font-size: 1.2em;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            color: #daa520;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.7);
+        }
+
+        .header p {
+            font-size: 1.4em;
+            opacity: 0.9;
+        }
+
+        .probability {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 968px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .playing-card {
+                width: 110px;
+                height: 160px;
+            }
+
+            .card-value {
+                font-size: 2em;
+            }
+
+            .card-center {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>♠️ Die Poker-Analogie ♥️</h1>
+            <p>Warum Du niemals gleich viel auf jede Hand setzen solltest</p>
+        </div>
+
+        <div class="comparison-grid">
+            <!-- D-Trade Section -->
+            <div class="card-section d-trade">
+                <div class="section-title">D-TRADE</div>
+                <div class="subtitle">Die schlechteste Starting Hand</div>
+                
+                <div class="poker-table">
+                    <div class="cards-container">
+                        <div class="playing-card">
+                            <div class="card-value black">9</div>
+                            <div class="card-suit black">♣</div>
+                            <div class="card-center black">♣</div>
+                        </div>
+                        
+                        <div class="playing-card">
+                            <div class="card-value red">2</div>
+                            <div class="card-suit red">♥</div>
+                            <div class="card-center red">♥</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <div class="stat-row">
+                        <span class="stat-label">Win-Rate:</span>
+                        <span class="stat-value">38,9%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Häufigkeit:</span>
+                        <span class="stat-value">Ständig verfügbar</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Ranking:</span>
+                        <span class="stat-value">Schlechteste Hand</span>
+                    </div>
+                </div>
+
+                <div class="probability">
+                    Diese Hand verliert in <strong>6 von 10 Fällen</strong>
+                </div>
+
+                <div class="warning-box">
+                    <p class="emphasis">
+                        ⚠️ Niemals groß setzen!<br><br>
+                        Selbst Profi-Pokerspieler folden diese Hand sofort, wenn sie nicht im Big Blind sind. 
+                        Warum? Weil die Wahrscheinlichkeit zu verlieren viel höher ist als zu gewinnen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- A-Trade Section -->
+            <div class="card-section a-trade">
+                <div class="section-title">A-TRADE</div>
+                <div class="subtitle">Pocket Aces - Die Königshand</div>
+                
+                <div class="poker-table">
+                    <div class="cards-container">
+                        <div class="playing-card">
+                            <div class="card-value red">A</div>
+                            <div class="card-suit red">♥</div>
+                            <div class="card-center red">♥</div>
+                        </div>
+                        
+                        <div class="playing-card">
+                            <div class="card-value black">A</div>
+                            <div class="card-suit black">♠</div>
+                            <div class="card-center black">♠</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-box">
+                    <div class="stat-row">
+                        <span class="stat-label">Win-Rate:</span>
+                        <span class="stat-value">85,3%</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Häufigkeit:</span>
+                        <span class="stat-value">1 von 221 Händen (0,45%)</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Ranking:</span>
+                        <span class="stat-value">Beste Starting Hand</span>
+                    </div>
+                </div>
+
+                <div class="probability">
+                    Diese Hand gewinnt in <strong>mehr als 8 von 10 Fällen</strong>
+                </div>
+
+                <div class="success-box">
+                    <p class="emphasis">
+                        🚀 GO ALL-IN!<br><br>
+                        Wenn Du Pocket Aces bekommst, ist es Zeit massiv zu setzen. Diese Hand kommt nur alle 221 Hände vor - 
+                        Du kannst es Dir nicht leisten, diese Gelegenheit zu verpassen!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Conclusion -->
+        <div style="margin-top: 60px; text-align: center; background: rgba(0, 0, 0, 0.4); padding: 40px; border-radius: 20px; border: 2px solid #daa520;">
+            <h2 style="color: #daa520; font-size: 2.2em; margin-bottom: 20px;">💡 Die entscheidende Lektion</h2>
+            <p style="color: white; font-size: 1.3em; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                Würdest Du auf 9-2 und Pocket Aces die <strong>gleiche Summe</strong> setzen?<br><br>
+                <span style="color: #e53e3e; font-size: 1.2em;">Natürlich nicht!</span><br><br>
+                Genau so funktioniert Trading: Wenn Du auf D-Trades und A-Trades die gleiche Positionsgröße setzt, 
+                <strong style="color: #daa520;">verschenkst Du massiv Potential</strong> und machst Dich langfristig zum Verlierer-Trader.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
