@@ -1,6 +1,7 @@
 # app.py - Didis Premium Trading Academy mit Menüsystem
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, flash, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from flask_wtf.csrf import CSRFProtect
 import os
 import enum
 import secrets
@@ -13,13 +14,53 @@ load_dotenv()
 # App-Konfiguration
 app = Flask(__name__)
 
-# Sicherheitskonfiguration
-app.secret_key = os.environ.get('SECRET_KEY') or secrets.token_hex(32)
+# === KRITISCHE SICHERHEITSKONFIGURATION ===
+
+# 1. SECRET_KEY Validierung (PRODUCTION-KRITISCH!)
+secret_key = os.environ.get('SECRET_KEY')
+flask_env = os.environ.get('FLASK_ENV', 'development')
+
+if flask_env == 'production' and not secret_key:
+    raise ValueError(
+        "KRITISCHER FEHLER: SECRET_KEY muss in Production gesetzt sein!\n"
+        "Setzen Sie SECRET_KEY in der .env Datei oder als Umgebungsvariable.\n"
+        "Generieren Sie einen sicheren Key mit: python -c 'import secrets; print(secrets.token_hex(32))'"
+    )
+
+# In Development: Fallback zu generiertem Key (mit Warnung)
+if not secret_key:
+    secret_key = secrets.token_hex(32)
+    print("⚠️  WARNING: Kein SECRET_KEY gesetzt. Verwende temporären Key für Development.")
+    print("⚠️  Sessions werden bei jedem Neustart ungültig!")
+    print("⚠️  Für Production: Setzen Sie SECRET_KEY in .env")
+
+app.secret_key = secret_key
+
+# 2. Session-Security basierend auf Umgebung
+is_production = flask_env == 'production'
+
 app.config.update(
-    SESSION_COOKIE_SECURE=False,  # Für Development - in Produktion auf True setzen
+    SESSION_COOKIE_SECURE=is_production,  # HTTPS-only in Production
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(hours=2)
+    PERMANENT_SESSION_LIFETIME=timedelta(hours=2),
+    WTF_CSRF_ENABLED=True,
+    WTF_CSRF_TIME_LIMIT=None  # CSRF-Token läuft nicht ab (Session-basiert)
+)
+
+# CSRF-Schutz aktivieren
+csrf = CSRFProtect(app)
+
+# Rate Limiting aktivieren (Schutz vor Brute-Force)
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=["200 per day", "50 per hour"],
+    storage_uri="memory://",  # In-Memory für Development, für Production: Redis
+    strategy="fixed-window"
 )
 
 # Database-Pfad konfigurieren
@@ -166,63 +207,37 @@ print("Analytics-Tracking aktiviert")
 
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
-    """🚀 Automatische Module-Synchronisation beim App-Start (Railway)"""
-    import os
-    import time
-    
-    # Persistenter Check via File (funktioniert über Worker hinweg!)
-    sync_flag_file = '.modules_synced'
-    
-    # Prüfe ob kürzlich synchronisiert wurde
-    if os.path.exists(sync_flag_file):
-        try:
-            file_age = time.time() - os.path.getmtime(sync_flag_file)
-            # Sync nur alle 60 Minuten (verhindert zu häufige Ausführung)
-            if file_age < 3600:
-                print(f"INFO: Module-Sync uebersprungen (zuletzt vor {int(file_age/60)} Minuten)")
-                return True
-        except Exception as e:
-            print(f"WARNUNG: Fehler beim Lesen des Sync-Flags: {e}")
-    
+    """🚀 VEREINFACHTE Startup-Logik: Stelle nur "Neue Module" Kategorie sicher"""
     try:
         with app.app_context():
             print("\n" + "="*60)
-            print("MODULE AUTO-SYNC BEIM START")
+            print("🚀 MODULE SETUP BEIM START")
             print("="*60)
-            
-            # 1. Kategorien synchronisieren (inkl. "Neue Module")
-            print("Synchronisiere Kategorien...")
-            sync_modules_from_local()
-            db.session.commit()
-            print("OK: Kategorien synchronisiert")
-            
-            # 2. Module aus JSON-Backup wiederherstellen
-            print("Pruefe JSON-Backup...")
-            restored_count = restore_modules_from_json()
-            if restored_count > 0:
-                print(f"OK: {restored_count} Module aus Backup wiederhergestellt")
-            
-            # 3. Templates scannen und neue Module registrieren
-            print("Scanne Templates nach neuen Modulen...")
-            print("INFO: Template-Scan - Nutze /admin/force-sync-templates fuer komplette Sync")
-            
-            print("="*60)
-            print("OK: MODULE AUTO-SYNC ABGESCHLOSSEN")
+
+            # Stelle sicher dass "Neue Module" Kategorie existiert
+            neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+            if not neue_module_cat:
+                neue_module_cat = ModuleCategory(
+                    name='🆕 Neue Module',
+                    slug='neue-module',
+                    icon='🆕',
+                    description='Neu gefundene Module - Bitte in richtige Kategorie verschieben',
+                    sort_order=999,
+                    is_active=True
+                )
+                db.session.add(neue_module_cat)
+                db.session.commit()
+                print("✅ Kategorie '🆕 Neue Module' erstellt")
+            else:
+                print("✅ Kategorie '🆕 Neue Module' bereits vorhanden")
+
+            print("ℹ️  Nutze Admin-Panel → '🔄 Neue Module scannen' um fehlende Module zu finden")
             print("="*60 + "\n")
-            
-            # Setze Flag-Datei (persistent über Worker!)
-            try:
-                with open(sync_flag_file, 'w') as f:
-                    from datetime import datetime
-                    f.write(datetime.utcnow().isoformat())
-                print(f"Sync-Flag gesetzt: {sync_flag_file}")
-            except Exception as flag_error:
-                print(f"WARNUNG: Konnte Sync-Flag nicht setzen: {flag_error}")
-        
+
         return True
-        
+
     except Exception as e:
-        print(f"WARNUNG: Fehler beim Module-Auto-Sync (nicht kritisch): {str(e)}")
+        print(f"⚠️ Fehler beim Module-Setup (nicht kritisch): {str(e)}")
         import traceback
         traceback.print_exc()
         return False
@@ -231,45 +246,150 @@ def init_modules_on_startup():
 # Grund: Läuft bei JEDEM Request (CSS, JS, Images) - zu oft!
 # Lösung: Nur beim App-Start aufrufen (siehe unten bei __main__)
 
+# === AUTHENTICATION DECORATORS ===
+
+from functools import wraps
+import re
+
+def login_required(f):
+    """Decorator: Route erfordert Login"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            flash('Bitte melden Sie sich an, um auf diese Seite zuzugreifen.', 'warning')
+            return redirect(url_for('login', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    """Decorator: Route erfordert Admin-Rechte"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            flash('Bitte melden Sie sich an.', 'warning')
+            return redirect(url_for('login', next=request.url))
+
+        username = session.get('user', {}).get('username')
+        if username not in ['admin', 'didi']:
+            flash('Zugriff verweigert: Admin-Rechte erforderlich.', 'error')
+            return redirect(url_for('home'))
+
+        return f(*args, **kwargs)
+    return decorated_function
+
+# === PASSWORD VALIDATION ===
+
+def validate_password_strength(password):
+    """
+    Validiert Passwort-Komplexität für erhöhte Sicherheit.
+
+    Returns:
+        (bool, str): (is_valid, error_message)
+    """
+    if len(password) < 8:
+        return False, "Passwort muss mindestens 8 Zeichen lang sein."
+
+    if len(password) > 128:
+        return False, "Passwort darf maximal 128 Zeichen lang sein."
+
+    # Mindestens ein Großbuchstabe
+    if not re.search(r'[A-Z]', password):
+        return False, "Passwort muss mindestens einen Großbuchstaben enthalten."
+
+    # Mindestens ein Kleinbuchstabe
+    if not re.search(r'[a-z]', password):
+        return False, "Passwort muss mindestens einen Kleinbuchstaben enthalten."
+
+    # Mindestens eine Ziffer
+    if not re.search(r'\d', password):
+        return False, "Passwort muss mindestens eine Ziffer enthalten."
+
+    # Mindestens ein Sonderzeichen
+    if not re.search(r'[!@#$%^&*(),.?":{}|<>_\-+=\[\]\\\/;\'`~]', password):
+        return False, "Passwort muss mindestens ein Sonderzeichen enthalten (!@#$%^&* etc.)."
+
+    # Check gegen häufige Passwörter
+    common_passwords = [
+        'password', '12345678', 'qwerty', 'abc123', 'password1',
+        'Password1', 'password123', 'Qwerty123', '123456789',
+        'welcome', 'admin123', 'letmein', 'monkey', 'dragon'
+    ]
+
+    if password.lower() in [p.lower() for p in common_passwords]:
+        return False, "Dieses Passwort ist zu häufig verwendet. Bitte wählen Sie ein einzigartigeres Passwort."
+
+    # Keine einfachen Wiederholungen (z.B. "aaaa", "1111")
+    if re.search(r'(.)\1{3,}', password):
+        return False, "Passwort darf keine sich wiederholenden Zeichen enthalten (z.B. 'aaaa')."
+
+    return True, "Passwort OK"
+
 # === USER MODELS ===
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Subscription Types - MUSS VOR User Model definiert werden
+class SubscriptionType(enum.Enum):
+    FREE = "free"
+    BASIC = "basic"
+    PREMIUM = "premium"  # 30-Minuten-Depot
+    ELITE = "elite"      # 5-Minuten-Depot + VIP
+    ELITE_PRO = "elite_pro"  # Elite Pro
+    MASTERCLASS = "masterclass"
+
 class User(db.Model):
     __tablename__ = 'users'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     first_name = db.Column(db.String(50))
     last_name = db.Column(db.String(50))
-    
+
     # Account Status
     is_active = db.Column(db.Boolean, default=True)
     email_verified = db.Column(db.Boolean, default=True)  # Für einfache Registrierung
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     last_login = db.Column(db.DateTime)
-    
+
+    # Subscription Management
+    subscription_type = db.Column(db.Enum(SubscriptionType), default=SubscriptionType.FREE, nullable=False)
+    subscription_updated_at = db.Column(db.DateTime)
+    subscription_updated_by = db.Column(db.String(80))  # Admin username who changed it
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
-    
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-    @property
-    def subscription_type(self):
-        """Gibt den aktuellen Subscription-Typ zurück - für Demo FREE"""
-        return SubscriptionType.FREE
+
+    def can_access_module(self, module):
+        """Check if user can access a specific module based on subscription"""
+        if module.is_lead_magnet:
+            return True
+        if not module.required_subscription_levels:
+            return True
+        return self.subscription_type.value in module.required_subscription_levels
+
+class AdminAuditLog(db.Model):
+    """Log für alle Admin-Aktionen zur Nachverfolgbarkeit"""
+    __tablename__ = 'admin_audit_log'
+
+    id = db.Column(db.Integer, primary_key=True)
+    admin_username = db.Column(db.String(80), nullable=False)
+    action_type = db.Column(db.String(50), nullable=False)  # 'subscription_change', 'user_activate', 'user_deactivate', 'user_delete'
+    target_user_id = db.Column(db.Integer)
+    target_username = db.Column(db.String(80))
+    old_value = db.Column(db.String(200))
+    new_value = db.Column(db.String(200))
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    ip_address = db.Column(db.String(50))
+
+    def __repr__(self):
+        return f'<AdminAuditLog {self.admin_username} {self.action_type} on {self.target_username}>'
 
 # === MENÜSYSTEM MODELS ===
-
-class SubscriptionType(enum.Enum):
-    FREE = "free"
-    BASIC = "basic" 
-    PREMIUM = "premium"  # 30-Minuten-Depot
-    ELITE = "elite"      # 5-Minuten-Depot + VIP
-    MASTERCLASS = "masterclass"
 
 class ModuleCategory(db.Model):
     """Hauptkategorien wie 'Fundamentalanalyse', 'Technische Analyse'"""
@@ -443,21 +563,24 @@ def get_accessible_modules_count(user_subscription="free"):
 @app.context_processor
 def inject_menu():
     """Template-Kontext für alle Templates verfügbar machen"""
+    from flask_wtf.csrf import generate_csrf
+
     menu_structure = get_menu_structure()
-    
+
     # User Subscription ermitteln
     user_subscription = "free"
     if session.get('logged_in'):
         user_subscription = session.get('user', {}).get('membership', 'free')
-    
+
     # Modul-Statistiken
     stats = get_accessible_modules_count(user_subscription)
-    
+
     return {
         'menu_structure': menu_structure,
         'total_modules': stats['total'],
         'accessible_modules': stats['accessible'],
-        'lead_magnets': stats['lead_magnets']
+        'lead_magnets': stats['lead_magnets'],
+        'csrf_token': generate_csrf  # CSRF-Token für alle Templates verfügbar machen
     }
 
 # === ROUTES ===
@@ -599,6 +722,8 @@ def home():
         """
 
 @app.route('/register', methods=['GET', 'POST'])
+@limiter.limit("3 per minute", methods=["POST"])  # Max 3 Registrierungen pro Minute
+@limiter.limit("10 per hour", methods=["POST"])   # Max 10 Registrierungen pro Stunde
 def register():
     """Einfache Benutzer-Registrierung ohne E-Mail-Verifizierung"""
     if request.method == 'POST':
@@ -609,12 +734,13 @@ def register():
             password = request.form['password']
             first_name = request.form.get('first_name', '').strip()
             last_name = request.form.get('last_name', '').strip()
-            
-            # Validierung
-            if len(password) < 8:
-                flash('Passwort muss mindestens 8 Zeichen lang sein.', 'error')
+
+            # Passwort-Stärke validieren
+            is_valid, error_msg = validate_password_strength(password)
+            if not is_valid:
+                flash(error_msg, 'error')
                 return render_template('auth/register.html')
-            
+
             # Prüfen ob E-Mail bereits existiert
             existing_user = User.query.filter_by(email=email).first()
             if existing_user:
@@ -651,6 +777,8 @@ def register():
     return render_template('auth/register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit("5 per minute", methods=["POST"])  # Max 5 Login-Versuche pro Minute
+@limiter.limit("20 per hour", methods=["POST"])   # Max 20 Login-Versuche pro Stunde
 def login():
     """Benutzer-Login - erweitert für echte User"""
     if request.method == 'POST':
@@ -724,13 +852,70 @@ def logout():
     flash('Du wurdest erfolgreich abgemeldet.', 'success')
     return redirect(url_for('home'))
 
+@app.route('/account/change-password', methods=['GET', 'POST'])
+@login_required
+@limiter.limit("3 per minute", methods=["POST"])  # Max 3 Passwort-Änderungen pro Minute
+def change_password():
+    """Passwort ändern für eingeloggte User"""
+    if request.method == 'POST':
+        try:
+            old_password = request.form.get('old_password')
+            new_password = request.form.get('new_password')
+            confirm_password = request.form.get('confirm_password')
+
+            # User aus Session laden
+            user_id = session.get('user_id')
+            if not user_id:
+                flash('Session abgelaufen. Bitte melden Sie sich erneut an.', 'error')
+                return redirect(url_for('login'))
+
+            # Prüfe ob Demo-User (user_id ist nicht numerisch)
+            try:
+                user_id_int = int(user_id)
+            except ValueError:
+                # Demo-User (z.B. 'admin', 'didi')
+                flash('Demo-Benutzer können ihr Passwort nicht ändern. Bitte registrieren Sie einen echten Account.', 'warning')
+                return render_template('account/change_password.html')
+
+            user = User.query.get(user_id_int)
+            if not user:
+                flash('Benutzer nicht gefunden.', 'error')
+                return redirect(url_for('login'))
+
+            # Altes Passwort prüfen
+            if not user.check_password(old_password):
+                flash('Altes Passwort ist falsch.', 'error')
+                return render_template('account/change_password.html')
+
+            # Neues Passwort validieren
+            if new_password != confirm_password:
+                flash('Passwörter stimmen nicht überein.', 'error')
+                return render_template('account/change_password.html')
+
+            # Passwort-Stärke validieren
+            is_valid, error_msg = validate_password_strength(new_password)
+            if not is_valid:
+                flash(error_msg, 'error')
+                return render_template('account/change_password.html')
+
+            # Neues Passwort setzen
+            user.set_password(new_password)
+            db.session.commit()
+
+            flash('Passwort erfolgreich geändert!', 'success')
+            return redirect(url_for('home'))
+
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Fehler beim Ändern des Passworts: {str(e)}', 'error')
+            return render_template('account/change_password.html')
+
+    return render_template('account/change_password.html')
+
 @app.route('/admin/init-demo-data')
+@admin_required
 def admin_init_demo_data():
     """Admin-Only: Initialize demo modules and data"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Nur Admins können Demo-Daten initialisieren.', 'error')
-        return redirect(url_for('login'))
-    
     try:
         # Force database initialization
         db.create_all()
@@ -749,13 +934,10 @@ def admin_init_demo_data():
         print(f"[ERROR] Admin init error: {str(e)}")
         return redirect(url_for('home'))
 
-@app.route('/admin/force-reload-modules')  
+@app.route('/admin/force-reload-modules')
+@admin_required
 def admin_force_reload_modules():
     """Admin-Only: Force reload all demo modules"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Nur Admins können Module neu laden.', 'error')
-        return redirect(url_for('login'))
-    
     try:
         # Clear all existing modules and categories
         print("[INFO] Clearing existing modules and categories...")
@@ -1884,12 +2066,9 @@ def debug_session():
 # === ADMIN ROUTES ===
 
 @app.route('/admin/modules')
+@admin_required
 def admin_modules():
     """Admin-Interface für Modul-Management"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Zugriff verweigert.', 'error')
-        return redirect(url_for('home'))
-    
     try:
         modules = LearningModule.query.order_by(
             LearningModule.category_id, 
@@ -1906,10 +2085,9 @@ def admin_modules():
     return render_template('admin/modules.html', modules=modules, categories=categories)
 
 @app.route('/admin/toggle-lead-magnet/<int:module_id>')
+@admin_required
 def toggle_lead_magnet(module_id):
     """Toggle Lead-Magnet Status eines Moduls"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'})
     
     try:
         module = LearningModule.query.get_or_404(module_id)
@@ -2476,314 +2654,102 @@ def admin_init_database():
     
     return redirect(url_for('admin_modules'))
 
-@app.route('/admin/force-sync-templates')
-def force_sync_templates():
-    """🔄 Erzwingt komplette Synchronisation aller Templates"""
+@app.route('/admin/scan-new-modules')
+def scan_new_modules():
+    """🔄 NEUE EINFACHE LÖSUNG: Scannt Templates und fügt fehlende Module in 'Neue Module' ein"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         flash('Admin-Zugriff erforderlich.', 'error')
         return redirect(url_for('home'))
-    
-    try:
-        # Stelle sicher dass "Neue Module" Kategorie existiert
-        sync_modules_from_local()
-        db.session.commit()
-        
-        # Führe Auto-Registrierung aus
-        return auto_register_modules()
-        
-    except Exception as e:
-        flash(f'❌ Fehler bei Template-Synchronisation: {str(e)}', 'error')
-        return redirect(url_for('admin_modules'))
 
-@app.route('/admin/auto-register-modules')
-def auto_register_modules():
-    """🚀 Automatische Registrierung neuer HTML-Templates"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
     try:
+        import os
         from pathlib import Path
-        import re
-        
-        templates_dir = Path("templates")
-        registered_count = 0
-        updated_count = 0
-        errors = []
-        
-        print("🔍 AUTO-REGISTRIERUNG GESTARTET")
-        print("=" * 50)
-        
-        # Debug-Info für Flash-Messages
-        flash('🔍 Auto-Registrierung gestartet...', 'info')
-        
-        # Alle HTML-Dateien finden (außer System-Templates)
-        excluded_patterns = [
+
+        # 1. Stelle sicher dass "Neue Module" Kategorie existiert
+        neue_module_cat = ModuleCategory.query.filter_by(slug='neue-module').first()
+        if not neue_module_cat:
+            neue_module_cat = ModuleCategory(
+                name='🆕 Neue Module',
+                slug='neue-module',
+                icon='🆕',
+                description='Neu gefundene Module - Bitte in richtige Kategorie verschieben',
+                sort_order=999,
+                is_active=True
+            )
+            db.session.add(neue_module_cat)
+            db.session.commit()
+            flash('✅ Kategorie "🆕 Neue Module" erstellt', 'success')
+
+        # 2. System-Templates die wir ignorieren
+        excluded_files = {
             'base.html', 'home.html', 'login.html', 'register.html',
             'modules_overview.html', 'upgrade_required.html', 'module_default.html',
             '_navigation.html', 'Banner5.html'
-        ]
-        
-        excluded_dirs = ['admin', 'auth', 'errors', 'account', 'templates']
-        
-        html_files = []
-        for html_file in templates_dir.glob("*.html"):
-            if any(pattern in html_file.name for pattern in excluded_patterns):
-                continue
-            if any(excluded_dir in str(html_file) for excluded_dir in excluded_dirs):
-                continue
-            html_files.append(html_file)
-        
-        print(f"📄 Gefundene HTML-Templates: {len(html_files)}")
-        flash(f'📄 {len(html_files)} HTML-Templates gefunden', 'info')
-        
-        for html_file in html_files:
-            try:
-                print(f"\n🔍 Analysiere: {html_file.name}")
-                
-                # Prüfen ob bereits registriert
-                existing_module = LearningModule.query.filter_by(
-                    template_file=html_file.name
-                ).first()
-                
-                if existing_module:
-                    print(f"[OK] Bereits registriert: {existing_module.title}")
-                    continue
-                
-                # Meta-Daten aus HTML extrahieren
-                module_info = extract_module_metadata(html_file)
-                
-                # WICHTIG: Alle automatisch gescannten Module gehen in "Neue Module" Kategorie
-                neue_module_category = ModuleCategory.query.filter_by(slug='neue-module').first()
-                
-                if not neue_module_category:
-                    # Fallback: "Neue Module" Kategorie erstellen falls nicht vorhanden
-                    neue_module_category = ModuleCategory(
-                        name='🆕 Neue Module',
-                        slug='neue-module',
-                        icon='🆕',
-                        description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
-                        sort_order=999,
-                        is_active=True
-                    )
-                    db.session.add(neue_module_category)
-                    db.session.flush()
-                
-                # Speichere den erkannten Kategorie-Vorschlag in der Description
-                suggested_category = module_info.get('category', 'technische-analyse')
-                module_info['description'] += f" [Vorschlag: {suggested_category}]"
-                
-                # Neues Modul erstellen in "Neue Module" Kategorie
-                create_auto_module(html_file, module_info, neue_module_category)
-                registered_count += 1
-                
-                print(f"[OK] REGISTRIERT: {module_info['title']} → 🆕 Neue Module (Vorschlag: {suggested_category})")
-                
-            except Exception as e:
-                error_msg = f"Fehler bei {html_file.name}: {str(e)}"
-                errors.append(error_msg)
-                print(f"[ERROR] {error_msg}")
-        
-        db.session.commit()
-        
-        # Flash-Nachricht für Frontend
-        if registered_count > 0:
-            flash(f'✅ {registered_count} neue Module automatisch registriert! Bitte Details im Admin-Panel anpassen.', 'success')
-        elif len(html_files) == 0:
-            flash('📄 Keine HTML-Templates gefunden.', 'info')
-        else:
-            flash('📋 Alle verfügbaren Module bereits registriert.', 'info')
-        
-        if errors:
-            flash(f'⚠️ {len(errors)} Fehler bei der Registrierung. Details in der Konsole.', 'warning')
-        
-        print("\n" + "=" * 50)
-        print("[SUMMARY] ZUSAMMENFASSUNG")
-        print("=" * 50)
-        print(f"[OK] Neue Module: {registered_count}")
-        print(f"[ERROR] Fehler: {len(errors)}")
-        print("[INFO] Nächste Schritte:")
-        print("   1. Admin-Panel öffnen")
-        print("   2. Module-Details anpassen")
-        print("   3. Module veröffentlichen")
-        
-    except Exception as e:
-        flash(f'❌ Fehler bei automatischer Registrierung: {str(e)}', 'error')
-        print(f"💥 Hauptfehler: {str(e)}")
-    
-    return redirect(url_for('admin_modules'))
+        }
 
-@app.route('/admin/register-missing-modules')
-def register_missing_modules():
-    """🚀 Registriert die wichtigsten fehlenden Module direkt"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        # Wichtige Module die oft fehlen
-        critical_modules = [
-            {
-                'title': 'Tirone Levels und Quadrant Lines',
-                'slug': 'tirone-quadrant-lines',
-                'template_file': 'tirone_quadrant_lines.html',
-                'description': 'Meistere die wichtigsten TC2000-Indikatoren für präzise Unterstützungs- und Widerstandsanalysen',
-                'category_slug': 'technische-analyse',
-                'icon': '📊',
-                'duration': 75,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Expected Value Calculator',
-                'slug': 'expected-value-calc',
-                'template_file': 'ev_calculator.html',
-                'description': 'Interaktiver Expected Value Rechner für Trading-Entscheidungen',
-                'category_slug': 'risikomanagement',
-                'icon': '🧮',
-                'duration': 45,
-                'difficulty': 'intermediate'
-            },
-            {
-                'title': 'Trading Tools Collection',
-                'slug': 'trading-tools-collection',
-                'template_file': 'trading_tools.html',
-                'description': 'Sammlung professioneller Trading-Werkzeuge und Kalkulatoren',
-                'category_slug': 'technische-analyse',
-                'icon': '🛠️',
-                'duration': 30,
-                'difficulty': 'beginner'
-            },
-            {
-                'title': 'Börsencrash März 2025 Analyse',
-                'slug': 'boersencrash-maerz-2025',
-                'template_file': 'boersencrash_maerz_2025.html',
-                'description': 'Detaillierte Analyse des Börsencrashs vom März 2025',
-                'category_slug': 'fundamentalanalyse',
-                'icon': '💥',
-                'duration': 60,
-                'difficulty': 'advanced'
-            },
-            {
-                'title': 'Trading-Playbook Grundlagen - Metalearning & The Process',
-                'slug': 'trading-playbook-masterclass',
-                'template_file': 'trading_playbook_masterclass.html',
-                'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess. Verstehe wie professionelle Trader wirklich denken und arbeiten.',
-                'category_slug': 'elite-system-iii',
-                'icon': '👑',
-                'duration': 120,
-                'difficulty': 'advanced'
-            }
-        ]
-        
-        registered_count = 0
-        
-        for module_data in critical_modules:
-            # Prüfen ob bereits existiert
-            existing = LearningModule.query.filter_by(slug=module_data['slug']).first()
-            if existing:
-                flash(f'⚠️ {module_data["title"]} bereits vorhanden', 'warning')
-                continue
-            
-            # Template-Datei prüfen
-            import os
-            template_path = os.path.join('templates', module_data['template_file'])
-            if not os.path.exists(template_path):
-                flash(f'❌ Template nicht gefunden: {module_data["template_file"]}', 'error')
-                continue
-            
-            # Kategorie finden
-            category = ModuleCategory.query.filter_by(slug=module_data['category_slug']).first()
-            if not category:
-                flash(f'❌ Kategorie nicht gefunden: {module_data["category_slug"]}', 'error')
-                continue
-            
-            # Modul erstellen
-            module = LearningModule(
-                category_id=category.id,
-                title=module_data['title'],
-                slug=module_data['slug'],
-                description=module_data['description'],
-                icon=module_data['icon'],
-                template_file=module_data['template_file'],
-                content_type='html',
-                is_published=True,
-                is_lead_magnet=False,
-                required_subscription_levels=['premium', 'elite'],
-                estimated_duration=module_data['duration'],
-                difficulty_level=module_data['difficulty'],
-                sort_order=100 + registered_count
-            )
-            
-            db.session.add(module)
-            registered_count += 1
-            flash(f'✅ REGISTRIERT: {module_data["title"]}', 'success')
-        
-        db.session.commit()
-        flash(f'🎉 {registered_count} kritische Module erfolgreich registriert!', 'success')
-        
+        # 3. Scanne templates/*.html
+        templates_dir = Path('templates')
+        all_html_files = list(templates_dir.glob('*.html'))
+
+        # 4. Filtere System-Dateien
+        module_templates = [f for f in all_html_files if f.name not in excluded_files]
+
+        # 5. Finde fehlende Module
+        new_modules = []
+        for template_file in module_templates:
+            # Prüfe ob bereits in DB
+            existing = LearningModule.query.filter_by(template_file=template_file.name).first()
+            if not existing:
+                new_modules.append(template_file.name)
+
+        # 6. Füge fehlende Module ein
+        if new_modules:
+            for idx, template_name in enumerate(new_modules):
+                # Erstelle einfachen Titel aus Dateiname
+                title = template_name.replace('.html', '').replace('_', ' ').replace('-', ' ').title()
+                slug = template_name.replace('.html', '')
+
+                new_module = LearningModule(
+                    category_id=neue_module_cat.id,
+                    title=title,
+                    slug=slug,
+                    description=f'Automatisch gefunden: {template_name} - Bitte Details ergänzen',
+                    icon='📄',
+                    template_file=template_name,
+                    content_type='html',
+                    is_published=False,  # Nicht veröffentlicht bis Admin prüft
+                    is_lead_magnet=False,
+                    required_subscription_levels=['premium', 'elite'],
+                    estimated_duration=30,
+                    difficulty_level='intermediate',
+                    sort_order=100 + idx
+                )
+                db.session.add(new_module)
+
+            db.session.commit()
+            flash(f'✅ {len(new_modules)} neue Module gefunden und in "🆕 Neue Module" eingefügt!', 'success')
+            for module_name in new_modules:
+                flash(f'  ➕ {module_name}', 'info')
+        else:
+            flash('ℹ️ Keine neuen Module gefunden - alle Templates sind bereits registriert', 'info')
+
+        flash(f'📊 Gescannt: {len(module_templates)} Templates (ohne System-Dateien)', 'info')
+
     except Exception as e:
         db.session.rollback()
-        flash(f'❌ Fehler bei Module-Registrierung: {str(e)}', 'error')
-    
+        flash(f'❌ Fehler beim Scannen: {str(e)}', 'error')
+        import traceback
+        print(f"Fehler beim Module-Scan:\n{traceback.format_exc()}")
+
     return redirect(url_for('admin_modules'))
 
-@app.route('/admin/fix-duplicate-categories')
-def fix_duplicate_categories():
-    """🔧 Behebt doppelte Kategorien in der Datenbank"""
-    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        flash('Admin-Zugriff erforderlich.', 'error')
-        return redirect(url_for('home'))
-    
-    try:
-        # Doppelte Kategorien finden und zusammenführen
-        categories = ModuleCategory.query.all()
-        category_groups = {}
-        
-        # Kategorien nach Name gruppieren
-        for category in categories:
-            name = category.name
-            if name in category_groups:
-                category_groups[name].append(category)
-            else:
-                category_groups[name] = [category]
-        
-        merged_count = 0
-        deleted_count = 0
-        
-        for name, cat_list in category_groups.items():
-            if len(cat_list) > 1:
-                flash(f'🔍 Doppelte Kategorie gefunden: {name} ({len(cat_list)}x)', 'info')
-                
-                # Erste Kategorie als Master behalten
-                master_category = cat_list[0]
-                
-                # Module von anderen Kategorien zur Master-Kategorie verschieben
-                for duplicate_cat in cat_list[1:]:
-                    modules_to_move = LearningModule.query.filter_by(category_id=duplicate_cat.id).all()
-                    
-                    for module in modules_to_move:
-                        module.category_id = master_category.id
-                        flash(f'📦 Modul verschoben: {module.title} → {master_category.name}', 'info')
-                    
-                    # Doppelte Kategorie löschen
-                    db.session.delete(duplicate_cat)
-                    deleted_count += 1
-                    flash(f'🗑️ Doppelte Kategorie gelöscht: {duplicate_cat.name} (ID: {duplicate_cat.id})', 'warning')
-                
-                merged_count += 1
-        
-        db.session.commit()
-        
-        if merged_count > 0:
-            flash(f'✅ {merged_count} doppelte Kategorien zusammengeführt, {deleted_count} Duplikate entfernt!', 'success')
-        else:
-            flash('✅ Keine doppelten Kategorien gefunden - alles sauber!', 'success')
-        
-    except Exception as e:
-        db.session.rollback()
-        flash(f'❌ Fehler beim Bereinigen der Kategorien: {str(e)}', 'error')
-    
-    return redirect(url_for('admin_modules'))
+# ❌ ALTE ROUTEN ENTFERNT - Ersetzt durch /admin/scan-new-modules
+# Die folgenden komplexen Routen wurden entfernt und durch eine einfache Lösung ersetzt:
+# - auto_register_modules() - zu komplex
+# - register_missing_modules() - zu spezifisch
+# Nutze stattdessen: /admin/scan-new-modules (Zeile 2634)
+
+# Alte Routen jetzt durch /admin/scan-new-modules ersetzt - siehe Kommentar oben
 
 def extract_module_metadata(html_file):
     """Extrahiert Meta-Informationen aus HTML-Template"""
@@ -4127,6 +4093,59 @@ def sync_modules_from_local():
                 'estimated_duration': 40,
                 'difficulty_level': 'beginner',
                 'sort_order': 3
+            },
+            # 🆕 Neu gefundene Module - automatisch in "Neue Module" einsortiert
+            {
+                'title': 'Better Volume Indicator',
+                'slug': 'better-volume-lernseite',
+                'category_slug': 'neue-module',
+                'description': 'Interaktive Präsentation zum Better Volume Indicator - Verstehe Volumen-Patterns im Detail',
+                'icon': '📊',
+                'template_file': 'better-volume-lernseite.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 60,
+                'difficulty_level': 'intermediate',
+                'sort_order': 1
+            },
+            {
+                'title': 'Defining Trend',
+                'slug': 'defining-trend',
+                'category_slug': 'neue-module',
+                'description': 'Die Kunst, Trends richtig zu identifizieren und zu definieren',
+                'icon': '📈',
+                'template_file': 'defining-trend.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 75,
+                'difficulty_level': 'intermediate',
+                'sort_order': 2
+            },
+            {
+                'title': 'Risikomanagement',
+                'slug': 'risikomanagement',
+                'category_slug': 'neue-module',
+                'description': 'Umfassender Guide zum professionellen Risikomanagement im Trading',
+                'icon': '⚠️',
+                'template_file': 'risikomanagement.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['premium', 'elite'],
+                'estimated_duration': 90,
+                'difficulty_level': 'intermediate',
+                'sort_order': 3
+            },
+            {
+                'title': '99% Noise vs. 0,1% Edge',
+                'slug': 'noise-vs-edge',
+                'category_slug': 'neue-module',
+                'description': 'Die Kunst der Setup-Selektion - Erkenne den Unterschied zwischen Noise und echtem Edge',
+                'icon': '🔍',
+                'template_file': 'noise-vs-edge.html',
+                'content_type': 'html',
+                'required_subscription_levels': ['elite'],
+                'estimated_duration': 80,
+                'difficulty_level': 'advanced',
+                'sort_order': 4
             }
             # 🆕 NEUE MODULE HIER HINZUFÜGEN → Automatisch online!
         ]
@@ -4221,6 +4240,12 @@ def internal_error(error):
     except:
         pass
     return render_template('errors/500.html'), 500
+
+@app.errorhandler(400)
+def csrf_error(error):
+    """Handler für CSRF-Fehler"""
+    flash('Sicherheitsfehler: CSRF-Token ungültig. Bitte versuchen Sie es erneut.', 'error')
+    return redirect(request.referrer or url_for('home'))
 
 # === APP STARTEN ===
 
@@ -4981,6 +5006,271 @@ def admin_analytics_api():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+@app.route('/admin/users')
+@admin_required
+def admin_users():
+    """Admin-Interface für User-Verwaltung"""
+    try:
+        # Query-Parameter für Suche und Filter
+        search = request.args.get('search', '').strip()
+        filter_subscription = request.args.get('subscription', '')
+        filter_status = request.args.get('status', '')
+
+        # Basis-Query
+        query = User.query
+
+        # Suche nach Username oder Email
+        if search:
+            query = query.filter(
+                db.or_(
+                    User.username.ilike(f'%{search}%'),
+                    User.email.ilike(f'%{search}%'),
+                    User.first_name.ilike(f'%{search}%'),
+                    User.last_name.ilike(f'%{search}%')
+                )
+            )
+
+        # Filter nach Subscription
+        if filter_subscription:
+            try:
+                sub_type = SubscriptionType(filter_subscription)
+                query = query.filter(User.subscription_type == sub_type)
+            except ValueError:
+                pass
+
+        # Filter nach Status
+        if filter_status == 'active':
+            query = query.filter(User.is_active == True)
+        elif filter_status == 'inactive':
+            query = query.filter(User.is_active == False)
+
+        # Sortierung
+        users = query.order_by(User.created_at.desc()).all()
+
+        # Statistiken
+        total_users = User.query.count()
+        active_users = User.query.filter_by(is_active=True).count()
+        subscription_stats = {
+            'free': User.query.filter_by(subscription_type=SubscriptionType.FREE).count(),
+            'premium': User.query.filter_by(subscription_type=SubscriptionType.PREMIUM).count(),
+            'elite': User.query.filter_by(subscription_type=SubscriptionType.ELITE).count(),
+            'elite_pro': User.query.filter_by(subscription_type=SubscriptionType.ELITE_PRO).count(),
+        }
+
+        # Letzte Audit-Logs
+        recent_logs = AdminAuditLog.query.order_by(AdminAuditLog.timestamp.desc()).limit(10).all()
+
+    except Exception as e:
+        flash(f'Fehler beim Laden der User: {str(e)}', 'error')
+        users = []
+        total_users = 0
+        active_users = 0
+        subscription_stats = {}
+        recent_logs = []
+
+    return render_template('admin/users.html',
+                         users=users,
+                         total_users=total_users,
+                         active_users=active_users,
+                         subscription_stats=subscription_stats,
+                         recent_logs=recent_logs,
+                         SubscriptionType=SubscriptionType)
+
+@app.route('/admin/users/add', methods=['POST'])
+@admin_required
+def admin_add_user():
+    """Erstellt einen neuen User"""
+    try:
+        username = request.form.get('username', '').strip()
+        email = request.form.get('email', '').strip()
+        password = request.form.get('password', '').strip()
+        first_name = request.form.get('first_name', '').strip()
+        last_name = request.form.get('last_name', '').strip()
+        subscription_type = request.form.get('subscription_type', 'free')
+
+        # Validierung
+        if not username or not email or not password:
+            flash('Username, Email und Passwort sind erforderlich!', 'error')
+            return redirect(url_for('admin_users'))
+
+        if len(password) < 6:
+            flash('Passwort muss mindestens 6 Zeichen lang sein!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Prüfe ob Username oder Email bereits existiert
+        if User.query.filter_by(username=username).first():
+            flash(f'Username "{username}" existiert bereits!', 'error')
+            return redirect(url_for('admin_users'))
+
+        if User.query.filter_by(email=email).first():
+            flash(f'Email "{email}" ist bereits registriert!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Subscription Type validieren
+        try:
+            sub_type = SubscriptionType(subscription_type)
+        except ValueError:
+            sub_type = SubscriptionType.FREE
+
+        # Neuen User erstellen
+        new_user = User(
+            username=username,
+            email=email,
+            first_name=first_name if first_name else None,
+            last_name=last_name if last_name else None,
+            subscription_type=sub_type,
+            is_active=True
+        )
+        new_user.set_password(password)
+
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='user_create',
+            target_user_id=new_user.id,
+            target_username=new_user.username,
+            old_value='—',
+            new_value=f'{email} | {sub_type.value}',
+            ip_address=request.remote_addr
+        )
+        db.session.add(audit_log)
+        db.session.commit()
+
+        flash(f'✅ User "{username}" erfolgreich erstellt!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'❌ Fehler beim Erstellen des Users: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/<int:user_id>/subscription', methods=['POST'])
+@admin_required
+def admin_change_subscription(user_id):
+    """Ändert die Subscription eines Users"""
+    try:
+        user = User.query.get_or_404(user_id)
+        new_subscription = request.form.get('subscription')
+
+        if not new_subscription:
+            flash('Keine Subscription ausgewählt.', 'error')
+            return redirect(url_for('admin_users'))
+
+        try:
+            new_sub_type = SubscriptionType(new_subscription)
+        except ValueError:
+            flash(f'Ungültige Subscription: {new_subscription}', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Alte Subscription speichern für Audit-Log
+        old_subscription = user.subscription_type.value
+
+        # Subscription ändern
+        user.subscription_type = new_sub_type
+        user.subscription_updated_at = datetime.utcnow()
+        user.subscription_updated_by = session.get('user', {}).get('username')
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='subscription_change',
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value=old_subscription,
+            new_value=new_subscription,
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.commit()
+
+        flash(f'Subscription von {user.username} erfolgreich geändert: {old_subscription} → {new_subscription}', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Ändern der Subscription: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/<int:user_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_toggle_user_status(user_id):
+    """Aktiviert oder deaktiviert einen User"""
+    try:
+        user = User.query.get_or_404(user_id)
+
+        # Status umkehren
+        user.is_active = not user.is_active
+        action_type = 'user_activate' if user.is_active else 'user_deactivate'
+
+        # Audit-Log erstellen
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type=action_type,
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value='inactive' if user.is_active else 'active',
+            new_value='active' if user.is_active else 'inactive',
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.commit()
+
+        status_text = 'aktiviert' if user.is_active else 'deaktiviert'
+        flash(f'User {user.username} erfolgreich {status_text}!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Ändern des Status: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+@app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_user(user_id):
+    """Löscht einen User (mit Bestätigung)"""
+    try:
+        user = User.query.get_or_404(user_id)
+        username = user.username
+
+        # Verhindere, dass Admins sich selbst löschen
+        current_username = session.get('user', {}).get('username')
+        if user.username == current_username:
+            flash('Du kannst dich nicht selbst löschen!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # Audit-Log erstellen BEVOR User gelöscht wird
+        admin_username = session.get('user', {}).get('username', 'unknown')
+        audit_log = AdminAuditLog(
+            admin_username=admin_username,
+            action_type='user_delete',
+            target_user_id=user.id,
+            target_username=user.username,
+            old_value=f'{user.email} | {user.subscription_type.value}',
+            new_value='DELETED',
+            ip_address=request.remote_addr
+        )
+
+        db.session.add(audit_log)
+        db.session.delete(user)
+        db.session.commit()
+
+        flash(f'User {username} erfolgreich gelöscht!', 'success')
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler beim Löschen des Users: {str(e)}', 'error')
+
+    return redirect(url_for('admin_users'))
+
+
 
 if __name__ == '__main__':
     with app.app_context():
@@ -5012,5 +5302,17 @@ if __name__ == '__main__':
     print("   - test/test (Premium Access)")
     print("[INFO] Admin-Panel: http://localhost:5000/admin/modules")
     print("[INFO] Zum Beenden: Ctrl+C")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    # 3. DEBUG-Mode absichern (NIEMALS debug=True in Production!)
+    flask_debug = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1', 'yes']
+
+    if flask_env == 'production' and flask_debug:
+        print("❌ FEHLER: DEBUG-Mode ist in Production aktiviert!")
+        print("❌ Dies ist ein kritisches Sicherheitsrisiko!")
+        print("❌ Setzen Sie FLASK_DEBUG=False in Production")
+        flask_debug = False  # Force disable in production
+
+    if flask_debug:
+        print("⚠️  DEBUG-Mode aktiviert (nur für Development!)")
+
+    app.run(debug=flask_debug, host='0.0.0.0', port=5000)

@@ -1,0 +1,410 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User-Verwaltung{% endblock %}
+
+{% block header_title %}👥 User-Verwaltung{% endblock %}
+{% block header_subtitle %}Member verwalten - Subscriptions, Status und Zugriffsrechte{% endblock %}
+
+{% block content %}
+
+<!-- Statistiken Dashboard -->
+<div class="card mb-4">
+    <h2>📊 Übersicht</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ total_users }}</div>
+            <div>Gesamt User</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ active_users }}</div>
+            <div>Aktive User</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ subscription_stats.get('premium', 0) }}</div>
+            <div>Premium</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ subscription_stats.get('elite', 0) + subscription_stats.get('elite_pro', 0) }}</div>
+            <div>Elite / Elite Pro</div>
+        </div>
+    </div>
+</div>
+
+<!-- Suche und Filter -->
+<div class="card mb-4">
+    <h2>🔍 Suchen & Filtern</h2>
+    <form method="GET" action="{{ url_for('admin_users') }}" style="padding: 20px;">
+        <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 15px; align-items: end;">
+            <div>
+                <label for="search">Suche (Username, Email, Name)</label>
+                <input type="text"
+                       id="search"
+                       name="search"
+                       value="{{ request.args.get('search', '') }}"
+                       placeholder="Suche nach User..."
+                       style="width: 100%;">
+            </div>
+            <div>
+                <label for="subscription">Subscription</label>
+                <select id="subscription" name="subscription" style="width: 100%;">
+                    <option value="">Alle</option>
+                    <option value="free" {% if request.args.get('subscription') == 'free' %}selected{% endif %}>Free</option>
+                    <option value="premium" {% if request.args.get('subscription') == 'premium' %}selected{% endif %}>Premium</option>
+                    <option value="elite" {% if request.args.get('subscription') == 'elite' %}selected{% endif %}>Elite</option>
+                    <option value="elite_pro" {% if request.args.get('subscription') == 'elite_pro' %}selected{% endif %}>Elite Pro</option>
+                </select>
+            </div>
+            <div>
+                <label for="status">Status</label>
+                <select id="status" name="status" style="width: 100%;">
+                    <option value="">Alle</option>
+                    <option value="active" {% if request.args.get('status') == 'active' %}selected{% endif %}>Aktiv</option>
+                    <option value="inactive" {% if request.args.get('status') == 'inactive' %}selected{% endif %}>Inaktiv</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" class="btn primary">🔍 Suchen</button>
+                <a href="{{ url_for('admin_users') }}" class="btn">↺ Reset</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- User-Liste -->
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h2>👥 Registrierte User ({{ users|length }})</h2>
+        <button class="btn primary" onclick="showAddUserModal()" style="background: linear-gradient(135deg, #10b981, #059669); color: white;">
+            ➕ User hinzufügen
+        </button>
+    </div>
+
+    {% if users %}
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="background: var(--bg-secondary); text-align: left;">
+                    <th style="padding: 12px;">Username</th>
+                    <th style="padding: 12px;">Email</th>
+                    <th style="padding: 12px;">Name</th>
+                    <th style="padding: 12px;">Subscription</th>
+                    <th style="padding: 12px; min-width: 100px;">Status</th>
+                    <th style="padding: 12px;">Registriert</th>
+                    <th style="padding: 12px;">Letzter Login</th>
+                    <th style="padding: 12px; text-align: center;">Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 12px; font-weight: 600;">
+                        {{ user.username }}
+                        {% if user.username in ['admin', 'didi'] %}
+                        <span style="background: var(--gold-classic); color: white; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; margin-left: 5px;">ADMIN</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px; color: var(--text-secondary);">{{ user.email }}</td>
+                    <td style="padding: 12px;">
+                        {% if user.first_name or user.last_name %}
+                        {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                        <span style="color: var(--text-muted);">—</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px;">
+                        <form method="POST" action="{{ url_for('admin_change_subscription', user_id=user.id) }}" style="margin: 0;">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                            <select name="subscription"
+                                    onchange="if(confirm('Subscription von {{ user.username }} ändern?')) this.form.submit();"
+                                    style="padding: 6px; border-radius: 4px; border: 1px solid var(--border-color);
+                                           {% if user.subscription_type.value == 'free' %}background: #e5e7eb;{% elif user.subscription_type.value == 'premium' %}background: #ddd6fe;{% elif user.subscription_type.value == 'elite' %}background: #fef3c7;{% elif user.subscription_type.value == 'elite_pro' %}background: linear-gradient(135deg, #ffd700, #ffed4e);{% endif %}">
+                                <option value="free" {% if user.subscription_type.value == 'free' %}selected{% endif %}>🆓 Free</option>
+                                <option value="premium" {% if user.subscription_type.value == 'premium' %}selected{% endif %}>⭐ Premium</option>
+                                <option value="elite" {% if user.subscription_type.value == 'elite' %}selected{% endif %}>💎 Elite</option>
+                                <option value="elite_pro" {% if user.subscription_type.value == 'elite_pro' %}selected{% endif %}>👑 Elite Pro</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td style="padding: 12px; min-width: 100px; white-space: nowrap;">
+                        {% if user.is_active %}
+                        <span style="background: var(--success); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.875rem;">✓ Aktiv</span>
+                        {% else %}
+                        <span style="background: var(--danger); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.875rem;">✗ Inaktiv</span>
+                        {% endif %}
+                    </td>
+                    <td style="padding: 12px; color: var(--text-secondary); font-size: 0.875rem;">
+                        {{ user.created_at.strftime('%d.%m.%Y') if user.created_at else '—' }}
+                    </td>
+                    <td style="padding: 12px; color: var(--text-secondary); font-size: 0.875rem;">
+                        {{ user.last_login.strftime('%d.%m.%Y %H:%M') if user.last_login else 'Noch nie' }}
+                    </td>
+                    <td style="padding: 12px; text-align: center;">
+                        <div style="display: flex; gap: 8px; justify-content: center;">
+                            <!-- Toggle Status -->
+                            <form method="POST" action="{{ url_for('admin_toggle_user_status', user_id=user.id) }}" style="margin: 0;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                <button type="submit"
+                                        class="btn"
+                                        style="padding: 6px 12px; font-size: 0.875rem; {% if user.is_active %}background: var(--warning);{% else %}background: var(--success);{% endif %}"
+                                        onclick="return confirm('User {{ user.username }} {% if user.is_active %}deaktivieren{% else %}aktivieren{% endif %}?');">
+                                    {% if user.is_active %}⏸️ Deaktivieren{% else %}▶️ Aktivieren{% endif %}
+                                </button>
+                            </form>
+
+                            <!-- Delete User -->
+                            {% if user.username not in ['admin', 'didi'] %}
+                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;">
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                                <button type="submit"
+                                        class="btn"
+                                        style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;"
+                                        onclick="return confirm('⚠️ ACHTUNG!\n\nUser {{ user.username }} wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!');">
+                                    🗑️ Löschen
+                                </button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+        <p style="font-size: 1.25rem; margin-bottom: 10px;">🔍 Keine User gefunden</p>
+        <p>Passe deine Suchfilter an oder registriere neue User.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Audit-Log -->
+{% if recent_logs %}
+<div class="card" style="margin-top: 30px;">
+    <h2>📜 Letzte Admin-Aktionen</h2>
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+            <thead>
+                <tr style="background: var(--bg-secondary); text-align: left;">
+                    <th style="padding: 10px;">Zeitpunkt</th>
+                    <th style="padding: 10px;">Admin</th>
+                    <th style="padding: 10px;">Aktion</th>
+                    <th style="padding: 10px;">Betroffener User</th>
+                    <th style="padding: 10px;">Änderung</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in recent_logs %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px; color: var(--text-secondary);">
+                        {{ log.timestamp.strftime('%d.%m.%Y %H:%M:%S') }}
+                    </td>
+                    <td style="padding: 10px; font-weight: 600;">{{ log.admin_username }}</td>
+                    <td style="padding: 10px;">
+                        {% if log.action_type == 'subscription_change' %}
+                        <span style="background: #ddd6fe; padding: 4px 8px; border-radius: 4px;">📊 Subscription geändert</span>
+                        {% elif log.action_type == 'user_activate' %}
+                        <span style="background: var(--success); color: white; padding: 4px 8px; border-radius: 4px;">✓ User aktiviert</span>
+                        {% elif log.action_type == 'user_deactivate' %}
+                        <span style="background: var(--warning); color: white; padding: 4px 8px; border-radius: 4px;">⏸️ User deaktiviert</span>
+                        {% elif log.action_type == 'user_delete' %}
+                        <span style="background: var(--danger); color: white; padding: 4px 8px; border-radius: 4px;">🗑️ User gelöscht</span>
+                        {% else %}
+                        {{ log.action_type }}
+                        {% endif %}
+                    </td>
+                    <td style="padding: 10px; font-weight: 600;">{{ log.target_username }}</td>
+                    <td style="padding: 10px; color: var(--text-secondary);">
+                        {% if log.old_value and log.new_value %}
+                        {{ log.old_value }} → {{ log.new_value }}
+                        {% else %}
+                        —
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}
+
+<style>
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn.primary {
+    background: linear-gradient(135deg, #3b82f6, #1e40af);
+    color: white;
+}
+
+input[type="text"], select {
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+table {
+    font-size: 0.9375rem;
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 0.8125rem;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #ffffff;
+    color: #1a1a1a;
+    margin: 5% auto;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close {
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #666;
+}
+
+.close:hover {
+    color: #1a1a1a;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: #ffffff;
+    color: #1a1a1a;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #3b82f6;
+}
+</style>
+
+<!-- Modal: User hinzufügen -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>➕ Neuen User hinzufügen</h2>
+            <span class="close" onclick="closeAddUserModal()">&times;</span>
+        </div>
+        <form method="POST" action="/admin/users/add">
+            <div class="form-group">
+                <label for="username">Username *</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Passwort *</label>
+                <input type="password" id="password" name="password" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="first_name">Vorname</label>
+                <input type="text" id="first_name" name="first_name">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Nachname</label>
+                <input type="text" id="last_name" name="last_name">
+            </div>
+            <div class="form-group">
+                <label for="subscription_type">Subscription</label>
+                <select id="subscription_type" name="subscription_type">
+                    <option value="free">Free</option>
+                    <option value="premium">Premium</option>
+                    <option value="elite">Elite</option>
+                    <option value="elite_pro">Elite Pro</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
+                <button type="button" class="btn" onclick="closeAddUserModal()">Abbrechen</button>
+                <button type="submit" class="btn primary">User erstellen</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showAddUserModal() {
+    document.getElementById('addUserModal').style.display = 'block';
+}
+
+function closeAddUserModal() {
+    document.getElementById('addUserModal').style.display = 'none';
+}
+
+// Modal schließen wenn außerhalb geklickt wird
+window.onclick = function(event) {
+    const modal = document.getElementById('addUserModal');
+    if (event.target == modal) {
+        closeAddUserModal();
+    }
+}
+</script>
+
+{% endblock %}

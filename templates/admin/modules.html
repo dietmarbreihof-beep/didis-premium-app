@@ -34,6 +34,7 @@
 <div class="card mb-4">
     <h2>⚡ Schnell-Aktionen</h2>
     <div style="display: flex; gap: 15px; flex-wrap: wrap; padding: 20px;">
+        <!-- HAUPT-AKTIONEN -->
         <button class="btn" onclick="showAddCategoryModal()">
             ➕ Hauptkategorie hinzufügen
         </button>
@@ -43,37 +44,16 @@
         <button class="btn" onclick="showAddModuleModal()" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
             📄 Neues Modul hinzufügen
         </button>
-        <a href="{{ url_for('force_sync_templates') }}" 
-           class="btn primary" 
-           style="background: linear-gradient(135deg, var(--success), #047857);"
-           onclick="return confirm('🔄 Alle Templates synchronisieren?\n\nDies scannt den templates-Ordner nach neuen HTML-Dateien und fügt sie zur Kategorie \'🆕 Neue Module\' hinzu.')">
-            🔄 Templates synchronisieren
+
+        <!-- NEUE EINFACHE SYNC-LÖSUNG -->
+        <a href="{{ url_for('scan_new_modules') }}"
+           class="btn primary"
+           style="background: linear-gradient(135deg, #10b981, #059669); color: white; font-weight: 600;"
+           onclick="return confirm('🔄 Nach neuen Modulen scannen?\n\n✅ Scannt templates/*.html nach fehlenden Modulen\n✅ Fügt sie automatisch in \'🆕 Neue Module\' ein\n✅ Du kannst sie dann manuell verschieben\n\nDies ist die neue, einfache und zuverlässige Methode!')">
+            🔄 Neue Module scannen
         </a>
-        <button class="btn primary" onclick="autoRegisterModules()" style="background: linear-gradient(135deg, #10b981, #059669);">
-            🚀 Module auto-registrieren
-        </button>
-        <a href="{{ url_for('register_missing_modules') }}" 
-           class="btn" 
-           style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white;"
-           onclick="return confirm('🚨 Kritische fehlende Module registrieren?\n\nDies fügt wichtige Module wie Tirone Levels, EV Calculator etc. hinzu.')">
-            🚨 Fehlende Module reparieren
-        </a>
-        <a href="{{ url_for('admin_analytics') }}" 
-           class="btn" 
-           style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;"
-           onclick="console.log('Analytics Button geklickt!'); console.log('URL:', '{{ url_for('admin_analytics') }}'); return true;">
-            📊 Analytics Dashboard
-        </a>
-        <a href="{{ url_for('admin_analytics_test') }}" 
-           class="btn" 
-           style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white;">
-            🧪 Analytics Test
-        </a>
-        <a href="{{ url_for('fix_duplicate_categories') }}" 
-           class="btn secondary" 
-           onclick="return confirm('🔧 Doppelte Kategorien bereinigen?\n\nDies führt doppelte Kategorien zusammen und verschiebt alle Module zur ersten Kategorie.')">
-            🔧 Duplikate bereinigen
-        </a>
+
+        <!-- ZUSÄTZLICHE TOOLS -->
         <button class="btn secondary" onclick="toggleBulkMode()">
             ☑️ Bulk-Auswahl
         </button>
@@ -83,12 +63,6 @@
         <button class="btn secondary" onclick="exportModules()">
             📤 Module exportieren
         </button>
-        <a href="{{ url_for('admin_init_database') }}" 
-           class="btn" 
-           style="background: linear-gradient(135deg, #10b981, #059669); color: white;"
-           onclick="return confirm('Database neu initialisieren? Dies erstellt fehlende Tabellen.')">
-            🗄️ Database initialisieren
-        </a>
         <button class="btn secondary" onclick="showBulkActions()" id="bulkActionsBtn" style="display: none;">
             🔧 Bulk-Aktionen
         </button>
@@ -499,6 +473,7 @@
     <div class="modal-content">
         <h3>➕ Hauptkategorie hinzufügen</h3>
         <form action="{{ url_for('admin_add_category') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <div class="form-group">
                 <label class="form-label">Name *</label>
                 <input type="text" name="name" class="form-input" placeholder="z.B. Technische Analyse" required>
@@ -528,6 +503,7 @@
     <div class="modal-content">
         <h3>➕ Unterkategorie hinzufügen</h3>
         <form action="{{ url_for('admin_add_subcategory') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-group">
                 <label class="form-label">Hauptkategorie *</label>
                 <select name="category_id" class="form-select" required>
@@ -562,6 +538,7 @@
     <div class="modal-content large">
         <h3>📄 Neues Flask HTML-Modul hinzufügen</h3>
         <form action="{{ url_for('add_module') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <div class="form-grid">
                 <div class="form-group">
                     <label class="form-label">Titel *</label>
@@ -656,6 +633,7 @@
     <div class="modal-content">
         <h3>✏️ Kategorie bearbeiten</h3>
         <form action="{{ url_for('admin_edit_category') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="category_id" id="edit_category_id">
             <div class="form-group">
                 <label class="form-label">Name *</label>
@@ -686,6 +664,7 @@
     <div class="modal-content">
         <h3>✏️ Unterkategorie bearbeiten</h3>
         <form action="{{ url_for('admin_edit_subcategory') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="subcategory_id" id="edit_subcategory_id">
             <div class="form-group">
                 <label class="form-label">Hauptkategorie *</label>
@@ -720,6 +699,7 @@
     <div class="modal-content">
         <h3>📁 Modul verschieben</h3>
         <form action="{{ url_for('admin_move_module') }}" method="POST">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
             <input type="hidden" name="module_id" id="move_module_id">
             <div class="form-group">
                 <label class="form-label">Ziel-Kategorie *</label>

@@ -87,7 +87,7 @@
             
             <!-- Unterkategorien -->
             {% for subcategory in category.subcategories %}
-            {% if subcategory.modules %}
+            {% if subcategory.modules or (session.get('user', {}).get('username') in ['admin', 'didi']) %}
             <div class="subcategory-section">
                 <div class="subcategory-header" onclick="toggleSubcategoryContent('{{ subcategory.slug }}')">
                     <span class="subcategory-icon">{{ subcategory.icon }}</span>
@@ -95,8 +95,14 @@
                     <span class="subcategory-count">({{ subcategory.modules|length }})</span>
                     <span class="expand-icon" id="expand-{{ subcategory.slug }}">▼</span>
                 </div>
-                
+
                 <div class="modules-grid" id="subcontent-{{ subcategory.slug }}" style="display: none;">
+                    {% if not subcategory.modules and session.get('user', {}).get('username') in ['admin', 'didi'] %}
+                    <div style="padding: 20px; text-align: center; background: #fef3c7; border-radius: 8px; color: #92400e;">
+                        <p style="margin: 0;">📭 <strong>Leere Unterkategorie</strong> (nur für Admin sichtbar)</p>
+                        <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Füge Module hinzu oder verschiebe sie hierher im Admin-Panel.</p>
+                    </div>
+                    {% endif %}
                     {% for module in subcategory.modules|sort(attribute='sort_order') %}
                     <div class="module-card {{ 'accessible' if module.user_has_access else 'locked' }}" 
                          data-module-title="{{ module.title|lower }}" 
