@@ -2040,6 +2040,225 @@ def get_module_navigation(current_module):
     
     return prev_module, next_module
 
+# === NEUE LERNMODULE (CURSOR) - Premium Content ===
+
+@app.route('/noise-vs-edge')
+def noise_vs_edge():
+    """99% Noise vs. 0,1% Edge - Setup-Selektion"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='noise-vs-edge'))
+    
+    return render_template('noise-vs-edge.html')
+
+@app.route('/defining-trend')
+def defining_trend():
+    """Defining Trend - Die Kunst der Trend-Erkennung"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='defining-trend'))
+    
+    return render_template('defining-trend.html')
+
+@app.route('/risikomanagement')
+def risikomanagement():
+    """Risikomanagement: Dein Überlebensguide"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='risikomanagement'))
+    
+    return render_template('risikomanagement.html')
+
+@app.route('/daily-report-card')
+def daily_report_card():
+    """Daily Report Card - Trading-Performance-Tracking"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='daily-report-card'))
+    
+    return render_template('daily_report_card_lernseite.html')
+
+@app.route('/darwin-investing')
+def darwin_investing():
+    """Darwin Investing - Evolution-basierte Investmentstrategien"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='darwin-investing'))
+    
+    return render_template('darwin_investing.html')
+
+@app.route('/trading-archetypen')
+def trading_archetypen():
+    """Trading-Archetypen - Finde deinen Trading-Stil"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='trading-archetypen'))
+    
+    return render_template('trading_archetypen.html')
+
+@app.route('/finde-deinen-trading-weg')
+def finde_deinen_trading_weg():
+    """Finde deinen Trading-Weg - Persönliche Strategie-Entwicklung"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='finde-deinen-trading-weg'))
+    
+    return render_template('finde_deinen_trading_weg.html')
+
+@app.route('/die-wahrheit-lernkurve')
+def die_wahrheit_lernkurve():
+    """Die Wahrheit über die Lernkurve im Trading"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='die-wahrheit-lernkurve'))
+    
+    return render_template('die_wahrheit_lernkurve.html')
+
+@app.route('/positioning-risikomanagement')
+def positioning_risikomanagement():
+    """Positioning & Risikomanagement - Fortgeschrittene Konzepte"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='positioning-risikomanagement'))
+    
+    return render_template('positioning_risikomanagement.html')
+
+@app.route('/meta-learning-quiz')
+def meta_learning_quiz():
+    """Meta-Learning Quiz - Teste dein Trading-Wissen"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='meta-learning-quiz'))
+    
+    return render_template('meta_learning_quiz.html')
+
+@app.route('/kgv-peg-trading')
+def kgv_peg_trading():
+    """KGV & PEG Trading - Fundamentalanalyse für Trader"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='kgv-peg-trading'))
+    
+    return render_template('kgv-peg-trading-lernseite-debugged.html')
+
+@app.route('/poker-cards-comparison')
+def poker_cards_comparison():
+    """Poker vs. Trading - Vergleich der Denkweisen"""
+    track_visitor()
+    
+    # Lead-Magnet - kein Login erforderlich
+    return render_template('poker-cards-comparison.html')
+
 # === API ROUTES ===
 
 @app.route('/api/check-admin')

@@ -214,3 +214,4 @@ python migrations/register_position_vergroessern.py
 **Autor:** AI Assistant  
 **Basierend auf:** Lance Breitstein's Trading Course (System III)
 
+

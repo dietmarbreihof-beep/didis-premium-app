@@ -1,82 +1,26 @@
-Der Sprecher (Lance) erörtert die optimale Strategie zum Hinzufügen zu
-Handelspositionen, wobei er betont, dass solche Ergänzungen als
-unabhängige Trades basierend auf dem erwarteten Wert behandelt werden
-sollten, anstatt von psychologischem Komfort geleitet zu werden.
+VICR ist ein Anbieter von modularen Leistungskomponenten und kompletten Stromversorgungssystemen. 
+Im dritten Quartal stieg der Umsatz im Vergleich zum Vorjahr um 18,5 % auf 110,4 Millionen US-Dollar. 
+Da die von Vicor entwickelten hochdichten Stromversorgungssysteme, darunter NBMs und VPD, 
+für Hochleistungsrechner echt wichtig sind, geht Vicor davon aus, 
+dass das Geschäft mit IP-Lizenzen ordentlich wachsen wird, weil OEMs und Hyperscaler Lizenzen brauchen oder ihre Lizenzen verlängern oder erweitern müssen. 
 
-Kernbotschaften und Argumente:
+Das IP-Lizenzgeschäft von Vicor ist ein margenstarkes und schnell wachsendes Geschäft. 
 
--   Grundsatz des erwarteten Wertes: Alle Handelsentscheidungen,
-    einschließlich des Aufstockens von Positionen, müssen auf dem
-    erwarteten Wert basieren.
+m dritten Quartal erreichte Vicor einen Lizenzumsatz von fast 90 Millionen US-Dollar pro Jahr. 
+In den nächsten zwei Jahren rechnet Vicor mit einer deutlichen Ausweitung seines Lizenzgeschäfts, 
+da Vicor IP in den meisten KI-Anwendungen eingesetzt wird, die zusätzliche Lizenzen oder 
+die Verlängerung bestehender Lizenzen erfordern. 
 
--   Regel für das Aufstocken von Positionen: Lance fügt nur dann hinzu,
-    wenn die neue Exposition ein unabhängiger Trade wäre, unabhängig von
-    seiner aktuellen Position. Momente mit einem bedeutsamen positiven
-    Erwartungswert sind zeitlich sehr spezifisch.
+Im Zentrum seines IP-Lizenzgeschäfts steht das Geschäft mit Leistungsmodulen, 
+das von den Investitionen in die erste Chip-Foundry mit Sitz in Andover, 
+Massachusetts, profitiert. Vicor hatte einige Herausforderungen zu bewältigen, 
+um diese Fabrik mit ihren einzigartigen patentierten Prozessen in Betrieb zu nehmen, 
+aber diese Probleme sind nun überwunden, und die Ausbeute und Zykluszeiten liegen auf Weltklasseniveau. 
 
--   Fehler von Amateur-Tradern:
+Während die Auslastung der Fabrik aufgrund der geringen Produktmargen 
+aufgrund von Unterauslastung niedrig blieb, geht Vicor davon aus, 
+dass die Leistungsniveaus, die mit Chips der fünften Generation und VPDs 
+der zweiten Generation erreicht werden, bald zu einer erheblichen 
+Kapazitätsauslastung führen werden. 
 
-    -   Amateur-Trader neigen dazu, Positionen aufzustocken, wenn ein
-        Trade bereits erfolgreich ist und Gewinne abwirft. Dies
-        geschieht oft aus Bedauern, nicht mehr Aktien zu einem besseren
-        erwarteten Wert gekauft zu haben, und aus psychologischem
-        Komfort.
-    -   Das Problem ist, dass der erwartete Wert in den meisten Fällen
-        sinkt, während ein Trade zugunsten des Traders läuft.
-    -   Dieses Verhalten verschlechtert den Durchschnittspreis und kann
-        einen ursprünglich guten Trade durch mittelmäßige oder schlechte
-        Hinzufügungen verderben, was oft zu einem vorzeitigen Ausstieg
-        führt.
-
--   Lance's Ansatz für professionelles Aufstocken:
-
-    -   Er stockt nur dann auf, wenn der Chart ein Setup bietet, das
-        unabhängig von seiner aktuellen Position einen echten Einstieg
-        für sein Handelssystem darstellen würde.
-    -   Beispiele hierfür sind exakte Ausbruchslevels, Durchbrüche
-        früherer Hochs oder schnell nach Eilmeldungen.
-    -   Bei Mean-Reversion-Trades könnte er intra-bar kaufen, wenn der
-        erwartete Wert sehr hoch ist, und dann hinzufügen, wenn der
-        Trend tatsächlich bricht (z. B. Bruch einer Trendlinie oder
-        früherer Hochs), aber nur, wenn der erwartete Wert immer noch
-        extrem günstig ist und er den Trade auch ohne bestehende
-        Position eingegangen wäre.
-
--   Unabhängige Behandlung von Positionen:
-
-    -   Jede hinzugefügte Position wird vollständig unabhängig als
-        eigener Trade behandelt.
-    -   Eine als Swing-Position gehaltene Größe wird nach den Regeln für
-        Swing-Trades gehandelt, und eine als Scalp hinzugefügte Größe
-        wird nach den Regeln für Scalps gehandelt.
-    -   Dies vereinfacht nachfolgende Entscheidungen, da keine Sorge um
-        den Durchschnittspreis oder den richtigen Stop-Loss besteht;
-        jede Position hat ihre klaren, präzisen Einstiege basierend auf
-        etablierten Strategien.
-
--   Psychologische Fallstricke: Trader lassen sich oft von der
-    Psychologie beeinflussen (Komfort beim Hinzufügen, Unbehagen beim
-    Ausstieg), anstatt sich auf die objektive Mathematik des erwarteten
-    Wertes zu verlassen.
-
--   Empfehlung zur Datenanalyse:
-
-    -   Trader sollten Daten über ihre Aufstockungen sammeln (manuell
-        oder mit Software), um den erwarteten Wert dieser Ergänzungen
-        mit dem der ursprünglichen Einstiege zu vergleichen.
-    -   Wenn Aufstockungen Geld verlieren, sollten sie eliminiert und
-        die Strategie überdacht werden.
-    -   Wenn Aufstockungen profitabel, aber deutlich weniger als die
-        ursprünglichen Einstiege sind, sollte mehr Kapital in die
-        ursprünglichen Einstiege verlagert werden, wo der erwartete Wert
-        höher ist.
-
--   Lance's persönliche Erfahrung: Er entwickelte diese Best Practices
-    durch objektive Analyse seiner eigenen Handelsdaten, nachdem er
-    festgestellt hatte, dass seine eigenen Aufstockungen ursprünglich
-    psychologisch motiviert waren und seine Gesamtperformance
-    belasteten.
-
--   Fazit: Objektive, detaillierte Datenanalyse ist entscheidend für
-    echtes Wachstum und Fortschritt im Handel, um individuelle, optimale
-    Regeln zu finden.
+Die Aktie legte nach den Ergebnissen des dritten Quartals und den optimistischen Kommentaren einen Kurssprung nach oben hin.

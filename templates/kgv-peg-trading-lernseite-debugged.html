@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KGV, PEG und die Trading-Legenden: Yahoo, Palantir & Crocs</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f7f7f7;
+            line-height: 1.6;
+            font-size: 1.05em;
+            color: #1a1a1a;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Hero Bereich */
+        .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            color: white;
+            padding: 80px 0 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(218, 165, 32, 0.3) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .hero h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4em;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+            animation: fadeInUp 0.8s ease-out 0.2s;
+            animation-fill-mode: both;
+        }
+        
+        /* Statistik Karten mit Glasmorphismus */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: slideIn 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+        
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: #daa520;
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #2d2d2d;
+            font-weight: 500;
+        }
+        
+        /* Fortschritts-Tracking */
+        .progress-section {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #b8860b 0%, #f4e97b 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+        
+        /* Aufklappbare Sektionen */
+        .section {
+            background: white;
+            margin: 20px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .section:nth-child(odd) { animation-delay: 0.2s; }
+        .section:nth-child(even) { animation-delay: 0.4s; }
+        
+        .section-header {
+            background: #2d2d2d;
+            color: white;
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        
+        .section-header:hover {
+            background: #1a1a1a;
+        }
+        
+        .section-header h2 {
+            font-size: 1.4em;
+            font-weight: 600;
+        }
+        
+        .section-header .toggle-icon {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            color: #daa520;
+        }
+        
+        .section.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+        
+        .section-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+        }
+        
+        .section.active .section-content {
+            padding: 30px;
+            max-height: 2000px;
+        }
+        
+        /* Highlight und Warn Boxen */
+        .highlight-box {
+            background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+            border-left: 5px solid #b8860b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: #1a1a1a;
+        }
+        
+        .warning-box {
+            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+            border-left: 5px solid #d69e2e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            color: white;
+        }
+        
+        /* Vergleichstabelle */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .comparison-table th,
+        .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .comparison-table th {
+            background: #2d2d2d;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:hover {
+            background: rgba(218, 165, 32, 0.1);
+        }
+        
+        /* Quiz Bereich */
+        .quiz-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            margin: 40px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .quiz-header h2 {
+            font-size: 2em;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+        
+        .question {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .question.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .question h3 {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #2d2d2d;
+        }
+        
+        .answer-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .answer-option:hover {
+            transform: translateX(5px);
+            border-color: #daa520;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .answer-option.selected {
+            background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(218, 165, 32, 0.1) 100%);
+            border-color: #b8860b;
+        }
+        
+        .answer-option.correct {
+            background: rgba(56, 161, 105, 0.1);
+            border-color: #38a169;
+        }
+        
+        .answer-option.incorrect {
+            background: rgba(229, 62, 62, 0.1);
+            border-color: #e53e3e;
+        }
+        
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        }
+        
+        .btn-secondary {
+            background: #2d2d2d;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #1a1a1a;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Quiz Ergebnis */
+        .quiz-result {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(184, 134, 11, 0.1) 0%, rgba(218, 165, 32, 0.1) 100%);
+            border-radius: 12px;
+            margin-top: 30px;
+            display: none;
+        }
+        
+        .quiz-result h3 {
+            font-size: 2em;
+            color: #b8860b;
+            margin-bottom: 20px;
+        }
+        
+        .quiz-result p {
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Animationen */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+            
+            .stat-number {
+                font-size: 2em;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            
+            .quiz-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .comparison-table {
+                font-size: 0.9em;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px;
+            }
+        }
+        
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #b8860b;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Bereich -->
+    <div class="hero">
+        <div class="container">
+            <h1>Von Yahoo zu Palantir</h1>
+            <p class="hero-subtitle">Wenn extremes Wachstum die Analysten verblüfft - und wann es zur Falle wird</p>
+            
+            <!-- Statistik Karten -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">938x</div>
+                    <div class="stat-label">Yahoo KGV 1997</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7.800%</div>
+                    <div class="stat-label">Yahoo Gewinn in 29 Monaten</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">439x</div>
+                    <div class="stat-label">Palantir KGV heute</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">194x</div>
+                    <div class="stat-label">Palantir Forward PE</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Fortschritts-Tracking -->
+        <div class="progress-section">
+            <h3>Dein Lernfortschritt</h3>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill">0%</div>
+            </div>
+            <p id="progressText">Beginne mit dem ersten Abschnitt, um deinen Fortschritt zu starten!</p>
+        </div>
+        
+        <!-- Sektion 1: Marc Minervinis Yahoo-Story -->
+        <div class="section" data-section="1">
+            <div class="section-header" onclick="toggleSection(1)">
+                <h2>📈 Die Yahoo-Story: Als ein KGV von 938 Sinn machte</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <p>Marc Minervini, einer der erfolgreichsten Trader unserer Zeit, erzählt in seinem Interview mit Ron Insana von CNBC eine bemerkenswerte Geschichte:</p>
+                
+                <div class="highlight-box">
+                    <p><strong>„Sie erinnern sich vielleicht, als Mark [Minervini] das letzte Mal Mitte Oktober [1998] hier war, empfahl er Yahoo!, das seit damals um 100 Prozent gestiegen ist..."</strong></p>
+                </div>
+                
+                <h3>Die Kernaussage: Wall Street versteht Superperformer nicht</h3>
+                <p>Die Wall Street weiß oft nicht, welches KGV sie bei sehr schnell wachsenden Unternehmen ansetzen soll. Bei Unternehmen in extremen Wachstumsphasen ist es schwierig vorherzusagen, wie lange diese anhalten wird und welche Verlangsamung in einem bestimmten Zeitrahmen auftreten wird.</p>
+                
+                <h3>Yahoo 1997: Die Zahlen, die sprachlos machten</h3>
+                <ul>
+                    <li><strong>KGV beim Kauf:</strong> 938 (!)</li>
+                    <li><strong>Kurssteigerung:</strong> 7.800% in nur 29 Monaten</li>
+                    <li><strong>KGV am Höhepunkt:</strong> Über 1.700x</li>
+                    <li><strong>Die Revolution:</strong> Das Internet - eine völlig neue Branche</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <p><strong>Minervinis Warnung an Skeptiker:</strong> „Auf keinen Fall – Ya-WHO?". Das Unternehmen war zu jener Zeit praktisch unbekannt, aber Yahoo! leitete eine neue technische Revolution ein: das Internet.</p>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="yahooChart" width="400" height="200"></canvas>
+                </div>
+                
+                <h3>Die Lehre aus der Yahoo-Story</h3>
+                <p>Viele Superperformance-Aktien neigen dazu, scheinbar lächerlicher Bewertungen zu trotzen und immer weiter in den Himmel zu klettern. Diese großartigen Unternehmen werden verpasst, weil Investoren die Art und Weise, wie die Wall Street arbeitet, fehldeuten und sich auf die falschen Kurstreiber konzentrieren.</p>
+                
+                <div class="highlight-box">
+                    <p><strong>Minervinis Erfolgsprinzip:</strong> „Jeder institutionelle Anleger, gegenüber dem ich die Aktie erwähnte, sagte: ‚Auf keinen Fall – Ya-WHO?'"</p>
+                    <p>Genau diese Skepsis der Masse war das Signal für eine außergewöhnliche Investmentchance.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sektion 2: Die AI-Revolution mit Palantir -->
+        <div class="section" data-section="2">
+            <div class="section-header" onclick="toggleSection(2)">
+                <h2>🤖 Palantir: Das Yahoo der AI-Revolution?</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Geschichte wiederholt sich nicht, aber sie reimt sich</h3>
+                <p>Heute, 27 Jahre nach Minervinis Yahoo-Trade, erleben wir eine ähnliche Situation mit Palantir und der AI-Revolution:</p>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Vergleichspunkt</th>
+                        <th>Yahoo 1997</th>
+                        <th>Palantir 2025</th>
+                    </tr>
+                    <tr>
+                        <td>Revolution</td>
+                        <td>Internet</td>
+                        <td>Künstliche Intelligenz</td>
+                    </tr>
+                    <tr>
+                        <td>KGV</td>
+                        <td>938x</td>
+                        <td>439x</td>
+                    </tr>
+                    <tr>
+                        <td>Forward PE</td>
+                        <td>Nicht verfügbar</td>
+                        <td>194x</td>
+                    </tr>
+                    <tr>
+                        <td>Marktreaktion</td>
+                        <td>"Ya-WHO?"</td>
+                        <td>"Zu teuer!"</td>
+                    </tr>
+                    <tr>
+                        <td>Kernkompetenz</td>
+                        <td>Web-Suche & Portal</td>
+                        <td>AI-Platform & Big Data</td>
+                    </tr>
+                    <tr>
+                        <td>Wachstumstreiber</td>
+                        <td>Internet-Adoption</td>
+                        <td>AI-Transformation</td>
+                    </tr>
+                </table>
+                
+                <h3>Warum Palantir das neue Yahoo sein könnte</h3>
+                
+                <div class="highlight-box">
+                    <h4>1. Technologische Revolution</h4>
+                    <p>Wie Yahoo das Internet-Zeitalter einläutete, steht Palantir an der Spitze der AI-Revolution. Ihre Plattformen Gotham und Foundry transformieren, wie Unternehmen und Regierungen Daten nutzen.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>2. "Unvernünftige" Bewertung</h4>
+                    <p>Mit einem KGV von 439 erscheint Palantir vielen Analysten als maßlos überbewertet - genau wie Yahoo 1997. Doch das Forward PE von 194 deutet auf erwartetes starkes Gewinnwachstum hin.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>3. Skeptische Wall Street</h4>
+                    <p>Viele institutionelle Investoren meiden Palantir wegen der hohen Bewertung - ein déjà-vu zu Minervinis Yahoo-Story.</p>
+                </div>
+                
+                <h3>Die Risiken nicht ignorieren</h3>
+                <div class="warning-box">
+                    <p><strong>Wichtig:</strong> Nicht jede hoch bewertete Aktie wird zum nächsten Yahoo! Die Dot-Com-Blase hat gezeigt, dass viele überbewertete Tech-Aktien auch komplett abstürzen können. Due Diligence ist essentiell!</p>
+                </div>
+                
+                <h3>Palantirs AI-Dominanz in Zahlen</h3>
+                <ul>
+                    <li><strong>Regierungsaufträge:</strong> Multi-Milliarden-Dollar-Verträge mit US-Behörden</li>
+                    <li><strong>Kommerzielle Kunden:</strong> Explosives Wachstum im Unternehmenssektor</li>
+                    <li><strong>AI Platform (AIP):</strong> Game-Changer für Unternehmens-AI</li>
+                    <li><strong>Profitabilität:</strong> Im Gegensatz zu vielen Tech-Unternehmen bereits profitabel</li>
+                </ul>
+                
+                <div class="chart-container">
+                    <canvas id="palantirChart" width="400" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sektion 3: Crocs-Mania - Die Warnung -->
+        <div class="section" data-section="3">
+            <div class="section-header" onclick="toggleSection(3)">
+                <h2>⚠️ Crocs-Mania: Wenn Timing alles ist</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Die andere Seite der Medaille: Wenn hohe Bewertungen zur Falle werden</h3>
+                <p>Nicht jede Geschichte endet wie Yahoo. Die Crocs-Story zeigt eindrucksvoll, warum Timing bei hochbewerteten Aktien überlebenswichtig ist.</p>
+                
+                <div class="warning-box">
+                    <h4>Die Crocs-Mania im Überblick</h4>
+                    <p>Als die ursprünglich für die Gartenarbeit und den Aufenthalt auf Booten gedachten Kunststoff-Clogs Mode wurden, trug sie plötzlich jeder. Diese Beliebtheit schwappte über auf die Aktie.</p>
+                </div>
+                
+                <h3>Die beeindruckenden Zahlen - und die brutale Realität</h3>
+                <ul>
+                    <li><strong>KGV beim Hype:</strong> Über 60x des Gewinns</li>
+                    <li><strong>Maximaler Gewinn:</strong> 700% in nur 20 Monaten (für frühe Käufer)</li>
+                    <li><strong>Das teuerste KGV der Geschichte:</strong> Zeitweise handelten die Crocs zum höchsten KGV aller Zeiten</li>
+                    <li><strong>Der Kollaps:</strong> 99% Verlust für Spätkäufer innerhalb eines Jahres</li>
+                </ul>
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Timing-Paradoxon</h4>
+                    <p><strong>April 2006 - Oktober 2007:</strong> Das KGV von Crocs FIEL, obwohl die Aktie stieg. Warum? Die Gewinne wuchsen noch schneller als der Aktienkurs!</p>
+                    <p>Dies ist ein klassisches Zeichen dafür, dass das Unternehmen in seine Bewertung "hineinwächst".</p>
+                </div>
+                
+                <div class="chart-container">
+                    <canvas id="crocsChart" width="400" height="200"></canvas>
+                </div>
+                
+                <h3>Die drei Timing-Szenarien bei Crocs</h3>
+                
+                <table class="comparison-table">
+                    <tr>
+                        <th>Kaufzeitpunkt</th>
+                        <th>KGV beim Kauf</th>
+                        <th>Ergebnis</th>
+                        <th>Lehre</th>
+                    </tr>
+                    <tr>
+                        <td>Früh (2006)</td>
+                        <td>20-30x</td>
+                        <td>+700% Gewinn</td>
+                        <td>Frühe Erkennung zahlt sich aus</td>
+                    </tr>
+                    <tr>
+                        <td>Während Hype (2007)</td>
+                        <td>60x+</td>
+                        <td>Kleine Gewinne/Verluste</td>
+                        <td>Vorsicht bei extremen Bewertungen</td>
+                    </tr>
+                    <tr>
+                        <td>Zu spät (2008)</td>
+                        <td>Niedriger, aber...</td>
+                        <td>-99% Verlust</td>
+                        <td>Fallende KGVs können täuschen</td>
+                    </tr>
+                </table>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Die brutale Wahrheit über Moden und Hypes</h4>
+                    <p>"Aber Moden kommen und gehen, und vielleicht hielt die Welt die Crocs nicht länger für adäquat."</p>
+                    <p>Wenn du gewartet hättest, bis die Aktie zu einer angemesseneren Bewertung gehandelt wurde, und erst gekauft hättest, als das historische KGV-Tief fast erreicht war, hättest du in weniger als einem Jahr <strong>99 Prozent deines Kapitals verloren</strong>.</p>
+                </div>
+                
+                <h3>Die Crocs-Lehren für heute</h3>
+                
+                <div class="highlight-box">
+                    <h4>1. Hohe Bewertungen sind keine Kaufgarantie</h4>
+                    <p>Ein hoheS KGV allein macht keine Aktie zum nächsten Yahoo. Bei Crocs führte das "Warten auf eine vernünftige Bewertung" zur Katastrophe.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>2. Unterscheide zwischen dauerhafter Innovation und Mode</h4>
+                    <p><strong>Yahoo/Internet:</strong> Dauerhafte technologische Revolution<br>
+                    <strong>Palantir/AI:</strong> Fundamentaler Technologiesprung<br>
+                    <strong>Crocs/Plastikschuhe:</strong> Modeerscheinung ohne dauerhaften Burggraben</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>3. Der Markt hat immer das letzte Wort</h4>
+                    <p>"Welche Meinung man auch immer vertritt – der Markt hat stets das letzte Wort."</p>
+                    <p>Diese Demut ist essentiell für langfristigen Trading-Erfolg.</p>
+                </div>
+                
+                <h3>Wie erkennst du den Unterschied?</h3>
+                <p>Die Million-Dollar-Frage: Ist es das nächste Yahoo oder die nächsten Crocs? Hier sind die Warnsignale:</p>
+                
+                <div class="warning-box">
+                    <h4>🚨 Crocs-Warnsignale:</h4>
+                    <ul>
+                        <li>Produkt ist eine Mode ohne technologischen Burggraben</li>
+                        <li>Keine wiederkehrenden Einnahmen oder Netzwerkeffekte</li>
+                        <li>Leicht kopierbar von Wettbewerbern</li>
+                        <li>Abhängig von einem einzigen Trend</li>
+                        <li>KGV fällt, weil Gewinnwachstum nicht nachhaltig ist</li>
+                    </ul>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>✅ Yahoo/Palantir-Qualitätsmerkmale:</h4>
+                    <ul>
+                        <li>Revolutionäre Technologie mit hohen Eintrittsbarrieren</li>
+                        <li>Netzwerkeffekte und steigende Skalenerträge</li>
+                        <li>Wiederkehrende Einnahmen und langfristige Verträge</li>
+                        <li>Plattform-Charakter mit Ökosystem</li>
+                        <li>KGV fällt, weil nachhaltiges Gewinnwachstum</li>
+                    </ul>
+                </div>
+                
+                <div class="warning-box" style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); border-left-color: #9b2c2c;">
+                    <h4 style="color: white;">💀 Die wichtigste Lektion aus der Crocs-Story</h4>
+                    <p style="color: white;"><strong>Bei hochbewerteten Wachstumsaktien gibt es nur zwei Ausgänge:</strong></p>
+                    <ol style="color: white;">
+                        <li>Sie werden zum nächsten großen Gewinner (Yahoo, Amazon, Netflix)</li>
+                        <li>Sie kollabieren spektakulär (Crocs, Pets.com, viele Dot-Com-Aktien)</li>
+                    </ol>
+                    <p style="color: white;"><strong>Dazwischen gibt es wenig!</strong> Deshalb ist striktes Risikomanagement mit Stop-Loss absolut überlebenswichtig.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sektion 4: Trading-Lektionen -->
+        <div class="section" data-section="4">
+            <div class="section-header" onclick="toggleSection(4)">
+                <h2>💡 Die zeitlosen Lektionen für Elite-Trader</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Was wir von Minervini lernen können</h3>
+                
+                <div class="highlight-box">
+                    <h4>Lektion 1: Ignoriere das KGV bei Superperformern</h4>
+                    <p>Bei revolutionären Unternehmen in neuen Branchen sind traditionelle Bewertungsmetriken oft irrelevant. Das Wachstumspotenzial rechtfertigt scheinbar absurde Bewertungen.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Lektion 2: Suche nach technischen Revolutionen</h4>
+                    <p>Die größten Gewinner entstehen oft in völlig neuen Branchen oder bei fundamentalen Technologiesprüngen (Internet → Mobile → Cloud → AI).</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Lektion 3: Nutze die Skepsis der Masse</h4>
+                    <p>Wenn institutionelle Investoren sagen "Auf keinen Fall!", könnte das dein Signal zum Kauf sein - vorausgesetzt, die Fundamentaldaten stimmen.</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Lektion 4: Timing ist alles</h4>
+                    <p>Früh einsteigen ist gut, aber das richtige Momentum abwarten ist besser. Minervini stieg ein, als Yahoo bereits Fahrt aufnahm.</p>
+                </div>
+                
+                <h3>Die Minervini-Checkliste für Superperformer</h3>
+                <ul>
+                    <li>✓ Revolutionäre Technologie oder Geschäftsmodell</li>
+                    <li>✓ Explosives Umsatz- und Gewinnwachstum</li>
+                    <li>✓ Führungsposition in einem neuen Markt</li>
+                    <li>✓ Institutionelle Sponsoren beginnen einzusteigen</li>
+                    <li>✓ Technisches Momentum (Stage 2 nach Weinstein)</li>
+                    <li>✓ Skepsis der breiten Masse ("zu teuer")</li>
+                </ul>
+                
+                <div class="warning-box">
+                    <h4>⚠️ Risikomanagement nicht vergessen!</h4>
+                    <p>Auch Minervini nutzt strikte Stop-Loss-Orders. Nicht jede Story endet wie Yahoo. Positionsgröße und Risikomanagement sind essentiell!</p>
+                </div>
+                
+                <h3>Praktische Anwendung für dein Trading</h3>
+                <p>Für Premium-Member von Didis Trading Club bedeutet das:</p>
+                <ol>
+                    <li><strong>Fokus auf Innovation:</strong> Suche nach Unternehmen, die neue Märkte schaffen</li>
+                    <li><strong>Ignoriere Bewertungs-Pessimisten:</strong> Bei echten Innovatoren zählt Wachstum mehr als KGV</li>
+                    <li><strong>Nutze technische Analyse:</strong> Warte auf klare Kaufsignale im Chart</li>
+                    <li><strong>Manage dein Risiko:</strong> Setze Stop-Loss bei -7% bis -10%</li>
+                    <li><strong>Halte Gewinner:</strong> Lass Gewinne laufen, solange der Trend intakt ist</li>
+                </ol>
+            </div>
+        </div>
+        
+        <!-- Sektion 5: Die PEG-Ratio verstehen -->
+        <div class="section" data-section="5">
+            <div class="section-header" onclick="toggleSection(5)">
+                <h2>📊 Die PEG-Ratio: Wenn KGV allein nicht reicht</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Die magische Formel für Wachstumsaktien</h3>
+                <p>Die PEG-Ratio (Price-Earning to Growth-Ratio, auf Deutsch: Kurs-Gewinn-Wachstums-Verhältnis) ist das Schweizer Taschenmesser der Wachstumsinvestoren. Sie setzt das KGV ins Verhältnis zum erwarteten Gewinnwachstum.</p>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%); color: white;">
+                    <h4>Die PEG-Formel</h4>
+                    <div style="text-align: center; font-size: 1.4em; margin: 20px 0; font-weight: bold;">
+                        PEG = erwartetes KGV ÷ (erwartete Gewinnsteigerung in % × 100)
+                    </div>
+                </div>
+                
+                <h3>Praktisches Beispiel</h3>
+                <p>Wenn eine Aktie zum 20-Fachen des Gewinns gehandelt wird und eine Wachstumsrate von 40 Prozent aufweist:</p>
+                <ul>
+                    <li>KGV = 20</li>
+                    <li>Wachstumsrate = 40%</li>
+                    <li><strong>PEG = 20 ÷ 40 = 0,5</strong></li>
+                    <li>Das Unternehmen wird zur Hälfte seiner Wachstumsrate gehandelt!</li>
+                </ul>
+                
+                <h3>Die PEG-Interpretation</h3>
+                <div class="highlight-box">
+                    <h4>📈 PEG < 1: Potentiell unterbewertet</h4>
+                    <p>Die Aktie wächst schneller als ihre Bewertung es widerspiegelt. Ein klassisches Signal für Wachstumsinvestoren!</p>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>📉 PEG > 1: Potentiell überbewertet</h4>
+                    <p>Das KGV übersteigt die Wachstumsrate. Die Aktie könnte gemäß dieser Denkweise als riskant oder überbewertet eingestuft werden.</p>
+                </div>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #38a169 0%, #276749 100%); color: white;">
+                    <h4>✅ PEG = 1: Fair bewertet</h4>
+                    <p>Die Bewertung entspricht dem Wachstum. Viele Analysten suchen nach Aktien mit PEG-Ratios zwischen 0,5 und 1.</p>
+                </div>
+                
+                <h3>PEG-Analyse unserer drei Beispiele</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>Unternehmen</th>
+                        <th>KGV</th>
+                        <th>Geschätztes Wachstum</th>
+                        <th>PEG-Ratio</th>
+                        <th>Interpretation</th>
+                    </tr>
+                    <tr>
+                        <td>Yahoo 1997</td>
+                        <td>938x</td>
+                        <td>200%+</td>
+                        <td>~4,7</td>
+                        <td>Extrem überbewertet (aber trotzdem +7.800%!)</td>
+                    </tr>
+                    <tr>
+                        <td>Palantir 2025</td>
+                        <td>439x</td>
+                        <td>30-40%</td>
+                        <td>~12-14</td>
+                        <td>Nach PEG sehr teuer</td>
+                    </tr>
+                    <tr>
+                        <td>Crocs 2007 (Hoch)</td>
+                        <td>60x</td>
+                        <td>50-60%</td>
+                        <td>~1,0-1,2</td>
+                        <td>"Fair" bewertet - und trotzdem -99%!</td>
+                    </tr>
+                </table>
+                
+                <h3>Die Grenzen der PEG-Ratio</h3>
+                
+                <div class="warning-box" style="background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%); border-left-color: #9b2c2c;">
+                    <h4>⚠️ Vorsicht bei extremen Wachstumsraten!</h4>
+                    <p>Wie das Buch zeigt: "Allerdings ist es mit traditionellen Bewertungsmethoden nahezu unmöglich, eine High-tech-Aktie wie Yahoo! zu bewerten, die zum 938-Fachen des Gewinns gehandelt wurde."</p>
+                </div>
+                
+                <div class="highlight-box">
+                    <h4>Die PEG-Fallen</h4>
+                    <ul>
+                        <li><strong>Wachstum ist nicht garantiert:</strong> Erwartete Wachstumsraten können sich schnell ändern</li>
+                        <li><strong>Qualität zählt:</strong> Ein niedriger PEG sagt nichts über die Qualität des Geschäftsmodells aus</li>
+                        <li><strong>Timing-Problem:</strong> "Viele der abgestürzten Spitzenreiter auf Basis dieser Methode durchaus attraktiv wirkten"</li>
+                        <li><strong>Zyklen beachten:</strong> Am Höhepunkt des Zyklus kann der PEG täuschen</li>
+                    </ul>
+                </div>
+                
+                <h3>Praktische Anwendung der PEG-Ratio</h3>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #b8860b 0%, #daa520 100%);">
+                    <h4>🎯 Die GARP-Strategie</h4>
+                    <p><strong>Growth at a Reasonable Price (Wachstum zu einem vernünftigen Preis):</strong></p>
+                    <ul>
+                        <li>Suche nach PEG-Ratios zwischen 0,5 und 1,5</li>
+                        <li>Kombiniere mit Qualitätskriterien (Burggraben, Management)</li>
+                        <li>Beachte die Nachhaltigkeit des Wachstums</li>
+                        <li>Nutze Stop-Loss für Risikomanagement</li>
+                    </ul>
+                </div>
+                
+                <h3>Wann die PEG-Ratio versagt</h3>
+                
+                <div class="warning-box">
+                    <h4>Bei revolutionären Unternehmen</h4>
+                    <p>Yahoo hatte 1997 vermutlich einen PEG von über 4 - und war trotzdem ein Jahrhunderttrade. Bei echten Gamechangern versagen traditionelle Metriken.</p>
+                </div>
+                
+                <div class="warning-box">
+                    <h4>Bei zyklischen Geschäften</h4>
+                    <p>Am Höhepunkt des Zyklus (wie bei Crocs) kann ein "fairer" PEG trotzdem eine Falle sein, wenn das Wachstum nicht nachhaltig ist.</p>
+                </div>
+                
+                <h3>Die Synthese: KGV + PEG + gesunder Menschenverstand</h3>
+                
+                <div class="highlight-box">
+                    <h4>🧠 Die Elite-Trader-Formel</h4>
+                    <ol>
+                        <li><strong>Nutze PEG als Screening-Tool:</strong> Finde unterbewertete Wachstumsaktien</li>
+                        <li><strong>Prüfe die Wachstumsqualität:</strong> Ist es nachhaltig oder nur ein Strohfeuer?</li>
+                        <li><strong>Beachte den Kontext:</strong> Revolutionäre Unternehmen sprengen alle Regeln</li>
+                        <li><strong>Timing ist entscheidend:</strong> Der beste PEG nutzt nichts am falschen Punkt im Zyklus</li>
+                        <li><strong>Risikomanagement:</strong> Auch bei niedrigem PEG brauchst du Stop-Loss</li>
+                    </ol>
+                </div>
+                
+                <div class="highlight-box" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white;">
+                    <h4>💎 Die ultimative Weisheit</h4>
+                    <p><strong>"Wie ihr KGV-Cousin kann auch die PEG-Ratio einige der profitabelsten und dynamischsten Unternehmen aus der Liste der Kaufkandidaten eliminieren."</strong></p>
+                    <p>Die besten Trades brechen oft alle Regeln. Nutze Kennzahlen als Werkzeuge, nicht als Dogma!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Abschluss-Quiz Bereich -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h2>🎯 Das große Abschluss-Quiz!</h2>
+                <p>Teste dein Wissen über KGV, PEG und die legendären Trading-Stories</p>
+            </div>
+            
+            <div id="quizContent">
+                <!-- Frage 1 -->
+                <div class="question active" data-question="1">
+                    <h3>Frage 1: Was ist die PEG-Formel?</h3>
+                    <div class="answer-option" onclick="selectAnswer(1, 'a')">
+                        <span>A) KGV × Gewinnwachstum</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(1, 'b')">
+                        <span>B) KGV ÷ (Gewinnwachstum in % × 100)</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(1, 'c')">
+                        <span>C) Gewinnwachstum ÷ KGV</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(1, 'd')">
+                        <span>D) KGV + Gewinnwachstum</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 2 -->
+                <div class="question" data-question="2">
+                    <h3>Frage 2: Mit einem KGV von 938x und geschätztem Wachstum von 200%, wie hoch wäre Yahoos PEG 1997?</h3>
+                    <div class="answer-option" onclick="selectAnswer(2, 'a')">
+                        <span>A) 0,47</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(2, 'b')">
+                        <span>B) 1,88</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(2, 'c')">
+                        <span>C) 4,69</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(2, 'd')">
+                        <span>D) 18,76</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 3 -->
+                <div class="question" data-question="3">
+                    <h3>Frage 3: Was bedeutet eine PEG-Ratio unter 1?</h3>
+                    <div class="answer-option" onclick="selectAnswer(3, 'a')">
+                        <span>A) Die Aktie ist definitiv überbewertet</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(3, 'b')">
+                        <span>B) Die Aktie könnte unterbewertet sein</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(3, 'c')">
+                        <span>C) Das Unternehmen wächst nicht</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(3, 'd')">
+                        <span>D) Das KGV ist zu hoch</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 4 -->
+                <div class="question" data-question="4">
+                    <h3>Frage 4: Warum versagte die PEG-Ratio bei der Crocs-Bewertung?</h3>
+                    <div class="answer-option" onclick="selectAnswer(4, 'a')">
+                        <span>A) Der PEG war zu hoch</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(4, 'b')">
+                        <span>B) Trotz "fairem" PEG (~1,0) war es eine Modeerscheinung ohne nachhaltiges Wachstum</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(4, 'c')">
+                        <span>C) Die Formel wurde falsch berechnet</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(4, 'd')">
+                        <span>D) Crocs hatte keinen Gewinn</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 5 -->
+                <div class="question" data-question="5">
+                    <h3>Frage 5: Was ist die wichtigste Lehre aus allen drei Beispielen (Yahoo, Palantir, Crocs)?</h3>
+                    <div class="answer-option" onclick="selectAnswer(5, 'a')">
+                        <span>A) Kaufe nur Aktien mit niedrigem KGV und PEG</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(5, 'b')">
+                        <span>B) Kennzahlen sind Werkzeuge, nicht Dogma - Kontext und Qualität entscheiden</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(5, 'c')">
+                        <span>C) Technische Analyse ist wichtiger als Fundamentaldaten</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(5, 'd')">
+                        <span>D) Folge immer der Meinung der Analysten</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 6 -->
+                <div class="question" data-question="6">
+                    <h3>Frage 6: Palantir hat ein KGV von 439x. Was macht es trotzdem zu einem potentiellen Yahoo?</h3>
+                    <div class="answer-option" onclick="selectAnswer(6, 'a')">
+                        <span>A) Es ist billig bewertet</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(6, 'b')">
+                        <span>B) Es steht an der Spitze einer technologischen Revolution (AI) mit hohen Eintrittsbarrieren</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(6, 'c')">
+                        <span>C) Es hat einen niedrigen PEG</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(6, 'd')">
+                        <span>D) Alle Analysten empfehlen es</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 7 -->
+                <div class="question" data-question="7">
+                    <h3>Frage 7: Was sagt das Buch über die Grenzen der PEG-Ratio?</h3>
+                    <div class="answer-option" onclick="selectAnswer(7, 'a')">
+                        <span>A) Sie funktioniert immer perfekt</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(7, 'b')">
+                        <span>B) Sie kann die profitabelsten Unternehmen aus der Kaufliste eliminieren</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(7, 'c')">
+                        <span>C) Sie sollte nie verwendet werden</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(7, 'd')">
+                        <span>D) Sie ist besser als alle anderen Kennzahlen</span>
+                    </div>
+                </div>
+                
+                <!-- Frage 8 -->
+                <div class="question" data-question="8">
+                    <h3>Frage 8: Welche Aktie zeigte, dass ein KGV-Rückgang WÄHREND steigender Kurse möglich ist?</h3>
+                    <div class="answer-option" onclick="selectAnswer(8, 'a')">
+                        <span>A) Yahoo - das KGV stieg immer mit dem Kurs</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(8, 'b')">
+                        <span>B) Palantir - hat ein konstantes KGV</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(8, 'c')">
+                        <span>C) Crocs - das KGV fiel von 2006-2007, weil die Gewinne schneller wuchsen als der Kurs</span>
+                    </div>
+                    <div class="answer-option" onclick="selectAnswer(8, 'd')">
+                        <span>D) Keine der genannten</span>
+                    </div>
+                </div>
+                
+                <!-- Quiz Controls -->
+                <div class="quiz-controls">
+                    <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn" disabled>Zurück</button>
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Weiter</button>
+                </div>
+            </div>
+            
+            <!-- Quiz Ergebnis -->
+            <div class="quiz-result" id="quizResult">
+                <h3>🎉 Abschluss-Quiz beendet!</h3>
+                <p id="scoreText"></p>
+                <p id="scoreMessage"></p>
+                <button class="btn btn-primary" onclick="restartQuiz()">Quiz wiederholen</button>
+                <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" class="btn btn-primary" style="margin-left: 10px;">
+                    Werde Premium-Member
+                </a>
+            </div>
+        </div>
+        
+        <!-- Call to Action -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(6)">
+                <h2>🚀 Bereit für die nächsten Superperformer?</h2>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <h3>Werde Teil von Didis Elite Trading Club</h3>
+                <p>Lerne, wie du die nächsten Yahoo- oder Palantir-Chancen erkennst, bevor die Masse aufwacht!</p>
+                
+                <div class="highlight-box">
+                    <h4>Was dich erwartet:</h4>
+                    <ul>
+                        <li>✓ Tägliche Marktanalysen und Trade-Setups</li>
+                        <li>✓ Deep Dives zu Superperformer-Kandidaten</li>
+                        <li>✓ Bewährte Trading-Methoden nach Minervini, Weinstein & Co.</li>
+                        <li>✓ Risk Management für nachhaltigen Erfolg</li>
+                        <li>✓ Zugang zur Elite-Community erfolgreicher Trader</li>
+                    </ul>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" class="btn btn-primary" style="font-size: 1.2em; padding: 15px 30px;">
+                        Jetzt Premium-Member werden
+                    </a>
+                    <p style="margin-top: 20px; color: #666;">
+                        <em>Spare dir täglich 1,5 Stunden Recherche und profitiere von über 30 Jahren Börsenerfahrung</em>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Globale Variablen
+        let currentQuestion = 1;
+        const totalQuestions = 8;
+        let score = 0;
+        let answers = {};
+        let sectionProgress = {1: false, 2: false, 3: false, 4: false, 5: false, 6: false};
+        
+        // Richtige Antworten
+        const correctAnswers = {
+            1: 'b', // PEG = KGV ÷ (Gewinnwachstum in % × 100)
+            2: 'c', // 938 ÷ 200 = 4,69
+            3: 'b', // könnte unterbewertet sein
+            4: 'b', // Modeerscheinung trotz fairem PEG
+            5: 'b', // Kennzahlen sind Werkzeuge, nicht Dogma
+            6: 'b', // AI-Revolution mit hohen Eintrittsbarrieren
+            7: 'b', // kann profitabelste Unternehmen eliminieren
+            8: 'c'  // Crocs - KGV fiel während Kurs stieg
+        };
+        
+        // Fortschritt aus localStorage laden
+        function loadProgress() {
+            const saved = localStorage.getItem('tradingLessonProgress');
+            if (saved) {
+                sectionProgress = JSON.parse(saved);
+                updateProgress();
+            }
+        }
+        
+        // Fortschritt speichern
+        function saveProgress() {
+            localStorage.setItem('tradingLessonProgress', JSON.stringify(sectionProgress));
+        }
+        
+        // Fortschritt aktualisieren
+        function updateProgress() {
+            const completed = Object.values(sectionProgress).filter(v => v).length;
+            const percentage = (completed / 6) * 100;
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            
+            progressFill.style.width = percentage + '%';
+            progressFill.textContent = Math.round(percentage) + '%';
+            
+            if (percentage === 0) {
+                progressText.textContent = 'Beginne mit dem ersten Abschnitt, um deinen Fortschritt zu starten!';
+            } else if (percentage < 100) {
+                progressText.textContent = `Du hast ${completed} von 6 Abschnitten abgeschlossen. Weiter so!`;
+            } else {
+                progressText.textContent = 'Glückwunsch! Du hast alle Abschnitte durchgearbeitet. Teste jetzt dein Wissen im Quiz!';
+            }
+        }
+        
+        // Sektion toggle
+        function toggleSection(num) {
+            const section = document.querySelector(`[data-section="${num}"]`);
+            section.classList.toggle('active');
+            
+            // Als gelesen markieren
+            if (section.classList.contains('active')) {
+                sectionProgress[num] = true;
+                saveProgress();
+                updateProgress();
+            }
+        }
+        
+        // Quiz Funktionen
+        function selectAnswer(questionNum, answer) {
+            // Sicherstellen, dass das Event-Target existiert
+            if (!event || !event.target) return;
+            
+            answers[questionNum] = answer;
+            
+            // Visuelle Markierung
+            const options = document.querySelectorAll(`[data-question="${questionNum}"] .answer-option`);
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            const selectedOption = event.target.closest('.answer-option');
+            if (selectedOption) {
+                selectedOption.classList.add('selected');
+            }
+        }
+        
+        function nextQuestion() {
+            if (currentQuestion < totalQuestions) {
+                const currentQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+                const nextQ = document.querySelector(`[data-question="${currentQuestion + 1}"]`);
+                
+                if (currentQ) currentQ.classList.remove('active');
+                if (nextQ) {
+                    currentQuestion++;
+                    nextQ.classList.add('active');
+                } else {
+                    console.error(`Frage ${currentQuestion + 1} nicht gefunden`);
+                    evaluateQuiz();
+                    return;
+                }
+                
+                // Button-Status aktualisieren
+                document.getElementById('prevBtn').disabled = false;
+                if (currentQuestion === totalQuestions) {
+                    document.getElementById('nextBtn').textContent = 'Auswerten';
+                }
+            } else {
+                // Quiz auswerten
+                evaluateQuiz();
+            }
+        }
+        
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                const currentQ = document.querySelector(`[data-question="${currentQuestion}"]`);
+                const prevQ = document.querySelector(`[data-question="${currentQuestion - 1}"]`);
+                
+                if (currentQ) currentQ.classList.remove('active');
+                if (prevQ) {
+                    currentQuestion--;
+                    prevQ.classList.add('active');
+                } else {
+                    console.error(`Frage ${currentQuestion - 1} nicht gefunden`);
+                    return;
+                }
+                
+                // Button-Status aktualisieren
+                if (currentQuestion === 1) {
+                    document.getElementById('prevBtn').disabled = true;
+                }
+                document.getElementById('nextBtn').textContent = 'Weiter';
+            }
+        }
+        
+        function evaluateQuiz() {
+            score = 0;
+            
+            // Antworten auswerten
+            for (let i = 1; i <= totalQuestions; i++) {
+                // Prüfe ob die Frage existiert
+                const questionElement = document.querySelector(`[data-question="${i}"]`);
+                if (!questionElement) continue;
+                
+                if (answers[i] === correctAnswers[i]) {
+                    score++;
+                }
+                
+                // Richtige/Falsche Antworten markieren
+                const options = document.querySelectorAll(`[data-question="${i}"] .answer-option`);
+                options.forEach(opt => {
+                    const answerText = opt.textContent.trim().charAt(0).toLowerCase();
+                    if (answerText === correctAnswers[i]) {
+                        opt.classList.add('correct');
+                    } else if (answerText === answers[i]) {
+                        opt.classList.add('incorrect');
+                    }
+                });
+            }
+            
+            // Ergebnis anzeigen
+            showResult();
+        }
+        
+        function showResult() {
+            document.getElementById('quizContent').style.display = 'none';
+            document.getElementById('quizResult').style.display = 'block';
+            
+            const percentage = Math.round((score / totalQuestions) * 100);
+            document.getElementById('scoreText').textContent = `Du hast ${score} von ${totalQuestions} Fragen richtig beantwortet (${percentage}%)`;
+            
+            let message = '';
+            if (percentage >= 90) {
+                message = 'Exzellent! Du bist bereit für die Elite-Trading-Strategien! 🏆';
+            } else if (percentage >= 70) {
+                message = 'Sehr gut! Du hast die wichtigsten Konzepte verstanden. 👍';
+            } else if (percentage >= 50) {
+                message = 'Gut! Schaue dir nochmal die Abschnitte an, um dein Wissen zu vertiefen. 📚';
+            } else {
+                message = 'Keine Sorge! Gehe die Lektionen nochmal durch und versuche es erneut. 💪';
+            }
+            
+            document.getElementById('scoreMessage').textContent = message;
+        }
+        
+        function restartQuiz() {
+            // Quiz zurücksetzen
+            currentQuestion = 1;
+            score = 0;
+            answers = {};
+            
+            // UI zurücksetzen
+            const quizContent = document.getElementById('quizContent');
+            const quizResult = document.getElementById('quizResult');
+            if (quizContent) quizContent.style.display = 'block';
+            if (quizResult) quizResult.style.display = 'none';
+            
+            // Fragen zurücksetzen
+            document.querySelectorAll('.question').forEach(q => {
+                q.classList.remove('active');
+                q.querySelectorAll('.answer-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+            });
+            
+            const firstQuestion = document.querySelector('[data-question="1"]');
+            if (firstQuestion) {
+                firstQuestion.classList.add('active');
+            }
+            
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (prevBtn) prevBtn.disabled = true;
+            if (nextBtn) nextBtn.textContent = 'Weiter';
+        }
+        
+        // Charts erstellen
+        function createCharts() {
+            // Yahoo Chart
+            const yahooCtx = document.getElementById('yahooChart').getContext('2d');
+            new Chart(yahooCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun 97', 'Sep 97', 'Dez 97', 'Mrz 98', 'Jun 98', 'Sep 98', 'Dez 98', 'Mrz 99', 'Jun 99', 'Sep 99', 'Dez 99'],
+                    datasets: [{
+                        label: 'Yahoo Aktie (indexiert)',
+                        data: [100, 120, 180, 350, 680, 1200, 2800, 4500, 6200, 7100, 7800],
+                        borderColor: '#b8860b',
+                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Yahoo Performance 1997-1999 (7.800% in 29 Monaten)'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Palantir Chart
+            const palantirCtx = document.getElementById('palantirChart').getContext('2d');
+            new Chart(palantirCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['KGV aktuell', 'Forward PE', 'Umsatzwachstum YoY %', 'AI-Kunden Wachstum %'],
+                    datasets: [{
+                        label: 'Palantir Kennzahlen',
+                        data: [439, 194, 30, 150],
+                        backgroundColor: [
+                            'rgba(184, 134, 11, 0.8)',
+                            'rgba(218, 165, 32, 0.8)',
+                            'rgba(56, 161, 105, 0.8)',
+                            'rgba(244, 233, 123, 0.8)'
+                        ],
+                        borderColor: [
+                            '#b8860b',
+                            '#daa520',
+                            '#38a169',
+                            '#f4e97b'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Palantir - Das Yahoo der AI-Revolution?'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            // Crocs Chart
+            const crocsCtx = document.getElementById('crocsChart').getContext('2d');
+            new Chart(crocsCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Feb 06', 'Apr 06', 'Jun 06', 'Aug 06', 'Okt 06', 'Dez 06', 'Feb 07', 'Apr 07', 'Jun 07', 'Aug 07', 'Okt 07', 'Dez 07', 'Feb 08', 'Apr 08', 'Jun 08', 'Aug 08'],
+                    datasets: [{
+                        label: 'Crocs Aktienkurs',
+                        data: [15, 20, 28, 35, 42, 50, 55, 63, 70, 75, 75, 65, 40, 20, 10, 5],
+                        borderColor: '#e53e3e',
+                        backgroundColor: 'rgba(229, 62, 62, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        yAxisID: 'y'
+                    }, {
+                        label: 'KGV',
+                        data: [20, 25, 30, 35, 40, 45, 50, 55, 60, 63, 60, 50, 35, 20, 10, 5],
+                        borderColor: '#d69e2e',
+                        backgroundColor: 'rgba(214, 158, 46, 0.1)',
+                        borderWidth: 2,
+                        borderDash: [5, 5],
+                        tension: 0.4,
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Crocs: Aufstieg und Fall 2006-2008'
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.datasetIndex === 0) {
+                                        label += '$' + context.parsed.y;
+                                    } else {
+                                        label += context.parsed.y + 'x';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Aktienkurs ($)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'KGV (P/E Ratio)'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Seite geladen. Initialisiere...');
+            console.log('Anzahl Quiz-Fragen:', totalQuestions);
+            console.log('Anzahl gefundener Fragen:', document.querySelectorAll('.question').length);
+            
+            // Validiere, dass alle Fragen vorhanden sind
+            for (let i = 1; i <= totalQuestions; i++) {
+                const question = document.querySelector(`[data-question="${i}"]`);
+                if (!question) {
+                    console.error(`Frage ${i} fehlt im HTML!`);
+                }
+            }
+            
+            loadProgress();
+            createCharts();
+            
+            // Smooth Scroll für interne Links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Intersection Observer für Animationen
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationPlayState = 'running';
+                    }
+                });
+            }, observerOptions);
+            
+            // Elemente für Animation registrieren
+            document.querySelectorAll('.section, .stat-card').forEach(el => {
+                el.style.animationPlayState = 'paused';
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
