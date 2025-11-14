@@ -1209,7 +1209,7 @@ def symmetrie_trading():
 
 @app.route('/position-vergroessern')
 def position_vergroessern():
-    """Position vergrößern - Lance's Expected-Value-Methode"""
+    """Position vergrößern - Didis-Charts Expected-Value-Methode"""
     track_visitor()  # Analytics
     
     # Zugriff prüfen (Premium Content)
@@ -1371,7 +1371,7 @@ def ev_calculator():
 
 @app.route('/bouncy-ball-setup')
 def bouncy_ball_setup():
-    """Bouncy Ball Setup - Lance's Intraday Strategie (Premium)"""
+    """Bouncy Ball Setup - Didis-Charts Intraday Strategie (Premium)"""
     track_visitor()
     
     # Zugriff prüfen (Premium Content)
@@ -4164,7 +4164,7 @@ def sync_modules_from_local():
                 'title': 'Position Sizing ABCD Calculator',
                 'slug': 'position-sizing-abcd-calculator',
                 'category_slug': 'grundlagen',
-                'description': 'Der ultimative ABCD Position Sizing Rechner mit Lance Breitstein Grading-System',
+                'description': 'Der ultimative ABCD Position Sizing Rechner mit Didis-Charts Grading-System',
                 'icon': '🎯',
                 'template_file': 'position_sizing_abcd_calculator.html',
                 'content_type': 'html',

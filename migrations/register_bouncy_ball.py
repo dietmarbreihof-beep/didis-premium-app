@@ -25,7 +25,7 @@ def register_bouncy_ball_module():
                 
                 # Update existing module
                 existing_module.title = "Bouncy Ball Setup"
-                existing_module.description = "Lance's Intraday-Strategie für explosive Breakouts und Breakdowns nach Konsolidierung. Lerne die 4 kritischen Merkmale und analysiere Real-World-Beispiele von VVOS, SMCI und Ford."
+                existing_module.description = "Didis-Charts Intraday-Strategie für explosive Breakouts und Breakdowns nach Konsolidierung. Lerne die 4 kritischen Merkmale und analysiere Real-World-Beispiele von VVOS, SMCI und Ford."
                 existing_module.icon = "🎾"
                 existing_module.content_type = "html"
                 existing_module.template_file = "bouncy-ball-setup.html"
@@ -39,7 +39,7 @@ def register_bouncy_ball_module():
                 print(f"✅ Modul erfolgreich aktualisiert!")
                 return
             
-            # Suche die richtige Kategorie - Lance's System III
+            # Suche die richtige Kategorie - Didis-Charts System III
             category = ModuleCategory.query.filter_by(slug='elite-system-iii').first()
             if not category:
                 # Fallback: Technische Analyse
@@ -47,12 +47,12 @@ def register_bouncy_ball_module():
             
             if not category:
                 print("❌ Fehler: Keine passende Kategorie gefunden!")
-                print("   Erstelle Kategorie 'Lance's System III'...")
+                print("   Erstelle Kategorie 'Didis-Charts System III'...")
                 
                 category = ModuleCategory(
-                    name="Lance's System III",
+                    name="Didis-Charts System III",
                     slug="elite-system-iii",
-                    description="Lance Breitstein's Elite Trading System - Fortgeschrittene Intraday-Strategien",
+                    description="Didis-Charts Elite Trading System - Fortgeschrittene Intraday-Strategien",
                     icon="👑",
                     sort_order=6,
                     is_published=True,
@@ -76,8 +76,7 @@ def register_bouncy_ball_module():
                     slug="intraday-setups",
                     description="Bewährte Intraday Trading Setups für aktive Trader",
                     icon="⚡",
-                    sort_order=1,
-                    is_published=True
+                    sort_order=1
                 )
                 db.session.add(subcategory)
                 db.session.commit()
@@ -94,7 +93,7 @@ def register_bouncy_ball_module():
                 subcategory_id=subcategory.id,
                 title="Bouncy Ball Setup",
                 slug="bouncy-ball-setup",
-                description="Lance's Intraday-Strategie für explosive Breakouts und Breakdowns nach Konsolidierung. Lerne die 4 kritischen Merkmale und analysiere Real-World-Beispiele von VVOS, SMCI und Ford.",
+                description="Didis-Charts Intraday-Strategie für explosive Breakouts und Breakdowns nach Konsolidierung. Lerne die 4 kritischen Merkmale und analysiere Real-World-Beispiele von VVOS, SMCI und Ford.",
                 icon="🎾",
                 content_type="html",
                 template_file="bouncy-ball-setup.html",
@@ -104,10 +103,7 @@ def register_bouncy_ball_module():
                 estimated_duration=45,  # 45 Minuten
                 difficulty_level="advanced",
                 sort_order=max_order + 1,
-                view_count=0,
-                completion_count=0,
-                created_at=datetime.utcnow(),
-                updated_at=datetime.utcnow()
+                view_count=0
             )
             
             db.session.add(new_module)

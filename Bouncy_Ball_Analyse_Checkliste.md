@@ -354,6 +354,6 @@ Verwende sie TÄGLICH und baue eine Datenbank von guten und schlechten Setups au
 
 **Erstellt:** 14. November 2024  
 **Version:** 1.0  
-**Quelle:** Lance Breitstein's System III - Bouncy Ball Setup  
+**Quelle:** Didis-Charts System III - Bouncy Ball Setup  
 **Für:** Didis Premium Trading Academy  
 

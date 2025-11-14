@@ -187,23 +187,23 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ## 📝 PROJEKT-SPEZIFISCHE SHORTCUTS
 
 ### @lance-kurs-module
-→ Erstelle Lernmodul basierend auf Lance's Kurs-Material aus "Lance Kurs für System III": 1) Extrahiere Konzepte aus .txt-Dateien, 2) Progressive Disclosure Pattern, 3) Interaktive Beispiele, 4) Quiz-Integration, 5) Key Takeaways, 6) PDF-Verlinkung
+→ Erstelle Lernmodul basierend auf Didis-Charts Kurs-Material aus "Lance Kurs für System III": 1) Extrahiere Konzepte aus .txt-Dateien, 2) Progressive Disclosure Pattern, 3) Interaktive Beispiele, 4) Quiz-Integration, 5) Key Takeaways, 6) PDF-Verlinkung
 
 ### @ev-calculator
 → Implementiere Expected Value Calculator: 1) Input-Felder für Win-Rate, Avg-Win, Avg-Loss, 2) Echtzeit-Berechnung, 3) Visualisierung mit Plotly, 4) Position-Sizing-Empfehlungen, 5) Trade-Journal-Integration
 
 ### @volume-analysis
-→ Erstelle Volume-Analyse-Modul: 1) Kapitulation vs Continuation unterscheiden, 2) Breaking News Volume Pattern, 3) Interaktive Chart-Beispiele, 4) Checklist-Integration, 5) Lance's Kriterien anwenden
+→ Erstelle Volume-Analyse-Modul: 1) Kapitulation vs Continuation unterscheiden, 2) Breaking News Volume Pattern, 3) Interaktive Chart-Beispiele, 4) Checklist-Integration, 5) Didis-Charts Kriterien anwenden
 
 ---
 
 ## 🎯 TRADING-SPEZIFISCHE FEATURES
 
 ### @bollinger-bands
-→ Implementiere Bollinger Bands Modul: 1) Measures of Overextension, 2) Lance's Magnum Opus Checklist, 3) Interaktive BB-Visualisierung, 4) Entry/Exit-Signale, 5) Grade-System (A/B/C)
+→ Implementiere Bollinger Bands Modul: 1) Measures of Overextension, 2) Didis-Charts Magnum Opus Checklist, 3) Interaktive BB-Visualisierung, 4) Entry/Exit-Signale, 5) Grade-System (A/B/C)
 
 ### @symmetry-analysis
-→ Erstelle Symmetrie-Analyse-Tool: 1) Swing-High/Low-Erkennung, 2) Fibonacci-Retracements, 3) Pattern-Recognition, 4) QBTS-Beispiel visualisieren, 5) Lance's Symmetrie-Regeln
+→ Erstelle Symmetrie-Analyse-Tool: 1) Swing-High/Low-Erkennung, 2) Fibonacci-Retracements, 3) Pattern-Recognition, 4) QBTS-Beispiel visualisieren, 5) Didis-Charts Symmetrie-Regeln
 
 ### @position-sizing
 → Implementiere Position-Sizing-Calculator: 1) Grade-basiertes System, 2) Exponentielles Sizing, 3) Risk-Management-Rules, 4) Portfolio-Impact-Berechnung, 5) The Sizing Notecard Integration
@@ -245,7 +245,7 @@ Features: Interactive Charts, Quiz, Key Takeaways
 ```
 @new-module-page Risikomanagement
 - HTML-Seite: templates/risikomanagement.html ✅
-- Screenshot integriert: Gewinn_Verlust_Lance.jpg ✅
+- Screenshot integriert: Gewinn_Verlust_Didis-Charts.jpg ✅
 - Kategorie: 4. Risikomanagement ✅
 - Lead-Magnet: Ja (für alle verfügbar) ✅
 - Features: Interaktiver Loss-Recovery-Rechner, Key Takeaways, Progressive Disclosure
@@ -256,7 +256,7 @@ Features: Interactive Charts, Quiz, Key Takeaways
 @new-module-page Bouncy Ball Setup
 - HTML-Seite: templates/bouncy-ball-setup.html ✅
 - Screenshots: VVOS (3 Phasen), SMCI (2 Phasen), Ford (1 Chart) ✅
-- Kategorie: Lance's System III → Intraday-Setups ✅
+- Kategorie: Didis-Charts System III → Intraday-Setups ✅
 - Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
 - Features: Progressive Disclosure, 4-Step-Learning, Quiz-System, Interactive Charts, Key Takeaways
 - Schwierigkeit: Fortgeschritten ⭐

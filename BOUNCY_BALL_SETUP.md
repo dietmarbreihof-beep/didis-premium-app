@@ -21,7 +21,7 @@
 
 ### 3. **Migrations-Script** (`migrations/register_bouncy_ball.py`)
 - ✅ Automatische Modul-Registrierung in Datenbank
-- ✅ Erstellt Kategorie "Lance's System III" falls nicht vorhanden
+- ✅ Erstellt Kategorie "Didis-Charts's System III" falls nicht vorhanden
 - ✅ Erstellt Unterkategorie "Intraday-Setups"
 - ✅ Konfiguriert Subscription-Level (Premium/Elite/Elite Pro)
 
@@ -35,7 +35,7 @@
 | **Slug** | `bouncy-ball-setup` |
 | **Route** | `/bouncy-ball-setup` |
 | **Icon** | 🎾 |
-| **Kategorie** | Lance's System III |
+| **Kategorie** | Didis-Charts's System III |
 | **Unterkategorie** | Intraday-Setups |
 | **Subscription** | Premium, Elite, Elite Pro |
 | **Schwierigkeit** | Fortgeschritten ⭐ |
@@ -100,7 +100,7 @@ Bouncy Ball Setup - Modul-Registrierung
 ============================================================
 ✅ Modul 'Bouncy Ball Setup' erfolgreich registriert!
    - ID: [AUTO-GENERATED]
-   - Kategorie: Lance's System III (ID: [AUTO-GENERATED])
+   - Kategorie: Didis-Charts's System III (ID: [AUTO-GENERATED])
    - Unterkategorie: Intraday-Setups (ID: [AUTO-GENERATED])
    - Slug: bouncy-ball-setup
    - Route: /bouncy-ball-setup
@@ -146,7 +146,7 @@ git add BOUNCY_BALL_SETUP.md
 git add static/screenshots/*.jpg  # Falls Bilder hochgeladen
 
 # Commit
-git commit -m "feat: Add Bouncy Ball Setup module - Lance's Intraday Strategy
+git commit -m "feat: Add Bouncy Ball Setup module - Didis-Charts's Intraday Strategy
 
 - Interactive learning page with 4-step progressive disclosure
 - 3 real-world examples: VVOS, SMCI, Ford
@@ -332,7 +332,7 @@ Nach erfolgreichem Deployment sollten folgende Metriken sichtbar sein:
 
 ### Phase 2 Ideen:
 - [ ] **Live-Chart-Integration:** Embedding von TradingView-Charts
-- [ ] **Video-Tutorials:** Lance's Erklärungen als eingebettete Videos
+- [ ] **Video-Tutorials:** Didis-Charts's Erklärungen als eingebettete Videos
 - [ ] **User-Comments:** Community-Feedback zu Beispielen
 - [ ] **Bookmarks:** Nutzer können wichtige Abschnitte markieren
 - [ ] **PDF-Export:** Download des Modul-Contents als PDF
@@ -347,7 +347,7 @@ Dieses Modul passt perfekt zu:
 - **Volume-Analyse** (Better Volume)
 - **Bollinger Bands** (Magnum Opus Checklist)
 - **Expected Value** (EV-Calculator)
-- **Position Sizing** (Lance's Sizing Notecard)
+- **Position Sizing** (Didis-Charts's Sizing Notecard)
 - **Symmetrie-Analyse** (QBTS-Beispiel)
 
 ---
@@ -374,5 +374,5 @@ Dieses Modul passt perfekt zu:
 **Version:** 1.0  
 **Autor:** Cursor AI Assistant  
 **Projekt:** Didis Premium Trading Academy  
-**Modul:** Bouncy Ball Setup - Lance's Intraday Strategy
+**Modul:** Bouncy Ball Setup - Didis-Charts's Intraday Strategy
 
