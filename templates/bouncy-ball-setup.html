@@ -888,17 +888,34 @@
                         </ul>
                     </div>
 
-                    <h3>📊 Der Intraday-Breakdown:</h3>
+                    <h3>📊 Der Breakdown - Tages-Chart & Intraday:</h3>
                     
-                    <!-- Ford Chart -->
+                    <!-- Ford Chart 1: Daily -->
                     <div class="chart-card">
-                        <h4>Der komplette Verlauf: Gap Down → Konsolidierung → Breakdown</h4>
-                        <img src="{{ url_for('static', filename='screenshots/Ford_Earnings_Breakdown.jpg') }}" 
-                             alt="Ford Earnings Gap Down und Breakdown" 
+                        <h4>Phase 1: Der Tages-Chart - Jahres-Support wird gebrochen</h4>
+                        <img src="{{ url_for('static', filename='screenshots/Ford_Beispiel3_1_daily.png') }}" 
+                             alt="Ford Daily Chart - Jahres-Support-Break bei $11" 
                              class="chart-image"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
-                            📊 Bild wird geladen: Ford_Earnings_Breakdown.jpg
+                            📊 Bild wird geladen: Ford_Beispiel3_1_daily.png
+                        </div>
+                        <p style="margin-top: 15px; line-height: 1.7;">
+                            Der <strong>Tages-Chart</strong> zeigt die Katastrophe: Ford bricht nach den Earnings unter die 
+                            jahrelang gehaltene $11-Support-Zone! Beachte die vielen Tests dieser Zone während des Jahres - 
+                            das macht den Break so signifikant. Der Gap Down eröffnet direkt unter diesem kritischen Level.
+                        </p>
+                    </div>
+
+                    <!-- Ford Chart 2: Intraday -->
+                    <div class="chart-card">
+                        <h4>Phase 2: Der Intraday-Verlauf - Gap Down → Konsolidierung → Breakdown</h4>
+                        <img src="{{ url_for('static', filename='screenshots/Ford_Beispiel3_2_Intraday.png') }}" 
+                             alt="Ford Intraday Chart - Bouncy Ball Breakdown" 
+                             class="chart-image"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                        <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
+                            📊 Bild wird geladen: Ford_Beispiel3_2_Intraday.png
                         </div>
                         <p style="margin-top: 15px; line-height: 1.7;">
                             <strong>Gelbe Linie:</strong> Stetiger Abverkauf von $11 auf $10,20 ohne Kapitulation<br>
