@@ -285,7 +285,8 @@
         }
 
         .bouncy-ball-wrapper .quiz-option {
-            display: block;
+            display: flex;
+            align-items: center;
             padding: 15px 20px;
             background: white;
             border: 2px solid #e5e5e5;
@@ -293,17 +294,23 @@
             margin-bottom: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
+            user-select: none;
         }
 
         .bouncy-ball-wrapper .quiz-option:hover {
             border-color: #daa520;
             background: #fef3c7;
             transform: translateX(5px);
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.2);
         }
 
         .bouncy-ball-wrapper .quiz-option input[type="radio"] {
             margin-right: 12px;
             accent-color: #daa520;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
         .bouncy-ball-wrapper .quiz-feedback {
@@ -1303,6 +1310,17 @@
             document.addEventListener('DOMContentLoaded', function() {
                 loadProgress();
                 updateProgressBar();
+                
+                // Make entire quiz option clickable
+                document.querySelectorAll('.quiz-option').forEach(function(label) {
+                    label.addEventListener('click', function(e) {
+                        // If click is not on the radio button itself, click it
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio && e.target !== radio) {
+                            radio.checked = true;
+                        }
+                    });
+                });
             });
 
             // Unlock Step Function
