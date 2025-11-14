@@ -251,6 +251,18 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Features: Interaktiver Loss-Recovery-Rechner, Key Takeaways, Progressive Disclosure
 ```
 
+**Beispiel 1b: Bouncy Ball Setup (Neu erstellt!)**
+```
+@new-module-page Bouncy Ball Setup
+- HTML-Seite: templates/bouncy-ball-setup.html ✅
+- Screenshots: VVOS (3 Phasen), SMCI (2 Phasen), Ford (1 Chart) ✅
+- Kategorie: Lance's System III → Intraday-Setups ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure, 4-Step-Learning, Quiz-System, Interactive Charts, Key Takeaways
+- Schwierigkeit: Fortgeschritten ⭐
+- Dauer: 45 Minuten
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display

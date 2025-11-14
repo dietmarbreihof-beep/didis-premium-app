@@ -1369,6 +1369,63 @@ def ev_calculator():
     
     return render_template('ev_calculator.html')
 
+@app.route('/bouncy-ball-setup')
+def bouncy_ball_setup():
+    """Bouncy Ball Setup - Lance's Intraday Strategie (Premium)"""
+    track_visitor()
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='bouncy-ball-setup'))
+    
+    # Versuche Modul aus Datenbank zu laden
+    try:
+        module = LearningModule.query.filter_by(slug='bouncy-ball-setup', is_published=True).first()
+    except:
+        module = None
+    
+    # Progress tracking für eingeloggte User
+    if session.get('logged_in') and module:
+        try:
+            user_id = session.get('user_id')
+            progress = ModuleProgress.query.filter_by(user_id=user_id, module_id=module.id).first()
+            if not progress:
+                progress = ModuleProgress(user_id=user_id, module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('bouncy-ball-setup.html',
+                         module=module,
+                         prev_module=prev_module,
+                         next_module=next_module)
+
 @app.route('/Screenshots/<filename>')
 def serve_screenshots(filename):
     """Serve screenshot files from templates/Screenshots directory"""
