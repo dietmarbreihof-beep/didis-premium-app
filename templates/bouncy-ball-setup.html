@@ -481,6 +481,58 @@
         .bouncy-ball-wrapper .fade-in {
             animation: fadeIn 0.6s ease-out;
         }
+
+        /* Lightbox für bildschirmfüllende Ansicht */
+        .bouncy-ball-wrapper .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-out;
+        }
+
+        .bouncy-ball-wrapper .lightbox.active {
+            display: flex;
+        }
+
+        .bouncy-ball-wrapper .lightbox img {
+            max-width: 95%;
+            max-height: 95%;
+            object-fit: contain;
+            box-shadow: 0 0 50px rgba(218, 165, 32, 0.5);
+        }
+
+        .bouncy-ball-wrapper .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: #daa520;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10000;
+        }
+
+        .bouncy-ball-wrapper .lightbox-close:hover {
+            color: #f4e97b;
+        }
+
+        .bouncy-ball-wrapper .chart-image.clickable {
+            cursor: zoom-in;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .bouncy-ball-wrapper .chart-image.clickable:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(218, 165, 32, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1267,8 +1319,9 @@
                             <div style="padding: 15px;">
                                 <img src="{{ url_for('static', filename='screenshots/CLS_Beispiel_long.png') }}" 
                                      alt="CLS Bouncy Ball Long Setup Beispiel" 
-                                     class="chart-image"
+                                     class="chart-image clickable"
                                      style="margin: 0; width: 100%;"
+                                     onclick="openLightbox(this.src)"
                                      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                                 <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
                                     📊 Bild wird geladen: CLS_Beispiel_long.png
@@ -1283,6 +1336,44 @@
                                         <li><strong>Roter Pfeil:</strong> Exit nach nur 1/4 Retracement (starke Bewegung!)</li>
                                         <li><strong>Volumen-Spike:</strong> Extrem hohes Volumen bestätigt die Bewegung</li>
                                     </ul>
+                                    <p style="margin: 15px 0 0 0; padding: 10px; background: linear-gradient(135deg, #fef3c7 0%, #f4e97b 100%); border-radius: 6px; font-size: 0.9em;">
+                                        <strong>📌 Hinweis:</strong> Klicke auf das Bild für eine bildschirmfüllende Ansicht mit allen Details!
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Beispiel: CYPH VCP Setup -->
+                        <div class="chart-card" style="padding: 0; overflow: hidden;">
+                            <div style="padding: 20px; background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);">
+                                <h3 style="margin: 0; color: #1a1a1a; font-size: 1.3em;">📈 CYPH - VCP Breakout Setup</h3>
+                                <p style="margin: 5px 0 0 0; color: #2d2d2d; font-size: 0.95em;">
+                                    Volatility Contraction Pattern (VCP) mit Bouncy Ball Charakteristiken
+                                </p>
+                            </div>
+                            <div style="padding: 15px;">
+                                <img src="{{ url_for('static', filename='screenshots/CYPH_VCP.png') }}" 
+                                     alt="CYPH VCP Bouncy Ball Setup Beispiel" 
+                                     class="chart-image clickable"
+                                     style="margin: 0; width: 100%;"
+                                     onclick="openLightbox(this.src)"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
+                                    📊 Bild wird geladen: CYPH_VCP.png
+                                </div>
+                                <div style="margin-top: 15px; padding: 15px; background: #f7f7f7; border-radius: 8px; border-left: 3px solid #daa520;">
+                                    <h4 style="margin: 0 0 10px 0; color: #b8860b; font-size: 1.1em;">🔍 Was du hier siehst:</h4>
+                                    <ul style="margin: 0; padding-left: 20px; font-size: 0.95em; line-height: 1.6;">
+                                        <li><strong>VCP-Muster:</strong> Volatility Contraction Pattern mit immer engeren Konsolidierungen</li>
+                                        <li><strong>Bollinger Band Pinch:</strong> Extreme Verengung der Bänder signalisiert bevorstehende Bewegung</li>
+                                        <li><strong>Konsolidierung im oberen Bereich:</strong> Zeigt bullische Stärke</li>
+                                        <li><strong>Volume Dry-Up:</strong> Abnehmende Volumen während Konsolidierung = wenig Selling Pressure</li>
+                                        <li><strong>Breakout-Zone:</strong> Klarer Ausbruch über Widerstand mit Volumen-Anstieg</li>
+                                        <li><strong>💡 Kombination:</strong> VCP + Bouncy Ball = besonders starkes Setup</li>
+                                    </ul>
+                                    <p style="margin: 15px 0 0 0; padding: 10px; background: linear-gradient(135deg, #fef3c7 0%, #f4e97b 100%); border-radius: 6px; font-size: 0.9em;">
+                                        <strong>📌 Hinweis:</strong> Klicke auf das Bild für eine bildschirmfüllende Ansicht mit allen Details!
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1302,11 +1393,13 @@
                     <div class="highlight-box" style="margin-top: 30px;">
                         <h4>💡 So nutzt du die Galerie effektiv:</h4>
                         <ol style="line-height: 1.8; margin: 10px 0 0 0;">
-                            <li>Studiere jedes Beispiel im Detail mit der Bouncy Ball Analyse-Checkliste</li>
-                            <li>Vergleiche die verschiedenen Setups: Was haben sie gemeinsam?</li>
-                            <li>Achte auf die Nuancen: Unterschiede zwischen A+ und B-Grade Setups</li>
-                            <li>Erstelle Screenshots und füge sie deiner eigenen Datenbank hinzu</li>
-                            <li>Benutze die Galerie als Referenz beim Live-Trading</li>
+                            <li><strong>🖱️ Klicke auf die Charts:</strong> Jedes Bild ist anklickbar für eine bildschirmfüllende Detailansicht</li>
+                            <li><strong>📋 Checkliste verwenden:</strong> Studiere jedes Beispiel im Detail mit der Bouncy Ball Analyse-Checkliste</li>
+                            <li><strong>🔍 Muster erkennen:</strong> Vergleiche die verschiedenen Setups - Was haben sie gemeinsam?</li>
+                            <li><strong>⭐ Grade verstehen:</strong> Achte auf die Nuancen zwischen A+ und B-Grade Setups</li>
+                            <li><strong>💾 Datenbank aufbauen:</strong> Erstelle Screenshots und füge sie deiner eigenen Datenbank hinzu</li>
+                            <li><strong>📊 Live-Trading:</strong> Benutze die Galerie als Referenz beim echten Trading</li>
+                            <li><strong>⌨️ Shortcut-Tipp:</strong> Drücke ESC um die bildschirmfüllende Ansicht zu schließen</li>
                         </ol>
                     </div>
                 </div>
@@ -1315,6 +1408,12 @@
 
         <!-- Navigation wird hier eingefügt -->
         {% include '_navigation.html' %}
+
+        <!-- Lightbox Overlay für bildschirmfüllende Ansicht -->
+        <div class="lightbox" id="imageLightbox" onclick="closeLightbox()">
+            <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+            <img id="lightboxImage" src="" alt="Bildschirmfüllende Ansicht">
+        </div>
 
         <!-- JavaScript -->
         <script>
@@ -1479,6 +1578,28 @@
 
             document.querySelectorAll('.premium-card, .step-container').forEach(el => {
                 observer.observe(el);
+            });
+
+            // Lightbox Funktionen
+            function openLightbox(imageSrc) {
+                const lightbox = document.getElementById('imageLightbox');
+                const lightboxImage = document.getElementById('lightboxImage');
+                lightboxImage.src = imageSrc;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Verhindere Scrollen im Hintergrund
+            }
+
+            function closeLightbox() {
+                const lightbox = document.getElementById('imageLightbox');
+                lightbox.classList.remove('active');
+                document.body.style.overflow = ''; // Erlaube wieder Scrollen
+            }
+
+            // ESC-Taste schließt Lightbox
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    closeLightbox();
+                }
             });
         </script>
     </div>
