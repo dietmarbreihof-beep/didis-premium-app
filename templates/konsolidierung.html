@@ -1,0 +1,817 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Konsolidierungs-Modul Spezifisches Styling */
+    .konsolidierung-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .konsolidierung-wrapper .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .konsolidierung-wrapper .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+    }
+
+    .konsolidierung-wrapper .hero-section .subtitle {
+        font-size: 1.4em;
+        opacity: 0.95;
+        font-weight: 400;
+    }
+
+    .konsolidierung-wrapper .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .konsolidierung-wrapper .stat-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+    }
+
+    .konsolidierung-wrapper .stat-card .stat-value {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin-bottom: 10px;
+    }
+
+    .konsolidierung-wrapper .stat-card .stat-label {
+        font-size: 1em;
+        opacity: 0.9;
+    }
+
+    .konsolidierung-wrapper .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .konsolidierung-wrapper .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .konsolidierung-wrapper .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .konsolidierung-wrapper .section-card h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .konsolidierung-wrapper .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .konsolidierung-wrapper .section-card p {
+        line-height: 1.8;
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .konsolidierung-wrapper .highlight-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #b8860b;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .konsolidierung-wrapper .highlight-box h4 {
+        color: #1a1a1a;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .konsolidierung-wrapper .highlight-box ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .konsolidierung-wrapper .highlight-box li {
+        padding: 8px 0;
+        padding-left: 30px;
+        position: relative;
+        color: #1a1a1a;
+        font-weight: 500;
+    }
+
+    .konsolidierung-wrapper .highlight-box li:before {
+        content: "✓";
+        position: absolute;
+        left: 0;
+        color: #b8860b;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .konsolidierung-wrapper .warning-box {
+        background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
+        border-left: 4px solid #d69e2e;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .konsolidierung-wrapper .warning-box h4 {
+        color: #1a1a1a;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .konsolidierung-wrapper .chart-example {
+        background: #f9f9f9;
+        border: 2px solid #daa520;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .konsolidierung-wrapper .chart-example img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        margin: 20px 0;
+    }
+
+    .konsolidierung-wrapper .chart-example .caption {
+        font-size: 1.1em;
+        color: #2d2d2d;
+        font-weight: 600;
+        margin-top: 15px;
+        line-height: 1.6;
+    }
+
+    .konsolidierung-wrapper .step-container {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .konsolidierung-wrapper .step-container.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .konsolidierung-wrapper .next-step-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        border-radius: 12px;
+        font-size: 1.2em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        display: inline-block;
+        margin: 30px 0;
+    }
+
+    .konsolidierung-wrapper .next-step-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+    }
+
+    .konsolidierung-wrapper .quiz-container {
+        background: #f0f9ff;
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .konsolidierung-wrapper .quiz-container h4 {
+        color: #1e40af;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .konsolidierung-wrapper .quiz-option {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .konsolidierung-wrapper .quiz-option:hover {
+        border-color: #daa520;
+        background: #fef3c7;
+    }
+
+    .konsolidierung-wrapper .quiz-option.selected {
+        border-color: #b8860b;
+        background: #fef3c7;
+    }
+
+    .konsolidierung-wrapper .quiz-option.correct {
+        border-color: #38a169;
+        background: #d1fae5;
+    }
+
+    .konsolidierung-wrapper .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #fee2e2;
+    }
+
+    .konsolidierung-wrapper .quiz-feedback {
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-weight: 600;
+        display: none;
+    }
+
+    .konsolidierung-wrapper .quiz-feedback.correct {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #38a169;
+        display: block;
+    }
+
+    .konsolidierung-wrapper .quiz-feedback.incorrect {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #e53e3e;
+        display: block;
+    }
+
+    .konsolidierung-wrapper .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .konsolidierung-wrapper .key-takeaways h3 {
+        color: #f4e97b;
+        font-size: 2em;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .konsolidierung-wrapper .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .konsolidierung-wrapper .key-takeaways li {
+        padding: 15px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 1.15em;
+        line-height: 1.6;
+    }
+
+    .konsolidierung-wrapper .key-takeaways li:before {
+        content: "🎯";
+        position: absolute;
+        left: 0;
+        font-size: 1.5em;
+    }
+
+    .konsolidierung-wrapper .progress-indicator {
+        text-align: center;
+        margin: 30px 0;
+        font-size: 1.1em;
+        color: #666;
+        font-weight: 600;
+    }
+
+    .konsolidierung-wrapper .factors-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+    }
+
+    .konsolidierung-wrapper .factor-card {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 25px;
+    }
+
+    .konsolidierung-wrapper .factor-card h4 {
+        color: #1e40af;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    @media (max-width: 768px) {
+        .konsolidierung-wrapper .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .konsolidierung-wrapper .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .konsolidierung-wrapper .section-card {
+            padding: 25px;
+        }
+
+        .konsolidierung-wrapper .stats-container {
+            grid-template-columns: 1fr;
+        }
+
+        .konsolidierung-wrapper .factors-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="konsolidierung-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>🎯 Konsolidierung Meistern</h1>
+        <p class="subtitle">Verstehe Price Action & Akzeptanz wie ein Profi</p>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Trends mit richtiger Konsolidierung</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2x</div>
+                <div class="stat-label">Ideale Konsolidierungslänge</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">📊</div>
+                <div class="stat-label">Real-Chart Beispiele</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <!-- Step 1: Grundlagen -->
+        <div id="step1" class="step-container active">
+            <div class="section-card">
+                <h2>📖 Was ist Konsolidierung?</h2>
+                
+                <p>Konsolidierung ist eines der wichtigsten Konzepte in der technischen Analyse. Im Kern ist Konsolidierung einfach <strong>Price Acceptance</strong> – Preisannahme.</p>
+
+                <p>Sie tritt auf, wenn Käufer und Verkäufer sich temporär auf einen Preis einigen und dem Markt eine "Atempause" ermöglichen, bevor die nächste Bewegung beginnt.</p>
+
+                <div class="highlight-box">
+                    <h4>🔑 Lance's Kernprinzip:</h4>
+                    <p style="font-size: 1.2em; margin: 0;"><em>"Solange es richtige Konsolidierung gibt, können Preistrends unendlich weitergehen."</em></p>
+                </div>
+
+                <h3>Warum ist Konsolidierung so wichtig?</h3>
+                
+                <p>Wenn eine Aktie richtig konsolidiert hat, ist sie auf diesem Zeitrahmen <strong>nicht mehr überextended</strong>. Der Preis wurde vom Markt akzeptiert.</p>
+
+                <div class="factors-grid">
+                    <div class="factor-card">
+                        <h4>📈 Für Continuation-Strategien</h4>
+                        <p>Richtige Konsolidierung ist eine der wichtigsten Variablen, um deine <strong>Win-Rate</strong> und dein <strong>Reward</strong> zu erhöhen.</p>
+                    </div>
+                    <div class="factor-card">
+                        <h4>📉 Für Mean-Reversion-Strategien</h4>
+                        <p>Die besten Win-Rates findest du bei Aktien, die <strong>extreme Bewegungen OHNE richtige Konsolidierung</strong> machen.</p>
+                    </div>
+                </div>
+
+                <h3>🧠 Die Psychologie dahinter</h3>
+                
+                <p>Denk an Konsolidierung aus der Perspektive der Holder:</p>
+
+                <ul style="line-height: 2; font-size: 1.1em;">
+                    <li><strong>Je länger eine Aktie konsolidiert</strong>, desto mehr Zeit hatten Longs zum Verkaufen</li>
+                    <li>Wer zu diesen Preisen verkaufen wollte, hatte die Gelegenheit</li>
+                    <li>Auch Shorts hatten Zeit, ihre Positionen aufzubauen</li>
+                    <li><strong>Wenn der Preis trotzdem nicht fällt</strong> = Signal der Stärke! 💪</li>
+                </ul>
+
+                <div class="warning-box">
+                    <h4>⚠️ Das Gegenteil: Wasserfälle ohne Konsolidierung</h4>
+                    <p>Bei "Mega-Waterfall"-Bewegungen gibt es <strong>scharfe Preisänderungen in minimalster Zeit</strong>. Sehr wenige Spieler haben die Möglichkeit zu kaufen – das führt oft zu Retracements und Bounces!</p>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(2)">Weiter zu den Qualitätsfaktoren →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Qualitätsfaktoren -->
+        <div id="step2" class="step-container">
+            <div class="section-card">
+                <h2>⚖️ Was macht gute Konsolidierung aus?</h2>
+                
+                <p class="progress-indicator">Schritt 2 von 5</p>
+
+                <p>Es gibt zwei Hauptfaktoren, die gute von schlechter Konsolidierung unterscheiden:</p>
+
+                <div class="factors-grid">
+                    <div class="factor-card">
+                        <h4>1️⃣ Länge der Konsolidierung</h4>
+                        <p><strong>Relativ zur Größe der vorherigen Bewegung</strong></p>
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li>Für <strong>kleinere Bewegungen</strong>: Konsolidierung mindestens bis zum Moving Average</li>
+                            <li>Für <strong>größere Legs</strong>: Konsolidierung sollte mindestens die Länge der vorherigen Bewegung haben</li>
+                            <li><strong>Ideal</strong>: 2x die Länge der vorherigen Bewegung!</li>
+                        </ul>
+                    </div>
+                    <div class="factor-card">
+                        <h4>2️⃣ Qualität der Konsolidierung</h4>
+                        <p><strong>Enge vs. lockere Konsolidierung</strong></p>
+                        <ul style="margin-top: 15px; line-height: 1.8;">
+                            <li><strong>Enge Konsolidierungen</strong> mit schmalen Trading-Ranges sind zuverlässiger</li>
+                            <li><strong>Lockere, rangige Konsolidierungen</strong> zeigen mangelnde Aggressivität der Käufer</li>
+                            <li>Je enger, desto besser! 🎯</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Lance's Daumenregel:</h4>
+                    <ul>
+                        <li><strong>Basic Legs:</strong> Konsolidierung bis zum Moving Average</li>
+                        <li><strong>Große Legs:</strong> 1:1 Ratio (Leg-Größe zu Konsolidierungslänge)</li>
+                        <li><strong>Riesige Legs:</strong> 2:1 Ratio (Konsolidierung 2x so lang wie der Leg)</li>
+                    </ul>
+                </div>
+
+                <h3>📊 Zeit & Volumen = Preisannahme</h3>
+                
+                <p>Je mehr <strong>Zeit und Volumen</strong> in einer Range auftreten, desto mehr Spieler hatten die Möglichkeit zu handeln, und desto mehr Preisannahme gibt es.</p>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: Konsolidierungslänge</h4>
+                    <p><strong>Eine Aktie macht einen riesigen Leg von $50 auf $100. Wie lange sollte sie idealerweise konsolidieren, bevor der nächste Breakout kommt?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(1, 'A', false)">
+                        <strong>A)</strong> 10-15 Minuten sind genug
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'B', false)">
+                        <strong>B)</strong> Bis zum Moving Average (ca. 30 Min)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'C', true)">
+                        <strong>C)</strong> Mindestens so lange wie der Leg gedauert hat, idealerweise 2x so lang
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'D', false)">
+                        <strong>D)</strong> Die Länge spielt keine Rolle
+                    </div>
+
+                    <div id="feedback1" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(3)">Weiter zum ersten Chart-Beispiel →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Chart-Beispiel AGRX -->
+        <div id="step3" class="step-container">
+            <div class="section-card">
+                <h2>📊 Chart-Beispiel #1: AGRX Intraday</h2>
+                
+                <p class="progress-indicator">Schritt 3 von 5</p>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/1_AGRX.png" alt="AGRX Intraday Chart - Konsolidierung Beispiel 1">
+                    <p class="caption"><strong>AGRX - 6. November 2019 (Intraday)</strong><br>
+                    Perfektes Beispiel für Downtrend mit richtiger Konsolidierung</p>
+                </div>
+
+                <h3>🔍 Was siehst du hier?</h3>
+                
+                <p>AGRX hatte sich für einen Exhaustion-Gap-Short auf dem Daily aufgebaut – dies war der Tag, an dem es intraday geknackt wurde.</p>
+
+                <div class="highlight-box">
+                    <h4>✅ Beobachtungen:</h4>
+                    <ul>
+                        <li>Für <strong>jedes Down-Leg</strong> konsolidiert der Chart vollständig bis zum Moving Average</li>
+                        <li>Beide Support-Breaks sind <strong>akzeptable Short-Entries</strong> aufgrund der vorherigen Konsolidierung</li>
+                        <li>Jede Konsolidierung ist <strong>etwa gleich breit</strong> wie die Länge der Down-Bewegung</li>
+                        <li><strong>1:1 Ratio</strong> zwischen Leg-Größe und Konsolidierungslänge</li>
+                    </ul>
+                </div>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/2_AGRX.png" alt="AGRX Chart - Zweites Beispiel">
+                    <p class="caption"><strong>AGRX - Detailansicht der Konsolidierungszonen</strong><br>
+                    Beachte die engen, kontrollierten Consolidation-Bereiche</p>
+                </div>
+
+                <h3>💡 Was kannst du daraus lernen?</h3>
+                
+                <p>Wenn du solche Patterns siehst, weißt du: Der Trend ist <strong>nachhaltig</strong>. Die Konsolidierung gibt dem Chart die "Erlaubnis", weiter zu fallen (oder zu steigen).</p>
+
+                <div class="warning-box">
+                    <h4>⚠️ Ohne diese Konsolidierung?</h4>
+                    <p>Ohne richtige Konsolidierung würdest du <strong>überextended</strong> shorten – das Risiko für einen Bounce wäre viel höher!</p>
+                </div>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: AGRX Chart</h4>
+                    <p><strong>Warum sind die Support-Breaks im AGRX-Chart gute Short-Entries?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(2, 'A', false)">
+                        <strong>A)</strong> Weil die Aktie schon so weit gefallen ist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'B', true)">
+                        <strong>B)</strong> Weil der Chart vollständig zum Moving Average konsolidiert hat (Price Acceptance)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'C', false)">
+                        <strong>C)</strong> Weil das Volumen so hoch ist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'D', false)">
+                        <strong>D)</strong> Weil es Freitag ist
+                    </div>
+
+                    <div id="feedback2" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(4)">Weiter zum Tesla-Beispiel →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Chart-Beispiel Tesla -->
+        <div id="step4" class="step-container">
+            <div class="section-card">
+                <h2>🚀 Chart-Beispiel #2: Tesla Multi-Leg Move</h2>
+                
+                <p class="progress-indicator">Schritt 4 von 5</p>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/TESLA_1.png" alt="Tesla Intraday Chart - Multi-Leg Konsolidierung">
+                    <p class="caption"><strong>Tesla - 10. Juli 2020 (Intraday)</strong><br>
+                    Lehrbuch-Beispiel für nachhaltigen Multi-Leg-Uptrend</p>
+                </div>
+
+                <h3>🔥 Warum ist dieser Chart so besonders?</h3>
+                
+                <p>Trotz der <strong>enormen Multi-Leg-Bewegung</strong> sollte uns die Price Action nicht überraschen. Warum nicht?</p>
+
+                <div class="highlight-box">
+                    <h4>✅ Beobachtungen:</h4>
+                    <ul>
+                        <li><strong>Beide Legs</strong> konsolidieren gleich oder länger als die ursprüngliche Bewegung</li>
+                        <li>Vor dem zweiten Leg-Breakout hätten wir vielleicht sogar <strong>noch mehr Konsolidierung</strong> gebraucht (wegen der enormen Distanz)</li>
+                        <li>Trotzdem: Wir erfüllen die <strong>Daumenregel</strong> – mindestens gleichlange Konsolidierung</li>
+                        <li>Dieser Chart ist <strong>total nachhaltig</strong> und der Typ Chart, von dem wir profitieren wollen!</li>
+                    </ul>
+                </div>
+
+                <h3>🎯 Trading-Implikationen</h3>
+                
+                <div class="warning-box">
+                    <h4>⚠️ NIEMALS Mean-Revert bei solchen Charts!</h4>
+                    <p>Wenn eine Aktie so beweglich ist, mit der Stetigkeit der Legs kombiniert mit richtiger Konsolidierung, solltest du:</p>
+                    <ul style="margin-top: 10px;">
+                        <li>✅ <strong>Mit dem Trend handeln</strong></li>
+                        <li>✅ Breakouts kaufen nach Konsolidierung</li>
+                        <li>❌ <strong>NIEMALS</strong> versuchen, es zu shorten ("Es ist schon zu weit gelaufen")</li>
+                    </ul>
+                </div>
+
+                <p style="font-size: 1.2em; margin-top: 30px;"><strong>💡 Lance's Prinzip:</strong> <em>"Mit richtiger Konsolidierung kann eine Aktie einfach immer weiter und weiter gehen."</em></p>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: Tesla Chart</h4>
+                    <p><strong>Was solltest du tun, wenn du einen Chart wie Tesla mit richtigen Multi-Leg-Konsolidierungen siehst?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(3, 'A', false)">
+                        <strong>A)</strong> Sofort shorten, weil es "zu weit gelaufen" ist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'B', true)">
+                        <strong>B)</strong> Mit dem Trend handeln und Breakouts nach Konsolidierung kaufen
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'C', false)">
+                        <strong>C)</strong> Abwarten und gar nicht handeln
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'D', false)">
+                        <strong>D)</strong> Nur auf dem Daily handeln, Intraday ignorieren
+                    </div>
+
+                    <div id="feedback3" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(5)">Weiter zu den Key Takeaways →</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Key Takeaways -->
+        <div id="step5" class="step-container">
+            <div class="section-card">
+                <h2>🎓 Zusammenfassung & Handlungsschritte</h2>
+                
+                <p class="progress-indicator">Schritt 5 von 5 - Abschluss</p>
+
+                <div class="key-takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Konsolidierung = Price Acceptance</strong> – Der Markt akzeptiert den neuen Preis</li>
+                        <li><strong>Mit richtiger Konsolidierung können Trends unendlich weitergehen</strong> – Lance's Kernprinzip</li>
+                        <li><strong>2 Hauptfaktoren:</strong> Länge (relativ zur Bewegung) & Qualität (eng vs. loose)</li>
+                        <li><strong>Daumenregel:</strong> Basic Legs bis MA, große Legs 1:1 Ratio, riesige Legs 2:1 Ratio</li>
+                        <li><strong>Enge Konsolidierungen</strong> sind zuverlässiger als lockere, rangige</li>
+                        <li><strong>Zeit & Volumen</strong> in einer Range = mehr Preisannahme</li>
+                        <li><strong>Für Continuation:</strong> Warte auf richtige Konsolidierung für höhere Win-Rate</li>
+                        <li><strong>Für Mean-Reversion:</strong> Suche Aktien ohne Konsolidierung (überextended)</li>
+                        <li><strong>Trading-Regel:</strong> Handele MIT dem Trend bei richtiger Konsolidierung, niemals dagegen!</li>
+                    </ul>
+                </div>
+
+                <div class="section-card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #3b82f6;">
+                    <h3>📚 Praktische Übung</h3>
+                    <p><strong>Damit Konsolidierung "in Fleisch und Blut" übergeht, empfiehlt Lance:</strong></p>
+                    <ol style="line-height: 2; font-size: 1.1em;">
+                        <li>Gehe durch hunderte Charts und analysiere sie durch die <strong>Konsolidierungs-Linse</strong></li>
+                        <li>Frage dich: Wie sieht die Konsolidierung vor den <strong>besten Moves</strong> aus?</li>
+                        <li>Frage dich: Wie sieht die Konsolidierung vor den <strong>schlechtesten Moves</strong> aus?</li>
+                        <li>Nach hunderten/tausenden Stunden wirst du <strong>internalisieren</strong>, wie Price Action und Konsolidierung zusammenspielen</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Nächste Schritte:</h4>
+                    <ul>
+                        <li>Öffne TradingView und analysiere 10 Charts durch die Konsolidierungs-Linse</li>
+                        <li>Markiere Konsolidierungszonen und miss ihre Länge vs. Leg-Größe</li>
+                        <li>Identifiziere enge vs. lockere Konsolidierungen</li>
+                        <li>Erstelle ein Trading-Journal mit Konsolidierungs-Screenshots</li>
+                        <li>Wende dieses Wissen in deinen nächsten Trades an! 🚀</li>
+                    </ul>
+                </div>
+
+                <!-- Final Quiz -->
+                <div class="quiz-container">
+                    <h4>🏆 Abschluss-Quiz: Konsolidierung Master</h4>
+                    <p><strong>Du siehst eine Aktie, die einen riesigen Leg gemacht hat, aber nur 5 Minuten konsolidiert, bevor sie wieder ausbricht. Was ist deine Reaktion?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(4, 'A', false)">
+                        <strong>A)</strong> Sofort kaufen, der Momentum ist stark!
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'B', true)">
+                        <strong>B)</strong> Skeptisch sein – zu wenig Konsolidierung = höheres Risiko für Retracement
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'C', false)">
+                        <strong>C)</strong> Shorten, weil es überextended ist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'D', false)">
+                        <strong>D)</strong> Konsolidierungslänge spielt keine Rolle
+                    </div>
+
+                    <div id="feedback4" class="quiz-feedback"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px;">
+                    <p style="font-size: 1.3em; color: #b8860b; font-weight: 700;">🎉 Glückwunsch! Du hast das Konsolidierungs-Modul abgeschlossen!</p>
+                    <p style="font-size: 1.1em; margin-top: 20px;">Wende dieses Wissen in deinen Trades an und beobachte, wie sich deine Win-Rate verbessert! 🚀</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Progressive Disclosure State Management
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function showStep(stepNumber) {
+        // Hide all steps
+        for (let i = 1; i <= totalSteps; i++) {
+            document.getElementById('step' + i).classList.remove('active');
+        }
+        
+        // Show requested step
+        document.getElementById('step' + stepNumber).classList.add('active');
+        currentStep = stepNumber;
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Save progress to localStorage
+        localStorage.setItem('konsolidierung_progress', stepNumber);
+    }
+
+    // Quiz System
+    const quizAnswers = {};
+
+    function checkAnswer(quizNumber, selectedOption, isCorrect) {
+        // Store answer
+        quizAnswers[quizNumber] = { selected: selectedOption, correct: isCorrect };
+        
+        // Get all options for this quiz
+        const quizContainer = document.querySelectorAll('.quiz-container')[quizNumber - 1];
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = document.getElementById('feedback' + quizNumber);
+        
+        // Remove previous selections
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+        });
+        
+        // Mark selected option
+        event.target.closest('.quiz-option').classList.add('selected');
+        
+        // Show feedback
+        if (isCorrect) {
+            event.target.closest('.quiz-option').classList.add('correct');
+            feedback.className = 'quiz-feedback correct';
+            feedback.innerHTML = '🎉 <strong>Richtig!</strong> Du hast das Konzept verstanden!';
+        } else {
+            event.target.closest('.quiz-option').classList.add('incorrect');
+            feedback.className = 'quiz-feedback incorrect';
+            
+            // Personalized feedback per quiz
+            const incorrectFeedback = {
+                1: '❌ <strong>Nicht ganz.</strong> Bei einem riesigen Leg brauchst du mindestens so lange Konsolidierung wie der Leg gedauert hat – idealerweise 2x so lang!',
+                2: '❌ <strong>Nicht ganz.</strong> Die Support-Breaks sind gut, weil der Chart vollständig zum Moving Average konsolidiert hat – das zeigt Price Acceptance!',
+                3: '❌ <strong>Nicht ganz.</strong> Bei Charts mit richtiger Konsolidierung solltest du MIT dem Trend handeln, nicht dagegen! Niemals shorten, nur weil es "zu weit" gelaufen ist.',
+                4: '❌ <strong>Nicht ganz.</strong> Zu wenig Konsolidierung nach einem riesigen Leg ist ein Warnsignal – höheres Risiko für Retracements, weil zu wenig Price Acceptance!'
+            };
+            
+            feedback.innerHTML = incorrectFeedback[quizNumber];
+        }
+    }
+
+    // Load progress on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        const savedProgress = localStorage.getItem('konsolidierung_progress');
+        if (savedProgress && parseInt(savedProgress) > 1) {
+            // Optionally ask user if they want to continue
+            if (confirm('Du hast dieses Modul bereits begonnen. Möchtest du dort weitermachen?')) {
+                showStep(parseInt(savedProgress));
+            }
+        }
+    });
+
+    // Track completion
+    function trackCompletion() {
+        localStorage.setItem('konsolidierung_completed', 'true');
+        localStorage.setItem('konsolidierung_completion_date', new Date().toISOString());
+    }
+
+    // Automatically track when reaching final step
+    const observer = new MutationObserver(function(mutations) {
+        if (currentStep === totalSteps) {
+            trackCompletion();
+        }
+    });
+</script>
+
+{% include '_navigation.html' %}
+
+{% endblock %}
+
