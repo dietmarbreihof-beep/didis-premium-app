@@ -1,0 +1,1209 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Expected Value Modul Spezifisches Styling */
+    .ev-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .ev-wrapper .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ev-wrapper .hero-section::before {
+        content: "💰";
+        position: absolute;
+        font-size: 20em;
+        opacity: 0.05;
+        top: -50px;
+        right: -100px;
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.05; }
+        50% { transform: scale(1.1) rotate(5deg); opacity: 0.08; }
+    }
+
+    .ev-wrapper .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ev-wrapper .hero-section .subtitle {
+        font-size: 1.4em;
+        opacity: 0.95;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ev-wrapper .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .ev-wrapper .stat-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ev-wrapper .stat-card .stat-value {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin-bottom: 10px;
+    }
+
+    .ev-wrapper .stat-card .stat-label {
+        font-size: 1em;
+        opacity: 0.9;
+    }
+
+    .ev-wrapper .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .ev-wrapper .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .ev-wrapper .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .ev-wrapper .section-card h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .ev-wrapper .section-card p {
+        line-height: 1.8;
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .ev-wrapper .formula-box {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        text-align: center;
+        border: 3px solid #daa520;
+    }
+
+    .ev-wrapper .formula-box .formula {
+        font-size: 1.8em;
+        font-weight: 700;
+        color: #f4e97b;
+        margin: 20px 0;
+        font-family: 'Courier New', monospace;
+    }
+
+    .ev-wrapper .formula-box .explanation {
+        font-size: 1.1em;
+        opacity: 0.9;
+        margin-top: 15px;
+    }
+
+    .ev-wrapper .calculator {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 3px solid #3b82f6;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .ev-wrapper .calculator h3 {
+        color: #1e40af;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 1.8em;
+    }
+
+    .ev-wrapper .calculator-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .ev-wrapper .input-group {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .ev-wrapper .input-group label {
+        display: block;
+        font-weight: 600;
+        color: #1e40af;
+        margin-bottom: 10px;
+        font-size: 1.1em;
+    }
+
+    .ev-wrapper .input-group input {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1.1em;
+        transition: all 0.3s ease;
+    }
+
+    .ev-wrapper .input-group input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+
+    .ev-wrapper .input-group .unit {
+        font-size: 0.9em;
+        color: #666;
+        margin-top: 5px;
+    }
+
+    .ev-wrapper .calc-button {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        border-radius: 12px;
+        font-size: 1.2em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        display: block;
+        margin: 30px auto;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .ev-wrapper .calc-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+    }
+
+    .ev-wrapper .result-box {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-top: 30px;
+        text-align: center;
+        display: none;
+    }
+
+    .ev-wrapper .result-box.show {
+        display: block;
+        animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .ev-wrapper .result-box .ev-value {
+        font-size: 3em;
+        font-weight: 800;
+        margin: 20px 0;
+    }
+
+    .ev-wrapper .result-box .ev-value.positive {
+        color: #38a169;
+    }
+
+    .ev-wrapper .result-box .ev-value.negative {
+        color: #e53e3e;
+    }
+
+    .ev-wrapper .result-box .verdict {
+        font-size: 1.3em;
+        font-weight: 600;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .ev-wrapper .result-box .verdict.good {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #38a169;
+    }
+
+    .ev-wrapper .result-box .verdict.bad {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #e53e3e;
+    }
+
+    .ev-wrapper .highlight-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #b8860b;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .ev-wrapper .highlight-box h4 {
+        color: #1a1a1a;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .success-box {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border-left: 4px solid #38a169;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .ev-wrapper .success-box h4 {
+        color: #065f46;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .warning-box {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border-left: 4px solid #e53e3e;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .ev-wrapper .warning-box h4 {
+        color: #991b1b;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .poker-analogy {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 3px solid #b8860b;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 40px 0;
+    }
+
+    .ev-wrapper .poker-analogy h3 {
+        color: #1a1a1a;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .ev-wrapper .poker-cards {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 30px 0;
+        flex-wrap: wrap;
+    }
+
+    .ev-wrapper .poker-card {
+        background: white;
+        border: 2px solid #daa520;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+        min-width: 150px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .ev-wrapper .poker-card .card-icon {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+
+    .ev-wrapper .poker-card .card-label {
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    .ev-wrapper .poker-card .card-value {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #b8860b;
+        margin-top: 5px;
+    }
+
+    .ev-wrapper .case-study {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .ev-wrapper .case-study h4 {
+        color: #1e40af;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .timeline {
+        position: relative;
+        padding-left: 40px;
+        margin: 30px 0;
+    }
+
+    .ev-wrapper .timeline::before {
+        content: '';
+        position: absolute;
+        left: 10px;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #3b82f6;
+    }
+
+    .ev-wrapper .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .ev-wrapper .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -43px;
+        top: 20px;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #3b82f6;
+        border: 3px solid white;
+    }
+
+    .ev-wrapper .timeline-item .time {
+        font-weight: 700;
+        color: #1e40af;
+        margin-bottom: 10px;
+    }
+
+    .ev-wrapper .timeline-item .ev-estimate {
+        display: inline-block;
+        padding: 8px 16px;
+        background: #fef3c7;
+        color: #b8860b;
+        border-radius: 8px;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+    .ev-wrapper .step-container {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .ev-wrapper .step-container.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .ev-wrapper .next-step-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        border-radius: 12px;
+        font-size: 1.2em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        display: inline-block;
+        margin: 30px 0;
+    }
+
+    .ev-wrapper .next-step-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+    }
+
+    .ev-wrapper .quiz-container {
+        background: #f0f9ff;
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .ev-wrapper .quiz-container h4 {
+        color: #1e40af;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .ev-wrapper .quiz-option {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .ev-wrapper .quiz-option:hover {
+        border-color: #daa520;
+        background: #fef3c7;
+    }
+
+    .ev-wrapper .quiz-option.selected {
+        border-color: #b8860b;
+        background: #fef3c7;
+    }
+
+    .ev-wrapper .quiz-option.correct {
+        border-color: #38a169;
+        background: #d1fae5;
+    }
+
+    .ev-wrapper .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #fee2e2;
+    }
+
+    .ev-wrapper .quiz-feedback {
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-weight: 600;
+        display: none;
+    }
+
+    .ev-wrapper .quiz-feedback.correct {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #38a169;
+        display: block;
+    }
+
+    .ev-wrapper .quiz-feedback.incorrect {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #e53e3e;
+        display: block;
+    }
+
+    .ev-wrapper .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .ev-wrapper .key-takeaways h3 {
+        color: #f4e97b;
+        font-size: 2em;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .ev-wrapper .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .ev-wrapper .key-takeaways li {
+        padding: 15px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 1.15em;
+        line-height: 1.6;
+    }
+
+    .ev-wrapper .key-takeaways li:before {
+        content: "🎯";
+        position: absolute;
+        left: 0;
+        font-size: 1.5em;
+    }
+
+    .ev-wrapper .progress-indicator {
+        text-align: center;
+        margin: 30px 0;
+        font-size: 1.1em;
+        color: #666;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .ev-wrapper .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .ev-wrapper .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .ev-wrapper .section-card {
+            padding: 25px;
+        }
+
+        .ev-wrapper .stats-container {
+            grid-template-columns: 1fr;
+        }
+
+        .ev-wrapper .calculator-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ev-wrapper .poker-cards {
+            flex-direction: column;
+        }
+    }
+</style>
+
+<div class="ev-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>💰 Expected Value Mastery</h1>
+        <p class="subtitle">Das fundamentalste Konzept im Trading</p>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value">∞</div>
+                <div class="stat-label">Wins mit positivem EV</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">🎯</div>
+                <div class="stat-label">Objektiver Maßstab</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">📈</div>
+                <div class="stat-label">Dynamisch & veränderlich</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <!-- Step 1: EV Grundlagen -->
+        <div id="step1" class="step-container active">
+            <div class="section-card">
+                <h2>📖 Was ist Expected Value?</h2>
+                
+                <p>Expected Value (Erwartungswert) ist <strong>das fundamentalste Konzept</strong> im Trading. Es ist der durchschnittliche Ausgang eines Trades oder einer Reihe von Trades.</p>
+
+                <p>Der EV berücksichtigt sowohl die <strong>Wahrscheinlichkeit verschiedener Ergebnisse</strong> als auch die <strong>potentiellen Gewinne oder Verluste</strong> über die Zeit.</p>
+
+                <div class="formula-box">
+                    <h3 style="color: #f4e97b;">Die EV-Formel</h3>
+                    <div class="formula">
+                        EV = (Gewinn × P_win) - (Verlust × P_loss)
+                    </div>
+                    <div class="explanation">
+                        P_win = Wahrscheinlichkeit eines Gewinns<br>
+                        P_loss = Wahrscheinlichkeit eines Verlusts
+                    </div>
+                </div>
+
+                <h3>💡 Ein praktisches Beispiel</h3>
+                
+                <p>Ein Trade, der bei Erfolg <strong>$8 Gewinn</strong> (75% Wahrscheinlichkeit) und bei Misserfolg <strong>$14 Verlust</strong> (25% Wahrscheinlichkeit) mit sich bringt:</p>
+
+                <div class="success-box">
+                    <h4>✅ Berechnung:</h4>
+                    <p style="font-size: 1.2em; font-family: monospace;">
+                        EV = ($8 × 0.75) - ($14 × 0.25)<br>
+                        EV = $6.00 - $3.50<br>
+                        <strong>EV = $2.50</strong> ✓
+                    </p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🔑 Die Erkenntnis:</h4>
+                    <p style="font-size: 1.15em; margin: 0;">Trotz <strong>größerer absoluter Verluste</strong> ($14) als Gewinne ($8) ist dies ein <strong>guter Trade</strong>, der jedes Mal eingegangen werden sollte, da er <strong>langfristig profitabel</strong> ist!</p>
+                </div>
+
+                <h3>🚫 Widerlegung gängiger Trading-Mythen</h3>
+                
+                <ul style="line-height: 2; font-size: 1.1em;">
+                    <li>❌ Du brauchst KEIN hohes Gewinn-Verlust-Verhältnis (z.B. 3:1)</li>
+                    <li>✅ <strong>Jede Gewinnrate über Null</strong> kann erfolgreich sein, solange der EV positiv ist</li>
+                    <li>✅ Erfolgreiche Trader haben <strong>sehr unterschiedliche Gewinnraten</strong></li>
+                    <li>✅ Der <strong>EV ist der objektive Maßstab</strong>, der Emotionen überwindet</li>
+                </ul>
+
+                <button class="next-step-btn" onclick="showStep(2)">Weiter zum EV-Calculator →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Interaktiver Calculator -->
+        <div id="step2" class="step-container">
+            <div class="section-card">
+                <h2>🧮 Interaktiver EV-Calculator</h2>
+                
+                <p class="progress-indicator">Schritt 2 von 5</p>
+
+                <p>Probiere es selbst aus! Gib deine Trade-Parameter ein und berechne den Expected Value:</p>
+
+                <div class="calculator">
+                    <h3>💻 EV-Calculator</h3>
+                    
+                    <div class="calculator-grid">
+                        <div class="input-group">
+                            <label for="avgWin">Durchschnittlicher Gewinn</label>
+                            <input type="number" id="avgWin" placeholder="z.B. 500" step="0.01">
+                            <div class="unit">in Dollar ($)</div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="winRate">Win-Rate</label>
+                            <input type="number" id="winRate" placeholder="z.B. 65" min="0" max="100" step="1">
+                            <div class="unit">in Prozent (%)</div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="avgLoss">Durchschnittlicher Verlust</label>
+                            <input type="number" id="avgLoss" placeholder="z.B. 300" step="0.01">
+                            <div class="unit">in Dollar ($)</div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="lossRate">Loss-Rate</label>
+                            <input type="number" id="lossRate" placeholder="z.B. 35" min="0" max="100" step="1">
+                            <div class="unit">in Prozent (%)</div>
+                        </div>
+                    </div>
+
+                    <button class="calc-button" onclick="calculateEV()">🚀 Expected Value berechnen</button>
+
+                    <div class="result-box" id="resultBox">
+                        <h4>Dein Expected Value:</h4>
+                        <div class="ev-value" id="evValue">$0.00</div>
+                        <div class="verdict" id="verdict">
+                            <span id="verdictText"></span>
+                        </div>
+                        <p id="verdictExplanation" style="margin-top: 20px; font-size: 1.1em;"></p>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Probiere diese Szenarien:</h4>
+                    <ul style="line-height: 1.8;">
+                        <li><strong>Scalper:</strong> Gewinn $50, Win 70%, Verlust $100, Loss 30%</li>
+                        <li><strong>Swing Trader:</strong> Gewinn $1000, Win 45%, Verlust $400, Loss 55%</li>
+                        <li><strong>Home Run Hitter:</strong> Gewinn $5000, Win 30%, Verlust $500, Loss 70%</li>
+                    </ul>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: EV-Verständnis</h4>
+                    <p><strong>Ein Trade hat $10 Gewinn bei 60% Win-Rate und $8 Verlust bei 40% Loss-Rate. Ist der EV positiv oder negativ?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(1, 'A', true)">
+                        <strong>A)</strong> Positiv - EV = $2.80 (Guter Trade!)
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'B', false)">
+                        <strong>B)</strong> Negativ - zu riskant
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'C', false)">
+                        <strong>C)</strong> Neutral - Break-Even
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'D', false)">
+                        <strong>D)</strong> Unmöglich zu sagen ohne mehr Daten
+                    </div>
+
+                    <div id="feedback1" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(3)">Weiter zur Poker-Analogie →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: EV ist dynamisch - Poker -->
+        <div id="step3" class="step-container">
+            <div class="section-card">
+                <h2>🃏 EV ist dynamisch - Die Poker-Analogie</h2>
+                
+                <p class="progress-indicator">Schritt 3 von 5</p>
+
+                <p>Das <strong>wichtigste Konzept</strong>, das viele Trader nicht verstehen: <strong>Expected Value ist NICHT statisch</strong> - er ändert sich ständig!</p>
+
+                <div class="poker-analogy">
+                    <h3>🎰 Was Trading mit Poker gemeinsam hat</h3>
+                    
+                    <p style="font-size: 1.15em;">Stell dir vor: Du hältst <strong>Ass-Dame</strong> und dein Gegner hat <strong>10-9</strong>. Initial hast du <strong>67% Win-Chance</strong>.</p>
+
+                    <div class="poker-cards">
+                        <div class="poker-card">
+                            <div class="card-icon">🎴</div>
+                            <div class="card-label">Pre-Flop</div>
+                            <div class="card-value">67%</div>
+                        </div>
+                        <div class="poker-card">
+                            <div class="card-icon">🃏</div>
+                            <div class="card-label">Nach Flop (Ass kommt)</div>
+                            <div class="card-value">94%!</div>
+                        </div>
+                        <div class="poker-card">
+                            <div class="card-icon">💥</div>
+                            <div class="card-label">River (7 gibt Straight)</div>
+                            <div class="card-value">0%!</div>
+                        </div>
+                    </div>
+
+                    <div class="success-box">
+                        <h4>🎯 Die Lektion:</h4>
+                        <p style="font-size: 1.15em; margin: 0;">Mit jeder neuen Karte <strong>ändern sich die Odds</strong>. Du musst <strong>ständig neu bewerten</strong>, ob du weiterspielen, erhöhen oder folden sollst!</p>
+                    </div>
+                </div>
+
+                <h3>📊 Trading ist genau gleich!</h3>
+                
+                <p>Mit <strong>jedem Balken, jedem Tick, jeder neuen Information</strong> ändert sich dein Expected Value.</p>
+
+                <div class="highlight-box">
+                    <h4>🔄 Faktoren, die EV ständig ändern:</h4>
+                    <ul style="line-height: 1.8; margin-top: 15px;">
+                        <li><strong>Level 2 Orderbook</strong> - Bid/Ask-Veränderungen</li>
+                        <li><strong>Chart-Pattern-Entwicklung</strong> - Konsolidierung, Breakdown, etc.</li>
+                        <li><strong>Overall Market Action</strong> - SPY, QQQ Momentum</li>
+                        <li><strong>News & Catalysts</strong> - Breaking News, Earnings</li>
+                        <li><strong>Volumen & Liquidität</strong> - Drying up oder spiking?</li>
+                        <li><strong>Zeit im Trade</strong> - Je länger, desto mehr Risiko oft</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Häufiger Fehler:</h4>
+                    <p style="font-size: 1.1em; margin: 0;">Viele Trader entscheiden <strong>initial</strong>, ob ein Trade gut ist, und ändern dann <strong>nie wieder ihre Meinung</strong> - selbst wenn sich die Situation dramatisch verändert hat!</p>
+                </div>
+
+                <p style="font-size: 1.2em; margin-top: 30px;"><strong>💡 Pro-Trader</strong> bewerten den EV <strong>jede Sekunde neu</strong> und passen ihre Position-Size oder Exit-Strategie entsprechend an!</p>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: Dynamischer EV</h4>
+                    <p><strong>Du kaufst eine Mean-Reversion bei $7.50 mit Stop bei $7. Target ist $10. Initial ist der EV positiv. Die Aktie bounct zu $9.50. Was passiert mit dem EV?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(2, 'A', false)">
+                        <strong>A)</strong> EV steigt, weil du näher am Target bist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'B', true)">
+                        <strong>B)</strong> EV sinkt, weil Reward nur noch $0.50 ist, aber Risk $2.00 beträgt
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'C', false)">
+                        <strong>C)</strong> EV bleibt gleich
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'D', false)">
+                        <strong>D)</strong> EV ist irrelevant, du bist im Gewinn
+                    </div>
+
+                    <div id="feedback2" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(4)">Weiter zur MSTR Case Study →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: MSTR Case Study -->
+        <div id="step4" class="step-container">
+            <div class="section-card">
+                <h2>🔥 Case Study: MSTR Short-Report</h2>
+                
+                <p class="progress-indicator">Schritt 4 von 5</p>
+
+                <div class="case-study">
+                    <h4>📅 28. März 2024 - MicroStrategy Bitcoin-Premium</h4>
+                    
+                    <p><strong>Setup:</strong> MSTR war von $400 auf fast $2000 explodiert durch Bitcoin-Resurgence. Die Aktie handelte mit <strong>enormem Premium</strong> zum Wert ihrer Bitcoin-Holdings.</p>
+
+                    <p><strong>Catalyst:</strong> Carousel Capital (bekannte Short-Bude) veröffentlicht negativen Research-Report über das Premium.</p>
+                </div>
+
+                <h3>📊 Wie sich der EV über den Tag entwickelte</h3>
+
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="time">🕘 Pre-Market (Report-Release)</div>
+                        <p>Initial skeptisch - <strong>Report sagt nur Obvious-Dinge</strong>, die jeder schon wusste.</p>
+                        <div class="ev-estimate">EV: 5-10% Win-Chance = Negativer EV</div>
+                        <p style="margin-top: 10px;"><strong>Entscheidung:</strong> Nicht shorten!</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">🕙 Market Open (9:30 AM)</div>
+                        <p>Aktie droppt pre-market, aber <strong>pairt bis Market Open</strong> - unchanged!</p>
+                        <div class="ev-estimate">EV: Immer noch negativ</div>
+                        <p style="margin-top: 10px;"><strong>Entscheidung:</strong> Abwarten...</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">🕙 10:00 AM (Breakdown Pre-Market Lows)</div>
+                        <p>Aktie <strong>bricht unter Pre-Market Reaction Lows</strong> - erstes Signal!</p>
+                        <div class="ev-estimate">EV: 25% Win-Chance = Leicht positiv, aber noch nicht juicy</div>
+                        <p style="margin-top: 10px;"><strong>Entscheidung:</strong> Noch kein Einstieg ohne Intraday-Setup</p>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="time">🕙 10:15 AM (Daily Trend Break)</div>
+                        <p>Jetzt <strong>brechen wir Prior Daily Bar Lows</strong> bei $1840 - der Daily Uptrend ist gebrochen!</p>
+                        <div class="ev-estimate">EV: 40-50% Win-Chance = Deutlich positiver</div>
+                        <p style="margin-top: 10px;"><strong>Entscheidung:</strong> Brauche trotzdem noch gutes Intraday-Setup für optimalen EV</p>
+                    </div>
+
+                    <div class="timeline-item" style="border-left: 3px solid #38a169;">
+                        <div class="time">🕚 11:00 AM (THE MAGIC)</div>
+                        <p><strong>Jetzt kommt alles zusammen:</strong></p>
+                        <ul style="margin-top: 10px; line-height: 1.8;">
+                            <li>✅ Massive Run-up vorher (überextended)</li>
+                            <li>✅ Negativer Catalyst (Short-Report)</li>
+                            <li>✅ Daily Trend broken</li>
+                            <li>✅ <strong>ENGE Intraday-Konsolidierung by Lows</strong></li>
+                        </ul>
+                        <div class="ev-estimate" style="background: #d1fae5; color: #065f46;">EV: MAXIMAL - Perfektes Setup!</div>
+                        <p style="margin-top: 10px;"><strong>Entscheidung:</strong> SHORT mit voller Size! 🚀</p>
+                    </div>
+
+                    <div class="timeline-item" style="border-left: 3px solid #38a169;">
+                        <div class="time">🎯 Result</div>
+                        <p>MSTR macht <strong>incredible Leg lower</strong>, hält perfekt Prior Bar Highs - du capturest fast alles mit simplem System!</p>
+                        <div class="ev-estimate" style="background: #38a169; color: white;">Winner! 💰</div>
+                    </div>
+                </div>
+
+                <div class="success-box">
+                    <h4>🎯 Die Kern-Lektion:</h4>
+                    <p style="font-size: 1.15em;">Viele Trader haben diesen Trade <strong>verpasst</strong>, weil sie initial skeptisch waren und <strong>ihre Odds NICHT updated haben</strong> als neue Information kam!</p>
+                    <ul style="margin-top: 15px; line-height: 1.8;">
+                        <li>Initial: Negativer EV (schlechter Short-Report)</li>
+                        <li>Nach Pre-Market Low Break: Leicht positiver EV</li>
+                        <li>Nach Daily Trend Break: Deutlich positiver EV</li>
+                        <li>Mit Intraday-Setup: <strong>MAXIMALER EV - perfekter Trade!</strong></li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Das Prinzip:</h4>
+                    <p style="font-size: 1.2em; margin: 0;"><em>"Wie in Poker kann selbst eine 2-7 (schlechteste Hand) zu einer incredible Hand werden, wenn sich die Daten über Zeit ändern!"</em></p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: MSTR Lesson</h4>
+                    <p><strong>Was war der WICHTIGSTE Faktor, der den EV von negativ zu maximal positiv gemacht hat?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(3, 'A', false)">
+                        <strong>A)</strong> Der Short-Report allein
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'B', false)">
+                        <strong>B)</strong> Der Daily Trend Break allein
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'C', true)">
+                        <strong>C)</strong> Die Kombination ALLER Faktoren + enge Intraday-Konsolidierung
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'D', false)">
+                        <strong>D)</strong> Glück und Timing
+                    </div>
+
+                    <div id="feedback3" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(5)">Weiter zu den Key Takeaways →</button>
+            </div>
+        </div>
+
+        <!-- Step 5: Key Takeaways -->
+        <div id="step5" class="step-container">
+            <div class="section-card">
+                <h2>🎓 EV Mastery - Zusammenfassung</h2>
+                
+                <p class="progress-indicator">Schritt 5 von 5 - Abschluss</p>
+
+                <div class="key-takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>EV ist das fundamentalste Trading-Konzept</strong> - objektiver Maßstab, der Emotionen überwindet</li>
+                        <li><strong>Die Formel: EV = (Gewinn × P_win) - (Verlust × P_loss)</strong></li>
+                        <li><strong>Positiver EV = Guter Trade</strong> - egal wie die einzelne Instanz ausgeht</li>
+                        <li><strong>Du brauchst KEIN 3:1 Risk-Reward</strong> - jede Win-Rate über 0% kann profitabel sein mit richtigem EV</li>
+                        <li><strong>EV ist DYNAMISCH - nicht statisch!</strong> - ändert sich mit jedem Balken, jedem Tick</li>
+                        <li><strong>Wie Poker: Odds ändern sich während des "Hands"</strong> - du musst ständig re-evaluate</li>
+                        <li><strong>Faktoren die EV ändern:</strong> Level 2, Chart-Pattern, Market, News, Volumen, Zeit</li>
+                        <li><strong>MSTR-Lektion: Auch schlechte Initial-Setups können perfekt werden</strong> wenn sich Daten ändern</li>
+                        <li><strong>Allokiere Kapital wo EV am höchsten ist</strong> - mehr bei besserem EV, weniger bei schlechterem</li>
+                        <li><strong>Bei negativem EV: KEINE Exposure</strong> - niemals Ausnahmen!</li>
+                    </ul>
+                </div>
+
+                <div class="section-card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #3b82f6;">
+                    <h3>📚 Praktische Umsetzung</h3>
+                    <p><strong>So internalisierst du Expected Value:</strong></p>
+                    <ol style="line-height: 2; font-size: 1.1em;">
+                        <li><strong>Pre-Trade:</strong> Schätze initial EV (grobe Zahlen ok!)</li>
+                        <li><strong>During Trade:</strong> Update EV <strong>ständig</strong> - jede Minute neu bewerten!</li>
+                        <li><strong>Position-Sizing:</strong> Mehr Size bei höherem EV, weniger bei niedrigerem</li>
+                        <li><strong>Exit-Strategie:</strong> Wenn EV negativ wird → Exit, egal ob im Gewinn oder Verlust!</li>
+                        <li><strong>Post-Trade Review:</strong> War dein geschätzter EV richtig? Was hast du übersehen?</li>
+                        <li><strong>Journal:</strong> Dokumentiere geschätzten EV vs. tatsächlichen Outcome</li>
+                    </ol>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Die goldene Regel:</h4>
+                    <p style="font-size: 1.3em; text-align: center; margin: 20px 0;"><strong>"Allokiere IMMER Kapital zu Wetten mit positivem EV - und das MEISTE Kapital dort, wo der EV am HÖCHSTEN ist!"</strong></p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Häufige EV-Fehler vermeiden:</h4>
+                    <ul style="line-height: 1.8; margin-top: 15px;">
+                        <li>❌ EV nur initial berechnen, dann nie wieder updaten</li>
+                        <li>❌ An Trades festhalten, deren EV negativ geworden ist</li>
+                        <li>❌ Emotionen über EV stellen ("Ich will recht haben!")</li>
+                        <li>❌ Position-Size nicht an EV anpassen</li>
+                        <li>❌ Einzelnes Outcome mit EV-Qualität verwechseln</li>
+                    </ul>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ Mental Shift für EV-Mastery:</h4>
+                    <p style="font-size: 1.15em;">Denke wie ein <strong>Baseballspieler</strong>: Wenn die Chance auf einen Grand Slam besteht (hoher EV), swingt er <strong>jedes Mal</strong> - auch wenn er manchmal ausscheidet. Über 1000 At-Bats gewinnt er!</p>
+                </div>
+
+                <!-- Final Quiz -->
+                <div class="quiz-container">
+                    <h4>🏆 Abschluss-Quiz: EV-Master</h4>
+                    <p><strong>Du bist in einem Trade mit initial positivem EV. Die Aktie bewegt sich gegen dich und der EV ist jetzt negativ. Was machst du?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(4, 'A', false)">
+                        <strong>A)</strong> Halten - der initial EV war gut!
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'B', false)">
+                        <strong>C)</strong> Halten und hoffen - vielleicht dreht es noch
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'C', true)">
+                        <strong>B)</strong> SOFORT RAUS - bei negativem EV KEINE Exposure!
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'D', false)">
+                        <strong>D)</strong> Verdoppeln - Averaging Down
+                    </div>
+
+                    <div id="feedback4" class="quiz-feedback"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px;">
+                    <p style="font-size: 1.3em; color: #b8860b; font-weight: 700;">🎉 Glückwunsch! Du hast Expected Value Mastery abgeschlossen!</p>
+                    <p style="font-size: 1.1em; margin-top: 20px;">Wende dieses Konzept in JEDEM Trade an und beobachte, wie sich deine Performance transformiert! 💰🚀</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Progressive Disclosure State Management
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function showStep(stepNumber) {
+        // Hide all steps
+        for (let i = 1; i <= totalSteps; i++) {
+            document.getElementById('step' + i).classList.remove('active');
+        }
+        
+        // Show requested step
+        document.getElementById('step' + stepNumber).classList.add('active');
+        currentStep = stepNumber;
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Save progress to localStorage
+        localStorage.setItem('expected_value_progress', stepNumber);
+    }
+
+    // EV Calculator
+    function calculateEV() {
+        const avgWin = parseFloat(document.getElementById('avgWin').value) || 0;
+        const winRate = parseFloat(document.getElementById('winRate').value) || 0;
+        const avgLoss = parseFloat(document.getElementById('avgLoss').value) || 0;
+        const lossRate = parseFloat(document.getElementById('lossRate').value) || 0;
+
+        // Validate
+        if (avgWin === 0 || winRate === 0 || avgLoss === 0 || lossRate === 0) {
+            alert('Bitte fülle alle Felder aus!');
+            return;
+        }
+
+        // Convert percentages to decimals
+        const pWin = winRate / 100;
+        const pLoss = lossRate / 100;
+
+        // Calculate EV
+        const ev = (avgWin * pWin) - (avgLoss * pLoss);
+
+        // Display result
+        const resultBox = document.getElementById('resultBox');
+        const evValue = document.getElementById('evValue');
+        const verdict = document.getElementById('verdict');
+        const verdictText = document.getElementById('verdictText');
+        const verdictExplanation = document.getElementById('verdictExplanation');
+
+        resultBox.classList.add('show');
+        evValue.textContent = '$' + ev.toFixed(2);
+
+        if (ev > 0) {
+            evValue.className = 'ev-value positive';
+            verdict.className = 'verdict good';
+            verdictText.textContent = '✅ POSITIVER EV - Guter Trade!';
+            verdictExplanation.innerHTML = `<strong>Langfristig profitabel!</strong> Bei diesem EV würdest du durchschnittlich <strong>$${ev.toFixed(2)} pro Trade</strong> verdienen. Trade dieses Setup <strong>jedes Mal</strong>, wenn du es siehst!`;
+        } else if (ev < 0) {
+            evValue.className = 'ev-value negative';
+            verdict.className = 'verdict bad';
+            verdictText.textContent = '❌ NEGATIVER EV - Schlechter Trade!';
+            verdictExplanation.innerHTML = `<strong>Langfristig verlierend!</strong> Bei diesem EV würdest du durchschnittlich <strong>$${Math.abs(ev).toFixed(2)} pro Trade</strong> verlieren. <strong>NIEMALS</strong> diesen Trade eingehen - keine Ausnahmen!`;
+        } else {
+            evValue.className = 'ev-value';
+            verdict.className = 'verdict';
+            verdictText.textContent = '➖ NEUTRALER EV - Break-Even';
+            verdictExplanation.innerHTML = `<strong>Weder profitabel noch verlierend.</strong> Langfristig würdest du weder gewinnen noch verlieren. Suche nach Trades mit <strong>positivem EV</strong>!`;
+        }
+    }
+
+    // Quiz System
+    const quizAnswers = {};
+
+    function checkAnswer(quizNumber, selectedOption, isCorrect) {
+        // Store answer
+        quizAnswers[quizNumber] = { selected: selectedOption, correct: isCorrect };
+        
+        // Get all options for this quiz
+        const quizContainer = document.querySelectorAll('.quiz-container')[quizNumber - 1];
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = document.getElementById('feedback' + quizNumber);
+        
+        // Remove previous selections
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+        });
+        
+        // Mark selected option
+        event.target.closest('.quiz-option').classList.add('selected');
+        
+        // Show feedback
+        if (isCorrect) {
+            event.target.closest('.quiz-option').classList.add('correct');
+            feedback.className = 'quiz-feedback correct';
+            feedback.innerHTML = '🎉 <strong>Richtig!</strong> Du verstehst Expected Value!';
+        } else {
+            event.target.closest('.quiz-option').classList.add('incorrect');
+            feedback.className = 'quiz-feedback incorrect';
+            
+            // Personalized feedback per quiz
+            const incorrectFeedback = {
+                1: '❌ <strong>Nicht ganz.</strong> EV = ($10 × 0.6) - ($8 × 0.4) = $6 - $3.20 = $2.80. Das ist ein positiver EV - ein guter Trade!',
+                2: '❌ <strong>Nicht ganz.</strong> Initial war Reward $2.50 (zum Target) und Risk $0.50. Bei $9.50 ist Reward nur noch $0.50, aber Risk $2.00! Der EV ist deutlich gesunken - Zeit zum Verkaufen!',
+                3: '❌ <strong>Nicht ganz.</strong> KEINE einzelne Variable allein macht den perfekten Trade. Es war die KOMBINATION: Short-Report + Daily Break + Intraday-Setup. Alle Faktoren mussten zusammenkommen!',
+                4: '❌ <strong>Nicht ganz.</strong> Bei negativem EV gibt es KEINE Ausnahmen - SOFORT raus! Egal ob du initial richtig lagst, egal ob du hoffst - negativer EV = kein Trade!'
+            };
+            
+            feedback.innerHTML = incorrectFeedback[quizNumber];
+        }
+    }
+
+    // Load progress on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        const savedProgress = localStorage.getItem('expected_value_progress');
+        if (savedProgress && parseInt(savedProgress) > 1) {
+            // Optionally ask user if they want to continue
+            if (confirm('Du hast dieses Modul bereits begonnen. Möchtest du dort weitermachen?')) {
+                showStep(parseInt(savedProgress));
+            }
+        }
+    });
+
+    // Track completion
+    function trackCompletion() {
+        localStorage.setItem('expected_value_completed', 'true');
+        localStorage.setItem('expected_value_completion_date', new Date().toISOString());
+    }
+
+    // Automatically track when reaching final step
+    const observer = new MutationObserver(function(mutations) {
+        if (currentStep === totalSteps) {
+            trackCompletion();
+        }
+    });
+</script>
+
+{% include '_navigation.html' %}
+
+{% endblock %}
+
