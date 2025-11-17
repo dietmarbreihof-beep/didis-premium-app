@@ -1,0 +1,1026 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Breaking News Volume Modul Spezifisches Styling */
+    .breaking-news-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .breaking-news-wrapper .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .breaking-news-wrapper .hero-section::before {
+        content: "📰";
+        position: absolute;
+        font-size: 20em;
+        opacity: 0.05;
+        top: -50px;
+        right: -100px;
+        animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.05; }
+        50% { transform: scale(1.1); opacity: 0.08; }
+    }
+
+    .breaking-news-wrapper .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breaking-news-wrapper .hero-section .subtitle {
+        font-size: 1.4em;
+        opacity: 0.95;
+        font-weight: 400;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breaking-news-wrapper .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+    }
+
+    .breaking-news-wrapper .stat-card {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+
+    .breaking-news-wrapper .stat-card .stat-value {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin-bottom: 10px;
+    }
+
+    .breaking-news-wrapper .stat-card .stat-label {
+        font-size: 1em;
+        opacity: 0.9;
+    }
+
+    .breaking-news-wrapper .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .breaking-news-wrapper .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .breaking-news-wrapper .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .breaking-news-wrapper .section-card h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.5em;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+
+    .breaking-news-wrapper .section-card p {
+        line-height: 1.8;
+        color: #333;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .breaking-news-wrapper .highlight-box {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-left: 4px solid #b8860b;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .breaking-news-wrapper .highlight-box h4 {
+        color: #1a1a1a;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .success-box {
+        background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+        border-left: 4px solid #38a169;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .breaking-news-wrapper .success-box h4 {
+        color: #065f46;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .warning-box {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border-left: 4px solid #e53e3e;
+        padding: 25px;
+        border-radius: 12px;
+        margin: 25px 0;
+    }
+
+    .breaking-news-wrapper .warning-box h4 {
+        color: #991b1b;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .volume-types {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin: 30px 0;
+    }
+
+    .breaking-news-wrapper .volume-card {
+        background: white;
+        border: 3px solid #daa520;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .breaking-news-wrapper .volume-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.3);
+    }
+
+    .breaking-news-wrapper .volume-card .icon {
+        font-size: 4em;
+        margin-bottom: 15px;
+    }
+
+    .breaking-news-wrapper .volume-card h4 {
+        color: #1a1a1a;
+        font-size: 1.4em;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .chart-example {
+        background: #f9f9f9;
+        border: 2px solid #daa520;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .breaking-news-wrapper .chart-example img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        margin: 20px 0;
+    }
+
+    .breaking-news-wrapper .chart-example .caption {
+        font-size: 1.1em;
+        color: #2d2d2d;
+        font-weight: 600;
+        margin-top: 15px;
+        line-height: 1.6;
+    }
+
+    .breaking-news-wrapper .case-study {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .breaking-news-wrapper .case-study h4 {
+        color: #1e40af;
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 20px 0;
+    }
+
+    .breaking-news-wrapper .metric-item {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .breaking-news-wrapper .metric-label {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 5px;
+    }
+
+    .breaking-news-wrapper .metric-value {
+        font-size: 1.5em;
+        font-weight: 700;
+        color: #1e40af;
+    }
+
+    .breaking-news-wrapper .checklist {
+        background: white;
+        border: 2px solid #38a169;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .breaking-news-wrapper .checklist h4 {
+        color: #065f46;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .breaking-news-wrapper .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 15px;
+        margin: 10px 0;
+        background: #f0fdf4;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .breaking-news-wrapper .checklist-item:hover {
+        background: #dcfce7;
+        transform: translateX(5px);
+    }
+
+    .breaking-news-wrapper .checklist-item .checkbox {
+        font-size: 1.5em;
+        margin-right: 15px;
+        color: #38a169;
+    }
+
+    .breaking-news-wrapper .checklist-item .text {
+        flex: 1;
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+
+    .breaking-news-wrapper .step-container {
+        display: none;
+        animation: fadeIn 0.5s ease;
+    }
+
+    .breaking-news-wrapper .step-container.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .breaking-news-wrapper .next-step-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 18px 50px;
+        border-radius: 12px;
+        font-size: 1.2em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3);
+        display: inline-block;
+        margin: 30px 0;
+    }
+
+    .breaking-news-wrapper .next-step-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+    }
+
+    .breaking-news-wrapper .quiz-container {
+        background: #f0f9ff;
+        border: 2px solid #3b82f6;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+    }
+
+    .breaking-news-wrapper .quiz-container h4 {
+        color: #1e40af;
+        font-size: 1.4em;
+        margin-bottom: 20px;
+        font-weight: 700;
+    }
+
+    .breaking-news-wrapper .quiz-option {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .breaking-news-wrapper .quiz-option:hover {
+        border-color: #daa520;
+        background: #fef3c7;
+    }
+
+    .breaking-news-wrapper .quiz-option.selected {
+        border-color: #b8860b;
+        background: #fef3c7;
+    }
+
+    .breaking-news-wrapper .quiz-option.correct {
+        border-color: #38a169;
+        background: #d1fae5;
+    }
+
+    .breaking-news-wrapper .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #fee2e2;
+    }
+
+    .breaking-news-wrapper .quiz-feedback {
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-weight: 600;
+        display: none;
+    }
+
+    .breaking-news-wrapper .quiz-feedback.correct {
+        background: #d1fae5;
+        color: #065f46;
+        border-left: 4px solid #38a169;
+        display: block;
+    }
+
+    .breaking-news-wrapper .quiz-feedback.incorrect {
+        background: #fee2e2;
+        color: #991b1b;
+        border-left: 4px solid #e53e3e;
+        display: block;
+    }
+
+    .breaking-news-wrapper .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .breaking-news-wrapper .key-takeaways h3 {
+        color: #f4e97b;
+        font-size: 2em;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .breaking-news-wrapper .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .breaking-news-wrapper .key-takeaways li {
+        padding: 15px 0;
+        padding-left: 40px;
+        position: relative;
+        font-size: 1.15em;
+        line-height: 1.6;
+    }
+
+    .breaking-news-wrapper .key-takeaways li:before {
+        content: "🎯";
+        position: absolute;
+        left: 0;
+        font-size: 1.5em;
+    }
+
+    .breaking-news-wrapper .progress-indicator {
+        text-align: center;
+        margin: 30px 0;
+        font-size: 1.1em;
+        color: #666;
+        font-weight: 600;
+    }
+
+    @media (max-width: 768px) {
+        .breaking-news-wrapper .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .breaking-news-wrapper .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .breaking-news-wrapper .section-card {
+            padding: 25px;
+        }
+
+        .breaking-news-wrapper .stats-container {
+            grid-template-columns: 1fr;
+        }
+
+        .breaking-news-wrapper .volume-types {
+            grid-template-columns: 1fr;
+        }
+
+        .breaking-news-wrapper .metrics-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="breaking-news-wrapper">
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <h1>📰 Breaking News Volume</h1>
+        <p class="subtitle">Erkenne die besten Headlines durch Volumen-Analyse</p>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-value">5%+</div>
+                <div class="stat-label">ADV in ersten Minuten = Monster-Setup</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">3x</div>
+                <div class="stat-label">Faktoren für Volume-Analyse</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">🚀</div>
+                <div class="stat-label">Real-Time Trading Opportunity</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-container">
+        <!-- Step 1: Grundlagen -->
+        <div id="step1" class="step-container active">
+            <div class="section-card">
+                <h2>📖 Warum Volumen der Schlüssel ist</h2>
+                
+                <p>Von allen verfügbaren Trading-Indikatoren gibt es einen, der <strong>bei weitem am wichtigsten</strong> ist: <strong>Volumen</strong>.</p>
+
+                <p>Vergiss komplizierte Fancy-Indikatoren. Wenn du nur <strong>ein zusätzliches Datenfeld</strong> haben könntest, wäre Volumen die richtige Wahl.</p>
+
+                <div class="highlight-box">
+                    <h4>🔑 Das Kernprinzip:</h4>
+                    <p style="font-size: 1.2em; margin: 0;"><em>"Die größten Trends werden von enormen Volumen-Exchanges begleitet."</em></p>
+                </div>
+
+                <h3>🧠 Volumen = Psychologie der Holder</h3>
+                
+                <p>Denk an Volumen als die <strong>Psychologie der Holder</strong>:</p>
+
+                <ul style="line-height: 2; font-size: 1.1em;">
+                    <li>Ist das meiste Volumen <strong>Out of the Money</strong> oder <strong>In the Money</strong>?</li>
+                    <li>Gab es einen <strong>enormen Austausch von Shares</strong>?</li>
+                    <li>Wenn ja, repräsentiert das eine <strong>neue Cost Basis</strong> für den durchschnittlichen Holder</li>
+                    <li>Mehr Volumen = mehr Interesse = mehr aktive Teilnehmer = neue Holder werden involviert</li>
+                </ul>
+
+                <h3>📊 Die 3 Haupt-Anwendungen von Volumen</h3>
+
+                <div class="volume-types">
+                    <div class="volume-card">
+                        <div class="icon">📰</div>
+                        <h4>Breaking News</h4>
+                        <p>Die besten Headlines ziehen <strong>enorme Volumen</strong> an - oft riesige Prozentsätze des ADV innerhalb von Minuten</p>
+                    </div>
+                    <div class="volume-card">
+                        <div class="icon">📈</div>
+                        <h4>Continuation Plays</h4>
+                        <p>Hohe Volumen bei Breakouts bestätigen <strong>starke Überzeugung</strong> der Marktteilnehmer</p>
+                    </div>
+                    <div class="volume-card">
+                        <div class="icon">🔄</div>
+                        <h4>Kapitulationen</h4>
+                        <p>Volume Climax bei Trend-Reversals - extreme Volumen signalisieren <strong>Shift in Sentiment</strong></p>
+                    </div>
+                </div>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/Volume Overview_News.jpg" alt="Volume Übersicht - Breaking News Pattern">
+                    <p class="caption"><strong>Breaking News Volume-Pattern</strong><br>
+                    Beachte: Enormes initiales Volumen, das sich über den Tag hält</p>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(2)">Weiter zur Volume-Analyse-Methode →</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Analyse-Methode -->
+        <div id="step2" class="step-container">
+            <div class="section-card">
+                <h2>🔍 Die Breaking News Volume-Analyse</h2>
+                
+                <p class="progress-indicator">Schritt 2 von 5</p>
+
+                <p>Die besten Headlines erzeugen <strong>sofort riesiges Volumen</strong>, das sich über den Tag, manchmal sogar über Wochen hält.</p>
+
+                <h3>📊 Die 3 Faktoren für Volume-Analyse</h3>
+
+                <div class="checklist">
+                    <h4>✅ Volumen-Analyse-Checkliste</h4>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">1️⃣</div>
+                        <div class="text">
+                            <strong>Vergleich mit früheren Balken</strong><br>
+                            Wie hoch ist das aktuelle Volumen im Vergleich zu typischen Intraday-Balken?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">2️⃣</div>
+                        <div class="text">
+                            <strong>Average Daily Volume (ADV)</strong><br>
+                            Wie viel Prozent des durchschnittlichen Tagesvolumens wird gehandelt?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">3️⃣</div>
+                        <div class="text">
+                            <strong>Float-Vergleich</strong><br>
+                            Welcher Prozentsatz des Streubesitzes wird gehandelt?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Die goldene Regel:</h4>
+                    <p><strong>Je schneller und größer das Volumen kommt, desto wahrscheinlicher ist der Catalyst echt</strong> und viele Investoren warten darauf, es in den Preis einzupreisen.</p>
+                </div>
+
+                <h3>🎯 Sustained Volume = Fortsetzung wahrscheinlich</h3>
+                
+                <p>Wenn das Volumen nach dem initialen Spike <strong>sustained</strong> (aufrechterhalten) wird, deutet das darauf hin, dass die Bewegung über den Rest des Tages, der Woche oder sogar Monate fortgesetzt wird.</p>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/Volume Overview_Continuation.jpg" alt="Volume Übersicht - Continuation Pattern">
+                    <p class="caption"><strong>Continuation Volume-Pattern</strong><br>
+                    Hohes Volumen bei Breakouts bestätigt Trend-Fortsetzung</p>
+                </div>
+
+                <!-- Quiz 1 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: Volume-Faktoren</h4>
+                    <p><strong>Eine Aktie macht Breaking News und handelt in den ersten 2 Minuten 5% ihres Average Daily Volume. Was bedeutet das?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(1, 'A', false)">
+                        <strong>A)</strong> Das ist normal, nicht besonders relevant
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'B', true)">
+                        <strong>B)</strong> Das ist extrem hoch und signalisiert, dass der Catalyst wahrscheinlich echt ist
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'C', false)">
+                        <strong>C)</strong> Das ist zu wenig Volumen, ich würde nicht traden
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(1, 'D', false)">
+                        <strong>D)</strong> Volumen ist irrelevant, nur der Preis zählt
+                    </div>
+
+                    <div id="feedback1" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(3)">Weiter zum MSOS Case Study →</button>
+            </div>
+        </div>
+
+        <!-- Step 3: MSOS Case Study -->
+        <div id="step3" class="step-container">
+            <div class="section-card">
+                <h2>🔥 Case Study #1: MSOS Cannabis-ETF</h2>
+                
+                <p class="progress-indicator">Schritt 3 von 5</p>
+
+                <div class="case-study">
+                    <h4>📅 30. August 2023 - Cannabis-Neuklassifizierung</h4>
+                    
+                    <p><strong>Nachricht:</strong> Das HHS (US-Gesundheitsministerium) empfahl die Neuklassifizierung von Marihuana als weniger gefährliche Droge.</p>
+
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-label">Erste 2 Minuten</div>
+                            <div class="metric-value">565K</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Average Daily Volume</div>
+                            <div class="metric-value">9M</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">% des ADV</div>
+                            <div class="metric-value">>5%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🎯 Was macht dieses Setup außergewöhnlich?</h3>
+                
+                <div class="success-box">
+                    <h4>✅ Volumen-Qualitätsfaktoren erfüllt:</h4>
+                    <ul style="line-height: 1.8; margin-top: 15px;">
+                        <li><strong>Über 5% des ADV in ersten 2 Minuten</strong> - das ist astronomisch!</li>
+                        <li><strong>Volumen blieb extrem hoch</strong> den ganzen Rest des Tages</li>
+                        <li>Nachrichten kamen <strong>spät am Tag</strong>, trotzdem enormes Interesse</li>
+                        <li>Der Ticker verzeichnete <strong>eines der höchsten Volumina seiner Geschichte</strong></li>
+                        <li><strong>Starke Konsolidierung</strong> den ganzen Nachmittag über</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Trading-Implikation:</h4>
+                    <p style="font-size: 1.15em; margin: 0;">MSOS wurde zu einem <strong>starken "Swing Long"-Kandidaten</strong>. Das anhaltende Volumen war außergewöhnlich und signalisierte, dass dies kein "One-Day-Wonder" sein würde.</p>
+                </div>
+
+                <h3>📊 Sustained Volume Principle</h3>
+                
+                <p>Das Volumen war nicht nur initial hoch - es <strong>blieb aufrechterhalten</strong>. Das ist das Schlüsselsignal, dass eine Headline echtes Follow-Through haben wird.</p>
+
+                <!-- Quiz 2 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: MSOS Setup</h4>
+                    <p><strong>Warum war MSOS ein starkes "Swing Long" Setup?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(2, 'A', false)">
+                        <strong>A)</strong> Weil Cannabis-Aktien immer steigen
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'B', true)">
+                        <strong>B)</strong> Weil das Volumen extrem hoch war UND über den ganzen Tag aufrechterhalten wurde
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'C', false)">
+                        <strong>C)</strong> Weil die News spät am Tag kamen
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(2, 'D', false)">
+                        <strong>D)</strong> Weil es ein ETF ist
+                    </div>
+
+                    <div id="feedback2" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(4)">Weiter zum SMCI Case Study →</button>
+            </div>
+        </div>
+
+        <!-- Step 4: SMCI Case Study -->
+        <div id="step4" class="step-container">
+            <div class="section-card">
+                <h2>🚀 Case Study #2: SMCI KI-Wahnsinn</h2>
+                
+                <p class="progress-indicator">Schritt 4 von 5</p>
+
+                <div class="case-study">
+                    <h4>📅 19. Januar 2024 - KI-Wachstums-Prognose</h4>
+                    
+                    <p><strong>Nachricht:</strong> Vorläufige Gewinnprognose, angetrieben durch explosives KI-Wachstum.</p>
+
+                    <div class="metrics-grid">
+                        <div class="metric-item">
+                            <div class="metric-label">Volumen an diesem Tag</div>
+                            <div class="metric-value">23M</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">Total Float</div>
+                            <div class="metric-value">~50M</div>
+                        </div>
+                        <div class="metric-item">
+                            <div class="metric-label">% des Float gehandelt</div>
+                            <div class="metric-value">46%!</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>🔥 Warum ist das so außergewöhnlich?</h3>
+                
+                <p>SMCI war bereits ein <strong>Large-Cap-Unternehmen</strong> - und trotzdem wurde <strong>fast die Hälfte des gesamten Streubesitzes an einem einzigen Tag</strong> gehandelt!</p>
+
+                <div class="success-box">
+                    <h4>✅ Extreme Volume-Signale:</h4>
+                    <ul style="line-height: 1.8; margin-top: 15px;">
+                        <li><strong>46% des Float</strong> an einem Tag - für ein Large-Cap extrem ungewöhnlich</li>
+                        <li>In den folgenden Wochen wurden weiterhin <strong>täglich enorme Prozentsätze</strong> gehandelt</li>
+                        <li>Dieses Ausmaß wird als <strong>äußerst abnormal und beispiellos</strong> beschrieben</li>
+                        <li>Das Volumen war ein klares Signal für <strong>massive institutionelle Akkumulation</strong></li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Das Prinzip dahinter:</h4>
+                    <p style="font-size: 1.15em;">Wenn so viel des Float in so kurzer Zeit gehandelt wird, bedeutet das einen <strong>massiven Shift in der Holder-Cost-Basis</strong>. Die neuen Holder haben einen viel höheren Average-Cost und sind daher bereit, höhere Preise zu akzeptieren.</p>
+                </div>
+
+                <h3>📈 Multi-Week Follow-Through</h3>
+                
+                <p>Das Volumen war nicht nur an einem Tag hoch - es blieb über <strong>Wochen hinweg extrem elevated</strong>. Das ist das Signature-Pattern von echten Monster-Moves.</p>
+
+                <div class="chart-example">
+                    <img src="/static/screenshots/Volume Overview_Kapitulation.jpg" alt="Volume Übersicht - Kapitulations-Pattern">
+                    <p class="caption"><strong>Kapitulations-Volume-Pattern</strong><br>
+                    Extreme Volumen bei Reversals signalisieren Trend-Shifts</p>
+                </div>
+
+                <!-- Quiz 3 -->
+                <div class="quiz-container">
+                    <h4>🧠 Quiz-Check: SMCI Setup</h4>
+                    <p><strong>Was ist die wichtigste Erkenntnis aus dem SMCI-Beispiel?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(3, 'A', false)">
+                        <strong>A)</strong> Large-Caps bewegen sich immer langsamer
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'B', false)">
+                        <strong>B)</strong> KI-Aktien sind immer gute Trades
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'C', true)">
+                        <strong>C)</strong> Wenn ein enormer Prozentsatz des Float gehandelt wird, signalisiert das einen massiven Shift in der Holder-Cost-Basis
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(3, 'D', false)">
+                        <strong>D)</strong> Man sollte nur Small-Caps mit Breaking News traden
+                    </div>
+
+                    <div id="feedback3" class="quiz-feedback"></div>
+                </div>
+
+                <button class="next-step-btn" onclick="showStep(5)">Weiter zu ENV & Key Takeaways →</button>
+            </div>
+        </div>
+
+        <!-- Step 5: ENV Contrarian + Key Takeaways -->
+        <div id="step5" class="step-container">
+            <div class="section-card">
+                <h2>⚠️ Case Study #3: ENV - Wenn Volumen NICHT sustained wird</h2>
+                
+                <p class="progress-indicator">Schritt 5 von 5 - Abschluss</p>
+
+                <div class="case-study">
+                    <h4>📉 ENV - Die andere Seite der Medaille</h4>
+                    
+                    <p><strong>Nachricht:</strong> Das Unternehmen erwog einen Verkauf.</p>
+                    
+                    <p><strong>Das Problem:</strong> Die Nachricht wurde im Vorfeld durch <strong>Insider-Käufe ("Front-Running")</strong> beeinträchtigt.</p>
+                </div>
+
+                <div class="warning-box">
+                    <h4>❌ Warum ENV KEIN gutes Setup war:</h4>
+                    <ul style="line-height: 1.8; margin-top: 15px;">
+                        <li>Nach dem anfänglichen Volumen-Spike <strong>löste sich das Volumen sofort auf</strong></li>
+                        <li>Es blieb <strong>nicht als signifikanter Prozentsatz</strong> des ADV erhalten</li>
+                        <li>Das zeigte, dass die Headline <strong>keine nachhaltige Momentum</strong> entwickeln würde</li>
+                        <li>Front-Running hatte bereits die meisten Käufer "ausgepreist"</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💡 Die Lektion:</h4>
+                    <p style="font-size: 1.15em;">Nicht jede Breaking News ist gleich. Der <strong>Unterschied liegt im sustained Volume</strong>. Wenn das Volumen nach dem initialen Spike zusammenbricht, ist das ein klares Signal, dass die Headline keine echte Dynamik hat.</p>
+                </div>
+
+                <h3>📋 Deine Breaking News Volume-Checkliste</h3>
+
+                <div class="checklist">
+                    <h4>✅ Verwende diese Checkliste für jede Breaking News</h4>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">1️⃣</div>
+                        <div class="text">
+                            <strong>Initial Volume Check:</strong> Ist das Volumen in den ersten Minuten >5% des ADV?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">2️⃣</div>
+                        <div class="text">
+                            <strong>Sustained Volume Check:</strong> Bleibt das Volumen über die nächste Stunde/Tag elevated?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">3️⃣</div>
+                        <div class="text">
+                            <strong>Float Analysis:</strong> Wird ein signifikanter % des Float gehandelt?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">4️⃣</div>
+                        <div class="text">
+                            <strong>Historical Comparison:</strong> Ist dieses Volumen außergewöhnlich für den Ticker?
+                        </div>
+                    </div>
+                    
+                    <div class="checklist-item">
+                        <div class="checkbox">5️⃣</div>
+                        <div class="text">
+                            <strong>Speed of Volume:</strong> Kam das Volumen schnell und aggressiv oder schleichend?
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-takeaways">
+                    <h3>🎯 Key Takeaways</h3>
+                    <ul>
+                        <li><strong>Volumen ist der wichtigste Indikator</strong> - wichtiger als alle Fancy-Indikatoren</li>
+                        <li><strong>Die besten Headlines erzeugen sofort riesiges Volumen</strong> (>5% ADV in ersten Minuten)</li>
+                        <li><strong>Sustained Volume ist das Schlüsselsignal</strong> für echte Fortsetzung</li>
+                        <li><strong>Analysiere 3 Faktoren:</strong> Frühere Balken, ADV, Float</li>
+                        <li><strong>Je schneller das Volumen kommt, desto echter der Catalyst</strong></li>
+                        <li><strong>Enormer Float-Turnover = massiver Shift in Cost-Basis</strong></li>
+                        <li><strong>Wenn Volumen nach Spike zusammenbricht = kein Follow-Through</strong></li>
+                        <li><strong>Dokumentiere jeden Breaking News-Trade</strong> und analysiere das Volumen-Pattern</li>
+                    </ul>
+                </div>
+
+                <div class="section-card" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #3b82f6;">
+                    <h3>📚 Praktische Übung</h3>
+                    <p><strong>So internalisierst du Breaking News Volume:</strong></p>
+                    <ol style="line-height: 2; font-size: 1.1em;">
+                        <li>Erstelle einen <strong>Breaking News Scanner</strong> (Benzinga, Twitter, Discord)</li>
+                        <li>Bei jeder Major News: <strong>Analysiere sofort das Volumen</strong> (erste 2-5 Min)</li>
+                        <li>Tracke: Initial Volume %, Sustained Volume, Float Turnover</li>
+                        <li>Führe ein <strong>Volume-Journal</strong> mit Screenshots</li>
+                        <li>Nach 50+ Beispielen wirst du <strong>Patterns erkennen</strong> auf den ersten Blick</li>
+                    </ol>
+                </div>
+
+                <!-- Final Quiz -->
+                <div class="quiz-container">
+                    <h4>🏆 Abschluss-Quiz: Breaking News Master</h4>
+                    <p><strong>Eine Aktie macht Breaking News. In den ersten 2 Minuten enormes Volumen (6% ADV), aber nach 30 Minuten fällt das Volumen dramatisch ab. Was machst du?</strong></p>
+                    
+                    <div class="quiz-option" onclick="checkAnswer(4, 'A', false)">
+                        <strong>A)</strong> Kaufen - das initiale Volumen war ja hoch!
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'B', true)">
+                        <strong>B)</strong> Skeptisch sein - das Volumen ist nicht sustained, wie ENV-Beispiel
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'C', false)">
+                        <strong>C)</strong> Shorten - das Volumen fällt ab, also bearish
+                    </div>
+                    <div class="quiz-option" onclick="checkAnswer(4, 'D', false)">
+                        <strong>D)</strong> Volumen ist egal, nur die News zählt
+                    </div>
+
+                    <div id="feedback4" class="quiz-feedback"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 50px;">
+                    <p style="font-size: 1.3em; color: #b8860b; font-weight: 700;">🎉 Glückwunsch! Du hast das Breaking News Volume-Modul abgeschlossen!</p>
+                    <p style="font-size: 1.1em; margin-top: 20px;">Wende diese Volume-Analyse bei der nächsten Breaking News an und beobachte, wie sich dein Edge verbessert! 📰🚀</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Progressive Disclosure State Management
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function showStep(stepNumber) {
+        // Hide all steps
+        for (let i = 1; i <= totalSteps; i++) {
+            document.getElementById('step' + i).classList.remove('active');
+        }
+        
+        // Show requested step
+        document.getElementById('step' + stepNumber).classList.add('active');
+        currentStep = stepNumber;
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Save progress to localStorage
+        localStorage.setItem('breaking_news_volume_progress', stepNumber);
+    }
+
+    // Quiz System
+    const quizAnswers = {};
+
+    function checkAnswer(quizNumber, selectedOption, isCorrect) {
+        // Store answer
+        quizAnswers[quizNumber] = { selected: selectedOption, correct: isCorrect };
+        
+        // Get all options for this quiz
+        const quizContainer = document.querySelectorAll('.quiz-container')[quizNumber - 1];
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = document.getElementById('feedback' + quizNumber);
+        
+        // Remove previous selections
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+        });
+        
+        // Mark selected option
+        event.target.closest('.quiz-option').classList.add('selected');
+        
+        // Show feedback
+        if (isCorrect) {
+            event.target.closest('.quiz-option').classList.add('correct');
+            feedback.className = 'quiz-feedback correct';
+            feedback.innerHTML = '🎉 <strong>Richtig!</strong> Du verstehst das Volume-Prinzip!';
+        } else {
+            event.target.closest('.quiz-option').classList.add('incorrect');
+            feedback.className = 'quiz-feedback incorrect';
+            
+            // Personalized feedback per quiz
+            const incorrectFeedback = {
+                1: '❌ <strong>Nicht ganz.</strong> 5% des ADV in den ersten 2 Minuten ist extrem hoch und signalisiert, dass der Catalyst wahrscheinlich echt ist!',
+                2: '❌ <strong>Nicht ganz.</strong> MSOS war stark, weil das Volumen nicht nur initial hoch war, sondern den ganzen Tag über aufrechterhalten wurde - das ist sustained volume!',
+                3: '❌ <strong>Nicht ganz.</strong> Die wichtigste Erkenntnis ist, dass ein enormer Float-Turnover einen massiven Shift in der Holder-Cost-Basis bedeutet - die neuen Holder akzeptieren höhere Preise!',
+                4: '❌ <strong>Nicht ganz.</strong> Wie beim ENV-Beispiel: Wenn das Volumen nach dem initialen Spike zusammenbricht, ist das ein Warnsignal, dass die Headline keine nachhaltige Momentum hat!'
+            };
+            
+            feedback.innerHTML = incorrectFeedback[quizNumber];
+        }
+    }
+
+    // Load progress on page load
+    window.addEventListener('DOMContentLoaded', function() {
+        const savedProgress = localStorage.getItem('breaking_news_volume_progress');
+        if (savedProgress && parseInt(savedProgress) > 1) {
+            // Optionally ask user if they want to continue
+            if (confirm('Du hast dieses Modul bereits begonnen. Möchtest du dort weitermachen?')) {
+                showStep(parseInt(savedProgress));
+            }
+        }
+    });
+
+    // Track completion
+    function trackCompletion() {
+        localStorage.setItem('breaking_news_volume_completed', 'true');
+        localStorage.setItem('breaking_news_volume_completion_date', new Date().toISOString());
+    }
+
+    // Automatically track when reaching final step
+    const observer = new MutationObserver(function(mutations) {
+        if (currentStep === totalSteps) {
+            trackCompletion();
+        }
+    });
+</script>
+
+{% include '_navigation.html' %}
+
+{% endblock %}
+
