@@ -195,6 +195,9 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ### @volume-analysis
 → Erstelle Volume-Analyse-Modul: 1) Kapitulation vs Continuation unterscheiden, 2) Breaking News Volume Pattern, 3) Interaktive Chart-Beispiele, 4) Checklist-Integration, 5) Didis-Charts Kriterien anwenden
 
+### @momentum-burst
+→ Implementiere Momentum Burst Setup-Modul: 1) Range Expansion Detection, 2) 3-5 Tage Timing-Regeln, 3) Profit-Erwartungen nach Preisklasse, 4) Mythen-Busting (52W High, 200MA, Fundamentals), 5) Trading-Checkliste, 6) Progressive Disclosure mit Quiz
+
 ---
 
 ## 🎯 TRADING-SPEZIFISCHE FEATURES
@@ -261,6 +264,18 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Features: Progressive Disclosure, 4-Step-Learning, Quiz-System, Interactive Charts, Key Takeaways
 - Schwierigkeit: Fortgeschritten ⭐
 - Dauer: 45 Minuten
+```
+
+**Beispiel 1c: Momentum Burst (StockBee Guide)**
+```
+@new-module-page Momentum Burst
+- HTML-Seite: templates/momentum-burst.html ✅
+- Quelle: StockBee Guides/Momentum Burst/Momentum-Burst.txt ✅
+- Kategorie: Trading-Setups → Momentum Trading ✅
+- Premium Modul: Ja (Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (8 Sections), Quiz-System (5 Fragen), Trading-Checklisten, Mythen-Busting, Key Takeaways
+- Schwierigkeit: Fortgeschritten ⭐⭐⭐
+- Dauer: 60 Minuten
 ```
 
 **Beispiel 2: Seite reparieren**
