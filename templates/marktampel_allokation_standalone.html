@@ -1006,11 +1006,11 @@
                             recommendedSectors.style.background = 'rgba(0, 0, 0, 0.25)';
                         }
                     } else {
-                        // Standard Grün für Goldilocks mit dunkel-goldener Schrift
+                        // Standard Grün für Goldilocks mit weißer Schrift
                         riskShield.className = 'risk-shield risk-shield-on';
                         riskShield.style.background = 'linear-gradient(135deg, #059669 0%, #10b981 100%)';
                         riskShield.style.borderColor = '#047857';
-                        riskShield.style.color = '#b8860b'; // Dunkel-goldene Schriftfarbe für besseren Kontrast
+                        riskShield.style.color = 'white'; // Weiße Schriftfarbe für besseren Kontrast auf grünem Hintergrund
                         
                         // Standard helle innere Bereiche für dunkles Grün
                         const riskExplanation = riskShield.querySelector('.risk-explanation');
@@ -1027,10 +1027,10 @@
                     riskShieldSubtitle.textContent = `${selectedRegime} Regime - Risikobereitschaft hoch`;
                     riskShieldExplanation.textContent = 'In Risk-On-Phasen sind Investoren risikobereit und suchen nach höheren Renditen. Wachstumsaktien, zyklische Sektoren und risikoreichere Assets performen besser.';
                     
-                    // Risk On empfohlene Sektoren mit angepassten Tag-Farben
+                    // Risk On empfohlene Sektoren mit angepassten Tag-Farben (einheitlich weiße Schrift)
                     const sectorTagsStyle = selectedRegime === 'Reflation' ? 
                         'style="background: rgba(0, 0, 0, 0.4); color: white;"' : 
-                        'style="background: rgba(255, 255, 255, 0.3); color: #b8860b;"'; // Dunkel-goldene Schrift für besseren Kontrast
+                        'style="background: rgba(255, 255, 255, 0.3); color: white;"'; // Weiße Schrift für besseren Kontrast
                     
                     recommendedSectorTags.innerHTML = `
                         <span class="sector-tag" ${sectorTagsStyle}>High Beta</span>
