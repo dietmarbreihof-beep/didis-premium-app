@@ -2794,7 +2794,7 @@ def add_module():
         title = request.form.get('title')
         description = request.form.get('description')
         icon = request.form.get('icon', '🎯')
-        template_file = request.form.get('template_file', '')
+        template_file_input = request.form.get('template_file', '').strip()
         external_url = request.form.get('external_url', '')
         estimated_duration = int(request.form.get('estimated_duration', 30))
         difficulty_level = request.form.get('difficulty_level', 'beginner')
@@ -2819,6 +2819,18 @@ def add_module():
         
         # Slug generieren
         slug = title.lower().replace(' ', '-').replace('.', '').replace('ä', 'ae').replace('ö', 'oe').replace('ü', 'ue').replace('ß', 'ss')
+        
+        # Template-Datei validieren und ggf. automatisch generieren
+        if template_file_input and template_file_input.lower().endswith('.html'):
+            # Gültiger Dateiname wurde angegeben
+            template_file = template_file_input
+        elif template_file_input:
+            # Ungültiger Dateiname (z.B. Titel wurde eingegeben) - aus Slug generieren
+            template_file = f"{slug}.html"
+            flash(f'⚠️ Template-Datei wurde automatisch generiert: {template_file}', 'info')
+        else:
+            # Kein Dateiname angegeben - aus Slug generieren
+            template_file = f"{slug}.html"
         
         # Sort-Order bestimmen
         if subcategory_id:
