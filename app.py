@@ -1351,6 +1351,69 @@ def expected_value():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/momentum-burst-method')
+def momentum_burst_method():
+    """Momentum Burst Method - Die 4% Breakout Strategie"""
+    track_visitor()
+    
+    # Modul aus Datenbank laden (falls registriert)
+    module_slug = 'momentum-burst-method'
+    try:
+        module = LearningModule.query.filter_by(slug=module_slug, is_published=True).first()
+    except:
+        module = None
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff (falls Modul in DB)
+    if module and not is_admin:
+        if not module.user_has_access(user_subscription):
+            flash('Für dieses Modul benötigst Du ein Premium-Abonnement.', 'warning')
+            return redirect(url_for('upgrade_required', module_slug=module_slug))
+    
+    # Progress tracking für eingeloggte User
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('momentum-burst-method.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/ev-calculator')
 def ev_calculator():
     """Expected Value Rechner - Trading Tool"""
