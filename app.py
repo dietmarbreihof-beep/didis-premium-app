@@ -1366,6 +1366,69 @@ def ev_calculator():
         user_id = session.get('user_id', 'anonymous')
         # Optional: Track tool usage
         pass
+
+@app.route('/vcp-pattern')
+def vcp_pattern():
+    """VCP-Pattern - Mark Minervinis Signatur-Strategie (Premium Elite Content)"""
+    track_visitor()
+    
+    module_slug = 'vcp-pattern'
+    
+    # Modul aus Datenbank laden
+    try:
+        module = LearningModule.query.filter_by(slug=module_slug, is_published=True).first()
+    except:
+        module = None
+    
+    # Zugriff prüfen (Elite Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Elite-Zugriff (nur Elite & Elite Pro haben Zugriff)
+    if not is_admin and user_subscription not in ['elite', 'elite_pro']:
+        flash('Für dieses Modul benötigst du ein Elite-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug=module_slug))
+    
+    # Progress tracking
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('vcp-pattern.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
     
     return render_template('ev_calculator.html')
 
@@ -2448,40 +2511,85 @@ def toggle_subcategory(subcategory_id):
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/admin/delete-item', methods=['POST'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
 def delete_item():
     """Lösche ein Item (Kategorie, Unterkategorie oder Modul)"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
-        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'})
+        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'}), 401
     
     try:
         data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': 'Keine Daten erhalten'}), 400
+            
         item_type = data.get('type')
         item_id = data.get('id')
         
+        if not item_type or not item_id:
+            return jsonify({'success': False, 'error': 'Type und ID sind erforderlich'}), 400
+        
         if item_type == 'category':
-            category = ModuleCategory.query.get_or_404(item_id)
+            category = ModuleCategory.query.get(item_id)
+            if not category:
+                return jsonify({'success': False, 'error': 'Kategorie nicht gefunden'}), 404
+                
+            category_name = category.name
             # Lösche auch alle Unterkategorien und Module
             for subcategory in category.subcategories:
                 for module in subcategory.modules:
+                    # Module Progress löschen
+                    ModuleProgress.query.filter_by(module_id=module.id).delete()
                     db.session.delete(module)
                 db.session.delete(subcategory)
+            
+            # Direkte Module der Kategorie löschen
+            for module in category.modules:
+                if module.subcategory_id is None:
+                    ModuleProgress.query.filter_by(module_id=module.id).delete()
+                    db.session.delete(module)
+                    
             db.session.delete(category)
+            db.session.commit()
+            
+            print(f"[DELETE] ✅ Kategorie gelöscht: {category_name}")
+            return jsonify({'success': True, 'message': f'Kategorie "{category_name}" gelöscht'})
             
         elif item_type == 'subcategory':
-            subcategory = ModuleSubcategory.query.get_or_404(item_id)
+            subcategory = ModuleSubcategory.query.get(item_id)
+            if not subcategory:
+                return jsonify({'success': False, 'error': 'Unterkategorie nicht gefunden'}), 404
+                
+            subcategory_name = subcategory.name
             # Lösche auch alle Module in dieser Unterkategorie
             for module in subcategory.modules:
+                ModuleProgress.query.filter_by(module_id=module.id).delete()
                 db.session.delete(module)
             db.session.delete(subcategory)
+            db.session.commit()
+            
+            print(f"[DELETE] ✅ Unterkategorie gelöscht: {subcategory_name}")
+            return jsonify({'success': True, 'message': f'Unterkategorie "{subcategory_name}" gelöscht'})
             
         elif item_type == 'module':
-            module = LearningModule.query.get_or_404(item_id)
+            module = LearningModule.query.get(item_id)
+            if not module:
+                return jsonify({'success': False, 'error': 'Modul nicht gefunden'}), 404
+                
+            module_title = module.title
+            # Module Progress löschen
+            ModuleProgress.query.filter_by(module_id=module.id).delete()
             db.session.delete(module)
-        
-        db.session.commit()
-        return jsonify({'success': True})
+            db.session.commit()
+            
+            print(f"[DELETE] ✅ Modul gelöscht: {module_title}")
+            return jsonify({'success': True, 'message': f'Modul "{module_title}" gelöscht'})
+        else:
+            return jsonify({'success': False, 'error': f'Unbekannter Item-Type: {item_type}'}), 400
+            
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)})
+        db.session.rollback()
+        print(f"[DELETE] ❌ Fehler: {str(e)}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 @app.route('/admin/bulk-action', methods=['POST'])
 def bulk_action():
@@ -4979,39 +5087,56 @@ def admin_move_module():
         flash(f'Fehler beim Verschieben des Moduls: {str(e)}', 'error')
         return redirect(url_for('admin_modules'))
 
-@app.route('/admin/delete-module/<int:module_id>', methods=['DELETE'])
+@app.route('/admin/delete-module/<int:module_id>', methods=['POST', 'DELETE'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
 def admin_delete_module(module_id):
     """Modul permanent löschen"""
+    # Admin-Zugriff prüfen
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
         return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'}), 401
     
     try:
         module = LearningModule.query.get(module_id)
         if not module:
-            return jsonify({'success': False, 'error': 'Modul nicht gefunden'})
+            return jsonify({'success': False, 'error': 'Modul nicht gefunden'}), 404
         
         module_title = module.title
+        module_slug = module.slug
+        
+        # Template-Datei speichern für spätere Referenz
+        template_file = module.template_file
         
         # Erst alle Abhängigkeiten löschen
         try:
             # Module Progress löschen (falls vorhanden)
-            ModuleProgress.query.filter_by(module_id=module_id).delete()
+            progress_count = ModuleProgress.query.filter_by(module_id=module_id).delete()
+            print(f"[DELETE] Gelöscht: {progress_count} Progress-Einträge für Modul {module_id}")
             
             # Modul löschen
             db.session.delete(module)
             db.session.commit()
             
+            print(f"[DELETE] ✅ Modul erfolgreich gelöscht: {module_title} (ID: {module_id}, Slug: {module_slug})")
+            
             return jsonify({
                 'success': True, 
-                'message': f'Modul "{module_title}" wurde erfolgreich gelöscht.'
+                'message': f'Modul "{module_title}" wurde erfolgreich gelöscht.',
+                'deleted_module': {
+                    'id': module_id,
+                    'title': module_title,
+                    'slug': module_slug,
+                    'template_file': template_file
+                }
             })
             
         except Exception as e:
             db.session.rollback()
-            return jsonify({'success': False, 'error': f'Fehler beim Löschen: {str(e)}'})
+            print(f"[DELETE] ❌ Fehler beim Löschen: {str(e)}")
+            return jsonify({'success': False, 'error': f'Fehler beim Löschen: {str(e)}'}), 500
         
     except Exception as e:
-        return jsonify({'success': False, 'error': f'Unbekannter Fehler: {str(e)}'})
+        print(f"[DELETE] ❌ Unbekannter Fehler: {str(e)}")
+        return jsonify({'success': False, 'error': f'Unbekannter Fehler: {str(e)}'}), 500
 
 @app.route('/admin/update-module-sort-order', methods=['POST'])
 def admin_update_module_sort_order():

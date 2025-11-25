@@ -1,0 +1,1827 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VCP-Pattern: Mark Minervinis Signatur-Strategie | Didis Trading Academy</title>
+    <meta name="description" content="Master das Volatility Contraction Pattern (VCP) - Mark Minervinis Methodik für explosionsartige Kursausbrüche mit 33.554% Rendite über 5 Jahre.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #b8860b 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,0 Q300,60 600,0 T1200,0 L1200,120 L0,120 Z" fill="rgba(184,134,11,0.1)"/></svg>') repeat-x bottom;
+            background-size: 1200px 120px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.2em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            font-weight: 300;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(184, 134, 11, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #f4e97b;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.95em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+
+        .progress-bar-container {
+            background: #f0f0f0;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+            border-radius: 6px;
+            transition: width 0.5s ease;
+            box-shadow: 0 2px 10px rgba(184, 134, 11, 0.3);
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            box-shadow: 0 6px 30px rgba(184, 134, 11, 0.15);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+            padding: 25px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: linear-gradient(180deg, #b8860b, #daa520);
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #2d2d2d, #b8860b);
+        }
+
+        .section-header h2 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-icon {
+            font-size: 1.8em;
+        }
+
+        .chevron {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .section-content.active {
+            max-height: 10000px;
+        }
+
+        .section-inner {
+            padding: 35px;
+        }
+
+        /* Content Styling */
+        .content-block {
+            margin-bottom: 30px;
+        }
+
+        .content-block h3 {
+            color: #1a1a1a;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            padding-left: 15px;
+            border-left: 4px solid #daa520;
+        }
+
+        .content-block p {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            color: #2d2d2d;
+        }
+
+        .content-block ul, .content-block ol {
+            margin-left: 40px;
+            margin-bottom: 20px;
+        }
+
+        .content-block li {
+            margin-bottom: 12px;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+
+        /* Highlight Box */
+        .highlight-box {
+            background: linear-gradient(135deg, #fff9e6, #fef3c7);
+            border-left: 5px solid #b8860b;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+            box-shadow: 0 2px 10px rgba(184, 134, 11, 0.1);
+        }
+
+        .highlight-box strong {
+            color: #b8860b;
+            font-weight: 600;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #fff5e6, #ffe8cc);
+            border-left: 5px solid #d69e2e;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        .warning-box::before {
+            content: '⚠️';
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: linear-gradient(135deg, #e6fff0, #ccffe6);
+            border-left: 5px solid #38a169;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        .success-box::before {
+            content: '✅';
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
+
+        /* Table Styling */
+        .vcp-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .vcp-table th {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .vcp-table td {
+            background: white;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .vcp-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vcp-table tr:hover td {
+            background: #fef3c7;
+        }
+
+        /* Quiz System */
+        .quiz-container {
+            background: white;
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h2 {
+            font-size: 2em;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+        }
+
+        .quiz-question {
+            background: #f7f7f7;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .quiz-question.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .question-number {
+            color: #b8860b;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.2em;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 12px;
+        }
+
+        .quiz-option {
+            background: white;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            transform: translateX(5px);
+            box-shadow: 0 2px 10px rgba(184, 134, 11, 0.2);
+        }
+
+        .quiz-option.selected {
+            background: linear-gradient(135deg, #fff9e6, #fef3c7);
+            border-color: #b8860b;
+            font-weight: 600;
+        }
+
+        .quiz-option.correct {
+            background: linear-gradient(135deg, #e6fff0, #ccffe6);
+            border-color: #38a169;
+        }
+
+        .quiz-option.incorrect {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            border-color: #e53e3e;
+        }
+
+        .option-letter {
+            background: #1a1a1a;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .quiz-option.selected .option-letter {
+            background: #b8860b;
+        }
+
+        .quiz-feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-feedback.correct {
+            background: linear-gradient(135deg, #e6fff0, #ccffe6);
+            border-left: 5px solid #38a169;
+        }
+
+        .quiz-feedback.incorrect {
+            background: linear-gradient(135deg, #ffe6e6, #ffcccc);
+            border-left: 5px solid #e53e3e;
+        }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .quiz-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        .quiz-btn-primary {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            color: white;
+        }
+
+        .quiz-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .quiz-btn-secondary {
+            background: #f0f0f0;
+            color: #1a1a1a;
+        }
+
+        .quiz-btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .quiz-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .quiz-progress {
+            text-align: center;
+            margin: 20px 0;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .quiz-results {
+            text-align: center;
+            padding: 40px;
+            display: none;
+        }
+
+        .quiz-results.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .quiz-score {
+            font-size: 4em;
+            font-weight: 700;
+            color: #b8860b;
+            margin: 20px 0;
+        }
+
+        .quiz-message {
+            font-size: 1.3em;
+            color: #2d2d2d;
+            margin-bottom: 30px;
+        }
+
+        /* Checklist */
+        .checklist {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checklist-item:hover {
+            background: #f7f7f7;
+        }
+
+        .checklist-checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #daa520;
+            border-radius: 4px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .checklist-item.checked .checklist-checkbox {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            border-color: #b8860b;
+        }
+
+        .checklist-item.checked .checklist-checkbox::after {
+            content: '✓';
+            color: white;
+            font-weight: 700;
+        }
+
+        .checklist-item.checked {
+            opacity: 0.7;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .section-header h2 {
+                font-size: 1.2em;
+            }
+
+            .section-inner {
+                padding: 25px 20px;
+            }
+
+            .quiz-nav {
+                flex-direction: column;
+            }
+
+            .quiz-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <h1>📈 VCP-Pattern: Minervinis Signatur-Strategie</h1>
+            <p class="hero-subtitle">Das Volatility Contraction Pattern – Die Methodik für explosionsartige Kursausbrüche</p>
+            
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <span class="stat-number">33.554%</span>
+                    <span class="stat-label">Rendite in 5 Jahren</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">334,8%</span>
+                    <span class="stat-label">2021 Championship</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">2-6</span>
+                    <span class="stat-label">Kontraktionen pro Setup</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number">7-8%</span>
+                    <span class="stat-label">Max. Stop-Loss</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <h3>📊 Dein Lernfortschritt</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+            <div class="progress-text">
+                <span id="progressText">0 von 10 Sektionen abgeschlossen</span>
+                <span id="progressPercent">0%</span>
+            </div>
+        </div>
+
+        <!-- Section 1: Einführung -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">🎯</span> Was ist das VCP-Pattern?</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <p>Das <strong>Volatility Contraction Pattern (VCP)</strong> ist Mark Minervinis Signatur-Chartmuster für explosionsartige Kursausbrüche – eine Methodik, die ihm 1997 und 2021 den U.S. Investing Championship Titel einbrachte.</p>
+                        
+                        <div class="highlight-box">
+                            <strong>Kernprinzip:</strong> Das VCP entsteht, wenn eine Aktie nach einem starken Aufwärtstrend in eine Konsolidierungsphase eintritt, die durch <strong>progressiv kleiner werdende Kursrückgänge</strong> und <strong>abnehmenden Volumen</strong> gekennzeichnet ist.
+                        </div>
+
+                        <h3>Warum VCP funktioniert</h3>
+                        <p>Die Kernlogik basiert auf dem <strong>Angebot-Nachfrage-Prinzip</strong>:</p>
+                        <ul>
+                            <li>Jede Kontraktionsphase absorbiert weitere schwache Halter</li>
+                            <li>Das Verkaufsvolumen nimmt kontinuierlich ab</li>
+                            <li>Bis praktisch keine Verkäufer mehr übrig sind</li>
+                            <li>Wenn dann Kaufdruck entsteht, trifft er auf minimalen Widerstand</li>
+                            <li>Der Kurs explodiert nach oben (Tennisball-Effekt)</li>
+                        </ul>
+
+                        <div class="success-box">
+                            <strong>Minervinis Erfolg:</strong> 33.554% Rendite über 5 Jahre mit nur einem Verlustquartal unter 1% – ein Beweis für die Tragfähigkeit dieser Methodik.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Technische Anatomie -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">🔬</span> Technische Anatomie des VCP</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>Die Kontraktionsstruktur</h3>
+                        <p>Ein korrektes VCP besteht aus <strong>2-6 Kontraktionen</strong> (Minervini nennt sie „T"), die über <strong>6-12 Wochen</strong> entstehen:</p>
+
+                        <table class="vcp-table">
+                            <thead>
+                                <tr>
+                                    <th>Kontraktion</th>
+                                    <th>Typische Tiefe</th>
+                                    <th>Dauer</th>
+                                    <th>Charakteristik</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>T1 (erste)</strong></td>
+                                    <td>20-25%</td>
+                                    <td>1-3 Wochen</td>
+                                    <td>Gewinnmitnahmen nach Rally</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>T2 (zweite)</strong></td>
+                                    <td>10-15%</td>
+                                    <td>1-2 Wochen</td>
+                                    <td>Institutionelle Akkumulation</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>T3 (dritte)</strong></td>
+                                    <td>5-10%</td>
+                                    <td>3-10 Tage</td>
+                                    <td>Schwache Halter kapitulieren</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>T4 (vierte)</strong></td>
+                                    <td>2-5%</td>
+                                    <td>3-7 Tage</td>
+                                    <td>Finale Konsolidierung</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="highlight-box">
+                            <strong>Minervinis Faustregel:</strong> Jede nachfolgende Kontraktion sollte etwa die Hälfte (±angemessene Abweichung) der vorherigen betragen. Die gesamte Basis-Tiefe sollte typischerweise <strong>15-25%</strong> vom Hoch zum Tief nicht überschreiten.
+                        </div>
+
+                        <h3>Die kritische Rolle des Volumens</h3>
+                        <ul>
+                            <li>📉 Volumen MUSS mit jeder Kontraktion <strong>abnehmen</strong></li>
+                            <li>🎯 Finale Tage zeigen oft die niedrigsten Werte der gesamten Basis</li>
+                            <li>📈 Ausbruch erfordert <strong>30-40% Volumenanstieg</strong> über Durchschnitt</li>
+                            <li>⚡ Idealerweise 50% oder mehr Volumenzunahme</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <strong>Ohne Volumenbestätigung scheitern Ausbrüche häufig!</strong> Das ist eines der wichtigsten Kriterien für erfolgreiche VCP-Trades.
+                        </div>
+
+                        <h3>Der Pivot-Punkt</h3>
+                        <p>Der <strong>Pivot-Punkt</strong> ist die horizontale Widerstandsebene, gebildet vom höchsten Kurs innerhalb der Basisstruktur. Der ideale Ausbruch geschieht bei etwa <strong>zwei Dritteln der Basislänge</strong>:</p>
+                        <ul>
+                            <li>❌ Zu früh = unzureichende Konsolidierung</li>
+                            <li>✅ Zwei Drittel = optimales Timing</li>
+                            <li>❌ Zu spät (Apex) = Energie verpufft</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: VCP vs. andere Muster -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">⚖️</span> VCP vs. verwandte Chartmuster</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>Cup-with-Handle</h3>
+                        <p><strong>Unterschied:</strong> Bildet einen runden Boden (U-Form) plus Handle, benötigt oft 3-6 Monate und zeigt nur zwei Hauptpullbacks. Das VCP ist schneller und zeigt multiple, progressiv enger werdende Kontraktionen.</p>
+
+                        <h3>Ascending Triangle</h3>
+                        <p><strong>Unterschied:</strong> Zeigt eine steigende untere Trendlinie mit flachem Widerstand. Das VCP hat sequentielle Preiskontraktionen mit höheren Tiefs, aber ohne die charakteristische aufsteigende Unterstützungslinie.</p>
+
+                        <h3>Flat Base</h3>
+                        <p><strong>Unterschied:</strong> Horizontale Konsolidierung ohne signifikante Verengung. Das VCP zeigt explizit progressive Volatilitätsreduktion von links nach rechts.</p>
+
+                        <h3>Double Bottom</h3>
+                        <p><strong>Unterschied:</strong> Testet dieselbe Unterstützung zweimal (oft mit Undercut). Das VCP formt stattdessen höhere Tiefs durch sequentielle Kontraktionen.</p>
+
+                        <div class="highlight-box">
+                            <strong>Das Besondere am VCP:</strong> Die progressive Volatilitätskontraktion ist einzigartig und signalisiert den exakten Moment maximaler Spannung vor dem Ausbruch.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: SEPA-Methodik -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">🎓</span> Die SEPA-Methodik (Minervinis Gesamtsystem)</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <p>VCP ist ein Kernbestandteil von Minervinis <strong>SEPA®-Methodik</strong> (Specific Entry Point Analysis), die vier Dimensionen integriert:</p>
+
+                        <h3>1. Risikomanagement</h3>
+                        <p>Kapitalerhalt zuerst – ohne Risikokontrolle funktioniert keine Strategie langfristig.</p>
+
+                        <h3>2. Aktienauswahl</h3>
+                        <p>Fundamentale UND technische Kriterien müssen erfüllt sein (nicht nur Charttechnik!).</p>
+
+                        <h3>3. Market Timing</h3>
+                        <p>Fokus auf <strong>Stage-2-Aktien</strong> (progressive/Akkumulationsphase).</p>
+
+                        <h3>4. Präzise Einstiegspunkte</h3>
+                        <p>VCP-Pivot-Ausbrüche mit Volumenbestätigung.</p>
+
+                        <div class="highlight-box">
+                            <h4>📊 Stage-Analyse nach Stan Weinstein</h4>
+                            <ul>
+                                <li><strong>Stage 1:</strong> Vernachlässigung/Konsolidierung (abwarten)</li>
+                                <li><strong>Stage 2:</strong> Progressive/Akkumulationsphase – <strong>HIER KAUFEN!</strong></li>
+                                <li><strong>Stage 3:</strong> Topping/Distribution (vorsichtig werden)</li>
+                                <li><strong>Stage 4:</strong> Abwärtsphase – <strong>NIEMALS KAUFEN!</strong></li>
+                            </ul>
+                        </div>
+
+                        <h3>Der Trend Template (8 nicht verhandelbare Kriterien)</h3>
+                        <div class="checklist">
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>Kurs über 50-, 150- und 200-Tage-Durchschnitt</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>50-Tage-MA über 150-Tage-MA</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>150-Tage-MA über 200-Tage-MA</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>200-Tage-MA steigt seit mind. 1 Monat</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>Kurs mind. 30% über 52-Wochen-Tief</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>Kurs innerhalb 25% des 52-Wochen-Hochs</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>Relative Stärke (RS) mindestens 70</div>
+                            </div>
+                            <div class="checklist-item" onclick="toggleChecklist(this)">
+                                <div class="checklist-checkbox"></div>
+                                <div>Idealerweise RS 80-90+</div>
+                            </div>
+                        </div>
+
+                        <div class="warning-box">
+                            <strong>Alle 8 Kriterien MÜSSEN erfüllt sein!</strong> Minervini ist hier kompromisslos – und das aus gutem Grund.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Fundamentale Kriterien -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">💰</span> Fundamentale Anforderungen</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <p>Minervini kombiniert technische Analyse mit strikten fundamentalen Kriterien. Ein VCP allein reicht NICHT aus!</p>
+
+                        <h3>📈 Gewinnwachstum (EPS)</h3>
+                        <ul>
+                            <li>Mindestens <strong>25% quartalsweises EPS-Wachstum</strong> (YoY)</li>
+                            <li>Idealerweise 30-50%+ Wachstum</li>
+                            <li>Jährliches EPS-Wachstum von 25%+ über 3-5 Jahre</li>
+                            <li><strong>Code 33:</strong> Drei Quartale in Folge mit Beschleunigung in EPS, Umsatz UND Nettogewinnmargen</li>
+                        </ul>
+
+                        <h3>💵 Umsatzwachstum</h3>
+                        <ul>
+                            <li>Mindestens <strong>20%+ quartalsweises Umsatzwachstum</strong></li>
+                            <li>Mit steigender Tendenz von Quartal zu Quartal</li>
+                            <li>Kein „Earnings-Manipulation" durch Kostensenkung allein</li>
+                        </ul>
+
+                        <h3>📊 Profitabilitätsmetriken</h3>
+                        <ul>
+                            <li>Nettogewinnmarge von <strong>10%+</strong> mit expandierendem Trend</li>
+                            <li>Return on Equity über <strong>15%</strong></li>
+                            <li>Sich verbessernde Margen (nicht stagnierende)</li>
+                        </ul>
+
+                        <h3>🏦 Institutionelle Unterstützung</h3>
+                        <ul>
+                            <li>Steigendes Volumen an Aufwärtstagen</li>
+                            <li>Abnehmendes Volumen bei Rückgängen</li>
+                            <li>Zunehmende Investmentfonds-Beteiligungen</li>
+                            <li>Aktie in einer der Top-performenden Branchen</li>
+                        </ul>
+
+                        <div class="highlight-box">
+                            <strong>Warum Fundamentals?</strong> Die besten VCP-Setups entstehen bei Aktien mit starken Fundamentals, weil institutionelle Investoren diese systematisch akkumulieren. Ohne fundamentale Stärke fehlt der nachhaltige Kaufdruck.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Schritt-für-Schritt Anleitung -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">🚀</span> Schritt-für-Schritt: VCP identifizieren & handeln</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>Phase 1: Setup identifizieren</h3>
+                        
+                        <div class="highlight-box">
+                            <strong>Schritt 1: Stage-2-Aufwärtstrend bestätigen</strong>
+                            <ul>
+                                <li>Alle 8 Trend-Template-Kriterien prüfen</li>
+                                <li>Starke vorherige Kursgewinne (100%+ ideal)</li>
+                                <li>Aktie in führender Branche</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>Schritt 2: Basisformation identifizieren</strong>
+                            <ul>
+                                <li>Suche nach 2-6 Preiskontraktionen</li>
+                                <li>Jede kleiner als die vorherige (z.B. 20% → 15% → 10% → 5%)</li>
+                                <li>Gesamtbasis-Tiefe idealerweise 15-25%</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>Schritt 3: Volumenkontraktionen verfolgen</strong>
+                            <ul>
+                                <li>Volumen MUSS mit jeder Preiskontraktion abnehmen</li>
+                                <li>Finale Kontraktion zeigt mehrwöchige Tiefstände</li>
+                                <li>„Volume Dry-Up" vor Ausbruch ist ideal</li>
+                            </ul>
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>Schritt 4: Pivot-Punkt identifizieren</strong>
+                            <ul>
+                                <li>Widerstandsebene am höchsten Punkt der Basis</li>
+                                <li>Klare horizontale Linie</li>
+                                <li>Enge Konsolidierung nahe diesem Niveau</li>
+                            </ul>
+                        </div>
+
+                        <h3>Phase 2: Einstiegsausführung</h3>
+
+                        <div class="success-box">
+                            <strong>Kaufkriterien (alle müssen erfüllt sein!):</strong>
+                            <ul>
+                                <li>✅ Kurs schließt über Pivot-Punkt</li>
+                                <li>✅ Volumenanstieg 40%+ über Durchschnitt (ideal 50%+)</li>
+                                <li>✅ Einstieg innerhalb 5% des Ausbruchspunkts</li>
+                                <li>✅ Starke Eröffnung oder Ausbruch in erster Handelsstunde bevorzugt</li>
+                                <li>✅ Fundamentals erfüllt (EPS, Umsatz, etc.)</li>
+                            </ul>
+                        </div>
+
+                        <h3>Phase 3: Risikomanagement</h3>
+
+                        <div class="warning-box">
+                            <strong>Stop-Loss-Platzierung:</strong>
+                            <ul>
+                                <li>Direkt unter dem Tief der letzten Kontraktion</li>
+                                <li>Typisches Risiko: 5-7% (normale Volatilität)</li>
+                                <li>8-10% bei höherer Volatilität</li>
+                                <li><strong>Maximal 7-8% als absoluter Cutoff</strong></li>
+                                <li>Niemals mehr als 1% des Gesamtkapitals pro Trade riskieren</li>
+                            </ul>
+                        </div>
+
+                        <h3>Phase 4: Gewinnmitnahme</h3>
+                        <ul>
+                            <li>📊 Teilgewinne bei 20-25% Gewinn</li>
+                            <li>🛡️ Stop auf Break-Even nach 10-15% Gewinn</li>
+                            <li>📈 Trailing Stop mit 21- oder 50-EMA</li>
+                            <li>💰 In Stärke verkaufen (neue Hochs)</li>
+                            <li>⚠️ Exit bei Schluss unter 50-Tage-EMA auf hohem Volumen</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Erfolgreiche Beispiele -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">🏆</span> Erfolgreiche VCP-Beispiele</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>📱 NVDA – Nvidia (2023)</h3>
+                        <div class="success-box">
+                            <strong>Setup:</strong> AI-getriebene Earnings-Rallye führte zu 6-wöchiger Konsolidierung<br>
+                            <strong>Kontraktionen:</strong> 15% (Wochen 1-2) → 8% (Wochen 3-4) → 4% (Wochen 5-6)<br>
+                            <strong>Ausbruch:</strong> Woche 7 nach Earnings-Beat mit dreifachem normalem Volumen<br>
+                            <strong>Ergebnis:</strong> <span style="color: #38a169; font-size: 1.3em;">+30% Rallye in 10 Handelstagen</span>
+                        </div>
+
+                        <h3>🚗 TSLA – Tesla (2020)</h3>
+                        <div class="success-box">
+                            <strong>Setup:</strong> Dreimonatige Konsolidierung nach 600% Vorlaufbewegung<br>
+                            <strong>Kontraktionen:</strong> 25% → 20% → 10%<br>
+                            <strong>Ausbruch:</strong> In neue Hochs auf massivem Volumen<br>
+                            <strong>Ergebnis:</strong> <span style="color: #38a169; font-size: 1.3em;">+90% Gewinn</span>
+                        </div>
+
+                        <h3>🛒 SHOP – Shopify (2016)</h3>
+                        <div class="success-box">
+                            <strong>Setup:</strong> Lehrbuch-VCP mit finaler Kontraktion in enger 5%-Spanne<br>
+                            <strong>Besonderheit:</strong> Volume Dry-Up auf mehrjährige Tiefststände<br>
+                            <strong>Ergebnis:</strong> <span style="color: #38a169; font-size: 1.3em;">+200% Anstieg im folgenden Jahr</span>
+                        </div>
+
+                        <h3>🏆 Minervinis 2021-Championship (334,8% Rendite)</h3>
+                        
+                        <div class="highlight-box">
+                            <strong>ANF (Abercrombie & Fitch):</strong><br>
+                            Einstieg: 4. Januar 2021 bei ~$20,94 | Risiko: 6,21%<br>
+                            Ergebnis: <strong>+79% Gewinn</strong>
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>GM (General Motors):</strong><br>
+                            Einstieg: 11. Januar bei ~$43,50 | Risiko: Nur 2,71% (Tennis Ball Action)<br>
+                            Ergebnis: <strong>+29% Gewinn</strong>
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>NNOX (Nano-X Imaging):</strong><br>
+                            Von Minervini beschrieben als „VCP at its best – even a child could see it"<br>
+                            Niedrige Volumina, sehr niedrige ATR vor rapidem Anstieg<br>
+                            Lehrbuchbeispiel für perfektes VCP-Setup
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Fehlgeschlagene Setups -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">⚠️</span> Gescheiterte Setups & Warnsignale</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>🐾 CHWY – Chewy (Verlust-Beispiel)</h3>
+                        <div class="warning-box">
+                            <strong>Setup:</strong> Erfüllte alle VCP-Kriterien auf dem Wochenchart<br>
+                            <strong>Ergebnis:</strong> Dennoch Kursverfall von ~$50 auf ~$30 (<strong>-40% Verlust</strong>)<br>
+                            <strong>Lektion:</strong> Selbst bei erfüllten Kriterien können Trades scheitern – Trailing Stop-Losses sind essentiell zum Kapitalschutz!
+                        </div>
+
+                        <h3>Typische Fehlergründe bei VCP-Misserfolgen</h3>
+                        
+                        <div class="content-block" style="background: #fff5e6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                            <h4>❌ Pattern-Erkennungsfehler</h4>
+                            <ul>
+                                <li>Einstieg nach nur einem Pullback ohne ausreichende Bestätigung</li>
+                                <li>Verwechslung einfacher Seitwärtsbewegung mit VCP</li>
+                                <li>Ignorieren der Trend-Template-Anforderungen</li>
+                                <li>Kontraktionen werden NICHT kleiner (kein echtes VCP)</li>
+                            </ul>
+
+                            <h4>⏱️ Timing-Fehler</h4>
+                            <ul>
+                                <li>Zu früh einsteigen vor Ausbruchsbestätigung</li>
+                                <li>Zu weit über Pivot-Punkt kaufen (>5% über Ausbruch)</li>
+                                <li>Volumenbestätigung ignorieren</li>
+                                <li>Zu lange Konsolidierung nahe Apex (Energie verpufft)</li>
+                            </ul>
+
+                            <h4>🎯 Ausführungsfehler</h4>
+                            <ul>
+                                <li>Ausbruch ohne Volumenbestätigung</li>
+                                <li>Kein vorheriger Aufwärtstrend (VCP ohne Stage-2 ungültig)</li>
+                                <li>Volumen steigt bei Rückgängen (Distribution statt Akkumulation)</li>
+                                <li>Späte Basis (4. oder 5.) – diese scheitern deutlich häufiger</li>
+                            </ul>
+
+                            <h4>💰 Positionsgrößen-Fehler</h4>
+                            <ul>
+                                <li>Zu große Positionen riskieren</li>
+                                <li><strong>Losers average losers</strong> – Niemals zu Verlustpositionen hinzukaufen!</li>
+                                <li>Mehr als 1-2% Konto-Risiko pro Trade</li>
+                            </ul>
+
+                            <h4>😤 Emotionale Fehler</h4>
+                            <ul>
+                                <li>Ego über Profit stellen</li>
+                                <li>Nicht falsch sein wollen und warten, bis Aktie „zurückkommt"</li>
+                                <li>Rachetrading nach Verlusten</li>
+                                <li>Gewinner zu früh verkaufen, Verlierer zu lange halten</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning-box">
+                            <strong>Minervini selbst sagt:</strong><br>
+                            <em>„Die meisten Trader machen Fehler, weil sie zunächst keine gute Strategie haben. Für die meisten ist ihr Ego wichtiger als Geld zu verdienen... Wenn eine Aktie fällt, wollen sie nicht falsch liegen, also warten sie, bis sie zurückkommt. Der Verlust wird größer, und ehe man sich versieht, ist ein großer Teil des Kapitals weg."</em>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: 7 Handelsregeln -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">📏</span> Minervinis 7 Handelsregeln</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>Die 7 lebensverändernden Trading-Regeln</h3>
+                        
+                        <div class="highlight-box">
+                            <h4>1️⃣ Immer einen Stop-Loss verwenden</h4>
+                            <p>Kein Trade ohne vordefinierten Ausstiegspunkt. Niemals!</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>2️⃣ Verluste klein halten im Verhältnis zu Gewinnen</h4>
+                            <p>Durchschnittlicher Gewinn muss deutlich größer sein als durchschnittlicher Verlust. Ziel: Mindestens 2:1 Verhältnis.</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>3️⃣ Niemals zu einer Verlustposition hinzukaufen</h4>
+                            <p><strong>„Losers average losers"</strong> – Das ist einer der häufigsten und tödlichsten Fehler!</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>4️⃣ So lange warten wie nötig, bis Aktien meine Kaufkriterien erfüllen</h4>
+                            <p>Geduld ist eine Superkraft. Kein FOMO! Nur setzen, wenn ALLE Kriterien erfüllt sind.</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>5️⃣ Niemals einen guten Gewinn in einen Verlust verwandeln lassen</h4>
+                            <p>Stop auf Break-Even ziehen sobald Trade 10-15% im Plus ist.</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>6️⃣ Niemals mutig werden, wenn es schlecht läuft</h4>
+                            <p>Bei Drawdown Positionsgrößen reduzieren, nicht erhöhen. „Progressive Exposure".</p>
+                        </div>
+
+                        <div class="highlight-box">
+                            <h4>7️⃣ Nicht gegen den Trend kämpfen</h4>
+                            <p>„The trend is your friend" – nur Stage-2-Aktien kaufen, niemals Stage-4!</p>
+                        </div>
+
+                        <h3>Positionsgrößen-Methodik</h3>
+                        <ul>
+                            <li>🎯 Maximale Einzelposition: <strong>25% des Portfolios</strong></li>
+                            <li>⚠️ Niemals mehr als 50% in einer Position</li>
+                            <li>💰 Risiko pro Trade: <strong>1-2% des Kontostands</strong></li>
+                            <li>📊 Skalierung: 50% initial → 30% Aufstockung → 20% finale Aufstockung</li>
+                        </ul>
+
+                        <h3>Progressive Exposure-Strategie</h3>
+                        <ul>
+                            <li>✅ Klein beginnen mit neuen Setups</li>
+                            <li>📈 Größe nur bei Traktion erhöhen</li>
+                            <li>🛡️ Stops immer respektieren</li>
+                            <li>📉 Bei schlechter Performance zurückschrauben</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 10: Ressourcen -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><span class="section-icon">📚</span> Ressourcen & Weiterbildung</h2>
+                <span class="chevron">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="section-inner">
+                    <div class="content-block">
+                        <h3>📖 Minervinis Bücher</h3>
+                        
+                        <div class="highlight-box">
+                            <strong>„Trade Like a Stock Market Wizard" (2013)</strong><br>
+                            Bestseller mit SEPA-Methodik und über 80 Chartbeispielen. Das Standardwerk!
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>„Think and Trade Like a Champion" (2017)</strong><br>
+                            Fortgeschrittene Strategien und detaillierte VCP-Musteranalyse.
+                        </div>
+
+                        <div class="highlight-box">
+                            <strong>„Mindset Secrets for Winning" (2019)</strong><br>
+                            Tradingpsychologie und mentale Rahmenbedingungen für Erfolg.
+                        </div>
+
+                        <h3>🎥 Video-Inhalte und Interviews</h3>
+                        <ul>
+                            <li>TraderLion-Interviews (Analyse seiner 2021-Championship-Trades)</li>
+                            <li>Jack Schwagers „Stock Market Wizards"-Kapitel über Minervini</li>
+                            <li>YouTube-Kanäle: Minervini Markets, TraderLion, TrendSpider</li>
+                        </ul>
+
+                        <h3>🔍 Screening-Tools</h3>
+                        <ul>
+                            <li><strong>Deepvue:</strong> Eingebaute Minervini-Presets, RMV-Metrik</li>
+                            <li><strong>TrendSpider:</strong> VCP-Scanner und Ausbruchswarnungen</li>
+                            <li><strong>Investor's Business Daily:</strong> RS-Ratings</li>
+                            <li><strong>Finviz, ChartMill, TradingView:</strong> Benutzerdefinierte Trend-Template-Indikatoren</li>
+                        </ul>
+
+                        <h3>📊 Technische Indikatoren zur Kombination</h3>
+                        <ul>
+                            <li>50-, 150-, 200-Tage-Durchschnitte für Trendbestätigung</li>
+                            <li>Relative Stärke (RS) über 70</li>
+                            <li>Volumenanalyse während Kontraktionen und beim Ausbruch</li>
+                            <li>Unterstützungs-/Widerstandsebenen für Stop-Platzierung</li>
+                        </ul>
+
+                        <h3>🌍 Optimale Marktbedingungen</h3>
+                        <div class="success-box">
+                            <strong>„Easy Dollar Environment":</strong>
+                            <ul>
+                                <li>✅ Stage-2-Aufwärtstrend in Hauptindizes</li>
+                                <li>✅ Viele Aktien brechen erfolgreich aus</li>
+                                <li>✅ Führende Aktien machen neue Hochs mit Follow-Through</li>
+                                <li>✅ Früh- bis Mittzyklus im Marktaufwärtstrend</li>
+                                <li>✅ Basen 1-3 (später scheitern sie häufiger)</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning-box">
+                            <strong>„Hard Penny Environment" – Warnsignale:</strong>
+                            <ul>
+                                <li>❌ Wenige Aktien setzen sich auf</li>
+                                <li>❌ Ausbrüche scheitern konsistent</li>
+                                <li>❌ Aktien machen neue Tiefs</li>
+                                <li>❌ „Pop and Drop"-Aktion (Ausbruch → sofortiges Scheitern)</li>
+                            </ul>
+                            <strong>Aktion:</strong> Exposure reduzieren, defensiver werden!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h2>🎯 Wissenstest: VCP-Pattern</h2>
+                <p>Teste dein Verständnis von Minervinis VCP-Methodik!</p>
+            </div>
+
+            <div class="quiz-progress" id="quizProgress">Frage 1 von 10</div>
+
+            <!-- Question 1 -->
+            <div class="quiz-question active" data-question="1">
+                <div class="question-number">Frage 1/10</div>
+                <div class="question-text">Was ist die Kerncharakteristik eines VCP-Musters?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Steigende Volatilität bei zunehmendem Volumen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>Progressiv kleiner werdende Kursrückgänge bei abnehmendem Volumen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>Konstante Seitwärtsbewegung ohne Volumenveränderung</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Drei gleichgroße Kursrückgänge mit hohem Volumen</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="quiz-question" data-question="2">
+                <div class="question-number">Frage 2/10</div>
+                <div class="question-text">Wie viele Kontraktionen sollte ein typisches VCP-Muster haben?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Genau 2 Kontraktionen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>2-6 Kontraktionen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>Mindestens 7 Kontraktionen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Es gibt keine feste Anzahl</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="quiz-question" data-question="3">
+                <div class="question-number">Frage 3/10</div>
+                <div class="question-text">Welches Volumenverhalten ist beim VCP-Ausbruch erforderlich?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Volumen spielt keine Rolle</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">B</div>
+                        <div>Volumen sollte 10% unter Durchschnitt liegen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">C</div>
+                        <div>Volumenanstieg von 30-40% über Durchschnitt (ideal 50%+)</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Volumen sollte auf Jahrestief fallen</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="quiz-question" data-question="4">
+                <div class="question-number">Frage 4/10</div>
+                <div class="question-text">Was ist Minervinis maximaler Stop-Loss als absoluter Cutoff?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>3-5%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>7-8%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>10-12%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>15-20%</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="quiz-question" data-question="5">
+                <div class="question-number">Frage 5/10</div>
+                <div class="question-text">In welcher Stage nach Weinstein sollte man VCP-Setups kaufen?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Stage 1 (Vernachlässigung)</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>Stage 2 (Akkumulation/Progressive Phase)</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>Stage 3 (Distribution)</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Stage 4 (Abwärtsphase)</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="quiz-question" data-question="6">
+                <div class="question-number">Frage 6/10</div>
+                <div class="question-text">Welche minimale Relative Stärke (RS) fordert Minervini?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>50</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">B</div>
+                        <div>60</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">C</div>
+                        <div>70 (idealerweise 80-90+)</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>95+</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="quiz-question" data-question="7">
+                <div class="question-number">Frage 7/10</div>
+                <div class="question-text">Was ist „Code 33" bei Minervini?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Eine spezielle Chartformation</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>Drei Quartale in Folge mit Beschleunigung in EPS, Umsatz UND Nettogewinnmargen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>33% Gewinn als Exit-Signal</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Seine persönliche Trading-Regel Nummer 33</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="quiz-question" data-question="8">
+                <div class="question-number">Frage 8/10</div>
+                <div class="question-text">Wie weit darf man über dem Pivot-Punkt maximal einsteigen?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>2%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>5%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>10%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Es gibt keine Grenze</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="quiz-question" data-question="9">
+                <div class="question-number">Frage 9/10</div>
+                <div class="question-text">Was besagt Minervinis Regel „Losers average losers"?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>Bei Verlusten sofort aufhören zu traden</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">B</div>
+                        <div>Niemals zu einer Verlustposition hinzukaufen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">C</div>
+                        <div>Nur Aktien mit niedrigem RS kaufen</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>Verlierer-Aktien meiden</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="quiz-question" data-question="10">
+                <div class="question-number">Frage 10/10</div>
+                <div class="question-text">Welche Rendite erzielte Minervini über 5 Jahre?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">A</div>
+                        <div>3.355%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">B</div>
+                        <div>10.000%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="correct">
+                        <div class="option-letter">C</div>
+                        <div>33.554%</div>
+                    </div>
+                    <div class="quiz-option" data-answer="wrong">
+                        <div class="option-letter">D</div>
+                        <div>100.000%</div>
+                    </div>
+                </div>
+                <div class="quiz-feedback">
+                    <p class="feedback-text"></p>
+                </div>
+            </div>
+
+            <!-- Quiz Results -->
+            <div class="quiz-results" id="quizResults">
+                <h2>🎉 Quiz abgeschlossen!</h2>
+                <div class="quiz-score" id="finalScore">0/10</div>
+                <div class="quiz-message" id="scoreMessage"></div>
+                <button class="quiz-btn quiz-btn-primary" onclick="restartQuiz()">🔄 Quiz wiederholen</button>
+            </div>
+
+            <!-- Quiz Navigation -->
+            <div class="quiz-nav" id="quizNav">
+                <button class="quiz-btn quiz-btn-secondary" id="prevBtn" onclick="previousQuestion()" disabled>← Zurück</button>
+                <button class="quiz-btn quiz-btn-primary" id="nextBtn" onclick="nextQuestion()" disabled>Weiter →</button>
+                <button class="quiz-btn quiz-btn-primary" id="submitBtn" onclick="submitQuiz()" style="display: none;">Auswertung anzeigen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation (wird am Ende eingefügt) -->
+    {% include '_navigation.html' %}
+
+    <script>
+        // Progress Tracking
+        let completedSections = new Set();
+        const totalSections = 10;
+
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const sectionCard = header.parentElement;
+            const sectionIndex = Array.from(document.querySelectorAll('.section-card')).indexOf(sectionCard);
+            
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+
+            if (content.classList.contains('active')) {
+                completedSections.add(sectionIndex);
+                updateProgress();
+                
+                // Save progress
+                localStorage.setItem('vcp-progress', JSON.stringify(Array.from(completedSections)));
+            }
+        }
+
+        function updateProgress() {
+            const progress = (completedSections.size / totalSections) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressText').textContent = `${completedSections.size} von ${totalSections} Sektionen abgeschlossen`;
+            document.getElementById('progressPercent').textContent = Math.round(progress) + '%';
+        }
+
+        // Load saved progress
+        const savedProgress = localStorage.getItem('vcp-progress');
+        if (savedProgress) {
+            completedSections = new Set(JSON.parse(savedProgress));
+            updateProgress();
+        }
+
+        // Checklist functionality
+        function toggleChecklist(item) {
+            item.classList.toggle('checked');
+            
+            // Save checklist state
+            const checkedItems = Array.from(document.querySelectorAll('.checklist-item.checked'))
+                .map(el => el.textContent.trim());
+            localStorage.setItem('vcp-checklist', JSON.stringify(checkedItems));
+        }
+
+        // Load checklist state
+        const savedChecklist = localStorage.getItem('vcp-checklist');
+        if (savedChecklist) {
+            const checkedItems = JSON.parse(savedChecklist);
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                if (checkedItems.includes(item.textContent.trim())) {
+                    item.classList.add('checked');
+                }
+            });
+        }
+
+        // Quiz System
+        let currentQuestion = 1;
+        let selectedAnswers = {};
+        let correctAnswers = 0;
+
+        function selectAnswer(option) {
+            const question = option.closest('.quiz-question');
+            const questionNum = parseInt(question.dataset.question);
+            const options = question.querySelectorAll('.quiz-option');
+            
+            // Deselect all options
+            options.forEach(opt => opt.classList.remove('selected'));
+            
+            // Select clicked option
+            option.classList.add('selected');
+            
+            // Store answer
+            selectedAnswers[questionNum] = option.dataset.answer;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+            if (questionNum === 10) {
+                document.getElementById('nextBtn').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'block';
+            }
+
+            // Show feedback
+            const feedback = question.querySelector('.quiz-feedback');
+            const feedbackText = feedback.querySelector('.feedback-text');
+            
+            if (option.dataset.answer === 'correct') {
+                feedback.classList.remove('incorrect');
+                feedback.classList.add('correct', 'show');
+                feedbackText.textContent = '✅ Richtig! Genau so funktioniert es.';
+                option.classList.add('correct');
+            } else {
+                feedback.classList.remove('correct');
+                feedback.classList.add('incorrect', 'show');
+                feedbackText.textContent = '❌ Nicht ganz. Lies die Sektion noch einmal durch.';
+                option.classList.add('incorrect');
+                
+                // Highlight correct answer
+                options.forEach(opt => {
+                    if (opt.dataset.answer === 'correct') {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < 10) {
+                // Hide current question
+                document.querySelector(`.quiz-question[data-question="${currentQuestion}"]`).classList.remove('active');
+                
+                // Show next question
+                currentQuestion++;
+                document.querySelector(`.quiz-question[data-question="${currentQuestion}"]`).classList.add('active');
+                
+                // Update progress
+                document.getElementById('quizProgress').textContent = `Frage ${currentQuestion} von 10`;
+                
+                // Update buttons
+                document.getElementById('prevBtn').disabled = false;
+                document.getElementById('nextBtn').disabled = !selectedAnswers[currentQuestion];
+                
+                // Hide feedback
+                document.querySelectorAll('.quiz-feedback').forEach(f => f.classList.remove('show'));
+            }
+        }
+
+        function previousQuestion() {
+            if (currentQuestion > 1) {
+                // Hide current question
+                document.querySelector(`.quiz-question[data-question="${currentQuestion}"]`).classList.remove('active');
+                
+                // Show previous question
+                currentQuestion--;
+                document.querySelector(`.quiz-question[data-question="${currentQuestion}"]`).classList.add('active');
+                
+                // Update progress
+                document.getElementById('quizProgress').textContent = `Frage ${currentQuestion} von 10`;
+                
+                // Update buttons
+                document.getElementById('prevBtn').disabled = currentQuestion === 1;
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('submitBtn').style.display = 'none';
+            }
+        }
+
+        function submitQuiz() {
+            // Calculate score
+            correctAnswers = Object.values(selectedAnswers).filter(answer => answer === 'correct').length;
+            
+            // Hide questions and show results
+            document.querySelectorAll('.quiz-question').forEach(q => q.style.display = 'none');
+            document.getElementById('quizNav').style.display = 'none';
+            document.getElementById('quizProgress').style.display = 'none';
+            
+            const resultsDiv = document.getElementById('quizResults');
+            resultsDiv.classList.add('show');
+            
+            document.getElementById('finalScore').textContent = `${correctAnswers}/10`;
+            
+            const messageEl = document.getElementById('scoreMessage');
+            if (correctAnswers === 10) {
+                messageEl.innerHTML = '🏆 <strong>Perfekt!</strong> Du hast die VCP-Methodik vollständig verstanden!';
+            } else if (correctAnswers >= 8) {
+                messageEl.innerHTML = '🎯 <strong>Sehr gut!</strong> Du hast ein solides Verständnis der VCP-Strategie.';
+            } else if (correctAnswers >= 6) {
+                messageEl.innerHTML = '👍 <strong>Gut gemacht!</strong> Mit etwas mehr Übung wirst du zum VCP-Profi.';
+            } else {
+                messageEl.innerHTML = '📚 <strong>Noch etwas Übung nötig.</strong> Lies die Sektionen noch einmal durch.';
+            }
+
+            // Mark quiz as completed
+            completedSections.add(totalSections - 1);
+            updateProgress();
+        }
+
+        function restartQuiz() {
+            currentQuestion = 1;
+            selectedAnswers = {};
+            correctAnswers = 0;
+            
+            // Reset UI
+            document.querySelectorAll('.quiz-question').forEach(q => {
+                q.style.display = 'none';
+                q.classList.remove('active');
+                q.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                q.querySelector('.quiz-feedback').classList.remove('show', 'correct', 'incorrect');
+            });
+            
+            document.querySelector('.quiz-question[data-question="1"]').classList.add('active');
+            document.querySelector('.quiz-question[data-question="1"]').style.display = 'block';
+            
+            document.getElementById('quizResults').classList.remove('show');
+            document.getElementById('quizNav').style.display = 'flex';
+            document.getElementById('quizProgress').style.display = 'block';
+            document.getElementById('quizProgress').textContent = 'Frage 1 von 10';
+            
+            document.getElementById('prevBtn').disabled = true;
+            document.getElementById('nextBtn').disabled = true;
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('submitBtn').style.display = 'none';
+        }
+
+        // Add click handlers to quiz options
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                selectAnswer(this);
+            });
+        });
+
+        // Smooth scroll animation for sections
+        document.querySelectorAll('.section-header').forEach((header, index) => {
+            header.style.animationDelay = `${index * 0.1}s`;
+        });
+
+        // Fade-in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.section-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
+
