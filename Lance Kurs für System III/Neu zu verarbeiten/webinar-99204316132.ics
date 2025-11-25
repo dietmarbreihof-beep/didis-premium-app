@@ -1,0 +1,76 @@
+BEGIN:VCALENDAR
+PRODID:-//zoom.us//iCalendar Event//EN
+VERSION:2.0
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+CLASS:PUBLIC
+BEGIN:VTIMEZONE
+TZID:Europe/Dublin
+LAST-MODIFIED:20250410T142247Z
+TZURL:https://www.tzurl.org/zoneinfo-outlook/Europe/Dublin
+X-LIC-LOCATION:Europe/Dublin
+BEGIN:DAYLIGHT
+TZNAME:IST
+TZOFFSETFROM:+0000
+TZOFFSETTO:+0100
+DTSTART:19700329T010000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=-1SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZNAME:GMT
+TZOFFSETFROM:+0100
+TZOFFSETTO:+0000
+DTSTART:19701025T020000
+RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+DTSTAMP:20251120T135036Z
+DTSTART;TZID=Europe/Dublin:20251121T110000
+DTEND;TZID=Europe/Dublin:20251121T120000
+SUMMARY:Inky in Action: Kaseya’s New Best-in-Breed Email Security Solutio
+ n (EMEA Session) 
+UID:20251120T135036Z-99204316132@web-prod-us01-va1-webok-5986f9f95-bkvsr
+TZID:Europe/Dublin
+DESCRIPTION:Thema: Inky in Action: Kaseya’s New Best-in-Breed Email Secur
+ ity Solution (EMEA Session) \nBeschreibung: Join us 21st November at 11A
+ M GMT for a technical deep dive into INKY\, Kaseya’s new AI-powered emai
+ l security for Microsoft 365 and Google Workspace. See how INKY blocks p
+ hishing\, brand forgeries\, and spoofed domains in real time - while cut
+ ting admin time from 40 hours to 1 hour a month. Don’t miss how INKY bri
+ ngs enterprise-grade security to MSPs.\n\nSie können auf PC\, Mac\, iPad
+  oder Android beitreten:\nhttps://kaseya.zoom.us/w/99204316132?tk=OZxupy
+ k2wQvcKQll3M8XBMTblsqTq_JQ11bNiuoRqFA.DQkAAAAXGQm75BZMUkJWbmFYRlN0S3BSQl
+ FaTllESFdBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&uuid=WN_Wu_ZenZURD
+ ibVxhIz3S52g\n\nTelefon-Schnelleinwahl:\n+13092053325\,\,99204316132# Ve
+ reinigte Staaten\n+13126266799\,\,99204316132# Vereinigte Staaten (Chica
+ go)\n\nÜber Audio beitreten:\n+1 309 205 3325 Vereinigte Staaten\n+1 312
+  626 6799 Vereinigte Staaten (Chicago)\n+1 346 248 7799 Vereinigte Staat
+ en (Houston)\n+1 360 209 5623 Vereinigte Staaten\n+1 386 347 5053 Verein
+ igte Staaten\n+1 507 473 4847 Vereinigte Staaten\n+1 564 217 2000 Verein
+ igte Staaten\n+1 646 876 9923 Vereinigte Staaten (New York)\n+1 646 931 
+ 3860 Vereinigte Staaten\n+1 669 444 9171 Vereinigte Staaten\n+1 669 900 
+ 6833 Vereinigte Staaten (San Jose)\n+1 689 278 1000 Vereinigte Staaten\n
+ +1 719 359 4580 Vereinigte Staaten\n+1 253 205 0468 Vereinigte Staaten\n
+ +1 253 215 8782 Vereinigte Staaten (Tacoma)\n+1 301 715 8592 Vereinigte 
+ Staaten (Washington DC)\n+1 305 224 1968 Vereinigte Staaten\nWebinar-ID:
+  992 0431 6132\nVerfügbare internationale Rufnummern: https://kaseya.zoo
+ m.us/u/acTTFlUQ5T\n\n\nÜber ein H.323-/SIP-Raumsystem beitreten:\nH.323:
+  \n144.195.19.161 (USA\n Westen)\n206.247.11.121 (USA\n Osten)\n115.114.
+ 131.7 (Indien Mumbai)\n115.114.115.7 (Indien Hyderabad)\n159.124.15.191 
+ (Amsterdam\n Niederlande)\n159.124.47.249 (Deutschland)\n159.124.104.213
+  (Australien Sydney)\n159.124.74.212 (Australien Melbourne)\n170.114.180
+ .219 (Singapur)\n64.211.144.160 (Brasilien)\n159.124.132.243 (Mexiko)\n1
+ 59.124.168.213 (Kanada Toronto)\n159.124.196.25 (Kanada Vancouver)\n170.
+ 114.194.163 (Japan Tokio)\n147.124.100.25 (Japan Osaka)\nMeeting-ID: 992
+  0431 6132\nSIP: 99204316132@zoomcrc.com\n
+LOCATION:https://kaseya.zoom.us/w/99204316132?tk=OZxupyk2wQvcKQll3M8XBMTb
+ lsqTq_JQ11bNiuoRqFA.DQkAAAAXGQm75BZMUkJWbmFYRlN0S3BSQlFaTllESFdBAAAAAAAA
+ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA&uuid=WN_Wu_ZenZURDibVxhIz3S52g
+BEGIN:VALARM
+TRIGGER:-PT10M
+ACTION:DISPLAY
+DESCRIPTION:Reminder
+END:VALARM
+END:VEVENT
+END:VCALENDAR

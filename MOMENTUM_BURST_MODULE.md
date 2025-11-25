@@ -272,3 +272,5 @@ Bei Fragen oder Problemen:
 **Premium-Level:** Elite / Elite Pro  
 **Schwierigkeit:** Fortgeschritten ⭐⭐⭐
 
+
+

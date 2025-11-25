@@ -1,0 +1,69 @@
+Summary of EG’s Discussion on Episodic Pivots Family and Tactics
+
+EG explores the Episodic Pivots (EP) trading setup and its variations, emphasizing the identification of catalysts that drive significant stock moves. He distinguishes between genuine catalysts (e.g., sales growth, turnarounds) and story-driven surges, advocating for tactics like delayed reaction entries to manage risk. The discussion highlights market evolution post-COVID, where stories now sustain multiple legs, and stresses adapting tactics while maintaining core principles. EG critiques misapplications of EP concepts, urging focus on high-volume signatures and plausible stories over chasing every breakout.
+
+Classic EP Section
+
+Classic EPs occur on neglected stocks with game-changing catalysts, such as explosive sales growth (>39% for multiple quarters), big orders, turnarounds, or events like drug approvals/wars/natural disasters. Examples include AMD (OpenAI catalyst), HIMS (Nvidia tie-up), SMCI (earnings raise), MP (rare earth deal), APLD ($15B orders), WULF (crypto-to-AI pivot), ANF/RAIL (turnarounds). Signature traits: highest lifetime volume, prior neglect (sideways/downtrend), and real economic impact, leading to 50-200% moves in days/weeks, scanned via NTRT/MTRT checklists or bucket zero for sustained growth.
+
+EP 9 Million Section
+
+EP 9 million targets story-driven stocks surging on 9M+ volume without real earnings/sales, post-COVID phenomenon where narratives (e.g., AI, quantum, crypto) fuel big moves. Examples: BigBear.ai, Rigetti Computing, QBTS (700% move). Focus on plausible stories, high volume as validation; rarer genuine catalysts but frequent opportunities (300-500/year). Entry via OPG (on-premise gap) or pre-market if volume hits early, aiming for 40-50% velocity moves in days/weeks.
+
+Delayed Reaction EP Section
+
+Delayed Reaction EP (DEP) is an entry tactic, not a separate setup, used on large-cap (>10B) EPs or EP 9 million to avoid chasing gaps (20-40%+). Wait for pullback/consolidation post-catalyst, then enter on breakout for lower risk, tighter stops, larger positions. Examples: AMD (post-OpenAI), Nvidia (post-catalyst), STX/NEXT/MOVE. Ideal for big caps needing time to absorb buying; risk missing straight runners but suits risk-averse trading.
+
+gravatar
+Czecher commented at 1:40 PM Oct 25th 2025
+
+Sugar Babies Section
+
+Sugar Babies tracks "market favorites" – story stocks with repeated multi-leg moves (4-6+), an evolution from COVID one/two-leg runs. Observation: Stories now have longevity due to market changes (leverage, retail groups). Examples: CLSK, SOUN, OPEN (multiple legs on same narrative). Focus on top 25-30 repeaters via 9M breakouts; anticipate swings, use as watchlist qualifier for DEP entries.
+
+Tactics and Market Observations Section
+
+Tactics evolve: Pre-market for early surges, OPG for simplicity (2.5-5% risk), avoid <5% gaps on large caps. Critique: Mislabeling breakouts/biotechs as EPs leads to low win rates; penny stocks (<$5) need separate pump/dump setups, not EP. Market shift post-COVID: Stories dominate over fundamentals, velocity over duration; adapt or lag. No long-term holds – aim for quick 40-50% gains.
+
+gravatar
+Czecher commented at 1:41 PM Oct 25th 2025
+
+Section-by-Section Breakdown
+﻿
+Section 1: Introduction to Classic EP and Genuine Catalysts (00:00:57 - 00:10:04)
+
+EG defines classic EP as neglected stocks exploding on game-changing catalysts like sales surges or big orders, illustrated by AMD's OpenAI deal with record volume after sideways action. He contrasts with examples like HIMS (Nvidia tie-up), SMCI (earnings raise), MP (rare earth), APLD ($15B orders), emphasizing highest lifetime volume, prior neglect, and real impact (e.g., 50-175% moves). Scans via NTRT/MTRT checklists; rare (3-5/year), not for biotechs or minor news.
+
+Section 2: Turnarounds and Sales Growth in Classic EP (00:10:04 - 00:18:41)
+
+EG highlights turnarounds (e.g., ANF, RAIL) and sustained >39% sales growth (e.g., WULF's 113-138% projections, TSSI's triple-digit) as key catalysts, projecting multi-quarter acceleration visible in earnings X-rays. Critiques misidentifying non-growers (e.g., Intel, Ford, GM with flat/negative figures) as EPs; stresses database of past examples for pattern recognition. Common catalysts: sales/earnings beats, orders, management changes; rarer: drugs/wars/disasters.
+
+Section 3: Entry Tactics and Delayed Reaction EP (00:18:41 - 00:34:22)
+
+For small caps (<$1-2B), enter immediately (e.g., OPG with 2.5-5% risk); for large caps (>10B), use Delayed Reaction EP (DEP) – wait for pullback post-catalyst, enter on breakout for tighter stops (e.g., AMD, Nvidia, STX). DEP as tactic, not setup; avoids chasing gaps (20-40%+), suits risk management; rare misses (e.g., GOOG) acceptable. Focus on volume confirmation, story plausibility.
+
+gravatar
+Czecher commented at 1:41 PM Oct 25th 2025
+
+Section 4: EP 9 Million and Story-Driven Stocks (00:34:22 - 00:50:10)
+
+EG introduces EP 9 million for story stocks surging on 9M+ volume without fundamentals, post-COVID shift where narratives (AI, quantum, crypto) drive 300-33,000% moves (e.g., BigBear.ai, Rigetti, QBTS). Observation: Market favors stories over earnings; scan for volume bangs, plausible tales; frequent (300-500/year). Pre-market focus emerging; velocity plays, not duration.
+
+Section 5: Sugar Babies and Market Evolution (00:50:10 - 01:13:05)
+
+Sugar Babies tracks repeat story stocks with 4-6+ legs (e.g., CLSK, SOUN, OPEN), observing post-COVID longevity vs. one/two-leg COVID runs due to leverage/retail/algos. Watchlist top 25-30 via repeated 9M breakouts; anticipate swings, use DEP entries. Market change: Stories dominate; adapt tactics (e.g., pre-market, relative volume alternatives) or lag; critique chasing pennies without specific setups.
+
+Section 6: Q&A, Critiques, and Final Advice (01:13:05 - 01:39:05)
+
+EG addresses questions: Avoid pennies with EP (one-day pumps); Tesla as cult/story stock (Musk-driven, not fundamentals). Reiterates observations (e.g., leverage surge, multi-leg stories); tactics evolve (e.g., no pre-market personally). Advice: Focus on velocity (40-50% quick gains), not duration; perfect setups, avoid arguments/complaints; adapt or find a job.
+
+gravatar
+Czecher commented at 5:16 PM Oct 26th 2025
+
+EP family - https://stockbee.biz/video/2022-08-25-ep-9-million/
+
+EP 9 million - https://stockbee.biz/video/2022-11-19-ep-9-million/
+
+Mind clarity 9 million EP - https://stockbee.biz/video/2023-03-04-mind-clarity-9-million-ep/
+
+How to trade 9 million EP - https://stockbee.biz/video/2023-05-02-how-to-trade-9-million-ep/
