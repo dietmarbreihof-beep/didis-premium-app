@@ -30,9 +30,9 @@ if flask_env == 'production' and not secret_key:
 # In Development: Fallback zu generiertem Key (mit Warnung)
 if not secret_key:
     secret_key = secrets.token_hex(32)
-    print("⚠️  WARNING: Kein SECRET_KEY gesetzt. Verwende temporären Key für Development.")
-    print("⚠️  Sessions werden bei jedem Neustart ungültig!")
-    print("⚠️  Für Production: Setzen Sie SECRET_KEY in .env")
+    print("[WARNING] Kein SECRET_KEY gesetzt. Verwende temporaeren Key fuer Development.")
+    print("[WARNING] Sessions werden bei jedem Neustart ungueltig!")
+    print("[WARNING] Fuer Production: Setzen Sie SECRET_KEY in .env")
 
 app.secret_key = secret_key
 
