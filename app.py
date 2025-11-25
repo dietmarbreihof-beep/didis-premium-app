@@ -3153,15 +3153,41 @@ def scan_new_modules():
         # 4. Filtere System-Dateien
         module_templates = [f for f in all_html_files if f.name not in excluded_files]
 
-        # 5. Finde fehlende Module
+        # 5. Finde fehlende Module UND Module die aktualisiert werden müssen
         new_modules = []
+        modules_to_update = []
+        
         for template_file in module_templates:
-            # Prüfe ob bereits in DB
-            existing = LearningModule.query.filter_by(template_file=template_file.name).first()
-            if not existing:
+            # Generiere Slug aus Dateiname
+            slug = template_file.name.replace('.html', '')
+            
+            # Prüfe ob bereits in DB (nach template_file ODER slug)
+            existing_by_file = LearningModule.query.filter_by(template_file=template_file.name).first()
+            existing_by_slug = LearningModule.query.filter_by(slug=slug).first()
+            
+            if existing_by_slug and not existing_by_slug.template_file:
+                # Modul existiert aber template_file fehlt → UPDATE
+                modules_to_update.append((existing_by_slug, template_file.name))
+            elif existing_by_slug and existing_by_slug.template_file != template_file.name:
+                # Modul existiert aber falsches template_file → UPDATE
+                modules_to_update.append((existing_by_slug, template_file.name))
+            elif not existing_by_file and not existing_by_slug:
+                # Komplett neues Modul → CREATE
                 new_modules.append(template_file.name)
 
-        # 6. Füge fehlende Module ein
+        # 6. Aktualisiere bestehende Module mit fehlendem template_file
+        updated_count = 0
+        if modules_to_update:
+            for module, template_name in modules_to_update:
+                old_file = module.template_file or '(leer)'
+                module.template_file = template_name
+                updated_count += 1
+                flash(f'  🔄 Aktualisiert: {module.title} → template_file={template_name}', 'info')
+            
+            db.session.commit()
+            flash(f'🔄 {updated_count} Module aktualisiert (template_file ergänzt)', 'success')
+
+        # 7. Füge komplett neue Module ein
         if new_modules:
             for idx, template_name in enumerate(new_modules):
                 # Erstelle einfachen Titel aus Dateiname
@@ -3189,7 +3215,8 @@ def scan_new_modules():
             flash(f'✅ {len(new_modules)} neue Module gefunden und in "🆕 Neue Module" eingefügt!', 'success')
             for module_name in new_modules:
                 flash(f'  ➕ {module_name}', 'info')
-        else:
+        
+        if not new_modules and not modules_to_update:
             flash('ℹ️ Keine neuen Module gefunden - alle Templates sind bereits registriert', 'info')
 
         flash(f'📊 Gescannt: {len(module_templates)} Templates (ohne System-Dateien)', 'info')

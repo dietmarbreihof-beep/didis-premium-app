@@ -105,40 +105,74 @@ audit_entry = AdminAuditLog(
 
 ### **Philosophie: Einfachheit über Komplexität**
 - ✅ **Manuelle Kontrolle** statt fehleranfällige Automatisierung
-- ✅ **Ein zuverlässiger Workflow**: Scan → Verschieben → Publishen
+- ✅ **3-Schritt-Prozess**: Template → Scan → Kategorie bearbeiten
 - ✅ **Admin hat volle Kontrolle**: Keine versteckten Auto-Prozesse
+- ✅ **Intelligente Erkennung**: Prüft template_file UND slug (doppelte Sicherheit)
 
-### **Kern-Workflow für neue Module:**
+### **📖 Vollständige Dokumentation:** 
+Siehe `MODUL_WORKFLOW.md` für detaillierte Anleitungen, Szenarien und Troubleshooting
 
-**Schritt-für-Schritt:**
+---
+
+### **Kern-Workflow (3 Schritte):**
+
 ```
-1. HTML-Datei in /templates/*.html speichern
-2. Commit & Push zu GitHub
-3. Nach Deployment: /admin/modules aufrufen
-4. Button "🔄 Neue Module scannen" klicken
-5. Modul erscheint in "🆕 Neue Module" (is_published=False)
-6. Modul in richtige Kategorie verschieben
-7. Optional: publishen (is_published=True)
+1. Template erstellen
+   - HTML-Datei in /templates/*.html erstellen
+   - Design-System verwenden (Gold-Grau, Inter-Font)
+   - {% include '_navigation.html' %} am Ende einfügen
+
+2. Neue Module scannen
+   - /admin/modules → "🔄 Neue Module scannen" klicken
+   - Intelligente Erkennung findet Template automatisch
+
+3. Kategorie bearbeiten
+   - Modul in "🆕 Neue Module" finden
+   - Kategorie verschieben, Details ergänzen
+   - Veröffentlichen (is_published=True)
 ```
 
-### **Scan-Funktion: `/admin/scan-new-modules`**
+---
 
-**Was die Route tut:**
-- Scannt `templates/*.html` (ausgenommen System-Dateien)
-- Findet Module, die NICHT in der DB sind
-- Fügt sie zur "🆕 Neue Module" Kategorie hinzu
-- Setzt `is_published=False` (unsichtbar für User)
-- Zeigt klare Erfolgsmeldung mit Anzahl neuer Module
+### **Scan-Funktion: Intelligente Modul-Erkennung**
 
-**System-Dateien die NICHT gescannt werden:**
+**Route:** `/admin/scan-new-modules` (app.py ~3116-3203)
+
+**Intelligente Doppel-Prüfung (NEUE VERBESSERUNG):**
 ```python
-system_templates = {
+# Prüft sowohl template_file ALS AUCH slug:
+existing_by_file = LearningModule.query.filter_by(template_file='momentum-burst.html').first()
+existing_by_slug = LearningModule.query.filter_by(slug='momentum-burst').first()
+```
+
+**3 Szenarien:**
+- ➕ **Neues Modul** (kein template_file, kein slug) → **CREATE** in "🆕 Neue Module"
+- 🔄 **Bestehendes Modul ohne template_file** → **UPDATE** (ergänzt fehlendes Feld)
+- ⏭️ **Vollständiges Modul** → **SKIP** (bereits registriert)
+
+**System-Dateien (werden ignoriert):**
+```python
+excluded_files = {
     'base.html', 'login.html', 'register.html', 'index.html',
-    'modules_overview.html', 'module_detail.html', 'admin_modules.html',
-    '_navigation.html', 'home.html', 'upgrade_required.html'
-    # Alle admin/*, auth/*, errors/* Templates
+    'modules_overview.html', 'upgrade_required.html', 'module_default.html',
+    '_navigation.html', 'home.html', 'Banner5.html'
+    # Alle admin/*, auth/*, errors/* Templates automatisch ausgeschlossen
 }
 ```
+
+**Scan-Ergebnis Beispiele:**
+```
+✅ 2 neue Module gefunden und in "🆕 Neue Module" eingefügt!
+  ➕ trading-archetypen.html
+  ➕ position-sizing.html
+
+🔄 1 Modul aktualisiert (template_file ergänzt)
+  🔄 Aktualisiert: Momentum Burst Method → template_file=momentum-burst-method.html
+
+📊 Gescannt: 45 Templates (ohne System-Dateien)
+```
+
+---
 
 ### **Admin-Interface Buttons (NUR 8 - NICHT MEHR!)**
 
@@ -159,12 +193,16 @@ system_templates = {
 - ❌ Mehrere verschiedene Sync-Buttons
 - ❌ Automatische Module-Registrierung
 
+---
+
 ### **Wichtige Code-Locations (NICHT MODIFIZIEREN ohne User):**
-- **Scan-Route:** `app.py` Zeile ~2634-2721
+- **Scan-Route:** `app.py` Zeile ~3116-3203 (aktualisiert mit doppelter Prüfung)
 - **Admin-Buttons:** `templates/admin/modules.html` Zeile ~33-70
 - **User Model:** `app.py` Zeile ~331-364
 - **SubscriptionType Enum:** `app.py` Zeile ~332 (MUSS VOR User Model sein!)
 - **Empty Subcategories:** `templates/modules_overview.html` Zeile ~89-105
+
+---
 
 ### **Leere Unterkategorien-Regel (NUR für Admin sichtbar):**
 ```html
@@ -575,65 +613,6 @@ const menuStructure = {
 6. **User Testing** mit echten Lernmodulen
 
 Verwende moderne Web-Standards, bevorzuge CSS Grid/Flexbox für Layout und sorge für eine intuitive, professionelle Benutzererfahrung die das Premium-Gefühl des Trading-Clubs widerspiegelt.
-
-## 📚 Modul-Integration Workflow
-
-### 🎯 Neue Module hinzufügen (3-Schritt-Prozess)
-
-#### **Schritt 1: Template erstellen**
-- Eigenständiges HTML-Template in `templates/` 
-- Gold-Grau Design-System verwenden
-- Inter-Font importieren
-- Navigation zurück zu `/modules` einbauen
-
-#### **Schritt 2: Route in app.py hinzufügen**
-- Nach bestehenden Legacy Routes einfügen
-- Standard-Pattern für Authentifizierung verwenden
-- Progress-Tracking und View-Count implementieren
-
-#### **Schritt 3: Datenbank-Eintrag erstellen**
-```python
-# Terminal-Command:
-python -c "
-from app import app, db, LearningModule, ModuleCategory
-with app.app_context():
-    category = ModuleCategory.query.filter_by(slug='KATEGORIE').first()
-    module = LearningModule(
-        category_id=category.id,
-        title='Modul Titel',
-        slug='modul-slug',
-        description='Beschreibung',
-        icon='🎯',
-        content_type='html',
-        template_file='template.html',
-        is_published=True,
-        is_lead_magnet=False,  # True für kostenlos
-        required_subscription_levels=['premium', 'elite'],
-        estimated_duration=60,
-        difficulty_level='intermediate',
-        sort_order=10
-    )
-    db.session.add(module)
-    db.session.commit()
-"
-```
-
-#### **Verfügbare Kategorien:**
-- `technische-analyse` - `fundamentalanalyse` - `psychologie-mindset` - `risk-management` - `Investing System I` - `Elite - System III`
-
-#### **Subscription Levels:**
-- `[]` = kostenlos (Lead-Magnet)
-- `['premium', 'elite']` = Premium-Module  
-- `['elite']` = Nur Elite
-
-#### **Difficulty Levels:**
-- `beginner` (grün) - `intermediate` (orange) - `advanced` (rot)
-
-### ✅ **Automatische Integration:**
-- Module erscheinen automatisch in `/admin/modules`
-- Werden in `/modules` unter gewählter Kategorie angezeigt
-- Zugriffskontrolle basierend auf Subscription-Level
-- Vollständig über Admin-Panel verwaltbar
 
 ## 🧭 **NAVIGATION-STANDARDS** 
 **⚠️ PFLICHT: Jedes neue Modul MUSS die einheitliche Navigation enthalten!**
