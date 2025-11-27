@@ -608,6 +608,53 @@
 
 <div class="content-container">
     
+    <!-- TC2000 Scanner Formulas (Always Visible) -->
+    <div class="section-card" style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%); color: white; border-left: 5px solid #daa520;">
+        <h2 style="color: #f4e97b;"><span class="emoji">⚡</span> TC2000 Scanner-Formeln</h2>
+        <p style="margin-bottom: 20px; font-size: 1.1em;">Kopiere diese Formeln direkt in TC2000 für sofortige Ergebnisse:</p>
+        
+        <div style="margin: 25px 0;">
+            <h4 style="color: #38a169; font-size: 1.3em; margin-bottom: 15px;">🟢 Bullish 4% Scan (USA)</h4>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1em; position: relative; border: 1px solid rgba(218, 165, 32, 0.3);">
+                <button class="copy-btn" style="position: absolute; top: 10px; right: 10px; background: #daa520; color: #1a1a1a; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="copyFormula(this, 'c/c1>=1.04 and v>v1 and v>=100000')">Kopieren</button>
+                c/c1>=1.04 and v>v1 and v>=100000
+            </div>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h4 style="color: #e53e3e; font-size: 1.3em; margin-bottom: 15px;">🔴 Bearish 4% Scan (USA)</h4>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1em; position: relative; border: 1px solid rgba(218, 165, 32, 0.3);">
+                <button class="copy-btn" style="position: absolute; top: 10px; right: 10px; background: #daa520; color: #1a1a1a; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="copyFormula(this, 'c/c1<=.96 and v>v1 and v>=100000')">Kopieren</button>
+                c/c1<=.96 and v>v1 and v>=100000
+            </div>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h4 style="color: #38a169; font-size: 1.3em; margin-bottom: 15px;">🟢 Bullish 4% Scan (Europa)</h4>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1em; position: relative; border: 1px solid rgba(218, 165, 32, 0.3);">
+                <button class="copy-btn" style="position: absolute; top: 10px; right: 10px; background: #daa520; color: #1a1a1a; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="copyFormula(this, 'c/c1>=104/100 and v>v1 and v>=100000')">Kopieren</button>
+                c/c1>=104/100 and v>v1 and v>=100000
+            </div>
+        </div>
+        
+        <div style="margin: 25px 0;">
+            <h4 style="color: #e53e3e; font-size: 1.3em; margin-bottom: 15px;">🔴 Bearish 4% Scan (Europa)</h4>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 1.1em; position: relative; border: 1px solid rgba(218, 165, 32, 0.3);">
+                <button class="copy-btn" style="position: absolute; top: 10px; right: 10px; background: #daa520; color: #1a1a1a; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: 600;" onclick="copyFormula(this, 'c/c1<=96/100 and v>v1 and v>=100000')">Kopieren</button>
+                c/c1<=96/100 and v>v1 and v>=100000
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); color: #1a1a1a; padding: 20px; border-radius: 8px; margin-top: 25px;">
+            <strong style="font-size: 1.2em;">💡 Scanner-Erklärung:</strong><br>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li><strong>c/c1>=1.04:</strong> Close heute ist 4%+ höher als Close gestern</li>
+                <li><strong>v>v1:</strong> Volumen heute ist größer als Volumen gestern</li>
+                <li><strong>v>=100000:</strong> Mindestens 100.000 Shares Volumen (Liquidität)</li>
+            </ul>
+        </div>
+    </div>
+    
     <!-- Section 1: Was ist Momentum Burst? -->
     <div class="section-card" data-section="1">
         <h2><span class="emoji">🚀</span> Was ist ein Momentum Burst?</h2>
@@ -622,40 +669,26 @@
         </div>
 
         <div class="chart-container" style="background: white; border: 2px solid #daa520; padding: 20px;">
-            <h4 style="text-align: center; color: #1a1a1a; margin-bottom: 20px;">📊 Chart-Beispiele aus der Praxis <span style="font-size: 0.8em; color: #666;">(Klicken zum Vergrößern)</span></h4>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <div style="text-align: center;">
-                    <img class="chart-image" 
-                         src="{{ url_for('static', filename='screenshots/StockBee Guides/1_Chart_Beispiel.png') }}" 
-                         alt="Momentum Burst Beispiel 1" 
-                         style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
-                         onclick="openLightbox(this.src)">
-                    <p style="margin-top: 10px; color: #666;">Beispiel: Range Expansion kickt Momentum an</p>
-                </div>
-                <div style="text-align: center;">
-                    <img class="chart-image"
-                         src="{{ url_for('static', filename='screenshots/StockBee Guides/2_Chart_Beispiel_GRWG.png') }}" 
-                         alt="Momentum Burst Beispiel GRWG" 
-                         style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
-                         onclick="openLightbox(this.src)">
-                    <p style="margin-top: 10px; color: #666;">GRWG: 3-5 Tage Momentum Burst</p>
-                </div>
-                <div style="text-align: center;">
-                    <img class="chart-image"
-                         src="{{ url_for('static', filename='screenshots/StockBee Guides/3_Chart_Beispiel_FSLY.png') }}" 
-                         alt="Momentum Burst Beispiel FSLY" 
-                         style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
-                         onclick="openLightbox(this.src)">
-                    <p style="margin-top: 10px; color: #666;">FSLY: Hochpreis-Aktie mit längerem Burst</p>
-                </div>
+            <h4 style="text-align: center; color: #1a1a1a; margin-bottom: 20px;">📊 Chart-Beispiel aus der Praxis <span style="font-size: 0.8em; color: #666;">(Klicken zum Vergrößern)</span></h4>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
                 <div style="text-align: center;">
                     <img class="chart-image"
                          src="{{ url_for('static', filename='screenshots/Momentumburst_4-Tage_Beispiel.png') }}" 
                          alt="Momentum Burst 4-Tage Beispiel" 
                          style="max-width: 100%; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);"
                          onclick="openLightbox(this.src)">
-                    <p style="margin-top: 10px; color: #666;">Hochpreis-Aktie: 4-Tage Momentum Burst</p>
+                    <p style="margin-top: 10px; color: #666; font-style: italic;">📈 Klassisches 4-Tage Momentum Burst Pattern - Perfekte Demonstration der Range Expansion</p>
                 </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #f7f7f7, #e8e8e8); border-radius: 8px;">
+                <h5 style="color: #1a1a1a; margin-bottom: 15px;">💡 Was Du im Chart erkennen solltest:</h5>
+                <ul style="line-height: 2; margin-left: 20px; color: #2d2d2d;">
+                    <li><strong>Range Expansion:</strong> Eine deutlich größere Kerze nach einer Phase niedriger Volatilität</li>
+                    <li><strong>Volumen-Spike:</strong> Überdurchschnittliches Volumen beim Breakout</li>
+                    <li><strong>Follow-Through:</strong> 3-5 Tage kontinuierliche Bewegung in dieselbe Richtung</li>
+                    <li><strong>Timing:</strong> Der Entry am Tag 1 (Range Expansion Day) ist entscheidend</li>
+                </ul>
             </div>
             
             <!-- Didis Super Stocks Highlight -->
@@ -737,12 +770,356 @@
             </div>
         </div>
 
-        <button class="btn-gold" onclick="completeSection(2)">✓ Verstanden – Weiter zu Timing & Dauer</button>
+        <h3 style="margin-top: 40px;">📊 Praxisbeispiel: ONDS – Realität vs. Lehrbuch</h3>
+        
+        <div style="background: linear-gradient(135deg, #fff9e6, #fef3c7); padding: 25px; border-radius: 12px; border-left: 5px solid #d69e2e; margin: 20px 0;">
+            <h4 style="color: #d69e2e; margin-bottom: 15px;">⚠️ ONDS (Ondas Holdings) – Ehrliche Trade-Analyse</h4>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+                <div>
+                    <strong style="color: #1a1a1a;">✅ Was war gut:</strong>
+                    <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li><strong>Vorbörsliches Volumen:</strong> Über 1,1 Mio. Aktien (extrem!)</li>
+                        <li><strong>2LYNCH "2":</strong> Nicht 2 Tage hintereinander höher</li>
+                        <li><strong>Market Tone:</strong> Sehr bullischer Markt</li>
+                        <li><strong>4% Bedingung:</strong> Sofort in erster Handelsstunde</li>
+                        <li><strong>V > V1:</strong> Bereits premarket erfüllt!</li>
+                    </ul>
+                </div>
+                <div>
+                    <strong style="color: #1a1a1a;">❌ Was fehlte:</strong>
+                    <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li><strong>Linearität (L):</strong> Nicht perfekt glatt</li>
+                    </ul>
+                    <strong style="color: #38a169; margin-top: 15px; display: block;">Ergebnis trotzdem:</strong>
+                    <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li><strong>Schlusskurs:</strong> <span style="color: #38a169; font-size: 1.3em; font-weight: 700;">+28%</span></li>
+                        <li><strong>Trade funktionierte!</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+            <h4 style="text-align: center; margin-bottom: 15px;">📈 ONDS Chart – 4% Breakout mit VCP-Pattern</h4>
+            <img class="chart-image" 
+                 src="{{ url_for('static', filename='screenshots/ONDS_BO.png') }}" 
+                 alt="ONDS 4% Breakout mit VCP-Pattern" 
+                 style="width: 100%; border-radius: 8px; border: 2px solid #daa520;"
+                 onclick="openLightbox(this.src)">
+            <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.95em;">
+                📊 ONDS zeigt perfektes VCP-Pattern mit Higher Lows vor dem Breakout
+            </p>
+        </div>
+
+        <div class="highlight-box">
+            <h4>💡 Was lernen wir aus ONDS?</h4>
+            <p style="line-height: 1.8; margin-bottom: 15px;">
+                <strong>Trading ist Wahrscheinlichkeits-Management, keine perfekte Wissenschaft!</strong>
+            </p>
+            <ul style="margin-left: 20px; line-height: 2;">
+                <li>✅ <strong>Perfekte 2LYNCH Setups</strong> = 80-90% Erfolgswahrscheinlichkeit</li>
+                <li>⚠️ <strong>Fehlende Linearität ABER starke Kompensation</strong> = 60-70% Erfolgswahrscheinlichkeit</li>
+                <li>❌ <strong>Mehrere fehlende Kriterien ohne Kompensation</strong> = 20-30% Erfolgswahrscheinlichkeit</li>
+            </ul>
+            <p style="margin-top: 15px; line-height: 1.8;">
+                <strong>Entscheidend:</strong> Wenn Du von 2LYNCH abweichst, brauchst Du sehr starke Gründe 
+                (wie extremes premarket Volume + bullischer Markt). Nicht einfach "hoffen", dass es klappt!
+            </p>
+        </div>
+
+        <button class="btn-gold" onclick="completeSection(2)">✓ Verstanden – Weiter zu 2LYNCH Kriterien</button>
     </div>
 
-    <!-- Section 3: Timing & Dauer -->
+    <!-- Section 3: 2LYNCH Kriterien (NEU KONSOLIDIERT) -->
     <div class="section-card locked" data-section="3">
-        <h2><span class="emoji">⏱️</span> Timing & Dauer: Die 3-5 Tage Regel</h2>
+        <h2><span class="emoji">✅</span> 2LYNCH - Die Qualitätsfilter</h2>
+        
+        <p style="font-size: 1.15em; line-height: 1.8;">
+            <strong>2LYNCH ist eine Checkliste von Kriterien, die eine Aktie erfüllen muss, um als A-Setup zu gelten.</strong> 
+            Nicht jede Aktie im 4% Scanner ist ein guter Trade. Von 100-200 Scanner-Hits bleiben nach 2LYNCH nur <strong>2-4 A-Qualität Setups</strong> übrig!
+        </p>
+
+        <div class="highlight-box" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-left: 4px solid #d69e2e;">
+            <strong style="color: #d69e2e;">⚠️ Die Realität:</strong><br>
+            Von 100 Aktien im 4% Scanner erfüllen nur 2-4 alle 2LYNCH Kriterien. Das ist der Punkt! Du willst nur die <strong>besten Setups</strong> traden, nicht jeden Breakout.
+        </div>
+
+        <h3>Die 6 2LYNCH Kriterien im Detail</h3>
+
+        <!-- Criterion 1: NOT UP TWO DAYS -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">2</span>
+                Not Up Two Days in a Row
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Aktie darf nicht 2 Tage in Folge gestiegen sein.</strong></p>
+            <p style="line-height: 1.8;">
+                Wenn die Aktie bereits 2 Tage hintereinander gestiegen ist, hat der Swing bereits begonnen. 
+                Du willst am <strong>START des Swings</strong> einsteigen, nicht mittendrin.
+            </p>
+            <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #38a169;">
+                <p style="margin: 0; line-height: 1.8;">
+                    ✅ <strong>Akzeptabel:</strong> +0,1% oder +0,2% (fast flach)<br>
+                    ❌ <strong>Nicht akzeptabel:</strong> +2% oder mehr an zwei aufeinanderfolgenden Tagen
+                </p>
+            </div>
+        </div>
+
+        <!-- Criterion 2: LINEARITY -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">L</span>
+                Linearity (Linearität)
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Aktie muss lineare, glatte Bewegungen haben.</strong></p>
+            <p style="line-height: 1.8;">
+                Keine choppigen Aktien! Lineare Aktien haben konsistentes, persistentes Buying. 
+                Choppy Aktien erfordern weitere Stops und sind unberechenbar.
+            </p>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #d69e2e;">
+                <p style="margin: 0; line-height: 1.8;">
+                    ⚠️ <strong>Dies ist eines der WICHTIGSTEN Kriterien!</strong><br>
+                    Wenn eine Aktie choppy ist, schaue nicht weiter - nächste Aktie!
+                </p>
+            </div>
+            <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <p style="margin: 0; line-height: 1.8; color: #1a1a1a;">
+                    💡 <strong>Ausnahmen:</strong> Fehlende Linearität kann akzeptiert werden bei:
+                </p>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8; color: #1a1a1a;">
+                    <li>Extremes vorbörsliches Volumen (1+ Mio. Shares)</li>
+                    <li>Stark bullischer Gesamtmarkt</li>
+                    <li>Breaking News oder fundamentaler Katalysator</li>
+                    <li>Institutionelle Accumulation sichtbar</li>
+                </ul>
+                <p style="margin: 10px 0 0 0; line-height: 1.8; color: #1a1a1a;">
+                    <strong>Beispiel:</strong> ONDS hatte fehlende Linearität, ABER 1,1 Mio. premarket Volume + sehr bullischer Markt = Trade funktionierte trotzdem (+28%).
+                </p>
+            </div>
+        </div>
+
+        <!-- Criterion 3: YOUNG SETUP -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">Y</span>
+                Young Setup
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Aktie sollte ein junges Setup haben (1. oder 2. Leg des Moves).</strong></p>
+            <p style="line-height: 1.8;">
+                Jüngere Aktien (IPO in letzten 10 Jahren) machen explosivere Moves. 
+                Beim 3. oder 4. Leg einer Bewegung steigt die Wahrscheinlichkeit des Scheiterns stark.
+            </p>
+            <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <p style="margin: 0; color: #1a1a1a; font-style: italic;">
+                    💡 Warum bevorzugen 60-jährige Hedgefonds-Manager 20-jährige zum Daten? 
+                    Aus dem gleichen Grund bevorzugst Du junge Setups - mehr Energie, mehr Potential! 😉
+                </p>
+            </div>
+        </div>
+
+        <!-- Criterion 4: NARROW/NEGATIVE DAY -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">N</span>
+                Narrow or Negative Day
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Der Tag VOR dem Breakout sollte ein negativer oder enger Tag sein.</strong></p>
+            <p style="line-height: 1.8;">
+                Du willst kaufen, wenn die Volatilität niedrig war und dann explodiert. 
+                Wenn die Aktie bereits vorher gestiegen ist, ist es kein richtiger Breakout-Start.
+            </p>
+            <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #38a169;">
+                <p style="margin: 0;">✅ <strong>Ideal:</strong> Doji, kleine Kerze oder Down-Day vor dem Breakout</p>
+            </div>
+        </div>
+
+        <!-- Criterion 5: CONSOLIDATION QUALITY -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">C</span>
+                Consolidation Quality
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Konsolidierung muss hochwertig sein.</strong></p>
+            <p style="margin-bottom: 15px;"><strong>Kriterien für gute Konsolidierung:</strong></p>
+            <ul style="line-height: 2; margin-left: 20px;">
+                <li>Maximal EINE 4% Breakdown (keine mehr!)</li>
+                <li>Enge, ordentliche Konsolidierung</li>
+                <li>Niedriges Volumen während Konsolidierung</li>
+                <li>Kein wildes Auf und Ab</li>
+                <li>Kein High-Volume Selling</li>
+            </ul>
+            <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #d69e2e;">
+                <p style="margin: 0; line-height: 1.8;">
+                    ⚠️ Wenn 2-3 Breakdowns in der Konsolidierung: Keine starken Käufer vorhanden. 
+                    Breakout wird wahrscheinlich scheitern!
+                </p>
+            </div>
+        </div>
+
+        <!-- Criterion 6: CLOSING NEAR HIGH -->
+        <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #b8860b; font-size: 1.4em; margin-bottom: 15px;">
+                <span style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; width: 45px; height: 45px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; margin-right: 10px;">H</span>
+                Closing Near High
+            </h4>
+            <p style="font-size: 1.1em; margin-bottom: 15px;"><strong>Aktie sollte nahe dem Tageshoch schließen.</strong></p>
+            <p style="line-height: 1.8;">
+                Wenn die Aktie einen großen Teil ihres Gewinns wieder abgibt, zeigt das schwaches Momentum. 
+                Warum sollte sie am Tag 2 oder 3 Momentum haben, wenn sie es nicht mal am Tag 1 halten kann?
+            </p>
+            <div style="background: #d4edda; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid #38a169;">
+                <p style="margin: 0; line-height: 1.8;">
+                    ✅ <strong>Akzeptabel:</strong> Bis zu 30% Gewinnrückgabe<br>
+                    ⚠️ <strong>Bedenklich:</strong> 50%+ Gewinnrückgabe<br>
+                    ❌ <strong>Vermeide:</strong> Große Dochte/Tails, >60% Gewinnrückgabe
+                </p>
+            </div>
+        </div>
+
+        <div class="success-box" style="margin-top: 30px;">
+            <strong style="font-size: 1.3em;">✅ Erfolgsformel: Die Filter-Realität</strong><br><br>
+            <p style="font-size: 1.1em; line-height: 1.8;">
+                Von 100-200 Aktien im 4% Scanner bleiben nach 2LYNCH nur <strong>2-4 gute Setups</strong> übrig.
+            </p>
+            <p style="margin: 15px 0 0 0; line-height: 1.8;">Von diesen 2-4 Setups:</p>
+            <ul style="margin: 10px 0 0 20px; line-height: 2;">
+                <li>✅ <strong>1-2 sind perfekte A+ Setups</strong> (alle 2LYNCH erfüllt) → 80-90% Erfolgsrate</li>
+                <li>⚠️ <strong>0-1 ist ein B+ Setup mit starken Kompensations-Faktoren</strong> (z.B. extremes premarket Volume) → 60-70% Erfolgsrate</li>
+                <li>❌ <strong>Vermeide den Rest!</strong> Auch wenn sie verlockend aussehen → 20-30% Erfolgsrate</li>
+            </ul>
+        </div>
+
+        <h3 style="margin-top: 40px;">📊 Perfektes Beispiel: Beyond Meat (BYND)</h3>
+        
+        <div style="background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); margin: 20px 0;">
+            <h4 style="text-align: center; margin-bottom: 15px; color: #1a1a1a;">📈 BYND Chart – Perfektes 2LYNCH Setup</h4>
+            <img class="chart-image" 
+                 src="{{ url_for('static', filename='screenshots/Beispiel_BYND.png') }}" 
+                 alt="BYND - Perfektes 2LYNCH Setup" 
+                 style="width: 100%; border-radius: 8px; border: 2px solid #38a169; cursor: pointer;"
+                 onclick="openLightbox(this.src)">
+            <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.95em;">
+                📊 Beyond Meat: Alle 2LYNCH Kriterien erfüllt – Ein A+ Setup (Klicken zum Vergrößern)
+            </p>
+        </div>
+        
+        <div style="background: white; border: 2px solid #38a169; border-radius: 12px; padding: 25px; margin: 20px 0;">
+            <h4 style="color: #38a169; margin-bottom: 15px;">✅ BYND - Lehrbuch-perfektes 2LYNCH Setup</h4>
+            <p style="font-size: 1.1em; line-height: 1.8; margin-bottom: 20px;">
+                Beyond Meat ist ein <strong>perfektes A+ Setup</strong>, das alle 2LYNCH Kriterien erfüllt. 
+                Lass uns durchgehen, warum:
+            </p>
+
+            <div style="display: grid; gap: 15px;">
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ 2 - Not Up Two Days:</strong> Aktie war nicht zwei Tage hintereinander gestiegen. Sie hatte sogar einen kleinen Pullback vor dem Breakout.
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ L - Linearity:</strong> Der erste Leg zeigt persistentes, konsistentes Buying. Die Bewegung ist sehr glatt und linear - keine wilde Choppiness.
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ Y - Young Setup:</strong> Dies ist der ERSTE Leg der Bewegung nach einer Konsolidierung. Perfekt! Nicht der 3., 4. oder 5. Leg.
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ N - Narrow/Negative Day:</strong> Der Tag vor dem Breakout war ein enger/negativer Tag. Die Volatilität war niedrig, dann explodierte die Aktie.
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ C - Consolidation Quality:</strong> Perfekte Konsolidierung!
+                    <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                        <li>Nur 4 Tage lang - kompakt</li>
+                        <li>Sehr ordentlich und tight</li>
+                        <li>Kein 4% Breakdown</li>
+                        <li>Niedriges Volumen während Konsolidierung</li>
+                    </ul>
+                </div>
+                
+                <div style="background: #d4edda; padding: 15px; border-radius: 8px; border-left: 4px solid #38a169;">
+                    <strong>✅ H - Closing Near High:</strong> Die Aktie schloss nahe ihrem Tageshoch beim Breakout. Starkes Momentum wurde den ganzen Tag gehalten.
+                </div>
+            </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); padding: 25px; border-radius: 12px; margin: 20px 0;">
+            <h4 style="color: #1a1a1a; margin-bottom: 15px;">💡 Der Unterschied: BYND vs. ONDS</h4>
+            <div style="display: grid; gap: 15px;">
+                <div>
+                    <p style="font-size: 1.15em; margin: 0; color: #1a1a1a;">
+                        <strong>BYND = Perfektes A+ Setup</strong> (alle 2LYNCH Kriterien erfüllt)<br>
+                        <span style="color: #38a169; font-weight: 700;">→ Erfolgswahrscheinlichkeit: ~80-90%</span>
+                    </p>
+                </div>
+                <div>
+                    <p style="font-size: 1.15em; margin: 0; color: #1a1a1a;">
+                        <strong>ONDS = B+ Setup mit starken Kompensations-Faktoren</strong><br>
+                        Linearität fehlte, ABER: Extremes premarket Volume + bullischer Markt<br>
+                        <span style="color: #d69e2e; font-weight: 700;">→ Erfolgswahrscheinlichkeit: ~60-70%</span>
+                    </p>
+                </div>
+            </div>
+            <p style="font-size: 1.1em; margin: 20px 0 0 0; color: #1a1a1a;">
+                <strong>Beide Trades waren profitabel!</strong> Aber Du willst öfter BYND-artige Setups 
+                (perfekt) als ONDS-artige Setups (Kompromiss mit guten Gründen).
+            </p>
+        </div>
+
+        <button class="btn-gold" onclick="completeSection(3)">✓ Verstanden – Weiter zu Timing & Dauer</button>
+    </div>
+
+    <!-- Section 4: Timing & Dauer + 4% Breakout Methode -->
+    <div class="section-card locked" data-section="4">
+        <h2><span class="emoji">⏱️</span> Die 4% Breakout Methode & Timing</h2>
+        
+        <h3>Warum genau 4%?</h3>
+        <p style="font-size: 1.15em; line-height: 1.8; margin: 20px 0;">
+            Die 4% Breakout Methode wurde durch eine historische Analyse entwickelt: 
+            <strong>Jede Aktie, die in den letzten 40 Jahren eine 25%+ Bewegung in einem Monat gemacht hat, 
+            hatte typischerweise einen 4% Breakout am Anfang der Bewegung.</strong>
+        </p>
+
+        <div class="highlight-box">
+            <h4>💡 Die Forschung</h4>
+            <p style="line-height: 1.8;">
+                Vor 20 Jahren wurde jede Aktie analysiert, die in den letzten 40 Jahren eine 25%+ Bewegung 
+                in einem Monat gemacht hat. Die Erkenntnis: <strong>Es war nicht 1%, nicht 2%, nicht 3% - 
+                es war typischerweise ein 4%+ Move am ersten Tag.</strong>
+            </p>
+        </div>
+
+        <h3 style="margin-top: 30px;">⏰ Wann den Scanner laufen lassen?</h3>
+        <p style="font-size: 1.1em; line-height: 1.8; margin: 20px 0;">
+            <strong>Ab Markteröffnung!</strong> Die besten Setups zeigen sich in den ersten 30-60 Minuten.
+        </p>
+
+        <div style="background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%); padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <h4 style="color: #1a1a1a; margin-bottom: 15px;">💡 Timing-Strategie</h4>
+            <ul style="margin-left: 20px; line-height: 2; color: #1a1a1a;">
+                <li>Scanner läuft ab 9:30 Uhr (Markteröffnung)</li>
+                <li>Erste Setups zeigen sich oft in den ersten Minuten</li>
+                <li>Die meisten profitablen Trades kommen aus der ersten Stunde</li>
+                <li>Aber: Kaufe auch später am Tag, wenn ein gutes Setup erscheint</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h4>⚠️ Häufige Einwände (und warum sie falsch sind)</h4>
+            <p style="margin-bottom: 15px;"><strong>"Die Aktie ist bereits 4-5% oben, ist das nicht zu spät?"</strong></p>
+            <p style="line-height: 1.8;">
+                <strong>NEIN!</strong> Das ist genau der Punkt. Wir wollen die Range Expansion sehen. 
+                Wenn Du versuchst, früher einzusteigen (bei 1-2%), gibt es keine Garantie, 
+                dass überhaupt ein Momentum Burst stattfindet.
+            </p>
+            
+            <p style="margin-top: 15px; margin-bottom: 10px;"><strong>"V > V1 kann doch nicht in der ersten Stunde erfüllt sein?"</strong></p>
+            <p style="line-height: 1.8;">
+                <strong>FALSCH!</strong> Wenn mehr Käufer als gestern vorhanden sind, wird die Bedingung sofort bei Markteröffnung erfüllt. 
+                Nach 20 Jahren Trading dieser Methode: Ja, die Bedingung wird erfüllt, und zwar täglich.
+            </p>
+        </div>
         
         <div class="warning-box">
             <strong>⚠️ KRITISCH:</strong> Die meisten Momentum Bursts dauern nur <strong>3-5 Tage</strong>. Wenn du am Tag 2 oder 3 einsteigst, verpasst du den Großteil des Gewinns!
@@ -791,11 +1168,11 @@
             <li>Nvidia: +$50 in 5 Tagen</li>
         </ul>
 
-        <button class="btn-gold" onclick="completeSection(3)">✓ Verstanden – Weiter zu Gewinn-Erwartungen</button>
+        <button class="btn-gold" onclick="completeSection(4)">✓ Verstanden – Weiter zu Gewinn-Erwartungen</button>
     </div>
 
-    <!-- Section 4: Gewinn-Erwartungen -->
-    <div class="section-card locked" data-section="4">
+    <!-- Section 5: Gewinn-Erwartungen -->
+    <div class="section-card locked" data-section="5">
         <h2><span class="emoji">💰</span> Gewinn-Erwartungen: Was ist realistisch?</h2>
         
         <p style="font-size: 1.15em; line-height: 1.8;">
@@ -858,11 +1235,11 @@
             Mit 1.000 Aktien = <strong>$2.400 Gewinn in 3-5 Tagen</strong>
         </div>
 
-        <button class="btn-gold" onclick="completeSection(4)">✓ Verstanden – Weiter zu Mythen-Busting</button>
+        <button class="btn-gold" onclick="completeSection(5)">✓ Verstanden – Weiter zu Mythen-Busting</button>
     </div>
 
-    <!-- Section 5: Mythen-Busting -->
-    <div class="section-card locked" data-section="5">
+    <!-- Section 6: Mythen-Busting -->
+    <div class="section-card locked" data-section="6">
         <h2><span class="emoji">🔥</span> Mythen-Busting: Was du NICHT brauchst</h2>
         
         <p style="font-size: 1.15em; line-height: 1.8;">
@@ -946,11 +1323,11 @@
             <strong>Alles andere ist optional!</strong>
         </div>
 
-        <button class="btn-gold" onclick="completeSection(5)">✓ Verstanden – Weiter zu Trading-Checkliste</button>
+        <button class="btn-gold" onclick="completeSection(6)">✓ Verstanden – Weiter zu Trading-Checkliste</button>
     </div>
 
-    <!-- Section 6: Trading Checkliste -->
-    <div class="section-card locked" data-section="6">
+    <!-- Section 7: Trading Checkliste -->
+    <div class="section-card locked" data-section="7">
         <h2><span class="emoji">📋</span> Momentum Burst Trading Checkliste</h2>
         
         <p style="font-size: 1.15em; line-height: 1.8; margin-bottom: 30px;">
@@ -1023,11 +1400,11 @@
             </ul>
         </div>
 
-        <button class="btn-gold" onclick="completeSection(6)">✓ Checkliste verstanden – Zum Quiz</button>
+        <button class="btn-gold" onclick="completeSection(7)">✓ Checkliste verstanden – Zum Quiz</button>
     </div>
 
-    <!-- Section 7: Quiz -->
-    <div class="section-card locked" data-section="7">
+    <!-- Section 8: Quiz -->
+    <div class="section-card locked" data-section="8">
         <h2><span class="emoji">🎓</span> Wissens-Quiz</h2>
         
         <p style="font-size: 1.1em; margin-bottom: 30px;">
@@ -1143,12 +1520,127 @@
                     Du hast <strong><span id="quiz-score">0</span>/5</strong> Fragen richtig beantwortet.
                 </p>
             </div>
-            <button class="btn-gold" style="margin-top: 20px;" onclick="completeSection(7)">✓ Weiter zu Key Takeaways</button>
+            <button class="btn-gold" style="margin-top: 20px;" onclick="completeSection(8)">✓ Weiter zu Key Takeaways</button>
         </div>
     </div>
 
-    <!-- Section 8: Key Takeaways -->
-    <div class="section-card locked" data-section="8">
+    <!-- Section 9: Key Takeaways + Advanced Topics -->
+    <div class="section-card locked" data-section="9">
+        
+        <h2><span class="emoji">🎓</span> Advanced: Deep Dive & Skill-Entwicklung</h2>
+        
+        <h3>Wie wirst Du ein Momentum Burst Experte?</h3>
+        <p style="font-size: 1.15em; line-height: 1.8; margin: 20px 0;">
+            Um diese Methode wirklich zu meistern, musst Du einen <strong>Deep Dive</strong> machen. 
+            Das bedeutet: Studiere tausende historische Beispiele, bis die Muster in Deinem Unterbewusstsein verankert sind.
+        </p>
+
+        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white; border-radius: 12px; padding: 40px; margin: 30px 0;">
+            <h3 style="color: #f4e97b; margin-bottom: 25px; border-bottom: 2px solid #daa520; padding-bottom: 15px;">📚 Der Deep Dive Prozess</h3>
+            
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #daa520;">
+                <h4 style="color: #f4e97b; margin-bottom: 15px;">Schritt 1: Verstehe das Grundphänomen (1000+ Charts)</h4>
+                <p>Gehe durch 1000+ historische Charts und markiere jeden Momentum Burst, den Du siehst:</p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li>Wo war die Range Expansion?</li>
+                    <li>Wie sah Tag 1 aus?</li>
+                    <li>Wie sah Tag 3 aus?</li>
+                    <li>Wie lang dauerte die Bewegung?</li>
+                    <li>Wie viel Prozent machte die Aktie?</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #daa520;">
+                <h4 style="color: #f4e97b; margin-bottom: 15px;">Schritt 2: Analysiere verschiedene Marktphasen (500+ Charts)</h4>
+                <p>Studiere, wie Momentum Bursts in verschiedenen Marktphasen funktionieren:</p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li>Bull Market vs Bear Market</li>
+                    <li>Steigende vs fallende Märkte</li>
+                    <li>Verschiedene Preispunkte ($5, $20, $100, $500+)</li>
+                    <li>Nahe 52W High vs nahe 52W Low</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #daa520;">
+                <h4 style="color: #f4e97b; margin-bottom: 15px;">Schritt 3: Stop-Strategien entwickeln (300+ Beispiele)</h4>
+                <p>Analysiere, wo optimale Stops gewesen wären:</p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li>Was ist die typische Intraday-Volatilität?</li>
+                    <li>Wo scheitern die meisten Setups?</li>
+                    <li>Welche Stop-Strategie hätte am besten funktioniert?</li>
+                </ul>
+            </div>
+
+            <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #daa520;">
+                <h4 style="color: #f4e97b; margin-bottom: 15px;">Schritt 4: 2LYNCH Deep Dive (500+ Vergleiche)</h4>
+                <p>Vergleiche erfolgreiche vs gescheiterte Breakouts:</p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li>Welche 2LYNCH-Kriterien fehlten bei Fehlschlägen?</li>
+                    <li>Wie sieht perfekte Linearity aus vs Choppiness?</li>
+                    <li>Welche Konsolidierungsmuster funktionieren am besten?</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h4>💡 Warum ist Deep Dive so wichtig?</h4>
+            <p style="font-size: 1.1em; line-height: 1.8;">
+                Du musst selbst überzeugt sein, dass dieses Phänomen real ist - nicht weil ich es sage, 
+                sondern weil Du es mit eigenen Augen in tausenden Charts gesehen hast. 
+                <strong>Diese Überzeugung gibt Dir das Vertrauen, die Methode konsequent zu traden.</strong>
+            </p>
+        </div>
+
+        <h3 style="margin-top: 40px;">🛠️ Praktische Umsetzung</h3>
+        
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">1. Scanner Setup (TC2000)</h4>
+                <ol style="line-height: 2; margin-left: 20px;">
+                    <li>Erstelle Combo List "4% Breakout Bullish"</li>
+                    <li>Füge Formel hinzu: c/c1>=1.04 and v>v1 and v>=100000</li>
+                    <li>Optional: Price Filter >$3 um Penny Stocks zu filtern</li>
+                    <li>Erstelle separaten "4% Breakdown Bearish" Scanner</li>
+                    <li>Tabbed Layout für schnellen Zugriff</li>
+                </ol>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">2. Chart Template Setup</h4>
+                <ol style="line-height: 2; margin-left: 20px;">
+                    <li>Candlestick Chart (schwarz/rot)</li>
+                    <li>Volume als Bar Chart</li>
+                    <li>4% Breakout als grüner Spike (Custom PCF True Indicator)</li>
+                    <li>4% Breakdown als roter Spike</li>
+                    <li>Optional: Trend Intensity Indicator (TI65)</li>
+                </ol>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">3. Täglicher Workflow</h4>
+                <ol style="line-height: 2; margin-left: 20px;">
+                    <li><strong>9:30 Uhr:</strong> Scanner starten bei Markteröffnung</li>
+                    <li><strong>9:30-10:00:</strong> Erste Setups erscheinen - 2LYNCH Analyse</li>
+                    <li><strong>10:00-15:30:</strong> Scanner läuft weiter, aber meiste Action in erster Stunde</li>
+                    <li><strong>Nach 15:30:</strong> Review der Trades, Deep Dive Session</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Der komplette Momentum Burst Trader</h4>
+            <p>Nach einem gründlichen Deep Dive und konsequenter Umsetzung wirst Du:</p>
+            <ul style="margin-left: 20px; margin-top: 10px; line-height: 2;">
+                <li>Momentum Bursts sofort auf jedem Chart erkennen</li>
+                <li>2LYNCH Quality in Sekunden beurteilen können</li>
+                <li>Wissen, welche Setups zu nehmen und welche zu vermeiden sind</li>
+                <li>Verstehen, wann eine Bewegung zu Ende geht</li>
+                <li>Konsistent profitabel traden können</li>
+            </ul>
+        </div>
+
+        <hr style="margin: 40px 0; border: none; border-top: 2px solid #daa520;">
+
         <div class="key-takeaways">
             <h3>🎯 Key Takeaways: Momentum Burst Master</h3>
             <ul>
@@ -1196,6 +1688,22 @@
 {% include '_navigation.html' %}
 
 <script>
+    // Copy Formula Function
+    function copyFormula(button, formula) {
+        navigator.clipboard.writeText(formula).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✓ Kopiert!';
+            button.style.background = '#38a169';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '#daa520';
+            }, 2000);
+        }).catch(() => {
+            alert('Formel kopiert: ' + formula);
+        });
+    }
+
     // Lightbox Functions
     function openLightbox(imageSrc) {
         const modal = document.getElementById('lightboxModal');
@@ -1220,7 +1728,7 @@
 
     // Progressive Disclosure Logic
     let currentSection = 1;
-    const totalSections = 8;
+    const totalSections = 9;
     let completedSections = new Set([1]); // Section 1 ist initial unlocked
     
     // Quiz State
