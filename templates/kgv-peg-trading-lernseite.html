@@ -286,6 +286,31 @@
             color: #2d2d2d;
         }
         
+        .explanation-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        .explanation-box.correct {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(56, 161, 105, 0.2) 100%);
+            border-left: 5px solid #38a169;
+            color: #1a5a3e;
+        }
+        
+        .explanation-box.incorrect {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(229, 62, 62, 0.2) 100%);
+            border-left: 5px solid #e53e3e;
+            color: #7d2828;
+        }
+        
+        .explanation-box.show {
+            display: block;
+        }
+        
         .answer-option {
             background: white;
             border: 2px solid #e0e0e0;
@@ -983,6 +1008,7 @@
                     <div class="answer-option" onclick="selectAnswer(1, 'd')">
                         <span>D) KGV + Gewinnwachstum</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 2 -->
@@ -1000,6 +1026,7 @@
                     <div class="answer-option" onclick="selectAnswer(2, 'd')">
                         <span>D) 18,76</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 3 -->
@@ -1017,6 +1044,7 @@
                     <div class="answer-option" onclick="selectAnswer(3, 'd')">
                         <span>D) Das KGV ist zu hoch</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 4 -->
@@ -1034,6 +1062,7 @@
                     <div class="answer-option" onclick="selectAnswer(4, 'd')">
                         <span>D) Crocs hatte keinen Gewinn</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 5 -->
@@ -1051,6 +1080,7 @@
                     <div class="answer-option" onclick="selectAnswer(5, 'd')">
                         <span>D) Folge immer der Meinung der Analysten</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 6 -->
@@ -1068,6 +1098,7 @@
                     <div class="answer-option" onclick="selectAnswer(6, 'd')">
                         <span>D) Alle Analysten empfehlen es</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 7 -->
@@ -1085,6 +1116,7 @@
                     <div class="answer-option" onclick="selectAnswer(7, 'd')">
                         <span>D) Sie ist besser als alle anderen Kennzahlen</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Frage 8 -->
@@ -1102,12 +1134,13 @@
                     <div class="answer-option" onclick="selectAnswer(8, 'd')">
                         <span>D) Keine der genannten</span>
                     </div>
+                    <div class="explanation-box"></div>
                 </div>
                 
                 <!-- Quiz Controls -->
                 <div class="quiz-controls">
                     <button class="btn btn-secondary" onclick="previousQuestion()" id="prevBtn" disabled>Zurück</button>
-                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn">Weiter</button>
+                    <button class="btn btn-primary" onclick="nextQuestion()" id="nextBtn" disabled>Weiter</button>
                 </div>
             </div>
             
@@ -1182,6 +1215,42 @@
             8: 'c'  // Crocs - KGV fiel während Kurs stieg
         };
         
+        // Erklärungen für jede Frage
+        const explanations = {
+            1: {
+                correct: '✅ Richtig! Die PEG-Ratio berechnet sich als KGV geteilt durch das Gewinnwachstum in Prozent (mal 100). So wird die Bewertung ins Verhältnis zum Wachstum gesetzt.',
+                incorrect: '❌ Nicht ganz. Die richtige Formel ist: PEG = KGV ÷ (Gewinnwachstum in % × 100). Damit setzt man die Bewertung ins Verhältnis zum Wachstum.'
+            },
+            2: {
+                correct: '✅ Perfekt! Yahoo mit KGV 938 und 200% Wachstum ergibt: 938 ÷ 200 = 4,69. Nach klassischer PEG-Analyse wäre das "überbewertet" gewesen - aber die Aktie stieg trotzdem um 7.800%!',
+                incorrect: '❌ Nicht ganz. Die Berechnung: 938 ÷ 200 = 4,69. Diese "Überbewertung" hinderte Yahoo nicht am spektakulären Anstieg von 7.800%!'
+            },
+            3: {
+                correct: '✅ Genau! Ein PEG unter 1 deutet darauf hin, dass das Unternehmen schneller wächst als seine Bewertung widerspiegelt - ein klassisches Value-Signal bei Wachstumsaktien.',
+                incorrect: '❌ Falsch. PEG < 1 bedeutet, dass die Aktie schneller wächst als ihre Bewertung - sie könnte also unterbewertet sein und bietet potentiell Chancen.'
+            },
+            4: {
+                correct: '✅ Exzellent! Das ist die Kern-Lektion: Trotz "fairem" PEG (~1,0) war Crocs eine Modeerscheinung ohne nachhaltigen Burggraben. Kennzahlen ersetzen nicht die qualitative Analyse!',
+                incorrect: '❌ Nicht korrekt. Der entscheidende Punkt: Trotz "fairem" PEG von ~1,0 kollabierte Crocs um 99%, weil es eine Mode ohne dauerhaften Burggraben war. Kennzahlen sind nicht alles!'
+            },
+            5: {
+                correct: '✅ Perfekt verstanden! Die wichtigste Lektion aus Yahoo, Palantir und Crocs: Kennzahlen wie KGV und PEG sind hilfreiche Werkzeuge, aber Kontext, Qualität und Geschäftsmodell entscheiden über Erfolg.',
+                incorrect: '❌ Falsch. Die wahre Lektion: Kennzahlen sind Werkzeuge, kein Dogma. Yahoo brach alle Regeln und stieg trotzdem 7.800%. Context und Qualität zählen mehr als starre Formeln!'
+            },
+            6: {
+                correct: '✅ Genau das ist der Punkt! Wie Yahoo das Internet revolutionierte, steht Palantir an der Spitze der AI-Revolution mit hohen Eintrittsbarrieren. Diese technologische Führerschaft rechtfertigt extreme Bewertungen.',
+                incorrect: '❌ Nicht richtig. Der Schlüssel: Palantir steht wie damals Yahoo an der Spitze einer technologischen Revolution (AI) mit massiven Eintrittsbarrieren - das unterscheidet es von "nur teuren" Aktien.'
+            },
+            7: {
+                correct: '✅ Brillant! Das Buch warnt genau davor: "Wie ihr KGV-Cousin kann auch die PEG-Ratio einige der profitabelsten Unternehmen aus der Liste eliminieren." Revolutionäre Unternehmen sprengen alle Regeln!',
+                incorrect: '❌ Leider falsch. Das Buch lehrt uns: Die PEG-Ratio kann die besten Investmentchancen eliminieren, weil revolutionäre Unternehmen traditionelle Kennzahlen sprengen. Dogmatismus kostet Rendite!'
+            },
+            8: {
+                correct: '✅ Hervorragend! Crocs ist das Paradebeispiel: Von 2006-2007 stieg der Kurs, aber das KGV FIEL, weil die Gewinne noch schneller wuchsen. Das Unternehmen wuchs in seine Bewertung "hinein" - kurzfristig!',
+                incorrect: '❌ Falsch. Crocs zeigte perfekt, wie das KGV fallen kann während der Kurs steigt: Die Gewinne wuchsen schneller als der Aktienkurs. Das Unternehmen wuchs in seine Bewertung "hinein".'
+            }
+        };
+        
         // Fortschritt aus localStorage laden
         function loadProgress() {
             const saved = localStorage.getItem('tradingLessonProgress');
@@ -1233,16 +1302,48 @@
             // Sicherstellen, dass das Event-Target existiert
             if (!event || !event.target) return;
             
+            // Prüfe ob bereits beantwortet
+            if (answers[questionNum]) {
+                return; // Antwort bereits gegeben, nicht ändern
+            }
+            
             answers[questionNum] = answer;
             
-            // Visuelle Markierung
+            // Alle Optionen der aktuellen Frage
             const options = document.querySelectorAll(`[data-question="${questionNum}"] .answer-option`);
-            options.forEach(opt => opt.classList.remove('selected'));
+            const explanationBox = document.querySelector(`[data-question="${questionNum}"] .explanation-box`);
             
-            const selectedOption = event.target.closest('.answer-option');
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
+            // Richtige Antwort markieren
+            const isCorrect = answer === correctAnswers[questionNum];
+            
+            options.forEach(opt => {
+                const answerLetter = opt.textContent.trim().charAt(0).toLowerCase();
+                
+                // Richtige Antwort immer grün markieren
+                if (answerLetter === correctAnswers[questionNum]) {
+                    opt.classList.add('correct');
+                }
+                
+                // Falsche gewählte Antwort rot markieren
+                if (answerLetter === answer && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+                
+                // Alle Optionen deaktivieren nach Auswahl
+                opt.style.pointerEvents = 'none';
+            });
+            
+            // Erklärung anzeigen
+            if (explanationBox) {
+                explanationBox.textContent = isCorrect ? 
+                    explanations[questionNum].correct : 
+                    explanations[questionNum].incorrect;
+                explanationBox.classList.add(isCorrect ? 'correct' : 'incorrect');
+                explanationBox.classList.add('show');
             }
+            
+            // "Weiter" Button aktivieren
+            document.getElementById('nextBtn').disabled = false;
         }
         
         function nextQuestion() {
@@ -1262,6 +1363,12 @@
                 
                 // Button-Status aktualisieren
                 document.getElementById('prevBtn').disabled = false;
+                
+                // "Weiter" Button deaktivieren wenn neue Frage noch nicht beantwortet
+                if (!answers[currentQuestion]) {
+                    document.getElementById('nextBtn').disabled = true;
+                }
+                
                 if (currentQuestion === totalQuestions) {
                     document.getElementById('nextBtn').textContent = 'Auswerten';
                 }
@@ -1360,7 +1467,14 @@
                 q.classList.remove('active');
                 q.querySelectorAll('.answer-option').forEach(opt => {
                     opt.classList.remove('selected', 'correct', 'incorrect');
+                    opt.style.pointerEvents = 'auto'; // Wieder klickbar machen
                 });
+                
+                // Erklärungsboxen verstecken
+                const explanationBox = q.querySelector('.explanation-box');
+                if (explanationBox) {
+                    explanationBox.classList.remove('show', 'correct', 'incorrect');
+                }
             });
             
             const firstQuestion = document.querySelector('[data-question="1"]');
@@ -1371,7 +1485,10 @@
             const prevBtn = document.getElementById('prevBtn');
             const nextBtn = document.getElementById('nextBtn');
             if (prevBtn) prevBtn.disabled = true;
-            if (nextBtn) nextBtn.textContent = 'Weiter';
+            if (nextBtn) {
+                nextBtn.textContent = 'Weiter';
+                nextBtn.disabled = true; // Initial deaktiviert bis erste Antwort
+            }
         }
         
         // Charts erstellen
