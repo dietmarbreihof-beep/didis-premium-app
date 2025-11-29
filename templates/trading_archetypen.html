@@ -513,6 +513,26 @@
             50% { transform: scale(1.02); }
             100% { transform: scale(1); }
         }
+
+        /* Quiz Styles */
+        .quiz-options label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.3s;
+            background: #f8f8f8;
+        }
+
+        .quiz-options label:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -559,7 +579,7 @@
                     <div class="method-icon">🐘</div>
                     <div class="method-title">
                         <h2>Buy & Hold - Der geduldige Investor</h2>
-                        <div class="method-subtitle">Haltedauer: 5-10 Jahre | Rendite: potentiell 12-18% p.a.*</div>
+                        <div class="method-subtitle">Haltedauer: 5-10 Jahre | Rendite: durchschnittlich-potentiell 6-25% p.a.*</div>
                     </div>
                 </div>
 
@@ -572,7 +592,7 @@
                             <li>Dollar-Cost-Average (DCA)</li>
                             <li>Käufe in mehreren Tranchen</li>
                             <li>Kein oder sehr weiter Stop-Loss</li>
-                            <li>High Conviction Titel</li>
+                            <li>High Conviction Qualtitätstitel</li>
                         </ul>
                     </div>
 
@@ -602,7 +622,7 @@
                     <div class="method-icon">🐆</div>
                     <div class="method-title">
                         <h2>Position Trading - Der strategische Jäger</h2>
-                        <div class="method-subtitle">Haltedauer: 3-9 Monate | Rendite: potentiell 15-25% p.a.*</div>
+                        <div class="method-subtitle">Haltedauer: 3-18 Monate | Rendite: potentiell 15-40% p.a.*</div>
                     </div>
                 </div>
 
@@ -610,7 +630,7 @@
                     <div class="info-card">
                         <h4>📊 Charakteristika</h4>
                         <ul class="info-list">
-                            <li>Mittlere Positionen (3-5% Depotgewicht)</li>
+                            <li>Mittlere Positionen (3-10% Depotgewicht)</li>
                             <li>Stage 2 Trades (Stan Weinstein)</li>
                             <li>Käufe in mehreren Tranchen</li>
                             <li>Fundamentale + Technische Analyse</li>
@@ -633,7 +653,7 @@
 
                 <div class="risk-warning">
                     <h4>⚠️ Wichtiger Hinweis</h4>
-                    <p>Position Trading erfordert Disziplin beim Verkaufen. <strong>Niemals in einem Bärenmarkt oder bei Stage 4 Signalen halten!</strong> Kapitalerhalt geht vor Gewinnmaximierung.</p>
+                    <p>Position Trading erfordert Disziplin beim Verkaufen. <strong>Niemals in einem Bärenmarkt oder bei Stage 3 und 4 Signalen halten!</strong> Kapitalerhalt geht vor Gewinnmaximierung.</p>
                 </div>
             </div>
 
@@ -643,7 +663,7 @@
                     <div class="method-icon">🐝</div>
                     <div class="method-title">
                         <h2>Swing Trading - Der taktische Sprinter</h2>
-                        <div class="method-subtitle">Haltedauer: 2-14 Tage | Rendite: potentiell 20-35% p.a.*</div>
+                        <div class="method-subtitle">Haltedauer: 2-14 Tage | Rendite: potentiell 20-200% p.a.*</div>
                     </div>
                 </div>
 
@@ -668,6 +688,8 @@
                             <li>Gap-Up/Gap-Down Trades</li>
                             <li>Volume-basierte Signale</li>
                             <li>Schnelle Gewinnmitnahme</li>
+                            <li>Super Stocks (10x+ Performance)</li>
+                            <li>Erfordert hohe technische Expertise und Disziplin</li>
                         </ul>
                     </div>
                 </div>
@@ -695,9 +717,9 @@
                     <tbody>
                         <tr>
                             <td><strong>Zeitaufwand/Tag</strong></td>
-                            <td>10-20 Minuten</td>
+                            <td>5-15 Minuten</td>
                             <td>30-60 Minuten</td>
-                            <td>1-3 Stunden</td>
+                            <td>1-4 Stunden</td>
                         </tr>
                         <tr>
                             <td><strong>Stress-Level</strong></td>
@@ -707,21 +729,21 @@
                         </tr>
                         <tr>
                             <td><strong>Positionsgröße</strong></td>
-                            <td>1-3% (bis 10% bei Top-Picks)</td>
-                            <td>3-5%</td>
-                            <td>5-15%</td>
+                            <td>0,5-3% (bis 5% bei Top-Picks)</td>
+                            <td>3-10% (bis 15% bei Top-Picks)</td>
+                            <td>5-15% (bis 20% bei Top-Low-Risk-Entry-Points)</td>
                         </tr>
                         <tr>
                             <td><strong>Stop-Loss</strong></td>
                             <td>Sehr weit/Keiner</td>
                             <td>15-25%</td>
-                            <td>5-10%</td>
+                            <td>3-5%</td>
                         </tr>
                         <tr>
                             <td><strong>Analysetiefe</strong></td>
                             <td>Sehr tief (Fundamental)</td>
                             <td>Mittel (Fundamental + Technisch)</td>
-                            <td>Oberflächlich (Technisch)</td>
+                            <td>Oberflächlich (Technisch + Theme + In Plays)</td>
                         </tr>
                         <tr>
                             <td><strong>Erfolgsfaktor</strong></td>
@@ -788,6 +810,7 @@
                         <ul class="info-list">
                             <li>Maximal 1% des Gesamtdepots pro Trade riskieren</li>
                             <li>Bei 50.000€ Depot = max. 500€ Risiko</li>
+                            <li>Anfänger: Maximal 0,5% des Gesamtdepots pro Tag riskieren</li>
                             <li>Stop-Loss bestimmt Positionsgröße</li>
                             <li>Emotionen werden ausgeschaltet</li>
                         </ul>
@@ -811,18 +834,169 @@
                 </div>
             </div>
 
-            <!-- Quiz Vorschau -->
-            <div class="quiz-preview fade-in">
-                <h3>🧠 Bereit für das Abschluss-Quiz?</h3>
-                <p>Teste dein Wissen über die drei Trading-Methoden und deren optimale Anwendung.</p>
-                <p><strong>Das Quiz enthält:</strong> 8 Fragen | Sofortiges Feedback | Persönliche Empfehlungen</p>
-                <a href="{{ url_for('modules') }}" class="btn btn-success">🚀 Zurück zur Modulübersicht</a>
+            <!-- Interaktives Quiz -->
+            <div class="method-section fade-in" id="quiz-section">
+                <div class="method-header">
+                    <div class="method-icon">🧠</div>
+                    <div class="method-title">
+                        <h2>Abschluss-Quiz: Teste dein Wissen</h2>
+                        <div class="method-subtitle">8 Fragen | Sofortiges Feedback | Persönliche Empfehlungen</div>
+                    </div>
+                </div>
+
+                <!-- Quiz Frage 1 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>1️⃣ Welche Haltedauer ist typisch für Position Trading?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px; transition: background 0.3s;">
+                            <input type="radio" name="q1" value="a"> 2-14 Tage
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px; transition: background 0.3s;">
+                            <input type="radio" name="q1" value="b"> 3-18 Monate ✓
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px; transition: background 0.3s;">
+                            <input type="radio" name="q1" value="c"> 5-10 Jahre
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q1" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 2 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>2️⃣ Welche Positionsgröße ist optimal für Swing Trading bei Top-Low-Risk-Entry-Points?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q2" value="a"> 0,5-3%
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q2" value="b"> 3-10%
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q2" value="c"> 5-15% (bis 20% bei Top-Low-Risk-Entry-Points) ✓
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q2" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 3 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>3️⃣ Wie eng sollte der Stop-Loss beim Swing Trading sein?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q3" value="a"> Sehr weit/Keiner
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q3" value="b"> 15-25%
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q3" value="c"> 3-5% ✓
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q3" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 4 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>4️⃣ Wann solltest du Position Trades NIEMALS halten?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q4" value="a"> Bei niedrigem Volumen
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q4" value="b"> In einem Bärenmarkt oder bei Stage 3 und 4 Signalen ✓
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q4" value="c"> Während Earnings Season
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q4" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 5 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>5️⃣ Welche potenzielle Rendite p.a. ist realistisch für Swing Trading?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q5" value="a"> 6-25% p.a.
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q5" value="b"> 15-40% p.a.
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q5" value="c"> 20-200% p.a. ✓
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q5" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 6 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>6️⃣ Wie viel Zeit solltest du täglich für Buy & Hold investieren?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q6" value="a"> 5-15 Minuten ✓
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q6" value="b"> 30-60 Minuten
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q6" value="c"> 1-4 Stunden
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q6" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 7 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>7️⃣ Was ist die wichtigste Regel für Risk Management (1%-Regel)?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q7" value="a"> Maximal 1% des Depots in eine Aktie investieren
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q7" value="b"> Maximal 1% des Gesamtdepots pro Trade riskieren ✓
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q7" value="c"> Maximal 1% Verlust pro Woche
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q7" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Frage 8 -->
+                <div class="info-card" style="margin-bottom: 20px;">
+                    <h4>8️⃣ Wie viel Performance des S&P 500 entsteht in RISK-ON Phasen?</h4>
+                    <div class="quiz-options">
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q8" value="a"> 70%
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q8" value="b"> 85%
+                        </label>
+                        <label style="display: block; padding: 10px; margin: 5px 0; cursor: pointer; border-radius: 8px;">
+                            <input type="radio" name="q8" value="c"> 97% ✓
+                        </label>
+                    </div>
+                    <div class="quiz-feedback" id="feedback-q8" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+                </div>
+
+                <!-- Quiz Auswertung -->
+                <div class="highlight-box" id="quiz-result" style="display: none;">
+                    <h4>🎉 Quiz abgeschlossen!</h4>
+                    <p id="quiz-score"></p>
+                    <p id="quiz-recommendation"></p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="checkAllAnswers()" class="btn btn-success">📊 Auswertung anzeigen</button>
+                    <button onclick="resetQuiz()" class="btn btn-primary" style="margin-left: 15px;">🔄 Quiz wiederholen</button>
+                </div>
             </div>
 
             <!-- Interaktives Element -->
             <div class="interactive-section fade-in">
                 <h4>📚 Weiteres Lernen</h4>
-                <p>Vertiefen Sie Ihr Wissen mit weiteren Modulen und Kursen</p>
+                <p>Vertiefe dein Wissen mit weiteren Modulen und Kursen</p>
             </div>
 
             <!-- Navigation Footer -->
@@ -837,7 +1011,7 @@
             <!-- CTA Section -->
             <div class="cta-section">
                 <h3>🎓 Bereit für den nächsten Schritt?</h3>
-                <p>Vertiefen Sie Ihr Wissen mit unserem Elite Trader Programm</p>
+                <p>Vertiefe dein Wissen mit unserem Elite Trader Programm</p>
                 <div class="cta-buttons">
                     <a href="{{ url_for('modules') }}" class="btn btn-success">Weitere Module entdecken</a>
                     <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Zum Dashboard</a>
@@ -884,6 +1058,137 @@
         document.querySelectorAll('.method-section, .comparison-section').forEach(el => {
             observer.observe(el);
         });
+
+        // Quiz Funktionalität
+        const quizAnswers = {
+            q1: 'b',
+            q2: 'c',
+            q3: 'c',
+            q4: 'b',
+            q5: 'c',
+            q6: 'a',
+            q7: 'b',
+            q8: 'c'
+        };
+
+        const quizFeedback = {
+            q1: {
+                correct: '✅ Richtig! Position Trading hat typischerweise eine Haltedauer von 3-18 Monaten.',
+                wrong: '❌ Nicht ganz. Position Trading liegt zwischen Buy & Hold (5-10 Jahre) und Swing Trading (2-14 Tage) mit einer Haltedauer von 3-18 Monaten.'
+            },
+            q2: {
+                correct: '✅ Perfekt! Bei Top-Low-Risk-Entry-Points können Swing Trader 5-15% (bis zu 20%) investieren.',
+                wrong: '❌ Falsch. Swing Trading erlaubt größere Positionen: 5-15% (bis 20% bei Top-Low-Risk-Entry-Points).'
+            },
+            q3: {
+                correct: '✅ Genau! Swing Trading erfordert enge Stop-Loss von 3-5% für schnelles Risikomanagement.',
+                wrong: '❌ Nicht richtig. Swing Trading nutzt enge Stops von 3-5%, im Gegensatz zu Position Trading (15-25%).'
+            },
+            q4: {
+                correct: '✅ Exzellent! Kapitalerhalt geht vor Gewinnmaximierung - niemals in Stage 3/4 oder Bärenmärkten halten.',
+                wrong: '❌ Das stimmt nicht. Entscheidend ist: NIEMALS in einem Bärenmarkt oder bei Stage 3 und 4 Signalen halten!'
+            },
+            q5: {
+                correct: '✅ Richtig! Swing Trading kann 20-200% p.a. erreichen, besonders mit Super Stocks (10x+ Performance).',
+                wrong: '❌ Falsch. Swing Trading bietet die höchste Rendite: 20-200% p.a., erfordert aber auch die höchste Expertise.'
+            },
+            q6: {
+                correct: '✅ Korrekt! Buy & Hold ist die zeiteffizienteste Methode mit nur 5-15 Minuten täglich.',
+                wrong: '❌ Nicht richtig. Buy & Hold benötigt am wenigsten Zeit: nur 5-15 Minuten täglich.'
+            },
+            q7: {
+                correct: '✅ Perfekt verstanden! Die 1%-Regel bedeutet: Maximal 1% des Gesamtdepots pro Trade RISKIEREN (nicht investieren).',
+                wrong: '❌ Achtung! Die 1%-Regel bezieht sich auf das RISIKO pro Trade, nicht die Investitionssumme. Bei 50.000€ Depot = max. 500€ Risiko.'
+            },
+            q8: {
+                correct: '✅ Beeindruckend! 97% der S&P 500 Performance entsteht in RISK-ON Phasen - deshalb ist Market Timing so wichtig.',
+                wrong: '❌ Falsch. Unglaubliche 97% der S&P 500 Performance entsteht in RISK-ON Phasen (Goldilocks/Reflation)!'
+            }
+        };
+
+        // Event Listener für alle Radio Buttons
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionNum = this.name;
+                const selectedAnswer = this.value;
+                const feedbackDiv = document.getElementById(`feedback-${questionNum}`);
+                const correctAnswer = quizAnswers[questionNum];
+                
+                feedbackDiv.style.display = 'block';
+                
+                if (selectedAnswer === correctAnswer) {
+                    feedbackDiv.style.background = 'linear-gradient(135deg, #d1fae5, #a7f3d0)';
+                    feedbackDiv.style.color = '#065f46';
+                    feedbackDiv.innerHTML = quizFeedback[questionNum].correct;
+                } else {
+                    feedbackDiv.style.background = 'linear-gradient(135deg, #fee2e2, #fecaca)';
+                    feedbackDiv.style.color = '#991b1b';
+                    feedbackDiv.innerHTML = quizFeedback[questionNum].wrong;
+                }
+            });
+        });
+
+        function checkAllAnswers() {
+            let correctCount = 0;
+            let answeredCount = 0;
+            
+            for (let question in quizAnswers) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                if (selected) {
+                    answeredCount++;
+                    if (selected.value === quizAnswers[question]) {
+                        correctCount++;
+                    }
+                }
+            }
+            
+            if (answeredCount < 8) {
+                alert('Bitte beantworte alle 8 Fragen, bevor du die Auswertung anzeigst.');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('quiz-result');
+            const scoreText = document.getElementById('quiz-score');
+            const recommendationText = document.getElementById('quiz-recommendation');
+            
+            const percentage = (correctCount / 8) * 100;
+            scoreText.innerHTML = `<strong>Dein Ergebnis: ${correctCount} von 8 richtig (${percentage.toFixed(0)}%)</strong>`;
+            
+            let recommendation = '';
+            if (percentage >= 90) {
+                recommendation = '🏆 <strong>Hervorragend!</strong> Du hast die Trading-Methoden perfekt verstanden. Du bist bereit für die praktische Anwendung und kannst mit dem Keulen-Kombi-Prozess starten.';
+            } else if (percentage >= 75) {
+                recommendation = '👍 <strong>Sehr gut!</strong> Du hast ein solides Verständnis der Trading-Methoden. Wiederhole die kritischen Punkte zu Risk Management und Positionsgrößen.';
+            } else if (percentage >= 50) {
+                recommendation = '📚 <strong>Guter Anfang!</strong> Lies das Modul noch einmal durch und fokussiere dich auf die Unterschiede zwischen den drei Methoden.';
+            } else {
+                recommendation = '🔄 <strong>Noch nicht ganz!</strong> Nimm dir Zeit, das Modul erneut durchzuarbeiten. Die Grundlagen sind essentiell für deinen Trading-Erfolg.';
+            }
+            
+            recommendationText.innerHTML = recommendation;
+            resultDiv.style.display = 'block';
+            
+            // Scroll zu Ergebnis
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function resetQuiz() {
+            // Alle Radio Buttons deselektieren
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.checked = false;
+            });
+            
+            // Alle Feedback-Divs verstecken
+            document.querySelectorAll('.quiz-feedback').forEach(feedback => {
+                feedback.style.display = 'none';
+            });
+            
+            // Ergebnis verstecken
+            document.getElementById('quiz-result').style.display = 'none';
+            
+            // Scroll zum Quiz-Anfang
+            document.getElementById('quiz-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
     </script>
 
     <!-- Einheitliche Navigation -->
