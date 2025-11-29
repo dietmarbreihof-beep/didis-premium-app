@@ -5141,12 +5141,42 @@ def csrf_error(error):
 
 # === APP STARTEN ===
 
+def migrate_user_table():
+    """Fügt fehlende Spalten zur User-Tabelle hinzu (PostgreSQL-kompatibel)"""
+    try:
+        # Prüfe ob subscription_started_at existiert
+        from sqlalchemy import text, inspect
+        
+        inspector = inspect(db.engine)
+        columns = [col['name'] for col in inspector.get_columns('users')]
+        
+        if 'subscription_started_at' not in columns:
+            print("[MIGRATION] Füge subscription_started_at Spalte hinzu...")
+            
+            # PostgreSQL: JSON-Typ für die Spalte
+            db.session.execute(text(
+                "ALTER TABLE users ADD COLUMN subscription_started_at JSON DEFAULT '{}'::json"
+            ))
+            db.session.commit()
+            print("[OK] subscription_started_at Spalte hinzugefügt!")
+        else:
+            print("[INFO] subscription_started_at Spalte existiert bereits")
+            
+        return True
+    except Exception as e:
+        print(f"[WARN] Migration übersprungen (evtl. bereits vorhanden): {e}")
+        db.session.rollback()
+        return True  # Nicht-kritisch, weitermachen
+
 def init_database():
     """Initialisiert die Database mit allen Tabellen"""
     try:
         # Alle Tabellen erstellen
         db.create_all()
         print("[OK] Database-Tabellen erstellt!")
+        
+        # ✅ NEUE SPALTEN MIGRIEREN (für bestehende Tabellen)
+        migrate_user_table()
         
         # User-Tabelle prüfen
         try:
