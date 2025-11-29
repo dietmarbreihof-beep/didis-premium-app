@@ -287,16 +287,27 @@ def send_email_async(to, subject, template, **kwargs):
 @app.route('/admin/test-email')
 def test_email():
     """Debug-Route zum Anzeigen der E-Mail-Konfiguration (nur für Admin)"""
-    # Nur für Admin
-    username = session.get('user', {}).get('username')
-    if username not in ['admin', 'didi']:
-        return "Nicht autorisiert", 403
-    
     import json
     
-    # Nur Konfiguration anzeigen (kein E-Mail-Versand - verursacht Timeout!)
+    # Session-Debug
+    username = session.get('user', {}).get('username')
+    logged_in = session.get('logged_in', False)
+    
+    # Nur für Admin
+    if username not in ['admin', 'didi']:
+        return f"""<h2>Nicht autorisiert</h2>
+        <pre>
+Logged in: {logged_in}
+Username: {username}
+Session user: {session.get('user')}
+        </pre>
+        <p><a href="/login">Zum Login</a></p>
+        """, 403
+    
+    # E-Mail-Konfiguration anzeigen (kein E-Mail-Versand - verursacht Timeout!)
     result = {
         "status": "⚠️ Gmail SMTP verursacht Timeout auf Railway",
+        "logged_in_as": username,
         "mail_server": app.config.get('MAIL_SERVER'),
         "mail_port": app.config.get('MAIL_PORT'),
         "mail_use_tls": app.config.get('MAIL_USE_TLS'),
