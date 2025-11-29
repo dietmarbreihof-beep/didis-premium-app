@@ -153,11 +153,12 @@
 
                             <!-- Delete User -->
                             {% if user.username not in ['admin', 'didi'] %}
-                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;" onsubmit="return confirm('⚠️ ACHTUNG!\n\nUser {{ user.username }} wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!');">
+                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;" id="delete-form-{{ user.id }}">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <button type="submit"
+                                <button type="button"
                                         class="btn"
-                                        style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;">
+                                        style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;"
+                                        onclick="if(confirm('⚠️ ACHTUNG!\n\nUser {{ user.username }} wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!')) { document.getElementById('delete-form-{{ user.id }}').submit(); }">
                                     🗑️ Löschen
                                 </button>
                             </form>

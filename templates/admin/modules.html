@@ -1423,6 +1423,22 @@
 </style>
 
 <script>
+// Helper: Cookie-Wert auslesen (für CSRF-Token)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 // Global Variables
 let bulkModeActive = false;
 let sortModeActive = false;
@@ -1944,34 +1960,76 @@ function toggleSubcategoryStatus(subcategoryId) {
 
 // Delete Category
 function deleteCategory(categoryId) {
-    if (confirm('Sind Sie sicher, dass Sie diese Kategorie und alle zugehörigen Unterkategorien löschen möchten?')) {
+    if (confirm('Sind Sie sicher, dass Sie diese Kategorie und alle zugehörigen Unterkategorien löschen möchten?\n\nAlle Module werden in "Neue Module" verschoben.')) {
+        // CSRF-Token aus Meta-Tag oder Cookie holen
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                         document.querySelector('input[name="csrf_token"]')?.value || 
+                         getCookie('csrf_token');
+        
         fetch(`/admin/delete-category/${categoryId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                location.reload();
+                showNotification('success', 'Kategorie erfolgreich gelöscht.');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
             } else {
-                alert('Fehler: ' + data.error);
+                alert('Fehler beim Löschen: ' + data.error);
             }
+        })
+        .catch(error => {
+            console.error('Delete error:', error);
+            alert('Fehler beim Löschen der Kategorie: ' + error.message);
         });
     }
 }
 
 // Delete Subcategory
 function deleteSubcategory(subcategoryId) {
-    if (confirm('Sind Sie sicher, dass Sie diese Unterkategorie löschen möchten?')) {
+    if (confirm('Sind Sie sicher, dass Sie diese Unterkategorie löschen möchten?\n\nAlle Module in dieser Unterkategorie werden in die Hauptkategorie verschoben.')) {
+        // CSRF-Token aus Meta-Tag oder Cookie holen
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                         document.querySelector('input[name="csrf_token"]')?.value || 
+                         getCookie('csrf_token');
+        
         fetch(`/admin/delete-subcategory/${subcategoryId}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            }
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                location.reload();
+                showNotification('success', 'Unterkategorie erfolgreich gelöscht.');
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
             } else {
-                alert('Fehler: ' + data.error);
+                alert('Fehler beim Löschen: ' + data.error);
             }
+        })
+        .catch(error => {
+            console.error('Delete error:', error);
+            alert('Fehler beim Löschen der Unterkategorie: ' + error.message);
         });
     }
 }
@@ -2164,10 +2222,16 @@ function changeModuleSortOrder(moduleId, currentOrder) {
 // Delete Module
 function deleteModule(moduleId, moduleTitle) {
     if (confirm(`Sind Sie sicher, dass Sie das Modul "${moduleTitle}" PERMANENT löschen möchten?\n\nDiese Aktion kann nicht rückgängig gemacht werden!`)) {
+        // CSRF-Token aus Meta-Tag oder Cookie holen
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || 
+                         document.querySelector('input[name="csrf_token"]')?.value || 
+                         getCookie('csrf_token');
+        
         fetch(`/admin/delete-module/${moduleId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
             }
         })
         .then(response => response.json())
