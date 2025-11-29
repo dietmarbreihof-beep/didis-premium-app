@@ -153,14 +153,12 @@
 
                             <!-- Delete User -->
                             {% if user.username not in ['admin', 'didi'] %}
-                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;" class="delete-user-form" data-username="{{ user.username }}">
-                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-                                <button type="submit"
-                                        class="btn delete-btn"
-                                        style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;">
-                                    🗑️ Löschen
-                                </button>
-                            </form>
+                            <button type="button"
+                                    class="btn delete-btn"
+                                    style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;"
+                                    onclick="showDeleteModal('{{ user.id }}', '{{ user.username }}', '{{ user.email }}', '{{ user.subscription_type.value }}')">
+                                🗑️ Löschen
+                            </button>
                             {% endif %}
                         </div>
                     </td>
@@ -388,7 +386,72 @@ table {
     </div>
 </div>
 
+<!-- Modal: User löschen (Bestätigung) -->
+<div id="deleteUserModal" class="modal">
+    <div class="modal-content" style="max-width: 450px; border: 2px solid var(--danger);">
+        <div class="modal-header" style="background: linear-gradient(135deg, var(--danger), #b91c1c); color: white; margin: -30px -30px 20px -30px; padding: 20px 30px; border-radius: 10px 10px 0 0;">
+            <h2 style="color: white; margin: 0;">⚠️ User löschen</h2>
+            <span class="close" onclick="closeDeleteModal()" style="color: white;">&times;</span>
+        </div>
+        
+        <div style="text-align: center; padding: 10px 0;">
+            <div style="font-size: 4rem; margin-bottom: 15px;">🗑️</div>
+            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 5px;">
+                Möchtest du diesen User wirklich löschen?
+            </p>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                Dieser Vorgang kann <strong>NICHT</strong> rückgängig gemacht werden!
+            </p>
+        </div>
+        
+        <!-- User-Details Box -->
+        <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+            <div style="display: grid; gap: 8px;">
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">👤 Username:</span>
+                    <strong id="deleteUserName" style="color: #1a1a1a;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">📧 Email:</span>
+                    <strong id="deleteUserEmail" style="color: #1a1a1a;"></strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #666;">⭐ Subscription:</span>
+                    <strong id="deleteUserSubscription" style="color: #1a1a1a;"></strong>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Warnung -->
+        <div style="background: #fffbeb; border: 1px solid #fbbf24; border-radius: 8px; padding: 12px; margin-bottom: 20px;">
+            <p style="margin: 0; font-size: 0.875rem; color: #92400e;">
+                <strong>⚠️ Folgende Daten werden ebenfalls gelöscht:</strong><br>
+                • Modul-Freischaltungen<br>
+                • E-Mail-Verifizierungs-Tokens<br>
+                • Analytics-Daten<br>
+                • Lernfortschritt
+            </p>
+        </div>
+        
+        <!-- Buttons -->
+        <form id="deleteUserForm" method="POST" action="">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button type="button" class="btn" onclick="closeDeleteModal()" 
+                        style="background: #e5e7eb; color: #374151; min-width: 120px;">
+                    ✖️ Abbrechen
+                </button>
+                <button type="submit" class="btn" id="confirmDeleteBtn"
+                        style="background: linear-gradient(135deg, var(--danger), #b91c1c); color: white; min-width: 120px;">
+                    🗑️ Endgültig löschen
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
+// === ADD USER MODAL ===
 function showAddUserModal() {
     document.getElementById('addUserModal').style.display = 'block';
 }
@@ -397,39 +460,76 @@ function closeAddUserModal() {
     document.getElementById('addUserModal').style.display = 'none';
 }
 
+// === DELETE USER MODAL ===
+function showDeleteModal(userId, username, email, subscription) {
+    console.log('[DELETE] Öffne Modal für User:', username, '(ID:', userId, ')');
+    
+    // User-Daten ins Modal einfügen
+    document.getElementById('deleteUserName').textContent = username;
+    document.getElementById('deleteUserEmail').textContent = email;
+    document.getElementById('deleteUserSubscription').textContent = getSubscriptionLabel(subscription);
+    
+    // Form-Action setzen
+    const form = document.getElementById('deleteUserForm');
+    form.action = '/admin/users/' + userId + '/delete';
+    
+    // Modal anzeigen
+    document.getElementById('deleteUserModal').style.display = 'block';
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteUserModal').style.display = 'none';
+}
+
+function getSubscriptionLabel(subscription) {
+    const labels = {
+        'free': '🆓 Free',
+        'premium': '⭐ Premium',
+        'elite': '💎 Elite',
+        'elite_pro': '👑 Elite Pro'
+    };
+    return labels[subscription] || subscription;
+}
+
 // Modal schließen wenn außerhalb geklickt wird
 window.onclick = function(event) {
-    const modal = document.getElementById('addUserModal');
-    if (event.target == modal) {
+    const addModal = document.getElementById('addUserModal');
+    const deleteModal = document.getElementById('deleteUserModal');
+    
+    if (event.target == addModal) {
         closeAddUserModal();
+    }
+    if (event.target == deleteModal) {
+        closeDeleteModal();
     }
 }
 
-// Delete User Forms - Bestätigung mit JavaScript
+// ESC-Taste zum Schließen
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeAddUserModal();
+        closeDeleteModal();
+    }
+});
+
+// Formular-Submission für Delete mit Loading-State
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('Delete forms script loaded');
+    console.log('[DELETE] Script geladen');
     
-    // Alle Delete-Forms finden
-    const deleteForms = document.querySelectorAll('.delete-user-form');
-    console.log('Found delete forms:', deleteForms.length);
-    
-    deleteForms.forEach(function(form) {
-        form.addEventListener('submit', function(e) {
-            const username = form.getAttribute('data-username');
-            console.log('Delete form submitted for:', username);
+    const deleteForm = document.getElementById('deleteUserForm');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            const confirmBtn = document.getElementById('confirmDeleteBtn');
+            const username = document.getElementById('deleteUserName').textContent;
             
-            const confirmed = confirm('⚠️ ACHTUNG!\n\nUser "' + username + '" wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!');
+            // Button deaktivieren und Loading-Text anzeigen
+            confirmBtn.disabled = true;
+            confirmBtn.innerHTML = '⏳ Lösche...';
+            confirmBtn.style.opacity = '0.7';
             
-            if (!confirmed) {
-                console.log('Delete cancelled by user');
-                e.preventDefault();
-                return false;
-            }
-            
-            console.log('Delete confirmed, submitting form...');
-            return true;
+            console.log('[DELETE] Lösche User:', username);
         });
-    });
+    }
 });
 </script>
 

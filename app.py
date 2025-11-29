@@ -6288,39 +6288,81 @@ def admin_toggle_user_status(user_id):
 @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
 @admin_required
 def admin_delete_user(user_id):
-    """Löscht einen User (mit Bestätigung) - inklusive aller abhängigen Daten"""
+    """
+    Löscht einen User VOLLSTÄNDIG - inklusive ALLER abhängigen Daten.
+    
+    WICHTIG: Diese Route löscht:
+    - UserModuleUnlock (tägliche Modul-Freischaltungen)
+    - EmailVerificationToken (Verifizierungs-Tokens)
+    - VisitorAnalytics (Besuchs-Analytics)
+    - ModuleProgress (Fortschritts-Tracking)
+    """
     try:
-        user = User.query.get_or_404(user_id)
+        # User laden
+        user = User.query.get(user_id)
+        
+        if not user:
+            flash(f'User mit ID {user_id} nicht gefunden!', 'error')
+            return redirect(url_for('admin_users'))
+        
         username = user.username
         user_email = user.email
         user_subscription = user.subscription_type.value
+        
+        print(f"\n{'='*60}")
+        print(f"[DELETE] Starte Löschvorgang für User: {username} (ID: {user_id})")
+        print(f"{'='*60}")
 
+        # === SICHERHEITSPRÜFUNGEN ===
+        
         # Verhindere, dass Admins sich selbst löschen
         current_username = session.get('user', {}).get('username')
         if user.username == current_username:
-            flash('Du kannst dich nicht selbst löschen!', 'error')
+            flash('❌ Du kannst dich nicht selbst löschen!', 'error')
             return redirect(url_for('admin_users'))
 
         # Verhindere, dass Admin-Accounts gelöscht werden
         if user.username in ['admin', 'didi']:
-            flash('Admin-Accounts können nicht gelöscht werden!', 'error')
+            flash('❌ Admin-Accounts können nicht gelöscht werden!', 'error')
             return redirect(url_for('admin_users'))
 
-        # === ABHÄNGIGE DATEN LÖSCHEN (WICHTIG: Vor User-Löschung!) ===
+        # === ABHÄNGIGE DATEN LÖSCHEN (WICHTIG: In korrekter Reihenfolge!) ===
+        deleted_stats = {
+            'unlocks': 0,
+            'tokens': 0,
+            'analytics': 0,
+            'progress': 0
+        }
         
-        # 1. Email-Verification-Tokens löschen
-        deleted_tokens = EmailVerificationToken.query.filter_by(user_id=user.id).delete()
-        print(f"[DELETE] Gelöschte Tokens für User {username}: {deleted_tokens}")
+        # 1. UserModuleUnlock löschen (KRITISCH - hat ForeignKey!)
+        try:
+            deleted_stats['unlocks'] = UserModuleUnlock.query.filter_by(user_id=user.id).delete()
+            print(f"[DELETE] ✓ UserModuleUnlock gelöscht: {deleted_stats['unlocks']}")
+        except Exception as e:
+            print(f"[DELETE] ⚠️ UserModuleUnlock Fehler (ignoriert): {str(e)}")
         
-        # 2. PageVisits löschen (Analytics)
-        deleted_visits = PageVisit.query.filter_by(user_id=user.id).delete()
-        print(f"[DELETE] Gelöschte PageVisits für User {username}: {deleted_visits}")
+        # 2. Email-Verification-Tokens löschen (hat ForeignKey!)
+        try:
+            deleted_stats['tokens'] = EmailVerificationToken.query.filter_by(user_id=user.id).delete()
+            print(f"[DELETE] ✓ EmailVerificationToken gelöscht: {deleted_stats['tokens']}")
+        except Exception as e:
+            print(f"[DELETE] ⚠️ EmailVerificationToken Fehler (ignoriert): {str(e)}")
         
-        # 3. ModuleProgress löschen (verwendet String-ID)
-        deleted_progress = ModuleProgress.query.filter_by(user_id=str(user.id)).delete()
-        print(f"[DELETE] Gelöschte ModuleProgress für User {username}: {deleted_progress}")
+        # 3. VisitorAnalytics löschen (hat ForeignKey - optional für User)
+        try:
+            deleted_stats['analytics'] = VisitorAnalytics.query.filter_by(user_id=user.id).delete()
+            print(f"[DELETE] ✓ VisitorAnalytics gelöscht: {deleted_stats['analytics']}")
+        except Exception as e:
+            print(f"[DELETE] ⚠️ VisitorAnalytics Fehler (ignoriert): {str(e)}")
+        
+        # 4. ModuleProgress löschen (verwendet String-ID!)
+        try:
+            deleted_stats['progress'] = ModuleProgress.query.filter_by(user_id=str(user.id)).delete()
+            print(f"[DELETE] ✓ ModuleProgress gelöscht: {deleted_stats['progress']}")
+        except Exception as e:
+            print(f"[DELETE] ⚠️ ModuleProgress Fehler (ignoriert): {str(e)}")
 
-        # Audit-Log erstellen BEVOR User gelöscht wird
+        # === AUDIT-LOG ERSTELLEN (BEVOR User gelöscht wird!) ===
         admin_username = session.get('user', {}).get('username', 'unknown')
         audit_log = AdminAuditLog(
             admin_username=admin_username,
@@ -6328,21 +6370,39 @@ def admin_delete_user(user_id):
             target_user_id=user.id,
             target_username=username,
             old_value=f'{user_email} | {user_subscription}',
-            new_value='DELETED',
+            new_value=f'DELETED (unlocks:{deleted_stats["unlocks"]}, tokens:{deleted_stats["tokens"]}, analytics:{deleted_stats["analytics"]}, progress:{deleted_stats["progress"]})',
             ip_address=request.remote_addr
         )
-
         db.session.add(audit_log)
+
+        # === USER LÖSCHEN ===
         db.session.delete(user)
         db.session.commit()
 
-        print(f"[DELETE] ✅ User {username} erfolgreich gelöscht (inkl. {deleted_tokens} Tokens, {deleted_visits} Visits, {deleted_progress} Progress)")
-        flash(f'User {username} erfolgreich gelöscht!', 'success')
+        # Erfolgsmeldung mit Details
+        print(f"[DELETE] ✅ User {username} erfolgreich gelöscht!")
+        print(f"[DELETE] 📊 Statistik:")
+        print(f"         - Modul-Freischaltungen: {deleted_stats['unlocks']}")
+        print(f"         - Verification-Tokens: {deleted_stats['tokens']}")
+        print(f"         - Analytics-Einträge: {deleted_stats['analytics']}")
+        print(f"         - Fortschritts-Einträge: {deleted_stats['progress']}")
+        print(f"{'='*60}\n")
+        
+        flash(f'✅ User "{username}" erfolgreich gelöscht! '
+              f'(inkl. {deleted_stats["unlocks"]} Freischaltungen, '
+              f'{deleted_stats["tokens"]} Tokens, '
+              f'{deleted_stats["progress"]} Fortschritt-Einträge)', 'success')
 
     except Exception as e:
         db.session.rollback()
-        print(f"[DELETE] ❌ Fehler beim Löschen von User {user_id}: {str(e)}")
-        flash(f'Fehler beim Löschen des Users: {str(e)}', 'error')
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"\n{'='*60}")
+        print(f"[DELETE] ❌ FEHLER beim Löschen von User {user_id}")
+        print(f"[DELETE] Fehlermeldung: {str(e)}")
+        print(f"[DELETE] Details:\n{error_details}")
+        print(f"{'='*60}\n")
+        flash(f'❌ Fehler beim Löschen des Users: {str(e)}', 'error')
 
     return redirect(url_for('admin_users'))
 
