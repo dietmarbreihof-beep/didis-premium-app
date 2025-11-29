@@ -973,14 +973,12 @@ def register():
                 return render_template('auth/register.html')
             
             # Neuen User erstellen
-            # HOTFIX: email_verified=True bis Email-Config in Railway gesetzt ist
-            # TODO: Auf False ändern sobald MAIL_* Environment Variables gesetzt sind
             user = User(
                 email=email,
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                email_verified=True,  # HOTFIX: Temporär auf True (siehe TODO oben)
+                email_verified=False,  # Email-Verifizierung erforderlich
                 subscription_type=SubscriptionType.FREE  # Standard: FREE
             )
             user.set_password(password)
@@ -992,14 +990,20 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            # HOTFIX: Email-Versand temporär deaktiviert bis Railway Email-Config steht
-            # TODO: Aktivieren sobald MAIL_USERNAME, MAIL_PASSWORD, etc. in Railway gesetzt sind
-            # token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
-            # base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
-            # verification_link = f"{base_url}/verify-email/{token}"
-            # send_email(...)
+            # Verifizierungs-Email senden
+            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+            verification_link = f"{base_url}/verify-email/{token}"
             
-            flash('Registrierung erfolgreich! Du kannst dich jetzt anmelden.', 'success')
+            send_email(
+                to=email,
+                subject='Bestätige deine Email-Adresse - Didis Trading Academy',
+                template='verify_email',
+                username=username,
+                verification_link=verification_link
+            )
+            
+            flash('Registrierung erfolgreich! Bitte prüfe dein Email-Postfach und bestätige deine Email-Adresse.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
