@@ -305,6 +305,42 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Kernthemen: Ziele definieren, Profit-Erwartungen, Zeit-Commitment (2-5 Jahre), Lernkosten, Kapitalanforderungen (300K+), OPM-Strategie, Zeitrahmen-Wahl
 ```
 
+**Beispiel 1f: Dein Trading-Stil (NEU - November 2025)**
+```
+@new-module-page Dein Trading-Stil
+- HTML-Seite: templates/dein-trading-stil.html ✅
+- Quelle: StockBee Guides/How to get started/How to become a trader 2.txt ✅
+- Kategorie: Trading-Psychologie → Grundlagen ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (6 Sections), Quiz-System (6 Fragen), Interaktive Style-Cards, Vergleichstabellen, Reflexions-Box
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 35 Minuten
+- Route: /dein-trading-stil ✅
+- Kernthemen: Day-Trading vs Swing-Trading vs Position-Trading, 4 Entscheidungsfaktoren (Persönlichkeit/Lifestyle/Alter/Kapital), Volatilitätsrisiko, Position Sizing je Stil, Konsequenzen jedes Stils, Commitment-Entscheidung
+```
+
+**Beispiel 1g: Wie man Trader wird Teil 3 (NEU - November 2025)**
+```
+@new-module-page Wie man Trader wird Teil 3
+- HTML-Seite: templates/wie-man-trader-wird-3.html ✅
+- Quelle: StockBee Guides/How to get started/Wie_man_Trader_wird_3.txt ✅
+- Kategorie: Trading-Psychologie → Grundlagen ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro/Masterclass) ✅
+- Features: Progressive Disclosure (6 Sections), Quiz-System (6 Fragen), Interaktive Setup-Cards, Trader-Vergleichstabelle, Vacuum-Learning-Anleitung, Checklisten
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 40 Minuten
+- Route: /wie-man-trader-wird-3 ✅
+- Kernthemen: 
+  • Alle erfolgreichen Trader machen dasselbe (nur mit verschiedenen Namen)
+  • Day-Trading Setups: News Plays, Shorting Pumps, Breakouts/Pullbacks
+  • Swing-Trading Setups: Breakouts ODER Pullbacks (VCP, TBA, TAZ = dasselbe)
+  • Position-Trading: Growth Stocks, Value Stocks, Dividend Aristocrats
+  • Vacuum-Learning System: 15-30 Tage intensives Sammeln = Expertise
+  • Keine exotischen Techniken jagen
+  • Einen Zeitrahmen wählen und DABEIBEIBEN
+- Serie: Teil 3 von 3 (nach "Wie man Trader wird" und "Dein Trading-Stil")
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
@@ -328,7 +364,7 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 ---
 
-**Zuletzt aktualisiert:** 17. Oktober 2025  
+**Zuletzt aktualisiert:** 29. November 2025  
 **Projekt:** Didis Premium Trading Academy  
 **Version:** 1.0
 

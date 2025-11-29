@@ -1,0 +1,1643 @@
+{% extends "base.html" %}
+
+{% block title %}Wie man Trader wird (Teil 3) - Setups & Expertise{% endblock %}
+
+{% block content %}
+<div class="trader-werden-3-wrapper">
+<style>
+    .trader-werden-3-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .trader-werden-3-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 70%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        max-width: 750px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .series-badge {
+        display: inline-block;
+        background: rgba(255,255,255,0.2);
+        padding: 6px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        margin-left: 10px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        max-width: 900px;
+        margin: 40px auto 0;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .stat-number {
+        font-size: 2.2em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin: 0;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        margin-top: 5px;
+        opacity: 0.9;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-header h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.3em;
+    }
+
+    .progress-percentage {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: #daa520;
+    }
+
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .section-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+        filter: blur(2px);
+    }
+
+    .section-card.locked::after {
+        content: '🔒 Vorherigen Abschnitt abschließen';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(26, 26, 26, 0.95);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1em;
+        filter: none;
+        z-index: 10;
+    }
+
+    .section-card.completed {
+        border-left-color: #38a169;
+    }
+
+    .section-card.completed::before {
+        content: '✅ Abgeschlossen';
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #38a169;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+
+    .section-card h2 {
+        color: #1a1a1a;
+        font-size: 1.8em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-number {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.4em;
+        margin: 30px 0 15px 0;
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 10px;
+    }
+
+    .section-card p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin-bottom: 15px;
+    }
+
+    .section-card ul, .section-card ol {
+        color: #444;
+        line-height: 1.8;
+        margin: 15px 0;
+        padding-left: 25px;
+    }
+
+    .section-card li {
+        margin-bottom: 10px;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(244, 233, 123, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.15em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1a1a1a;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left: 4px solid #d69e2e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .warning-box strong {
+        color: #92400e;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-left: 4px solid #38a169;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .insight-box strong {
+        color: #2f6846;
+    }
+
+    .danger-box {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        border-left: 4px solid #e53e3e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .danger-box strong {
+        color: #c53030;
+    }
+
+    /* Quote Box */
+    .quote-box {
+        background: #1a1a1a;
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .quote-box::before {
+        content: '"';
+        font-size: 4em;
+        color: #daa520;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        opacity: 0.5;
+    }
+
+    .quote-box p {
+        color: white;
+        font-size: 1.2em;
+        font-style: italic;
+        padding-left: 40px;
+        margin: 0;
+    }
+
+    .quote-author {
+        text-align: right;
+        margin-top: 15px;
+        color: #daa520;
+        font-weight: 600;
+    }
+
+    /* Setup Cards Grid */
+    .setup-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .setup-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .setup-card:hover {
+        border-color: #daa520;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .setup-card.day-trading {
+        border-top: 4px solid #e53e3e;
+    }
+
+    .setup-card.swing-trading {
+        border-top: 4px solid #daa520;
+    }
+
+    .setup-card.position-trading {
+        border-top: 4px solid #38a169;
+    }
+
+    .setup-card .icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+    }
+
+    .setup-card h4 {
+        color: #1a1a1a;
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+    }
+
+    .setup-card p {
+        margin: 0;
+        font-size: 0.95em;
+        color: #666;
+    }
+
+    .setup-card ul {
+        margin: 10px 0 0 0;
+        padding-left: 20px;
+        font-size: 0.9em;
+    }
+
+    .setup-card ul li {
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    /* Trader Cards */
+    .trader-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .trader-card {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .trader-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .trader-card .icon {
+        font-size: 3em;
+        margin-bottom: 15px;
+    }
+
+    .trader-card h4 {
+        color: #f4e97b;
+        margin: 0 0 10px 0;
+    }
+
+    .trader-card p {
+        color: #ccc;
+        font-size: 0.9em;
+        margin: 0;
+    }
+
+    .trader-card .method {
+        background: #daa520;
+        color: #1a1a1a;
+        padding: 5px 15px;
+        border-radius: 15px;
+        font-size: 0.85em;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.95em;
+    }
+
+    .comparison-table th {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+    }
+
+    .comparison-table td {
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .comparison-table tr:hover {
+        background: #f8f9fa;
+    }
+
+    .comparison-table .category {
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    /* Checklist */
+    .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+    }
+
+    .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .checklist li:hover {
+        background: #f0f0f0;
+    }
+
+    .checklist li.checked {
+        background: #e8f5e9;
+    }
+
+    .checklist li.checked .check-icon {
+        color: #38a169;
+    }
+
+    .check-icon {
+        font-size: 1.3em;
+        flex-shrink: 0;
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
+
+    /* Quiz Styles */
+    .quiz-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-container h4 {
+        color: #1a1a1a;
+        margin: 0 0 20px 0;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quiz-question {
+        font-size: 1.1em;
+        color: #2d2d2d;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quiz-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        background: #fffef5;
+    }
+
+    .quiz-option.selected {
+        border-color: #daa520;
+        background: #fffef5;
+    }
+
+    .quiz-option.correct {
+        border-color: #38a169;
+        background: #e8f5e9;
+    }
+
+    .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #ffebee;
+    }
+
+    .quiz-option input[type="radio"] {
+        display: none;
+    }
+
+    .quiz-radio {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option.selected .quiz-radio {
+        border-color: #daa520;
+        background: #daa520;
+    }
+
+    .quiz-option.selected .quiz-radio::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: white;
+        border-radius: 50%;
+    }
+
+    .quiz-feedback {
+        margin-top: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-feedback.show {
+        display: block;
+    }
+
+    .quiz-feedback.correct {
+        background: #e8f5e9;
+        color: #2f6846;
+        border: 1px solid #38a169;
+    }
+
+    .quiz-feedback.incorrect {
+        background: #ffebee;
+        color: #c53030;
+        border: 1px solid #e53e3e;
+    }
+
+    /* Continue Button */
+    .continue-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .continue-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+    }
+
+    .continue-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Summary Box */
+    .summary-box {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 35px;
+        margin: 30px 0;
+    }
+
+    .summary-box h3 {
+        color: #daa520;
+        border-bottom-color: #daa520;
+        margin-top: 0;
+    }
+
+    .summary-box ul {
+        color: white;
+    }
+
+    .summary-box li {
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .summary-box li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #f4e97b;
+        font-weight: bold;
+    }
+
+    /* Reflection Box */
+    .reflection-box {
+        background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 25px 0;
+        border: 2px dashed #6366f1;
+    }
+
+    .reflection-box h4 {
+        color: #4338ca;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .reflection-box textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 15px;
+        border: 2px solid #c7d2fe;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1em;
+        resize: vertical;
+        margin-top: 10px;
+    }
+
+    .reflection-box textarea:focus {
+        outline: none;
+        border-color: #6366f1;
+    }
+
+    /* Final Section */
+    .final-section {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 50px;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .final-section h2 {
+        color: white;
+        justify-content: center;
+        font-size: 2em;
+    }
+
+    .final-section p {
+        color: white;
+        font-size: 1.2em;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+
+    /* Step Cards */
+    .step-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin: 25px 0;
+    }
+
+    .step-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        border-bottom: 3px solid #daa520;
+    }
+
+    .step-card .step-num {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        margin: 0 auto 15px;
+    }
+
+    .step-card h5 {
+        margin: 0 0 10px 0;
+        color: #1a1a1a;
+    }
+
+    .step-card p {
+        margin: 0;
+        font-size: 0.9em;
+        color: #666;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 50px 20px;
+        }
+
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-card h2 {
+            font-size: 1.4em;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .setup-grid, .trader-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quote-box p {
+            font-size: 1em;
+            padding-left: 20px;
+        }
+
+        .comparison-table {
+            font-size: 0.85em;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 10px;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="hero-badge">📚 PREMIUM LERNMODUL</span>
+        <span class="series-badge">Teil 3 von 3</span>
+        <h1>🎯 Setups & Expertise aufbauen</h1>
+        <p class="subtitle">Wie du die richtigen Setups für deinen Zeitrahmen findest – und warum alle erfolgreichen Trader dasselbe machen.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-number">3-4</p>
+                <p class="stat-label">Kern-Setups reichen</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">100%</p>
+                <p class="stat-label">Performance zählt</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">15</p>
+                <p class="stat-label">Tage Vakuum-Learning</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">6</p>
+                <p class="stat-label">Lernabschnitte</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="content-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-header">
+            <h3>📊 Dein Lernfortschritt</h3>
+            <span class="progress-percentage" id="progressText">0%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Section 1: Die Wahrheit über Setups -->
+    <div class="section-card" id="section1" data-section="1">
+        <h2><span class="section-number">1</span> Die überraschende Wahrheit über Setups</h2>
+        
+        <p>Hier kommt die Erkenntnis, die dir Jahre sparen kann: <strong>Alle erfolgreichen Trader machen im Grunde dasselbe.</strong></p>
+        
+        <p>Es ist 100% Performance-basiert. Es gibt keine Noten fürs "Wissen". Du verdienst kein Geld dafür, etwas zu <em>wissen</em> – nur dafür, etwas <em>umzusetzen</em>.</p>
+
+        <div class="highlight-box">
+            <strong>🎯 Die goldene Regel</strong>
+            <p>Sobald du deinen Zeitrahmen gewählt hast (Day-Trading, Swing-Trading, Position-Trading), finde heraus: <strong>Was sind die am häufigsten verwendeten Setups in diesem Zeitrahmen?</strong></p>
+        </div>
+
+        <p>Dank YouTube, Twitter, Blogs und Twitch ist diese Information heute frei verfügbar. Vor 20 Jahren gab es das nicht – da war man auf Foren und Magazine angewiesen.</p>
+
+        <div class="quote-box">
+            <p>Es ist nicht wie in diesen Taekwondo-Schulen, wo jeder einen schwarzen Gürtel bekommt und ein Foto damit macht. Hier machst du entweder Geld – oder du machst keins.</p>
+            <div class="quote-author">— Pradeep Bonde (StockBee)</div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Jage keine exotischen Hasen!</strong>
+            <p>Was ist das Problem mit exotischen Techniken? Du verschwendest so viel Zeit, weil es nicht genug Information gibt. Wenn jemand eine "einzigartige" Elliott-Wave-Technik hat – wo findest du zusätzliche Informationen? Und wenn du die gängigen Techniken nicht zum Laufen bekommst, bin ich sehr skeptisch gegenüber exotischen Methoden.</p>
+        </div>
+
+        <!-- Quiz 1 -->
+        <div class="quiz-container" id="quiz1">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Warum ist es riskant, "exotische" Trading-Techniken zu verfolgen?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz1" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Weil sie grundsätzlich nicht funktionieren</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz1" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Weil es zu wenig Information gibt und du von einem "geheimen Guru" abhängig bist</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz1" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Weil sie zu teuer zu lernen sind</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback1"></div>
+        </div>
+
+        <button class="continue-btn" id="continue1" onclick="completeSection(1)" disabled>
+            Weiter zu Abschnitt 2 ➡️
+        </button>
+    </div>
+
+    <!-- Section 2: Day-Trading Setups -->
+    <div class="section-card locked" id="section2" data-section="2">
+        <h2><span class="section-number">2</span> Day-Trading: Die Kern-Setups</h2>
+        
+        <p>Wenn du Day-Trader werden willst, wirst du feststellen: <strong>Fast alle erfolgreichen Day-Trader handeln dieselben 3-4 Setups.</strong></p>
+
+        <div class="setup-grid">
+            <div class="setup-card day-trading">
+                <div class="icon">📰</div>
+                <h4>News Plays</h4>
+                <p>Die beliebteste Day-Trading-Methode überhaupt. Jeder große Day-Trader, der Millionen macht, handelt News Plays.</p>
+                <ul>
+                    <li>Earnings Surprises</li>
+                    <li>FDA-Approvals (Biotech)</li>
+                    <li>Breaking News Events</li>
+                </ul>
+            </div>
+            <div class="setup-card day-trading">
+                <div class="icon">📉</div>
+                <h4>Shorting Pumps</h4>
+                <p>Extrem profitabel. Stocks die 50-100% in 2-3 Tagen steigen auf fragwürdigen Fundamentaldaten – dann faden.</p>
+                <ul>
+                    <li>Parabolic Short</li>
+                    <li>Pump & Dump Plays</li>
+                    <li>Extreme Move Fading</li>
+                </ul>
+            </div>
+            <div class="setup-card day-trading">
+                <div class="icon">📊</div>
+                <h4>Breakouts & Pullbacks</h4>
+                <p>Klassische Techniken, die auch intraday funktionieren. Support/Resistance, Kanäle, Bollinger Bands.</p>
+                <ul>
+                    <li>Opening Range Breakout</li>
+                    <li>VWAP-Reclaim</li>
+                    <li>Previous Day High/Low</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Kristjan Kullamägi's erste Million</strong>
+            <p>Wie hat Qullamaggie seine erste Million gemacht? <strong>Shorting parabolic plays!</strong> Das ist Day-Trading-Short von extremen Moves. Alle Day-Trader mit speziellen Brokern (für Short-Locate) traden genau das.</p>
+        </div>
+
+        <h3>Die Day-Trader Community</h3>
+        <p>Wenn du auf YouTube "day trading live" suchst, findest du hunderte Videos. Sie alle handeln dieselben Aktien am selben Tag – weil sie alle dieselben Setups handeln:</p>
+
+        <div class="trader-grid">
+            <div class="trader-card">
+                <div class="icon">🎥</div>
+                <h4>Warrior Trading</h4>
+                <p>Einer der bekanntesten Day-Trading-Channels</p>
+                <span class="method">News Plays + Momentum</span>
+            </div>
+            <div class="trader-card">
+                <div class="icon">📺</div>
+                <h4>NYSE/NASDAQ Day Traders</h4>
+                <p>Hunderte von Live-Streams täglich</p>
+                <span class="method">Dieselben Stocks täglich</span>
+            </div>
+            <div class="trader-card">
+                <div class="icon">💬</div>
+                <h4>Twitter/X Trading Community</h4>
+                <p>Alle beschweren sich über "keine Shorts verfügbar"</p>
+                <span class="method">Shorting Pumps</span>
+            </div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="quiz-container" id="quiz2">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Was ist die am häufigsten verwendete Methode unter erfolgreichen Day-Tradern?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz2" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Elliott Wave Analyse</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz2" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>News Plays und Shorting Pumps</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz2" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Langfristiges Value Investing</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback2"></div>
+        </div>
+
+        <button class="continue-btn" id="continue2" onclick="completeSection(2)" disabled>
+            Weiter zu Abschnitt 3 ➡️
+        </button>
+    </div>
+
+    <!-- Section 3: Swing-Trading Setups -->
+    <div class="section-card locked" id="section3" data-section="3">
+        <h2><span class="section-number">3</span> Swing-Trading: Breakouts & Pullbacks</h2>
+        
+        <p>Alle Swing-Trader – und ich meine wirklich ALLE – lassen sich in zwei Kategorien einteilen:</p>
+
+        <div class="setup-grid">
+            <div class="setup-card swing-trading">
+                <div class="icon">🚀</div>
+                <h4>Breakout-Trader</h4>
+                <p>Kaufen wenn der Kurs aus einer Konsolidierung ausbricht. Klassische Momentum-Strategie.</p>
+                <ul>
+                    <li>52-Week High Breakouts</li>
+                    <li>Cup & Handle</li>
+                    <li>Flat Base Breakouts</li>
+                    <li>VCP (Volatility Contraction Pattern)</li>
+                </ul>
+            </div>
+            <div class="setup-card swing-trading">
+                <div class="icon">🔄</div>
+                <h4>Pullback/Anticipation-Trader</h4>
+                <p>Kaufen während eines Rücksetzers – bevor der nächste Breakout kommt. "Mean Reversion" ist nur ein fancy Begriff für Pullback.</p>
+                <ul>
+                    <li>Flag Patterns</li>
+                    <li>21 EMA Pullbacks</li>
+                    <li>Anticipation Entries</li>
+                    <li>TBA / TAZ (Trader Action Zone)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>🎯 Die Namen sind anders, das Setup ist dasselbe!</strong>
+            <p>Mark Minervini nennt es <strong>VCP</strong>. Dan Zanger nennt es <strong>TBA (Technical Buy Area)</strong>. Ein anderer Trader nennt es <strong>TAZ (Traders Action Zone)</strong>. Aber es ist immer dasselbe: Anticipation – vor dem Breakout einsteigen.</p>
+        </div>
+
+        <h3>Bekannte Swing-Trader – Was sie WIRKLICH machen</h3>
+
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Trader</th>
+                    <th>Was er nennt</th>
+                    <th>Was es wirklich ist</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="category">Mark Minervini</td>
+                    <td>VCP, SEPA</td>
+                    <td>Breakouts + Anticipation</td>
+                </tr>
+                <tr>
+                    <td class="category">Dan Zanger</td>
+                    <td>TBA (Technical Buy Area)</td>
+                    <td>Breakouts</td>
+                </tr>
+                <tr>
+                    <td class="category">Scott (ehemaliges StockBee-Mitglied)</td>
+                    <td>Slingshot</td>
+                    <td>Pullbacks</td>
+                </tr>
+                <tr>
+                    <td class="category">Pattern Profits</td>
+                    <td>PEG (Price Earnings Gap)</td>
+                    <td>Episodic Pivots (späte Entry!)</td>
+                </tr>
+                <tr>
+                    <td class="category">Qullamaggie</td>
+                    <td>Episodic Pivots</td>
+                    <td>Breakouts nach News</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="quote-box">
+            <p>Ich kenne praktisch jeden Swing-Trader, der auf Twitter bekannt ist. Ich habe sie alle studiert. Sie machen alle dasselbe. Manche nennen es anders – aber es sind immer Breakouts oder Pullbacks.</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Persönlichkeits-basierte Aussagen erkennen</strong>
+            <p>Wenn jemand sagt: "Du solltest NIE einen Breakout kaufen, immer nur Anticipation!" – dann spricht er über <em>seine</em> Persönlichkeit, nicht über universelle Wahrheiten. Manche Leute können psychologisch keine Breakouts kaufen – also machen sie Pullbacks. Beides funktioniert!</p>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="quiz-container" id="quiz3">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Was unterscheidet erfolgreiche Swing-Trader voneinander?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz3" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Komplett verschiedene, geheime Strategien</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz3" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Die teuren Kurse, die sie besucht haben</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz3" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Hauptsächlich die Namen – aber alle machen Breakouts oder Pullbacks</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback3"></div>
+        </div>
+
+        <button class="continue-btn" id="continue3" onclick="completeSection(3)" disabled>
+            Weiter zu Abschnitt 4 ➡️
+        </button>
+    </div>
+
+    <!-- Section 4: Position-Trading Setups -->
+    <div class="section-card locked" id="section4" data-section="4">
+        <h2><span class="section-number">4</span> Position-Trading: Langfristige Strategien</h2>
+        
+        <p>Wenn du Position-Trading wählst (Wochen bis Monate halten), gibt es genau <strong>drei Hauptkategorien</strong>:</p>
+
+        <div class="setup-grid">
+            <div class="setup-card position-trading">
+                <div class="icon">📈</div>
+                <h4>Growth Stocks</h4>
+                <p>Die mit Abstand beliebteste Methode. Du suchst Wachstumsaktien früh und reitest die Welle.</p>
+                <ul>
+                    <li>Starkes Gewinnwachstum</li>
+                    <li>Innovative Produkte/Services</li>
+                    <li>Expandierende Märkte</li>
+                </ul>
+            </div>
+            <div class="setup-card position-trading">
+                <div class="icon">💎</div>
+                <h4>Value Stocks</h4>
+                <p>Unterbewertete Unternehmen kaufen und warten bis der Markt den wahren Wert erkennt.</p>
+                <ul>
+                    <li>Niedriges KGV</li>
+                    <li>Starke Bilanz</li>
+                    <li>Turnaround-Situationen</li>
+                </ul>
+            </div>
+            <div class="setup-card position-trading">
+                <div class="icon">💰</div>
+                <h4>Dividend Aristocrats</h4>
+                <p>Aktien, die seit 25+ Jahren jedes Jahr die Dividende erhöhen. Passives Einkommen.</p>
+                <ul>
+                    <li>Unilever, Caterpillar</li>
+                    <li>Johnson & Johnson</li>
+                    <li>Procter & Gamble</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Meine Empfehlung für Position-Trading</strong>
+            <p>Wenn du Position-Trading machen willst, geh zu <strong>Growth Stocks</strong>. Das ist der einfachste Einstieg ("low hanging fruit"). Dividend Aristocrats sind für Leute mit viel Kapital und anderen Überlegungen – ich würde das nicht als Anfänger empfehlen.</p>
+        </div>
+
+        <h3>Die Dividend-Berechnung</h3>
+        <p>Beispiel: Unilever zahlt etwa $2 pro Aktie Dividende. Wenn du $1.000/Monat an Dividenden willst:</p>
+        <ul>
+            <li>$12.000/Jahr Dividenden benötigt</li>
+            <li>Bei $2/Aktie = 6.000 Aktien nötig</li>
+            <li>Bei ~$50/Aktie = $300.000 Investment</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Vorsicht bei sterbenden Geschäftsmodellen</strong>
+            <p>Ich würde nicht in AT&T gehen – das ist ein sterbendes Geschäft. Lieber Consumer-Produkte-Unternehmen, die stabil sind. Schau dir das Geschäftsmodell an, nicht nur die Dividende!</p>
+        </div>
+
+        <!-- Quiz 4 -->
+        <div class="quiz-container" id="quiz4">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Welche Position-Trading-Strategie ist für Anfänger am einfachsten?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz4" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Growth Stocks – der einfachste Einstieg</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz4" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Dividend Aristocrats – garantiertes Einkommen</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz4" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Deep Value Investing – billig kaufen</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback4"></div>
+        </div>
+
+        <button class="continue-btn" id="continue4" onclick="completeSection(4)" disabled>
+            Weiter zu Abschnitt 5 ➡️
+        </button>
+    </div>
+
+    <!-- Section 5: Das Vacuum-Learning System -->
+    <div class="section-card locked" id="section5" data-section="5">
+        <h2><span class="section-number">5</span> Das Vacuum-Learning System</h2>
+        
+        <p>Sobald du weißt, welches Setup du perfektionieren willst, gibt es zwei Wege:</p>
+
+        <div class="setup-grid">
+            <div class="setup-card swing-trading">
+                <div class="icon">📚</div>
+                <h4>Der Premium-Weg</h4>
+                <p>Finde hochwertige Informationsquellen und Mentoren, die dir Jahre ersparen können.</p>
+            </div>
+            <div class="setup-card swing-trading">
+                <div class="icon">🔍</div>
+                <h4>Der Vacuum-Weg</h4>
+                <p>Sauge ALLE verfügbaren Informationen aus dem Internet auf und destilliere deine eigene Methode.</p>
+            </div>
+        </div>
+
+        <h3>Wie das Vacuum-Learning funktioniert</h3>
+
+        <div class="step-cards">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h5>Suchbegriffe definieren</h5>
+                <p>"Swing trading breakouts", "pullback scans", "momentum PCF telechart"</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h5>Top 200 Ergebnisse durchgehen</h5>
+                <p>YouTube, Twitter, Blogs – alles vakuumieren</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h5>Material sammeln</h5>
+                <p>2-3 Wochen nur sammeln, nicht traden</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">4</div>
+                <h5>Destillieren</h5>
+                <p>Gemeinsame Muster erkennen, eigene Methode formen</p>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p>Wenn ich ein Thema recherchiere, vakuumiere ich einfach alles raus. Ich arbeite gerade an einer Geschäftsidee und habe die letzten 2-3 Monate alles aus dem Internet gesammelt – YouTube, Facebook, überall. Dann mache ich mir Sinn daraus.</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>🎯 Das Dan Zanger Beispiel</strong>
+            <p>Als ich Dan Zanger studiert habe – 16.440% Return – habe ich JEDES Interview vakuumiert, jeden Post gelesen, seinen Newsletter analysiert, mich auf seiner Seite angemeldet. Und was habe ich rausgefunden? Er kauft Breakouts und Low-Float-Stocks. Das war's. Heute fokussiert er sich auf $40+ Aktien und Dollar-Records.</p>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Zeitrahmen für Vacuum-Learning</strong>
+            <p>Wenn du diese Methode oft benutzt, wirst du schneller. Für mich dauert es etwa <strong>15 Tage</strong>, um ein Thema zu vakuumieren und darin kompetent zu werden. Für dich vielleicht einen Monat – aber danach hast du echtes Wissen.</p>
+        </div>
+
+        <div class="reflection-box">
+            <h4>📝 Dein Vacuum-Plan</h4>
+            <p>Welches Setup willst du als erstes vakuumieren? Welche Suchbegriffe würdest du verwenden?</p>
+            <textarea id="reflection5" placeholder="z.B. 'Ich will Swing-Breakouts lernen. Suchbegriffe: swing trading breakouts, momentum breakout scans, breakout patterns stock...'"></textarea>
+        </div>
+
+        <!-- Quiz 5 -->
+        <div class="quiz-container" id="quiz5">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Was ist das Ziel des "Vacuum-Learning"?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz5" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Möglichst viele verschiedene Strategien gleichzeitig lernen</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz5" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>ALLE Informationen zu EINEM Thema sammeln und daraus deine eigene Methode destillieren</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz5" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Nur die kostenpflichtigen Kurse durcharbeiten</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback5"></div>
+        </div>
+
+        <button class="continue-btn" id="continue5" onclick="completeSection(5)" disabled>
+            Weiter zu Abschnitt 6 ➡️
+        </button>
+    </div>
+
+    <!-- Section 6: Der klare Pfad -->
+    <div class="section-card locked" id="section6" data-section="6">
+        <h2><span class="section-number">6</span> Der klare Pfad: Entscheiden, Fokussieren, Perfektionieren</h2>
+        
+        <p>Jetzt hast du alle Informationen. Der Pfad ist klar:</p>
+
+        <div class="step-cards">
+            <div class="step-card">
+                <div class="step-num">1</div>
+                <h5>Zeitrahmen wählen</h5>
+                <p>Day, Swing oder Position</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">2</div>
+                <h5>Setup-Typ wählen</h5>
+                <p>Breakouts ODER Pullbacks</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">3</div>
+                <h5>Vakuumieren ODER Mentor</h5>
+                <p>Beide Wege funktionieren</p>
+            </div>
+            <div class="step-card">
+                <div class="step-num">4</div>
+                <h5>EIN Setup perfektionieren</h5>
+                <p>Erst meistern, dann erweitern</p>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>🎯 Die Befreiung durch Klarheit</strong>
+            <p>Wenn du weißt, dass alle erfolgreichen Trader dasselbe machen – sollte das Druck von dir nehmen. Du musst nichts Exotisches finden. Du musst nur <strong>eine bewährte Sache gut machen</strong>.</p>
+        </div>
+
+        <h3>Was die Renditen unterscheidet</h3>
+        <p>Wenn alle dasselbe machen, was unterscheidet dann die Returns?</p>
+        <ul>
+            <li><strong>Size:</strong> Wie viel Kapital du pro Trade einsetzt</li>
+            <li><strong>Frequenz:</strong> Wie viele Trades du machst (300-500/Jahr bei den Besten)</li>
+            <li><strong>Execution:</strong> Wie präzise du ein- und aussteigst</li>
+            <li><strong>Disziplin:</strong> Wie konsequent du deine Regeln einhältst</li>
+        </ul>
+
+        <div class="quote-box">
+            <p>Das größte Problem vieler Trader: Sie wechseln ständig. Heute Swing, morgen Day-Trading, nächste Woche Position-Trading, weil jemand auf Twitter Gold-Stocks pusht. Diese Leute verlieren Jahre.</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <div class="danger-box">
+            <strong>❌ Der größte Fehler</strong>
+            <p>Viele Mitglieder treffen nicht mal die Zeitrahmen-Entscheidung. Einen Tag machen sie das, am nächsten Tag was anderes. Wenn deine Persönlichkeit nicht zu Breakouts passt – mach Pullbacks. Aber ENTSCHEIDE DICH!</p>
+        </div>
+
+        <h3>✅ Deine finale Checkliste</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe meinen Zeitrahmen gewählt (Day/Swing/Position)</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich weiß, welche Setups in meinem Zeitrahmen am häufigsten funktionieren</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe mich für EIN Setup entschieden (Breakout ODER Pullback)</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe einen Plan zum Vakuumieren ODER einen Mentor</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich verstehe, dass ich dieses eine Setup PERFEKTIONIEREN muss</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich bin bereit, NICHT zwischen Strategien zu wechseln</li>
+        </ul>
+
+        <div class="summary-box">
+            <h3>🎯 Die Key Takeaways</h3>
+            <ul>
+                <li><strong>Alle erfolgreichen Trader machen dasselbe</strong> – nur mit verschiedenen Namen</li>
+                <li><strong>Day-Trading:</strong> News Plays, Shorting Pumps, Breakouts/Pullbacks</li>
+                <li><strong>Swing-Trading:</strong> Breakouts ODER Pullbacks – mehr nicht</li>
+                <li><strong>Position-Trading:</strong> Growth, Value oder Dividend Stocks</li>
+                <li><strong>Jage keine exotischen Hasen</strong> – zu wenig Information, zu viel Abhängigkeit</li>
+                <li><strong>Vacuum-Learning:</strong> 15-30 Tage intensives Sammeln = echte Expertise</li>
+                <li><strong>Entscheide dich EINMAL</strong> – und dann BLEIB DABEI</li>
+            </ul>
+        </div>
+
+        <!-- Final Quiz -->
+        <div class="quiz-container" id="quiz6">
+            <h4>🧠 Abschluss-Quiz</h4>
+            <p class="quiz-question">Du hast beschlossen Swing-Trader zu werden, aber Breakouts "fühlen sich falsch an" für dich. Was solltest du tun?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz6" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Trotzdem Breakouts traden – das ist der "richtige" Weg</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz6" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Pullback-Trading perfektionieren – das passt besser zu deiner Persönlichkeit</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz6" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Zu Day-Trading wechseln – vielleicht ist Swing-Trading nicht für dich</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback6"></div>
+        </div>
+
+        <button class="continue-btn" id="continue6" onclick="completeModule()">
+            🎉 Modul abschließen
+        </button>
+    </div>
+
+    <!-- Completion Section (hidden initially) -->
+    <div class="final-section" id="completionSection" style="display: none;">
+        <h2>🎉 Glückwunsch!</h2>
+        <p>Du hast die komplette Serie "Wie man Trader wird" abgeschlossen! Du weißt jetzt:</p>
+        <ul style="text-align: left; max-width: 500px; margin: 20px auto; list-style: none;">
+            <li>✅ Wie du dein Ziel und deine Erwartungen definierst (Teil 1)</li>
+            <li>✅ Wie du deinen Trading-Stil findest (Teil 2)</li>
+            <li>✅ Welche Setups funktionieren und wie du Expertise aufbaust (Teil 3)</li>
+        </ul>
+        <p>Jetzt ist es Zeit zu HANDELN. Wähle EINEN Weg und geh ihn konsequent!</p>
+        <button class="continue-btn" onclick="window.location.href='/modules'" style="background: white; color: #b8860b;">
+            📚 Zurück zu allen Modulen
+        </button>
+    </div>
+</div>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+<script>
+    // State Management
+    let currentSection = 1;
+    let completedSections = [];
+    let quizAnswers = {};
+    const TOTAL_SECTIONS = 6;
+    const STORAGE_KEY = 'traderWerden3Progress';
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProgress();
+        setupQuizzes();
+        updateUI();
+    });
+
+    // Setup Quiz Event Listeners
+    function setupQuizzes() {
+        for (let i = 1; i <= TOTAL_SECTIONS; i++) {
+            const quizContainer = document.getElementById(`quiz${i}`);
+            if (!quizContainer) continue;
+
+            const options = quizContainer.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    handleQuizAnswer(i, this);
+                });
+            });
+        }
+    }
+
+    // Handle Quiz Answer
+    function handleQuizAnswer(quizNum, selectedOption) {
+        const quizContainer = document.getElementById(`quiz${quizNum}`);
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = document.getElementById(`feedback${quizNum}`);
+        const continueBtn = document.getElementById(`continue${quizNum}`);
+
+        // Remove previous selections
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+        });
+
+        // Mark selected
+        selectedOption.classList.add('selected');
+
+        // Check if correct
+        const isCorrect = selectedOption.dataset.correct === 'true';
+        quizAnswers[quizNum] = isCorrect;
+
+        // Show feedback
+        if (isCorrect) {
+            selectedOption.classList.add('correct');
+            feedback.className = 'quiz-feedback show correct';
+            feedback.innerHTML = '✅ Richtig! Sehr gut verstanden.';
+            continueBtn.disabled = false;
+        } else {
+            selectedOption.classList.add('incorrect');
+            feedback.className = 'quiz-feedback show incorrect';
+            feedback.innerHTML = '❌ Nicht ganz. Lies den Abschnitt noch einmal durch und versuche es erneut.';
+        }
+
+        saveProgress();
+    }
+
+    // Complete Section
+    function completeSection(sectionNum) {
+        if (!completedSections.includes(sectionNum)) {
+            completedSections.push(sectionNum);
+        }
+        currentSection = sectionNum + 1;
+        
+        // Mark current section as completed
+        const section = document.getElementById(`section${sectionNum}`);
+        section.classList.add('completed');
+        
+        // Unlock next section
+        const nextSection = document.getElementById(`section${sectionNum + 1}`);
+        if (nextSection) {
+            nextSection.classList.remove('locked');
+            // Scroll to next section
+            nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        updateProgress();
+        saveProgress();
+    }
+
+    // Complete Module
+    function completeModule() {
+        if (!completedSections.includes(TOTAL_SECTIONS)) {
+            completedSections.push(TOTAL_SECTIONS);
+        }
+        
+        const lastSection = document.getElementById(`section${TOTAL_SECTIONS}`);
+        lastSection.classList.add('completed');
+        
+        const completionSection = document.getElementById('completionSection');
+        completionSection.style.display = 'block';
+        completionSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        updateProgress();
+        saveProgress();
+    }
+
+    // Update Progress Bar
+    function updateProgress() {
+        const progress = (completedSections.length / TOTAL_SECTIONS) * 100;
+        
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = `${Math.round(progress)}%`;
+    }
+
+    // Update UI based on state
+    function updateUI() {
+        // Unlock completed sections
+        completedSections.forEach(sectionNum => {
+            const section = document.getElementById(`section${sectionNum}`);
+            if (section) {
+                section.classList.remove('locked');
+                section.classList.add('completed');
+            }
+        });
+
+        // Unlock current section
+        const currentSectionEl = document.getElementById(`section${currentSection}`);
+        if (currentSectionEl) {
+            currentSectionEl.classList.remove('locked');
+        }
+
+        // Re-enable continue buttons for completed quizzes
+        Object.keys(quizAnswers).forEach(quizNum => {
+            if (quizAnswers[quizNum]) {
+                const btn = document.getElementById(`continue${quizNum}`);
+                if (btn) btn.disabled = false;
+            }
+        });
+
+        updateProgress();
+    }
+
+    // Toggle Checklist Item
+    function toggleCheck(element) {
+        element.classList.toggle('checked');
+        const icon = element.querySelector('.check-icon');
+        icon.textContent = element.classList.contains('checked') ? '✅' : '⬜';
+    }
+
+    // Save Progress to localStorage
+    function saveProgress() {
+        const state = {
+            currentSection,
+            completedSections,
+            quizAnswers,
+            reflections: {
+                reflection5: document.getElementById('reflection5')?.value || ''
+            }
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    // Load Progress from localStorage
+    function loadProgress() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            const state = JSON.parse(saved);
+            currentSection = state.currentSection || 1;
+            completedSections = state.completedSections || [];
+            quizAnswers = state.quizAnswers || {};
+            
+            // Restore reflections
+            if (state.reflections) {
+                const r5 = document.getElementById('reflection5');
+                if (r5) r5.value = state.reflections.reflection5 || '';
+            }
+        }
+    }
+
+    // Save reflections on input
+    document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.addEventListener('input', saveProgress);
+    });
+</script>
+</div>
+{% endblock %}
+

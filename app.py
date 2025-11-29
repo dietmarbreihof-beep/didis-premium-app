@@ -2937,6 +2937,26 @@ def wie_man_trader_wird():
     
     return render_template('wie-man-trader-wird.html')
 
+@app.route('/wie-man-trader-wird-3')
+def wie_man_trader_wird_3():
+    """Wie man Trader wird Teil 3 - Setups & Expertise aufbauen (StockBee)"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    # Premium-Modul - Zugriff für Premium, Elite, Elite Pro, Masterclass
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='wie-man-trader-wird-3'))
+    
+    return render_template('wie-man-trader-wird-3.html')
+
 # === API ROUTES ===
 
 @app.route('/api/check-admin')
