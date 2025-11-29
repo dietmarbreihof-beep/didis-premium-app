@@ -1,0 +1,1504 @@
+{% extends "base.html" %}
+
+{% block title %}Wie man Trader wird - Die fundamentalen Fragen{% endblock %}
+
+{% block content %}
+<div class="trader-werden-wrapper">
+<style>
+    .trader-werden-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .trader-werden-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 70%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 20px;
+        max-width: 900px;
+        margin: 40px auto 0;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .stat-number {
+        font-size: 2.2em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin: 0;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+        margin-top: 5px;
+        opacity: 0.9;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-header h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.3em;
+    }
+
+    .progress-percentage {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: #daa520;
+    }
+
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.3s ease;
+    }
+
+    .section-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+        position: relative;
+        filter: blur(2px);
+    }
+
+    .section-card.locked::after {
+        content: '🔒 Vorherigen Abschnitt abschließen';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(26, 26, 26, 0.95);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1em;
+        filter: none;
+        z-index: 10;
+    }
+
+    .section-card.completed {
+        border-left-color: #38a169;
+    }
+
+    .section-card.completed::before {
+        content: '✅ Abgeschlossen';
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: #38a169;
+        color: white;
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+
+    .section-card {
+        position: relative;
+    }
+
+    .section-card h2 {
+        color: #1a1a1a;
+        font-size: 1.8em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-number {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.4em;
+        margin: 30px 0 15px 0;
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 10px;
+    }
+
+    .section-card p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin-bottom: 15px;
+    }
+
+    .section-card ul, .section-card ol {
+        color: #444;
+        line-height: 1.8;
+        margin: 15px 0;
+        padding-left: 25px;
+    }
+
+    .section-card li {
+        margin-bottom: 10px;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(244, 233, 123, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.15em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1a1a1a;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left: 4px solid #d69e2e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .warning-box strong {
+        color: #92400e;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-left: 4px solid #38a169;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .insight-box strong {
+        color: #2f6846;
+    }
+
+    .danger-box {
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+        border-left: 4px solid #e53e3e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .danger-box strong {
+        color: #c53030;
+    }
+
+    /* Quote Box */
+    .quote-box {
+        background: #1a1a1a;
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .quote-box::before {
+        content: '"';
+        font-size: 4em;
+        color: #daa520;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        opacity: 0.5;
+    }
+
+    .quote-box p {
+        color: white;
+        font-size: 1.2em;
+        font-style: italic;
+        padding-left: 40px;
+        margin: 0;
+    }
+
+    .quote-author {
+        text-align: right;
+        margin-top: 15px;
+        color: #daa520;
+        font-weight: 600;
+    }
+
+    /* Example Cards */
+    .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .example-card {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+        border-color: #daa520;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    }
+
+    .example-card .icon {
+        font-size: 2.5em;
+        margin-bottom: 15px;
+    }
+
+    .example-card h4 {
+        color: #1a1a1a;
+        margin: 0 0 10px 0;
+        font-size: 1.2em;
+    }
+
+    .example-card p {
+        margin: 0;
+        font-size: 0.95em;
+        color: #666;
+    }
+
+    /* Checklist */
+    .checklist {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+    }
+
+    .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .checklist li:hover {
+        background: #f0f0f0;
+    }
+
+    .checklist li.checked {
+        background: #e8f5e9;
+    }
+
+    .checklist li.checked .check-icon {
+        color: #38a169;
+    }
+
+    .check-icon {
+        font-size: 1.3em;
+        flex-shrink: 0;
+        color: #ccc;
+        transition: color 0.3s ease;
+    }
+
+    /* Quiz Styles */
+    .quiz-container {
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-container h4 {
+        color: #1a1a1a;
+        margin: 0 0 20px 0;
+        font-size: 1.3em;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quiz-question {
+        font-size: 1.1em;
+        color: #2d2d2d;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quiz-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        background: #fffef5;
+    }
+
+    .quiz-option.selected {
+        border-color: #daa520;
+        background: #fffef5;
+    }
+
+    .quiz-option.correct {
+        border-color: #38a169;
+        background: #e8f5e9;
+    }
+
+    .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #ffebee;
+    }
+
+    .quiz-option input[type="radio"] {
+        display: none;
+    }
+
+    .quiz-radio {
+        width: 22px;
+        height: 22px;
+        border: 2px solid #ccc;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option.selected .quiz-radio {
+        border-color: #daa520;
+        background: #daa520;
+    }
+
+    .quiz-option.selected .quiz-radio::after {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background: white;
+        border-radius: 50%;
+    }
+
+    .quiz-feedback {
+        margin-top: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-feedback.show {
+        display: block;
+    }
+
+    .quiz-feedback.correct {
+        background: #e8f5e9;
+        color: #2f6846;
+        border: 1px solid #38a169;
+    }
+
+    .quiz-feedback.incorrect {
+        background: #ffebee;
+        color: #c53030;
+        border: 1px solid #e53e3e;
+    }
+
+    /* Continue Button */
+    .continue-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        font-size: 1.1em;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .continue-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.4);
+    }
+
+    .continue-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Summary Box */
+    .summary-box {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 35px;
+        margin: 30px 0;
+    }
+
+    .summary-box h3 {
+        color: #daa520;
+        border-bottom-color: #daa520;
+        margin-top: 0;
+    }
+
+    .summary-box ul {
+        color: white;
+    }
+
+    .summary-box li {
+        position: relative;
+        padding-left: 25px;
+    }
+
+    .summary-box li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #f4e97b;
+        font-weight: bold;
+    }
+
+    /* Reflection Box */
+    .reflection-box {
+        background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 25px 0;
+        border: 2px dashed #6366f1;
+    }
+
+    .reflection-box h4 {
+        color: #4338ca;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .reflection-box textarea {
+        width: 100%;
+        min-height: 100px;
+        padding: 15px;
+        border: 2px solid #c7d2fe;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 1em;
+        resize: vertical;
+        margin-top: 10px;
+    }
+
+    .reflection-box textarea:focus {
+        outline: none;
+        border-color: #6366f1;
+    }
+
+    /* Numbers Grid */
+    .numbers-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin: 25px 0;
+    }
+
+    .number-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        border: 2px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .number-card:hover {
+        border-color: #daa520;
+        transform: translateY(-3px);
+    }
+
+    .number-card .big-number {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #daa520;
+        margin-bottom: 10px;
+    }
+
+    .number-card .label {
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    /* Final Section */
+    .final-section {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 50px;
+        text-align: center;
+        margin-top: 40px;
+    }
+
+    .final-section h2 {
+        color: white;
+        justify-content: center;
+        font-size: 2em;
+    }
+
+    .final-section p {
+        color: white;
+        font-size: 1.2em;
+        max-width: 700px;
+        margin: 20px auto;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 50px 20px;
+        }
+
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-card h2 {
+            font-size: 1.4em;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .example-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .quote-box p {
+            font-size: 1em;
+            padding-left: 20px;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="hero-content">
+        <span class="hero-badge">📚 PREMIUM LERNMODUL</span>
+        <h1>🎯 Wie man Trader wird</h1>
+        <p class="subtitle">Die fundamentalen Fragen, die du dir stellen musst, BEVOR du startest – und die dich Jahre des Lernens sparen können.</p>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <p class="stat-number">2-5</p>
+                <p class="stat-label">Jahre Lernzeit</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">300K+</p>
+                <p class="stat-label">Empfohlenes Kapital</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">10K+</p>
+                <p class="stat-label">Lernkosten typisch</p>
+            </div>
+            <div class="stat-card">
+                <p class="stat-number">7</p>
+                <p class="stat-label">Kernfragen</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="content-container">
+    <!-- Progress Tracker -->
+    <div class="progress-tracker">
+        <div class="progress-header">
+            <h3>📊 Dein Lernfortschritt</h3>
+            <span class="progress-percentage" id="progressText">0%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Section 1: Warum Trading? -->
+    <div class="section-card" id="section1" data-section="1">
+        <h2><span class="section-number">1</span> Warum Trading? Was ist dein Ziel?</h2>
+        
+        <p>Die erste und wichtigste Frage, die du dir stellen musst: <strong>Was ist es, das du im Trading wirklich suchst?</strong></p>
+        
+        <p>Viele Menschen stolpern ins Trading, ohne wirklich zu wissen, was sie wollen. Das ist einer der größten Fehler. Dein Ziel bestimmt deinen gesamten Weg – die Methoden, die Zeit, das Risiko.</p>
+
+        <div class="example-grid">
+            <div class="example-card">
+                <div class="icon">💰</div>
+                <h4>Großes Vermögen aufbauen</h4>
+                <p>Du willst 10-50 Millionen machen? Dann brauchst du einen anderen Ansatz als jemand, der nur sein 401K wachsen lassen möchte.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">🏖️</div>
+                <h4>"Freiheit" suchen?</h4>
+                <p>Achtung: Trading ist harte Arbeit! Es ist NICHT die Lösung für Leute, die einfach nicht mehr arbeiten wollen.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">📈</div>
+                <h4>Rente aufbessern</h4>
+                <p>Wenn du nur dein Retirement-Konto wachsen lassen willst, ist aktives Trading vielleicht gar nicht nötig.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">🎯</div>
+                <h4>Professionelle Karriere</h4>
+                <p>Wenn Trading dein Beruf werden soll – dann brauchst du den gleichen Ernst wie für jede andere Karriere.</p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Warnung: "Freiheit" als Motivation</strong>
+            <p>Wenn du Trading machst, weil du "frei" sein willst und deinen Job hasst – überdenke das! Trading wird dir keine Freiheit geben. Es ist echte Arbeit. Vollzeit-Trader arbeiten den ganzen Tag, das ganze Jahr. Wenn du nur deinem Job entkommen willst, gibt es bessere Alternativen.</p>
+        </div>
+
+        <div class="reflection-box">
+            <h4>📝 Deine Reflexion</h4>
+            <p>Was ist DEIN wahres Ziel im Trading? Sei ehrlich zu dir selbst:</p>
+            <textarea id="reflection1" placeholder="Schreibe hier dein Ziel auf... (z.B. 'Ich möchte in 5 Jahren finanziell unabhängig sein mit 500K im Portfolio')"></textarea>
+        </div>
+
+        <!-- Quiz 1 -->
+        <div class="quiz-container" id="quiz1">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Warum ist es so wichtig, dein Ziel VOR dem Start zu definieren?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz1" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Damit du weißt, wie viel Geld du ausgeben kannst</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz1" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Dein Ziel bestimmt deine Methoden, Zeit-Commitment und den gesamten Weg</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz1" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Es ist nicht wirklich wichtig, man kann es später noch ändern</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback1"></div>
+        </div>
+
+        <button class="continue-btn" id="continue1" onclick="completeSection(1)" disabled>
+            Weiter zu Abschnitt 2 ➡️
+        </button>
+    </div>
+
+    <!-- Section 2: Profit-Erwartungen -->
+    <div class="section-card locked" id="section2" data-section="2">
+        <h2><span class="section-number">2</span> Realistische Profit-Erwartungen</h2>
+        
+        <p>Deine Profit-Erwartung bestimmt, welche Art von Trading du betreiben musst. Sei realistisch!</p>
+
+        <div class="numbers-grid">
+            <div class="number-card">
+                <div class="big-number">1.000$/Tag</div>
+                <div class="label">= Du MUSST Day-Trader werden</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">100K/Monat</div>
+                <div class="label">= Brauchst mind. 300K + hohe Skills</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">10M+</div>
+                <div class="label">= Nur realistisch mit OPM (Other People's Money)</div>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p>Wenn du 1.000 Dollar am Tag machen willst – es gibt keinen anderen Weg als Day-Trading. Aber bist du bereit für dieses Level an Intensität?</p>
+            <div class="quote-author">— Pradeep Bonde (StockBee)</div>
+        </div>
+
+        <h3>💡 Die Wahrheit über Milliardäre im Trading</h3>
+        
+        <p>Schau dir alle Trading-Milliardäre an:</p>
+        <ul>
+            <li><strong>Warren Buffett</strong> – OPM (Berkshire ist fremdes Geld)</li>
+            <li><strong>George Soros</strong> – OPM (Hedge Fund)</li>
+            <li><strong>Paul Tudor Jones</strong> – OPM</li>
+            <li><strong>Ray Dalio</strong> – OPM</li>
+            <li><strong>Jim Simons</strong> – OPM</li>
+            <li><strong>Ken Griffin</strong> – OPM</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>🎯 Die Formel für großes Vermögen:</strong>
+            <p><strong>OPM (Other People's Money) + Leverage = Milliarden</strong><br>
+            KEINER dieser Leute wurde mit seinem eigenen Geld Milliardär. Sie alle managen fremdes Kapital.</p>
+        </div>
+
+        <div class="danger-box">
+            <strong>❌ Unrealistische Erwartungen</strong>
+            <p>Wenn du mit 10K startest und glaubst, in 2 Jahren 10 Millionen zu machen – du wirst enttäuscht werden. Sei ehrlich zu dir selbst über das, was realistisch möglich ist.</p>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="quiz-container" id="quiz2">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Was ist die realistischste Weg, um durch Trading reich zu werden (über 100 Millionen)?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz2" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Mit dem eigenen Konto und viel Geduld</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz2" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Durch Day-Trading von Optionen</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz2" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>OPM (Other People's Money) + Leverage</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback2"></div>
+        </div>
+
+        <button class="continue-btn" id="continue2" onclick="completeSection(2)" disabled>
+            Weiter zu Abschnitt 3 ➡️
+        </button>
+    </div>
+
+    <!-- Section 3: Zeit-Commitment -->
+    <div class="section-card locked" id="section3" data-section="3">
+        <h2><span class="section-number">3</span> Zeit-Commitment: Die unbequeme Wahrheit</h2>
+        
+        <div class="highlight-box">
+            <strong>⏰ Die wichtigste Frage:</strong>
+            <p>Bist du bereit, <strong>2-5 Jahre SUPERHUMAN EFFORT</strong> zu investieren?</p>
+        </div>
+
+        <p>Fast JEDER erfolgreiche Trader, den ich kenne, hat mindestens 2-5 Jahre extremer Anstrengung hinter sich. Es gibt praktisch keine Ausnahmen.</p>
+
+        <h3>Vergleich: Trading vs. Medizin</h3>
+        
+        <p>Wenn dein Kind Arzt werden will, was sagst du ihm?</p>
+        <ul>
+            <li>Mindestens 10-12 Jahre bis zum ersten echten Gehalt</li>
+            <li>Echtes Geld erst nach 15-20 Jahren</li>
+            <li>Enormer Zeitaufwand während der Ausbildung</li>
+        </ul>
+
+        <p><strong>Trading ist nicht anders!</strong> Du wirst Jahre brauchen, um:</p>
+        <ul>
+            <li>Dinge zu verstehen und zu verinnerlichen</li>
+            <li>Klarheit über deine Methodik zu gewinnen</li>
+            <li>Eine Strategie zu finden und zu perfektionieren</li>
+            <li>Sie zu deiner eigenen zu machen</li>
+        </ul>
+
+        <div class="quote-box">
+            <p>Selbst wenn dir jemand eine fertige Vorlage gibt, alle Regeln zeigt und alles erklärt – es wird dich immer noch 1-2 Jahre kosten, bis du erfolgreich bist. Warum? Du musst es VERINNERLICHEN. Du musst Vertrauen aufbauen. Das kann dir niemand geben.</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <div class="example-grid">
+            <div class="example-card">
+                <div class="icon">⚡</div>
+                <h4>Kristian (Qullamaggie)</h4>
+                <p>Selbst er hat Jahre gebraucht. Er war in mehreren Chatrooms, hat 10K+ für Lernmaterialien ausgegeben, und hat jahrelang superhuman effort betrieben.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">📚</div>
+                <h4>Mark Minervini</h4>
+                <p>5-6 Jahre bis zum Durchbruch. Arbeitete als Türsteher in einem Nachtclub, um tagsüber traden zu können.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">🎯</div>
+                <h4>Dan Zanger</h4>
+                <p>Erst nachdem er 17 Millionen gemacht hatte, gab er sein Pool-Geschäft auf. Nicht vorher!</p>
+            </div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="quiz-container" id="quiz3">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Wie lange dauert es typischerweise, bis erfolgreiche Trader profitabel werden?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz3" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>3-6 Monate intensives Lernen</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz3" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>2-5 Jahre mit superhuman effort</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz3" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Es hängt nur vom Glück ab</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback3"></div>
+        </div>
+
+        <button class="continue-btn" id="continue3" onclick="completeSection(3)" disabled>
+            Weiter zu Abschnitt 4 ➡️
+        </button>
+    </div>
+
+    <!-- Section 4: Lernkosten -->
+    <div class="section-card locked" id="section4" data-section="4">
+        <h2><span class="section-number">4</span> Lernkosten: Es gibt keine kostenlosen Mittagessen</h2>
+        
+        <p>Wie viel bist du bereit, für deine Trading-Ausbildung auszugeben?</p>
+
+        <div class="warning-box">
+            <strong>💸 Die Realität der Lernkosten</strong>
+            <p>Du wirst Geld ausgeben müssen, um zu lernen. Entweder durch Verluste (teuer!) oder durch Investition in Bildung. Es gibt KEINE kostenlosen Mittagessen in diesem Business.</p>
+        </div>
+
+        <h3>Fallstudie: Kristian (Qullamaggie)</h3>
+        <p>Bevor er seine Millionen machte, hat er ausgegeben:</p>
+        <ul>
+            <li><strong>Mark Minervini's Seite</strong> – $5.000</li>
+            <li><strong>Dan Zanger's Seite</strong> – $150-200/Monat</li>
+            <li><strong>Investor Underground</strong> – ~$300/Monat</li>
+            <li><strong>Weitere Chatrooms</strong> – Access Trading, etc.</li>
+        </ul>
+
+        <div class="numbers-grid">
+            <div class="number-card">
+                <div class="big-number">10K+</div>
+                <div class="label">Typische Lernkosten</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">💰</div>
+                <div class="label">+ Trading-Verluste</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">⏰</div>
+                <div class="label">+ Unzählige Stunden</div>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p>Die Story klingt glamourös: "Er startete mit $3.000 und machte $80 Millionen." Aber niemand redet über die Jahre des Leidens, die $10K+ an Lernmaterialien, den superhuman effort. Der Hintergrund wird immer ausgeblendet.</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <div class="insight-box">
+            <strong>✅ Die kluge Investition</strong>
+            <p>Investiere in gute Bildung und Mentorship. Es ist billiger als jahrelang Geld am Markt zu verlieren und die gleichen Fehler zu wiederholen.</p>
+        </div>
+
+        <!-- Quiz 4 -->
+        <div class="quiz-container" id="quiz4">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Warum ist es oft besser, in Bildung zu investieren statt direkt zu traden?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz4" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Weil man dadurch schneller reich wird</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz4" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Weil Trading-Verluste während des Lernens oft viel teurer sind</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz4" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Weil Kurse garantiert profitable Strategien liefern</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback4"></div>
+        </div>
+
+        <button class="continue-btn" id="continue4" onclick="completeSection(4)" disabled>
+            Weiter zu Abschnitt 5 ➡️
+        </button>
+    </div>
+
+    <!-- Section 5: Kapitalanforderungen -->
+    <div class="section-card locked" id="section5" data-section="5">
+        <h2><span class="section-number">5</span> Wie viel Kapital brauchst du wirklich?</h2>
+        
+        <p>Die kritischste Frage: <strong>Wie viel Geld brauchst du, um vom Trading leben zu können?</strong></p>
+
+        <div class="danger-box">
+            <strong>❌ Die harte Wahrheit</strong>
+            <p>Alles unter <strong>$300.000</strong> – du wirst ständig auf dem Laufband sein. Keine Chance auf echte finanzielle Freiheit.</p>
+        </div>
+
+        <h3>Die Mathematik</h3>
+        <p>Sagen wir, du machst 100% Return auf $300K = $300K Gewinn</p>
+        <ul>
+            <li>Davon gehen 40-47% an Steuern (je nach Staat)</li>
+            <li>Bleiben dir ~$165K</li>
+            <li>Davon musst du leben (Miete, Essen, Versicherung...)</li>
+            <li>Was bleibt übrig fürs nächste Jahr?</li>
+        </ul>
+
+        <div class="numbers-grid">
+            <div class="number-card">
+                <div class="big-number">$300K</div>
+                <div class="label">Absolutes Minimum</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">$500K</div>
+                <div class="label">Empfohlen für Vollzeit</div>
+            </div>
+            <div class="number-card">
+                <div class="big-number">20-30%</div>
+                <div class="label">Auch in schlechten Jahren möglich</div>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Das Retirement-Account Problem</strong>
+            <p>Wenn dein Geld in einem Retirement-Konto (401K, IRA) ist – kannst du es überhaupt nutzen? Nein! Du zahlst 10% Strafe + Steuern, wenn du es früh rausnimmst. Du bist "reich auf dem Papier" aber hast keinen Cash Flow.</p>
+        </div>
+
+        <div class="insight-box">
+            <strong>✅ Was Kristian wirklich tat</strong>
+            <p>Er hat seinen Job NICHT aufgegeben, bis er $1 Million hatte. Erst bei $1 Million kündigte er. Und wie hat er die erste Million gemacht? <strong>Day-Trading!</strong> Weil nur hohe Frequenz diese Returns ermöglicht.</p>
+        </div>
+
+        <h3>Was tun mit wenig Kapital?</h3>
+        <p>Hast du nur $10K oder $15K? Dann:</p>
+        <ul class="checklist" id="checklist5">
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Behalte deinen Job!</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Finde einen Side-Hustle</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Baue Kapital auf, während du lernst</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Erwarte NICHT, davon zu leben</li>
+        </ul>
+
+        <!-- Quiz 5 -->
+        <div class="quiz-container" id="quiz5">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Wann hat Kristian (Qullamaggie) seinen Job aufgegeben?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz5" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Als er profitabel wurde</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz5" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Als er $100K im Konto hatte</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz5" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Erst als er $1 Million erreicht hatte</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback5"></div>
+        </div>
+
+        <button class="continue-btn" id="continue5" onclick="completeSection(5)" disabled>
+            Weiter zu Abschnitt 6 ➡️
+        </button>
+    </div>
+
+    <!-- Section 6: Zeitrahmen & Frequenz -->
+    <div class="section-card locked" id="section6" data-section="6">
+        <h2><span class="section-number">6</span> Die wichtigste Entscheidung: Zeitrahmen & Frequenz</h2>
+        
+        <div class="highlight-box">
+            <strong>🎯 Die Entscheidung, die alles ändert</strong>
+            <p>Sobald ich Frieden mit meinem Zeitrahmen und meiner Frequenz geschlossen hatte, begannen die Dinge zu passieren – und zwar schnell!</p>
+        </div>
+
+        <p>Das größte Problem vieler Trader: Sie wechseln ständig zwischen verschiedenen Ansätzen.</p>
+
+        <div class="example-grid">
+            <div class="example-card">
+                <div class="icon">⚡</div>
+                <h4>Day-Trading</h4>
+                <p>Höchste Frequenz, höchster Zeitaufwand. Kann schnell Kapital aufbauen. Aber: Vollzeit-Job!</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">📊</div>
+                <h4>Swing-Trading</h4>
+                <p>Hält Positionen Tage bis Wochen. Guter Kompromiss zwischen Rendite und Zeitaufwand.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">📈</div>
+                <h4>Position-Trading</h4>
+                <p>Hält Positionen Wochen bis Monate. Weniger Stress, aber langsamerer Vermögensaufbau.</p>
+            </div>
+            <div class="example-card">
+                <div class="icon">🏦</div>
+                <h4>Long-Term Investing</h4>
+                <p>Jahre halten. Weniger Steuern, aber du brauchst sehr gute Research-Fähigkeiten.</p>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p>Ich habe in den ersten drei Jahren ständig zwischen Swing und Position-Trading gewechselt. Wenn ich von Anfang an klar gewesen wäre, hätte ich 2 Jahre gespart. Zwei Jahre!</p>
+            <div class="quote-author">— Pradeep Bonde</div>
+        </div>
+
+        <h3>Die Mathematik des Kapitaleinsatzes</h3>
+        <p>Wenn du <strong>großes Geld</strong> willst:</p>
+        <ul>
+            <li>Du musst <strong>höhere Frequenz</strong> handeln</li>
+            <li>Du musst <strong>Leverage</strong> nutzen</li>
+            <li>Je mehr du dein Kapital einsetzt, desto mehr kannst du verdienen</li>
+        </ul>
+
+        <div class="reflection-box">
+            <h4>📝 Deine Entscheidung</h4>
+            <p>Welcher Zeitrahmen passt zu deinem Leben? Sei ehrlich über deine verfügbare Zeit:</p>
+            <textarea id="reflection6" placeholder="z.B. 'Ich habe einen Vollzeit-Job, also kann ich maximal 1-2 Stunden am Abend traden. Swing-Trading scheint am besten zu passen...'"></textarea>
+        </div>
+
+        <!-- Quiz 6 -->
+        <div class="quiz-container" id="quiz6">
+            <h4>🧠 Wissenscheck</h4>
+            <p class="quiz-question">Warum ist die Entscheidung für einen Zeitrahmen so wichtig?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz6" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Weil verschiedene Zeitrahmen unterschiedliche Gebühren haben</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz6" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Weil ständiges Wechseln Jahre verschwendet und verhindert, dass man Expertise aufbaut</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz6" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Weil Broker bestimmte Zeitrahmen bevorzugen</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback6"></div>
+        </div>
+
+        <button class="continue-btn" id="continue6" onclick="completeSection(6)" disabled>
+            Weiter zu Abschnitt 7 ➡️
+        </button>
+    </div>
+
+    <!-- Section 7: Final Summary -->
+    <div class="section-card locked" id="section7" data-section="7">
+        <h2><span class="section-number">7</span> Bist du bereit? Die ehrliche Selbsteinschätzung</h2>
+        
+        <p>Jetzt kommt der wichtigste Teil: Die ehrliche Bestandsaufnahme.</p>
+
+        <h3>✅ Die ultimative Checkliste</h3>
+        <ul class="checklist" id="finalChecklist">
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe ein klares Ziel definiert (nicht nur "Geld machen")</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe realistische Profit-Erwartungen</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich bin bereit, 2-5 Jahre intensiv zu lernen</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe Budget für Lernmaterialien eingeplant</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe genug Kapital ODER behalte meinen Job</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich habe meinen Zeitrahmen gewählt</li>
+            <li onclick="toggleCheck(this)"><span class="check-icon">⬜</span> Ich bin lernfähig und nicht in meinen Ansichten festgefahren</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Wenn du nicht alle Punkte abhaken kannst...</strong>
+            <p>...dann ist Trading vielleicht (noch) nicht der richtige Weg für dich. Und das ist OKAY! Besser jetzt ehrlich sein, als Jahre und Geld zu verschwenden.</p>
+        </div>
+
+        <div class="summary-box">
+            <h3>🎯 Die Key Takeaways</h3>
+            <ul>
+                <li><strong>Definiere dein Ziel</strong> – Es bestimmt deinen gesamten Weg</li>
+                <li><strong>Sei realistisch</strong> – Milliarden erfordern OPM + Leverage</li>
+                <li><strong>Plane 2-5 Jahre</strong> – Superhuman Effort ist erforderlich</li>
+                <li><strong>Investiere in Bildung</strong> – Es ist billiger als Verluste</li>
+                <li><strong>Brauche genug Kapital</strong> – Mindestens $300K für Vollzeit</li>
+                <li><strong>Wähle EINEN Zeitrahmen</strong> – Und bleibe dabei</li>
+                <li><strong>Behalte deinen Job</strong> – Bis du sicher profitabel bist</li>
+            </ul>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Der klügste nächste Schritt</strong>
+            <p>Wenn du nach dieser Analyse immer noch Trading machen willst – dann hast du eine klarere Vorstellung davon, was vor dir liegt. Nutze diese Klarheit! Wähle deinen Zeitrahmen, investiere in gute Bildung, und sei bereit für den Marathon, nicht den Sprint.</p>
+        </div>
+
+        <!-- Final Quiz -->
+        <div class="quiz-container" id="quiz7">
+            <h4>🧠 Abschluss-Quiz</h4>
+            <p class="quiz-question">Was solltest du tun, wenn du nur $15K Kapital hast und vom Trading leben willst?</p>
+            <div class="quiz-options">
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz7" value="a">
+                    <span class="quiz-radio"></span>
+                    <span>Sofort Vollzeit-Trader werden und auf $1.000/Tag zielen</span>
+                </label>
+                <label class="quiz-option" data-correct="false">
+                    <input type="radio" name="quiz7" value="b">
+                    <span class="quiz-radio"></span>
+                    <span>Alles in einen Trade setzen für maximalen Gewinn</span>
+                </label>
+                <label class="quiz-option" data-correct="true">
+                    <input type="radio" name="quiz7" value="c">
+                    <span class="quiz-radio"></span>
+                    <span>Job behalten, Kapital aufbauen, nebenher lernen und traden</span>
+                </label>
+            </div>
+            <div class="quiz-feedback" id="feedback7"></div>
+        </div>
+
+        <button class="continue-btn" id="continue7" onclick="completeModule()">
+            🎉 Modul abschließen
+        </button>
+    </div>
+
+    <!-- Completion Section (hidden initially) -->
+    <div class="final-section" id="completionSection" style="display: none;">
+        <h2>🎉 Glückwunsch!</h2>
+        <p>Du hast das Modul "Wie man Trader wird" abgeschlossen. Du hast jetzt ein realistisches Bild davon, was Trading wirklich erfordert.</p>
+        <p>Nutze diese Erkenntnisse, um deinen persönlichen Trading-Weg zu planen!</p>
+        <button class="continue-btn" onclick="window.location.href='/modules'" style="background: white; color: #b8860b;">
+            📚 Zurück zu allen Modulen
+        </button>
+    </div>
+</div>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+<script>
+    // State Management
+    let currentSection = 1;
+    let completedSections = [];
+    let quizAnswers = {};
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProgress();
+        setupQuizzes();
+        updateUI();
+    });
+
+    // Setup Quiz Event Listeners
+    function setupQuizzes() {
+        for (let i = 1; i <= 7; i++) {
+            const quizContainer = document.getElementById(`quiz${i}`);
+            if (!quizContainer) continue;
+
+            const options = quizContainer.querySelectorAll('.quiz-option');
+            options.forEach(option => {
+                option.addEventListener('click', function() {
+                    handleQuizAnswer(i, this);
+                });
+            });
+        }
+    }
+
+    // Handle Quiz Answer
+    function handleQuizAnswer(quizNum, selectedOption) {
+        const quizContainer = document.getElementById(`quiz${quizNum}`);
+        const options = quizContainer.querySelectorAll('.quiz-option');
+        const feedback = document.getElementById(`feedback${quizNum}`);
+        const continueBtn = document.getElementById(`continue${quizNum}`);
+
+        // Remove previous selections
+        options.forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+        });
+
+        // Mark selected
+        selectedOption.classList.add('selected');
+
+        // Check if correct
+        const isCorrect = selectedOption.dataset.correct === 'true';
+        quizAnswers[quizNum] = isCorrect;
+
+        // Show feedback
+        if (isCorrect) {
+            selectedOption.classList.add('correct');
+            feedback.className = 'quiz-feedback show correct';
+            feedback.innerHTML = '✅ Richtig! Sehr gut verstanden.';
+            continueBtn.disabled = false;
+        } else {
+            selectedOption.classList.add('incorrect');
+            feedback.className = 'quiz-feedback show incorrect';
+            feedback.innerHTML = '❌ Nicht ganz. Lies den Abschnitt noch einmal durch und versuche es erneut.';
+        }
+
+        saveProgress();
+    }
+
+    // Complete Section
+    function completeSection(sectionNum) {
+        if (!completedSections.includes(sectionNum)) {
+            completedSections.push(sectionNum);
+        }
+        currentSection = sectionNum + 1;
+        
+        // Mark current section as completed
+        const section = document.getElementById(`section${sectionNum}`);
+        section.classList.add('completed');
+        
+        // Unlock next section
+        const nextSection = document.getElementById(`section${sectionNum + 1}`);
+        if (nextSection) {
+            nextSection.classList.remove('locked');
+            // Scroll to next section
+            nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        updateProgress();
+        saveProgress();
+    }
+
+    // Complete Module
+    function completeModule() {
+        if (!completedSections.includes(7)) {
+            completedSections.push(7);
+        }
+        
+        const section7 = document.getElementById('section7');
+        section7.classList.add('completed');
+        
+        const completionSection = document.getElementById('completionSection');
+        completionSection.style.display = 'block';
+        completionSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        updateProgress();
+        saveProgress();
+    }
+
+    // Update Progress Bar
+    function updateProgress() {
+        const totalSections = 7;
+        const progress = (completedSections.length / totalSections) * 100;
+        
+        document.getElementById('progressBar').style.width = `${progress}%`;
+        document.getElementById('progressText').textContent = `${Math.round(progress)}%`;
+    }
+
+    // Update UI based on state
+    function updateUI() {
+        // Unlock completed sections
+        completedSections.forEach(sectionNum => {
+            const section = document.getElementById(`section${sectionNum}`);
+            if (section) {
+                section.classList.remove('locked');
+                section.classList.add('completed');
+            }
+        });
+
+        // Unlock current section
+        const currentSectionEl = document.getElementById(`section${currentSection}`);
+        if (currentSectionEl) {
+            currentSectionEl.classList.remove('locked');
+        }
+
+        // Re-enable continue buttons for completed quizzes
+        Object.keys(quizAnswers).forEach(quizNum => {
+            if (quizAnswers[quizNum]) {
+                const btn = document.getElementById(`continue${quizNum}`);
+                if (btn) btn.disabled = false;
+            }
+        });
+
+        updateProgress();
+    }
+
+    // Toggle Checklist Item
+    function toggleCheck(element) {
+        element.classList.toggle('checked');
+        const icon = element.querySelector('.check-icon');
+        icon.textContent = element.classList.contains('checked') ? '✅' : '⬜';
+    }
+
+    // Save Progress to localStorage
+    function saveProgress() {
+        const state = {
+            currentSection,
+            completedSections,
+            quizAnswers,
+            reflections: {
+                reflection1: document.getElementById('reflection1')?.value || '',
+                reflection6: document.getElementById('reflection6')?.value || ''
+            }
+        };
+        localStorage.setItem('traderWerdenProgress', JSON.stringify(state));
+    }
+
+    // Load Progress from localStorage
+    function loadProgress() {
+        const saved = localStorage.getItem('traderWerdenProgress');
+        if (saved) {
+            const state = JSON.parse(saved);
+            currentSection = state.currentSection || 1;
+            completedSections = state.completedSections || [];
+            quizAnswers = state.quizAnswers || {};
+            
+            // Restore reflections
+            if (state.reflections) {
+                const r1 = document.getElementById('reflection1');
+                const r6 = document.getElementById('reflection6');
+                if (r1) r1.value = state.reflections.reflection1 || '';
+                if (r6) r6.value = state.reflections.reflection6 || '';
+            }
+        }
+    }
+
+    // Save reflections on input
+    document.querySelectorAll('textarea').forEach(textarea => {
+        textarea.addEventListener('input', saveProgress);
+    });
+</script>
+</div>
+{% endblock %}
+

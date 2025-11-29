@@ -291,6 +291,20 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Route: /eine-rally-fuer-jede-jahreszeit ✅
 ```
 
+**Beispiel 1e: Wie man Trader wird (NEU - November 2025)**
+```
+@new-module-page Wie man Trader wird
+- HTML-Seite: templates/wie-man-trader-wird.html ✅
+- Quelle: StockBee Guides/How to get started/Wie_man_Trader_wird.txt ✅
+- Kategorie: Trading-Psychologie → Grundlagen ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (7 Sections), Quiz-System (7 Fragen), Reflexions-Boxen, Checklisten, Key Takeaways
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 45 Minuten
+- Route: /wie-man-trader-wird ✅
+- Kernthemen: Ziele definieren, Profit-Erwartungen, Zeit-Commitment (2-5 Jahre), Lernkosten, Kapitalanforderungen (300K+), OPM-Strategie, Zeitrahmen-Wahl
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
