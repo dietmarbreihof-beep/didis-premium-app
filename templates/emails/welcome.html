@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f7f7f7;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #b8860b);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .content p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white !important;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .feature-box {
+            background: #f9fafb;
+            border-left: 4px solid #b8860b;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+        .feature-box h3 {
+            margin: 0 0 10px 0;
+            color: #1a1a1a;
+            font-size: 18px;
+        }
+        .feature-box p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .footer {
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .footer a {
+            color: #b8860b;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎊 Willkommen in der Trading Academy!</h1>
+        </div>
+        <div class="content">
+            <p>Hallo <strong>{{ first_name }}</strong>,</p>
+            <p>dein Account wurde erfolgreich aktiviert! Du bist jetzt Teil der Didis Trading Academy Community.</p>
+            
+            <div class="btn-container">
+                <a href="https://didis-premium-app-production.up.railway.app/login" class="btn">🚀 Jetzt einloggen</a>
+            </div>
+            
+            <h2 style="color: #1a1a1a; margin-top: 30px;">Was dich erwartet:</h2>
+            
+            <div class="feature-box">
+                <h3>📚 Strukturierte Lernmodule</h3>
+                <p>Von Grundlagen bis zu fortgeschrittenen Trading-Strategien - alles Schritt für Schritt erklärt.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>💡 30+ Jahre Erfahrung</h3>
+                <p>Profitiere von meinen bewährten Strategien und lerne, wie ich Super-Stocks wie ROOT (+3000%) und SMCI (+1000%) gefunden habe.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>⏱️ Zeitersparnis garantiert</h3>
+                <p>Statt 2 Stunden täglich nur noch 5-30 Minuten für deine Trading-Analysen.</p>
+            </div>
+            
+            <div class="feature-box">
+                <h3>🛡️ Risikomanagement</h3>
+                <p>Lerne, wie du dein Kapital schützt und Verluste minimierst - das Wichtigste im Trading!</p>
+            </div>
+            
+            <p style="margin-top: 30px;">Du startest mit einem <strong>FREE Account</strong> und hast Zugriff auf alle kostenfreien Lead-Magnet Module. Wenn du mehr willst, kannst du jederzeit auf Premium upgraden.</p>
+            
+            <p>Viel Erfolg beim Lernen! 📈</p>
+            
+            <div class="footer">
+                <p>Beste Grüße,<br>
+                <strong>Didi</strong><br>
+                Didis Premium Trading Academy</p>
+                <p><a href="https://didis-charts.com">didis-charts.com</a></p>
+                <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                    Fragen? Schreib mir einfach eine Email!
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

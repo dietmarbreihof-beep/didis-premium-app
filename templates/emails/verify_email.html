@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f7f7f7;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #b8860b);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .content p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white !important;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .info-box {
+            background: #fef3c7;
+            border-left: 4px solid #b8860b;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box p {
+            color: #92400e;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        .footer {
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .footer a {
+            color: #b8860b;
+            text-decoration: none;
+        }
+        code {
+            background: #f3f4f6;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #333;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Willkommen bei Didis Trading Academy!</h1>
+        </div>
+        <div class="content">
+            <p>Hallo <strong>{{ username }}</strong>,</p>
+            <p>vielen Dank für deine Registrierung bei Didis Trading Academy! Wir freuen uns, dich in unserer Community begrüßen zu dürfen.</p>
+            <p>Um dein Konto zu aktivieren und mit dem Lernen zu beginnen, bestätige bitte deine Email-Adresse:</p>
+            
+            <div class="btn-container">
+                <a href="{{ verification_link }}" class="btn">✅ Email bestätigen</a>
+            </div>
+            
+            <div class="info-box">
+                <p><strong>⏰ Wichtig:</strong> Dieser Link ist 24 Stunden gültig.</p>
+                <p>Falls der Button nicht funktioniert, kopiere diesen Link in deinen Browser:</p>
+                <p><code>{{ verification_link }}</code></p>
+            </div>
+            
+            <p>Nach der Bestätigung erhältst du sofortigen Zugriff auf:</p>
+            <ul style="color: #333; line-height: 1.8;">
+                <li>🎁 Kostenlose Lead-Magnet Module</li>
+                <li>📊 Fortschritts-Tracking</li>
+                <li>💎 Option zum Upgrade auf Premium</li>
+                <li>📧 Exklusive Trading-Updates</li>
+            </ul>
+            
+            <div class="footer">
+                <p>Beste Grüße,<br>
+                <strong>Didi & das Team der Trading Academy</strong></p>
+                <p><a href="https://didis-charts.com">didis-charts.com</a></p>
+                <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                    Du erhältst diese Email, weil du dich bei Didis Trading Academy registriert hast.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

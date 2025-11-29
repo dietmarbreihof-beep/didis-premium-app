@@ -82,6 +82,21 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # Database initialisieren
 db = SQLAlchemy(app)
 
+# === FLASK-MAIL KONFIGURATION ===
+
+from flask_mail import Mail, Message
+
+# Flask-Mail Konfiguration
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True') == 'True'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', 'noreply@didis-academy.com')
+
+mail = Mail(app)
+print(f"📧 Flask-Mail konfiguriert (Server: {app.config['MAIL_SERVER']})")
+
 # Analytics-Modell direkt definieren (für korrekte db-Instanz)
 class VisitorAnalytics(db.Model):
     """Tracking für Besucher-Analytics mit IP-basierter Deduplizierung"""
@@ -204,6 +219,36 @@ def track_visitor():
 # Registriere die Tracking-Funktion
 app.before_request(track_visitor)
 print("Analytics-Tracking aktiviert")
+
+# === EMAIL HELPER FUNCTION ===
+
+def send_email(to, subject, template, **kwargs):
+    """
+    Sendet eine Email mit HTML-Template
+    
+    Args:
+        to: Empfänger-Email
+        subject: Email-Betreff
+        template: Name des Templates (ohne .html)
+        **kwargs: Variablen für Template-Rendering
+    
+    Returns:
+        bool: True wenn erfolgreich, False bei Fehler
+    """
+    try:
+        msg = Message(
+            subject=subject,
+            recipients=[to],
+            html=render_template(f'emails/{template}.html', **kwargs)
+        )
+        mail.send(msg)
+        print(f"✅ Email gesendet: {subject} → {to}")
+        return True
+    except Exception as e:
+        print(f"❌ Email-Fehler: {e}")
+        import traceback
+        traceback.print_exc()
+        return False
 
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
@@ -372,6 +417,26 @@ class User(db.Model):
             return True
         return self.subscription_type.value in module.required_subscription_levels
 
+class EmailVerificationToken(db.Model):
+    """Token für Email-Verifizierung und Passwort-Reset"""
+    __tablename__ = 'email_verification_tokens'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    token = db.Column(db.String(100), unique=True, nullable=False)
+    token_type = db.Column(db.String(20), nullable=False)  # 'verify_email' oder 'reset_password'
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    used_at = db.Column(db.DateTime)
+    
+    user = db.relationship('User', backref='verification_tokens')
+    
+    def is_valid(self):
+        """Prüft ob Token noch gültig ist"""
+        if self.used_at:
+            return False
+        return datetime.utcnow() < self.expires_at
+
 class AdminAuditLog(db.Model):
     """Log für alle Admin-Aktionen zur Nachverfolgbarkeit"""
     __tablename__ = 'admin_audit_log'
@@ -388,6 +453,32 @@ class AdminAuditLog(db.Model):
 
     def __repr__(self):
         return f'<AdminAuditLog {self.admin_username} {self.action_type} on {self.target_username}>'
+
+# === TOKEN GENERATION ===
+
+def generate_verification_token(user_id, token_type='verify_email', expiry_hours=24):
+    """
+    Generiert einen sicheren Token für Email-Verifizierung oder Passwort-Reset
+    
+    Args:
+        user_id: ID des Users
+        token_type: 'verify_email' oder 'reset_password'
+        expiry_hours: Gültigkeit in Stunden (Standard: 24h)
+    """
+    token = secrets.token_urlsafe(32)
+    expires_at = datetime.utcnow() + timedelta(hours=expiry_hours)
+    
+    verification_token = EmailVerificationToken(
+        user_id=user_id,
+        token=token,
+        token_type=token_type,
+        expires_at=expires_at
+    )
+    
+    db.session.add(verification_token)
+    db.session.commit()
+    
+    return token
 
 # === MENÜSYSTEM MODELS ===
 
@@ -725,15 +816,21 @@ def home():
 @limiter.limit("3 per minute", methods=["POST"])  # Max 3 Registrierungen pro Minute
 @limiter.limit("10 per hour", methods=["POST"])   # Max 10 Registrierungen pro Stunde
 def register():
-    """Einfache Benutzer-Registrierung ohne E-Mail-Verifizierung"""
+    """Benutzer-Registrierung mit Email-Verifizierung"""
     if request.method == 'POST':
         try:
             # Formulardaten extrahieren
             email = request.form['email'].lower().strip()
             username = request.form['username'].strip()
             password = request.form['password']
+            password_confirm = request.form.get('password_confirm', '')
             first_name = request.form.get('first_name', '').strip()
             last_name = request.form.get('last_name', '').strip()
+
+            # Passwort-Bestätigung prüfen
+            if password != password_confirm:
+                flash('Die Passwörter stimmen nicht überein.', 'error')
+                return render_template('auth/register.html')
 
             # Passwort-Stärke validieren
             is_valid, error_msg = validate_password_strength(password)
@@ -753,13 +850,14 @@ def register():
                 flash('Dieser Benutzername ist bereits vergeben.', 'error')
                 return render_template('auth/register.html')
             
-            # Neuen User erstellen
+            # Neuen User erstellen (email_verified=False!)
             user = User(
                 email=email,
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                email_verified=True  # Sofort aktiv
+                email_verified=False,  # GEÄNDERT: Muss verifiziert werden
+                subscription_type=SubscriptionType.FREE  # Standard: FREE
             )
             user.set_password(password)
             
@@ -767,14 +865,83 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            flash('Registrierung erfolgreich! Sie können sich jetzt anmelden.', 'success')
+            # Verifizierungs-Token generieren
+            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+            
+            # Verifizierungs-Email senden
+            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+            verification_link = f"{base_url}/verify-email/{token}"
+            
+            email_sent = send_email(
+                to=user.email,
+                subject='Bestätige deine Email-Adresse',
+                template='verify_email',
+                username=user.username,
+                verification_link=verification_link
+            )
+            
+            if email_sent:
+                flash('Registrierung erfolgreich! Bitte prüfe deine Emails zur Verifizierung.', 'success')
+            else:
+                flash('Registrierung erfolgreich, aber Email-Versand fehlgeschlagen. Kontaktiere den Support.', 'warning')
+            
             return redirect(url_for('login'))
             
         except Exception as e:
             db.session.rollback()
             flash(f'Fehler bei der Registrierung: {str(e)}', 'error')
+            import traceback
+            traceback.print_exc()
     
     return render_template('auth/register.html')
+
+@app.route('/verify-email/<token>')
+def verify_email(token):
+    """Verifiziert Email-Adresse mit Token"""
+    try:
+        # Token aus DB laden
+        verification_token = EmailVerificationToken.query.filter_by(
+            token=token,
+            token_type='verify_email'
+        ).first()
+        
+        if not verification_token:
+            flash('Ungültiger Verifizierungs-Link.', 'error')
+            return redirect(url_for('login'))
+        
+        # Token-Gültigkeit prüfen
+        if not verification_token.is_valid():
+            flash('Dieser Verifizierungs-Link ist abgelaufen. Bitte registriere dich erneut.', 'error')
+            return redirect(url_for('register'))
+        
+        # User aktivieren
+        user = verification_token.user
+        user.email_verified = True
+        user.is_active = True
+        
+        # Token als verwendet markieren
+        verification_token.used_at = datetime.utcnow()
+        
+        db.session.commit()
+        
+        # Welcome-Email senden
+        send_email(
+            to=user.email,
+            subject='Willkommen bei Didis Trading Academy',
+            template='welcome',
+            username=user.username,
+            first_name=user.first_name or user.username
+        )
+        
+        flash('Email erfolgreich bestätigt! Du kannst dich jetzt anmelden.', 'success')
+        return redirect(url_for('login'))
+        
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Fehler bei der Verifizierung: {str(e)}', 'error')
+        import traceback
+        traceback.print_exc()
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 @limiter.limit("5 per minute", methods=["POST"])  # Max 5 Login-Versuche pro Minute
@@ -794,7 +961,17 @@ def login():
             # Username-Login
             user = User.query.filter_by(username=email_or_username).first()
         
-        if user and user.check_password(password) and user.is_active:
+        if user and user.check_password(password):
+            # Email-Verifizierung prüfen
+            if not user.email_verified:
+                flash('Bitte bestätige zuerst deine Email-Adresse. Prüfe dein Postfach.', 'warning')
+                return render_template('auth/login.html')
+            
+            # Account-Status prüfen
+            if not user.is_active:
+                flash('Dein Account wurde deaktiviert. Kontaktiere den Support.', 'error')
+                return render_template('auth/login.html')
+            
             # Echter User Login
             session['logged_in'] = True
             session['user_id'] = str(user.id)
@@ -845,12 +1022,167 @@ def login():
     
     return render_template('auth/login.html')
 
+@app.route('/forgot-password', methods=['GET', 'POST'])
+@limiter.limit("3 per hour")  # Max 3 Reset-Anfragen pro Stunde
+def forgot_password():
+    """Passwort-Reset anfordern"""
+    if request.method == 'POST':
+        try:
+            email = request.form['email'].lower().strip()
+            
+            # User suchen
+            user = User.query.filter_by(email=email).first()
+            
+            # Aus Sicherheitsgründen IMMER Erfolgs-Meldung zeigen
+            # (verhindert User-Enumeration)
+            flash('Falls ein Account mit dieser Email existiert, wurde ein Reset-Link gesendet.', 'success')
+            
+            if user and user.email_verified:
+                # Token generieren (6 Stunden gültig)
+                token = generate_verification_token(user.id, 'reset_password', expiry_hours=6)
+                
+                # Reset-Email senden
+                base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+                reset_link = f"{base_url}/reset-password/{token}"
+                
+                send_email(
+                    to=user.email,
+                    subject='Passwort zurücksetzen',
+                    template='password_reset',
+                    username=user.username,
+                    reset_link=reset_link
+                )
+            
+            return redirect(url_for('login'))
+            
+        except Exception as e:
+            flash('Ein Fehler ist aufgetreten. Bitte versuche es später erneut.', 'error')
+            import traceback
+            traceback.print_exc()
+    
+    return render_template('auth/forgot_password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """Neues Passwort setzen mit Token"""
+    # Token validieren
+    verification_token = EmailVerificationToken.query.filter_by(
+        token=token,
+        token_type='reset_password'
+    ).first()
+    
+    if not verification_token or not verification_token.is_valid():
+        flash('Dieser Reset-Link ist ungültig oder abgelaufen.', 'error')
+        return redirect(url_for('forgot_password'))
+    
+    if request.method == 'POST':
+        try:
+            password = request.form['password']
+            password_confirm = request.form['password_confirm']
+            
+            # Passwort-Bestätigung prüfen
+            if password != password_confirm:
+                flash('Die Passwörter stimmen nicht überein.', 'error')
+                return render_template('auth/reset_password.html', token=token)
+            
+            # Passwort-Stärke validieren
+            is_valid, error_msg = validate_password_strength(password)
+            if not is_valid:
+                flash(error_msg, 'error')
+                return render_template('auth/reset_password.html', token=token)
+            
+            # Passwort ändern
+            user = verification_token.user
+            user.set_password(password)
+            
+            # Token als verwendet markieren
+            verification_token.used_at = datetime.utcnow()
+            
+            db.session.commit()
+            
+            flash('Passwort erfolgreich geändert! Du kannst dich jetzt anmelden.', 'success')
+            return redirect(url_for('login'))
+            
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Fehler beim Zurücksetzen: {str(e)}', 'error')
+            import traceback
+            traceback.print_exc()
+    
+    return render_template('auth/reset_password.html', token=token)
+
 @app.route('/logout')
 def logout():
     """Benutzer-Logout"""
     session.clear()
     flash('Du wurdest erfolgreich abgemeldet.', 'success')
     return redirect(url_for('home'))
+
+# === SHOP INTEGRATION (VORBEREITET) ===
+
+@app.route('/webhook/stripe', methods=['POST'])
+@csrf.exempt  # Webhooks brauchen kein CSRF-Token
+def stripe_webhook():
+    """
+    Webhook für Stripe Payment Success
+    
+    Diese Route ist vorbereitet für die spätere Shop-Integration.
+    Sie wird automatisch aufgerufen wenn ein User ein Subscription-Upgrade kauft.
+    """
+    try:
+        payload = request.get_data(as_text=True)
+        sig_header = request.headers.get('Stripe-Signature')
+        
+        # TODO: Später mit echtem Stripe Secret validieren
+        # import stripe
+        # webhook_secret = os.environ.get('STRIPE_WEBHOOK_SECRET')
+        # event = stripe.Webhook.construct_event(payload, sig_header, webhook_secret)
+        
+        # Für jetzt: Dummy-Implementierung
+        data = request.json
+        
+        if data.get('type') == 'checkout.session.completed':
+            # User-Email aus Payment-Data extrahieren
+            customer_email = data['data']['object'].get('customer_email')
+            product_id = data['data']['object'].get('metadata', {}).get('product_id')
+            
+            if customer_email and product_id:
+                # User suchen und Subscription upgraden
+                user = User.query.filter_by(email=customer_email.lower()).first()
+                if user:
+                    # Subscription basierend auf Product-ID setzen
+                    subscription_map = {
+                        'prod_premium': SubscriptionType.PREMIUM,
+                        'prod_elite': SubscriptionType.ELITE,
+                        'prod_elite_pro': SubscriptionType.ELITE_PRO
+                    }
+                    
+                    new_subscription = subscription_map.get(product_id, SubscriptionType.FREE)
+                    
+                    user.subscription_type = new_subscription
+                    user.subscription_updated_at = datetime.utcnow()
+                    user.subscription_updated_by = 'stripe_webhook'
+                    
+                    db.session.commit()
+                    
+                    # Upgrade-Email senden
+                    send_email(
+                        to=user.email,
+                        subject='Subscription erfolgreich aktiviert',
+                        template='welcome',  # TODO: Eigenes Template für Subscription Upgrade
+                        username=user.username,
+                        first_name=user.first_name or user.username
+                    )
+                    
+                    print(f"✅ Subscription upgraded: {user.username} → {new_subscription.value}")
+        
+        return jsonify({'status': 'success'}), 200
+        
+    except Exception as e:
+        print(f"❌ Webhook-Fehler: {e}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(e)}), 400
 
 @app.route('/account/change-password', methods=['GET', 'POST'])
 @login_required
