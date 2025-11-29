@@ -3478,6 +3478,9 @@ def admin_init_database():
             # Database neu initialisieren
             db.create_all()
             
+            # ✅ NEUE SPALTEN MIGRIEREN (für bestehende Tabellen)
+            migrate_user_table()
+            
             # User-Tabelle Status
             try:
                 user_count = User.query.count()
