@@ -1981,10 +1981,16 @@ function deleteCategory(categoryId) {
         })
         .then(data => {
             if (data.success) {
+                // Kategorie visuell entfernen (sofort nach API-Erfolg)
+                const categoryElement = document.querySelector(`[data-category-id="${categoryId}"]`);
+                if (categoryElement) {
+                    categoryElement.style.transition = 'opacity 0.3s ease';
+                    categoryElement.style.opacity = '0';
+                    setTimeout(() => {
+                        categoryElement.remove();
+                    }, 300);
+                }
                 showNotification('success', 'Kategorie erfolgreich gelöscht.');
-                setTimeout(() => {
-                    location.reload();
-                }, 1500);
             } else {
                 alert('Fehler beim Löschen: ' + data.error);
             }
