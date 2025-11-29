@@ -286,38 +286,26 @@ def send_email_async(to, subject, template, **kwargs):
 # === EMAIL DEBUG ROUTE ===
 @app.route('/admin/test-email')
 def test_email():
-    """Debug-Route zum Testen des E-Mail-Versands (nur für Admin)"""
+    """Debug-Route zum Anzeigen der E-Mail-Konfiguration (nur für Admin)"""
     # Nur für Admin
     username = session.get('user', {}).get('username')
     if username not in ['admin', 'didi']:
         return "Nicht autorisiert", 403
     
     import json
+    
+    # Nur Konfiguration anzeigen (kein E-Mail-Versand - verursacht Timeout!)
     result = {
+        "status": "⚠️ Gmail SMTP verursacht Timeout auf Railway",
         "mail_server": app.config.get('MAIL_SERVER'),
         "mail_port": app.config.get('MAIL_PORT'),
         "mail_use_tls": app.config.get('MAIL_USE_TLS'),
         "mail_username": app.config.get('MAIL_USERNAME'),
-        "mail_password": "***" + (app.config.get('MAIL_PASSWORD', '')[-4:] if app.config.get('MAIL_PASSWORD') else "NICHT GESETZT"),
+        "mail_password_set": bool(app.config.get('MAIL_PASSWORD')),
+        "mail_password_preview": "***" + (app.config.get('MAIL_PASSWORD', '')[-4:] if app.config.get('MAIL_PASSWORD') else ""),
         "mail_default_sender": app.config.get('MAIL_DEFAULT_SENDER'),
+        "empfehlung": "Verwende SendGrid, Mailgun oder AWS SES statt Gmail SMTP"
     }
-    
-    # Test-Email senden (synchron für direktes Feedback)
-    test_to = request.args.get('to', app.config.get('MAIL_USERNAME'))
-    if test_to:
-        try:
-            from flask_mail import Message as TestMessage
-            msg = TestMessage(
-                subject='🧪 Test-Email - Didis Trading Academy',
-                recipients=[test_to],
-                html='<h1>Test erfolgreich!</h1><p>Die E-Mail-Konfiguration funktioniert.</p>'
-            )
-            mail.send(msg)
-            result["test_result"] = f"✅ Email erfolgreich gesendet an: {test_to}"
-        except Exception as e:
-            import traceback
-            result["test_result"] = f"❌ Fehler: {str(e)}"
-            result["traceback"] = traceback.format_exc()
     
     return f"<pre>{json.dumps(result, indent=2, ensure_ascii=False)}</pre>"
 
@@ -1049,7 +1037,7 @@ def register():
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                email_verified=False,  # Email-Verifizierung erforderlich
+                email_verified=True,  # Direkt aktiviert (Gmail SMTP funktioniert nicht auf Railway)
                 subscription_type=SubscriptionType.FREE  # Standard: FREE
             )
             user.set_password(password)
@@ -1061,22 +1049,15 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            # Verifizierungs-Email ASYNCHRON senden (verhindert Railway-Timeout)
-            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
-            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
-            verification_link = f"{base_url}/verify-email/{token}"
+            # ⚠️ Gmail SMTP funktioniert nicht auf Railway (Timeout/Blockiert)
+            # User wird direkt aktiviert ohne E-Mail-Verifizierung
+            # TODO: SendGrid, Mailgun oder AWS SES für E-Mail-Versand verwenden
+            user.email_verified = True
+            db.session.commit()
             
-            send_email_async(
-                to=email,
-                subject='Bestätige deine Email-Adresse - Didis Trading Academy',
-                template='verify_email',
-                username=username,
-                verification_link=verification_link
-            )
+            print(f"✅ User {username} registriert (E-Mail-Verifizierung übersprungen - Gmail SMTP nicht verfügbar)")
             
-            print(f"✅ User {username} registriert - Verifizierungs-Email wird asynchron gesendet")
-            
-            flash('Registrierung erfolgreich! Bitte prüfe dein Email-Postfach und bestätige deine Email-Adresse.', 'success')
+            flash('Registrierung erfolgreich! Du kannst dich jetzt anmelden.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
