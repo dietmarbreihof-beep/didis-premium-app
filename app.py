@@ -1098,7 +1098,7 @@ def module_view(slug):
     elif module.template_file:
         # Prüfe ob es eine standalone HTML-Seite ist (z.B. better-volume-lernseite.html)
         # Diese Seiten haben DOCTYPE und sind komplett eigenständig
-        if module.template_file in ['better-volume-lernseite.html']:
+        if module.template_file in ['better-volume-lernseite.html', 'trading_archetypen.html']:
             # Standalone HTML direkt ausliefern ohne Template-Engine
             try:
                 return send_from_directory('templates', module.template_file)
@@ -4959,7 +4959,8 @@ def admin_toggle_subcategory_status(subcategory_id):
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/admin/delete-category/<int:category_id>', methods=['DELETE'])
+@app.route('/admin/delete-category/<int:category_id>', methods=['POST', 'DELETE'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
 def admin_delete_category(category_id):
     """Kategorie löschen"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
@@ -4991,7 +4992,8 @@ def admin_delete_category(category_id):
         db.session.rollback()
         return jsonify({'success': False, 'error': str(e)})
 
-@app.route('/admin/delete-subcategory/<int:subcategory_id>', methods=['DELETE'])
+@app.route('/admin/delete-subcategory/<int:subcategory_id>', methods=['POST', 'DELETE'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
 def admin_delete_subcategory(subcategory_id):
     """Unterkategorie löschen"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
