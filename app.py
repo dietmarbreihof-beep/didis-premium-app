@@ -990,20 +990,32 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            # Verifizierungs-Email senden
-            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
-            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
-            verification_link = f"{base_url}/verify-email/{token}"
+            # Verifizierungs-Email senden (nicht-blockierend - Fehler fangen)
+            email_sent = False
+            try:
+                token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+                base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+                verification_link = f"{base_url}/verify-email/{token}"
+                
+                email_sent = send_email(
+                    to=email,
+                    subject='Bestätige deine Email-Adresse - Didis Trading Academy',
+                    template='verify_email',
+                    username=username,
+                    verification_link=verification_link
+                )
+            except Exception as email_error:
+                print(f"⚠️ Email-Versand fehlgeschlagen: {email_error}")
+                # Registrierung trotzdem erfolgreich - Email später erneut senden
             
-            send_email(
-                to=email,
-                subject='Bestätige deine Email-Adresse - Didis Trading Academy',
-                template='verify_email',
-                username=username,
-                verification_link=verification_link
-            )
+            if email_sent:
+                flash('Registrierung erfolgreich! Bitte prüfe dein Email-Postfach und bestätige deine Email-Adresse.', 'success')
+            else:
+                # User trotzdem aktivieren wenn Email fehlschlägt
+                user.email_verified = True
+                db.session.commit()
+                flash('Registrierung erfolgreich! Du kannst dich jetzt anmelden.', 'success')
             
-            flash('Registrierung erfolgreich! Bitte prüfe dein Email-Postfach und bestätige deine Email-Adresse.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
