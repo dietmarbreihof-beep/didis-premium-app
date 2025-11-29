@@ -278,6 +278,19 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Dauer: 60 Minuten
 ```
 
+**Beispiel 1d: Eine Rally für jede Jahreszeit (Neu erstellt!)**
+```
+@new-module-page Eine Rally für jede Jahreszeit
+- HTML-Seite: templates/eine-rally-fuer-jede-jahreszeit.html ✅
+- Quelle: APP Didis-Chart/pages ✅
+- Kategorie: Marktanalyse → Marktzyklen & Timing ✅
+- Lead-Magnet: Ja (für alle verfügbar) ✅
+- Features: Progressive Disclosure (6 Sections), Quiz-System (3 Fragen), Interaktive Saison-Karten, Key Takeaways
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 20 Minuten
+- Route: /eine-rally-fuer-jede-jahreszeit ✅
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display

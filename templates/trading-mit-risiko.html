@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Der Schlüssel zum Reichtum: Warum du mehr Risiko eingehen musst | Didis Charts</title>
+    <meta name="description" content="Entdecke die unbequeme Wahrheit über Vermögensaufbau. Lerne, wie du mit kalkuliertem Risiko außergewöhnliche Renditen erzielst - mit nur 5 oder 30 Minuten täglich.">
+    
+    <style>
+        :root {
+            /* Gold-Premium Design-System */
+            --primary-dark: #1a1a1a;
+            --primary-gray: #2d2d2d;
+            --gold-dark: #b8860b;
+            --gold-classic: #daa520;
+            --gold-light: #f4e97b;
+            --success-green: #38a169;
+            --warning-orange: #d69e2e;
+            --error-red: #e53e3e;
+            --bg-page: #f7f7f7;
+            --bg-white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            --gradient-gold: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+            --gradient-success: linear-gradient(135deg, #38a169 0%, #059669 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--primary-dark);
+            background-color: var(--bg-page);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(218, 165, 32, 0.1) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(-50px, -50px) rotate(180deg); }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 20px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 30px;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            background: white;
+            color: var(--gold-dark);
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(184,134,11,0.4);
+        }
+
+        /* Success Banner */
+        .success-banner {
+            background: var(--gradient-success);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .success-banner span {
+            margin: 0 15px;
+            display: inline-block;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Section Styles */
+        .section {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* Progressive Disclosure Sections */
+        .disclosure-section {
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.6s ease-out;
+            margin: 20px 0;
+        }
+
+        .disclosure-section.visible {
+            opacity: 1;
+            max-height: 5000px;
+        }
+
+        .unlock-button {
+            display: inline-block;
+            background: var(--gradient-gold);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            box-shadow: 0 4px 20px rgba(184,134,11,0.3);
+        }
+
+        .unlock-button:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(184,134,11,0.4);
+        }
+
+        .unlock-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Truth Section */
+        .truth-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            margin: 40px 0;
+            border-left: 4px solid var(--gold-dark);
+        }
+
+        .truth-box h3 {
+            font-size: 2rem;
+            color: var(--gold-dark);
+            margin-bottom: 20px;
+        }
+
+        .truth-box p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+
+        /* Billionaire Examples */
+        .billionaire-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .billionaire-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            border-top: 3px solid var(--gold-dark);
+        }
+
+        .billionaire-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .billionaire-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .billionaire-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            background: var(--gradient-gold);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            margin: 40px 0;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 100px;
+            position: absolute;
+            top: -20px;
+            left: 30px;
+            opacity: 0.2;
+        }
+
+        .quote-text {
+            font-size: 1.5rem;
+            font-style: italic;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-author {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Two Paths Section */
+        .paths-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .path-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .path-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .path-header {
+            padding: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        .path-header.conservative {
+            background: var(--gradient-primary);
+        }
+
+        .path-header.aggressive {
+            background: var(--gradient-gold);
+        }
+
+        .path-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+
+        .path-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .path-content {
+            padding: 30px;
+        }
+
+        .path-feature {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            font-size: 1.1rem;
+        }
+
+        .path-feature-icon {
+            color: var(--success-green);
+            margin-right: 15px;
+            font-size: 1.5rem;
+        }
+
+        .path-cta {
+            display: block;
+            text-align: center;
+            padding: 18px 30px;
+            margin: 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .path-cta.conservative {
+            background: var(--gradient-primary);
+            color: white;
+        }
+
+        .path-cta.aggressive {
+            background: var(--gradient-gold);
+            color: white;
+        }
+
+        .path-cta:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Results Section */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .result-card {
+            background: var(--gradient-success);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-stock {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .result-return {
+            font-size: 2.5rem;
+            font-weight: 800;
+        }
+
+        /* Knowledge Section */
+        .knowledge-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .knowledge-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid var(--gold-dark);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .knowledge-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .knowledge-number {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-gold);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--gold-dark);
+        }
+
+        .quiz-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--gold-dark);
+            margin-bottom: 20px;
+        }
+
+        .quiz-question {
+            margin: 20px 0;
+        }
+
+        .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .quiz-option {
+            display: block;
+            padding: 12px 20px;
+            margin: 8px 0;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--gold-classic);
+            background: var(--bg-page);
+        }
+
+        .quiz-option input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .quiz-submit {
+            background: var(--gradient-gold);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .quiz-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(184,134,11,0.4);
+        }
+
+        .quiz-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .quiz-result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .quiz-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--primary-dark);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-top: 80px;
+        }
+
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-gold);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 20px;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .paths-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .success-banner span {
+                display: block;
+                margin: 5px 0;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Button Center Helper */
+        .button-center {
+            text-align: center;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Der Schlüssel zum Reichtum:<br>Warum du mehr Risiko eingehen musst</h1>
+            <p class="hero-subtitle">Die unbequeme Wahrheit über Vermögensaufbau, die dir niemand erzählt</p>
+            <a href="#section-1" class="hero-cta">🚀 Entdecke deinen Weg zu höheren Renditen</a>
+        </div>
+    </section>
+
+    <!-- Success Banner -->
+    <div class="success-banner">
+        <span>🎯 CLS +1000%</span>
+        <span>🎯 PRCH +1000%</span>
+        <span>🎯 AMD +80%</span>
+        <span>🎯 QXO +71%</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Section 1: The Million Dollar Truth (Immer sichtbar) -->
+        <section class="section fade-in" id="section-1">
+            <h2 class="section-title">Die Millionen-Dollar-Wahrheit</h2>
+            <div class="truth-box">
+                <h3>💰 Niemand wird superreich, indem er Geld auf ein Sparbuch legt</h3>
+                <p>Die erfolgreichsten Selfmade-Milliardäre haben ihr Vermögen durch <strong>kalkulierte, aber hohe Risiken</strong> aufgebaut. Sie waren bereit, alles zu verlieren, um alles zu gewinnen.</p>
+            </div>
+            
+            <div class="billionaire-grid">
+                <div class="billionaire-card">
+                    <div class="billionaire-icon">🚀</div>
+                    <div class="billionaire-name">Elon Musk</div>
+                    <p>Riskierte alles bei Tesla & SpaceX</p>
+                </div>
+                <div class="billionaire-card">
+                    <div class="billionaire-icon">📦</div>
+                    <div class="billionaire-name">Jeff Bezos</div>
+                    <p>Verließ Wall Street für Amazon-Garage</p>
+                </div>
+                <div class="billionaire-card">
+                    <div class="billionaire-icon">📈</div>
+                    <div class="billionaire-name">Warren Buffett</div>
+                    <p>Konzentrierte Wetten auf wenige Aktien</p>
+                </div>
+            </div>
+
+            <div class="button-center">
+                <button class="unlock-button" onclick="unlockSection(2)">💡 Weiter: Das Buffett-Paradox</button>
+            </div>
+        </section>
+
+        <!-- Section 2: Buffett Quote (Progressive Disclosure) -->
+        <section class="section disclosure-section" id="section-2">
+            <div class="quote-box fade-in">
+                <p class="quote-text">Risiko entsteht dadurch, dass man nicht weiß, was man tut.</p>
+                <p class="quote-author">- Warren Buffett</p>
+            </div>
+
+            <!-- Quiz 1 -->
+            <div class="quiz-container fade-in">
+                <h3 class="quiz-title">🎯 Wissenscheck: Was ist echtes Risiko?</h3>
+                <form id="quiz1">
+                    <div class="quiz-question">
+                        <p>Was bedeutet Buffetts Zitat für dein Trading?</p>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="a">
+                            Ich sollte gar kein Risiko eingehen
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="b">
+                            Risiko verschwindet durch Wissen und Methodik
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q1" value="c">
+                            Nur Millionäre sollten riskieren
+                        </label>
+                    </div>
+                    <button type="button" class="quiz-submit" onclick="checkQuiz(1, 'b')">Antwort prüfen</button>
+                    <div class="quiz-result" id="quiz1-result"></div>
+                </form>
+            </div>
+
+            <div class="button-center">
+                <button class="unlock-button" id="unlock-3" onclick="unlockSection(3)" disabled>🔒 Löse Quiz 1 für mehr</button>
+            </div>
+        </section>
+
+        <!-- Section 3: The Paradox (Progressive Disclosure) -->
+        <section class="section disclosure-section" id="section-3">
+            <h2 class="section-title fade-in">Das Risiko-Rendite-Paradox</h2>
+            <div class="truth-box fade-in">
+                <p style="font-size: 1.3rem; margin-bottom: 20px;"><strong>Höhere Renditen = Höhere Risiken</strong></p>
+                <p>Diversifikation schützt dich vor Katastrophen, aber sie verhindert auch außergewöhnliche Renditen. Je mehr Aktien du besitzt, desto unwahrscheinlicher wird es, dass du mit ein oder zwei guten Ideen richtig große Gewinne erzielst.</p>
+            </div>
+
+            <div class="button-center">
+                <button class="unlock-button" onclick="unlockSection(4)">🎯 Weiter: Deine zwei Wege</button>
+            </div>
+        </section>
+
+        <!-- Section 4: Two Paths (Progressive Disclosure) -->
+        <section class="section disclosure-section" id="section-4">
+            <h2 class="section-title fade-in">Zwei Wege zu höheren Renditen</h2>
+            <p class="fade-in" style="text-align: center; font-size: 1.2rem; margin-bottom: 40px;">Nach 30 Jahren Trading habe ich zwei bewährte Systeme entwickelt - je nachdem, wie viel Zeit und Risiko du handhaben willst:</p>
+            
+            <div class="paths-container">
+                <!-- Conservative Path -->
+                <div class="path-card fade-in">
+                    <div class="path-header conservative">
+                        <div class="path-icon">🐢</div>
+                        <h3 class="path-title">Der Geduldige Investor</h3>
+                        <p>5-Minuten-Depot</p>
+                    </div>
+                    <div class="path-content">
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Nur 5 Minuten täglich Zeitaufwand</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>12-17% Jahresrendite angestrebt</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Niedriges Stresslevel</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Long-Term-Compounder wie DUOL, NTRA</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Warren Buffett Style Investing</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Zeit als Verbündeter</span>
+                        </div>
+                    </div>
+                    <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" class="path-cta conservative">
+                        🎯 Zum 5-Minuten-Depot
+                    </a>
+                </div>
+
+                <!-- Aggressive Path -->
+                <div class="path-card fade-in">
+                    <div class="path-header aggressive">
+                        <div class="path-icon">🐆</div>
+                        <h3 class="path-title">Der Aktive Stockpicker</h3>
+                        <p>30-Minuten Premium Trading</p>
+                    </div>
+                    <div class="path-content">
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>30+ Minuten täglich Trading</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>20-35% Jahresrendite angestrebt</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Mittleres Stresslevel</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Super Stocks mit QXO, PRCH, CLS</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Konzentrierte Positionen</span>
+                        </div>
+                        <div class="path-feature">
+                            <span class="path-feature-icon">✓</span>
+                            <span>Aktives Risikomanagement</span>
+                        </div>
+                    </div>
+                    <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" class="path-cta aggressive">
+                        🚀 Zum Premium Trading Club
+                    </a>
+                </div>
+            </div>
+
+            <!-- Quiz 2 -->
+            <div class="quiz-container fade-in">
+                <h3 class="quiz-title">🎯 Wissenscheck: Welcher Typ bist du?</h3>
+                <form id="quiz2">
+                    <div class="quiz-question">
+                        <p>Welches System passt besser zu dir?</p>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="a">
+                            5-Minuten-Depot: Langfristiges Compounding mit wenig Zeitaufwand
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="b">
+                            30-Minuten Premium: Aktive Stockpicking mit höherer Rendite
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q2" value="c">
+                            Beides interessiert mich!
+                        </label>
+                    </div>
+                    <button type="button" class="quiz-submit" onclick="checkQuiz(2, 'any')">Auswahl bestätigen</button>
+                    <div class="quiz-result" id="quiz2-result"></div>
+                </form>
+            </div>
+
+            <div class="button-center">
+                <button class="unlock-button" id="unlock-5" onclick="unlockSection(5)" disabled>🔒 Bestätige deine Wahl</button>
+            </div>
+        </section>
+
+        <!-- Section 5: Results (Progressive Disclosure) -->
+        <section class="section disclosure-section" id="section-5">
+            <h2 class="section-title fade-in">Die Erfolge sprechen für sich</h2>
+            <div class="results-grid">
+                <div class="result-card fade-in">
+                    <div class="result-stock">CLS</div>
+                    <div class="result-return">+1000%</div>
+                </div>
+                <div class="result-card fade-in">
+                    <div class="result-stock">PRCH</div>
+                    <div class="result-return">+1000%</div>
+                </div>
+                <div class="result-card fade-in">
+                    <div class="result-stock">AMD</div>
+                    <div class="result-return">+80%</div>
+                </div>
+                <div class="result-card fade-in">
+                    <div class="result-stock">QXO</div>
+                    <div class="result-return">+71%</div>
+                </div>
+            </div>
+            <p class="fade-in" style="text-align: center; font-size: 1.2rem; margin-top: 30px;">
+                Alle systematisch analysiert, alle rechtzeitig kommuniziert, alle mit unterschiedlichen Risikoprofilen handelbar.
+            </p>
+
+            <div class="button-center">
+                <button class="unlock-button" onclick="unlockSection(6)">🛡️ Weiter: Deine Waffen gegen Risiko</button>
+            </div>
+        </section>
+
+        <!-- Section 6: Knowledge (Progressive Disclosure) -->
+        <section class="section disclosure-section" id="section-6">
+            <h2 class="section-title fade-in">Deine zwei Waffen gegen das Risiko</h2>
+            <div class="knowledge-steps">
+                <div class="knowledge-card fade-in">
+                    <div class="knowledge-number">1</div>
+                    <h3>Wissen ist Macht</h3>
+                    <p>Lerne alles über deine Aktien: Geschäftsmodell, Finanzen, Branche, Wachstum. Ich erstelle 10-15 seitige Deep-Dive-Analysen für jede Empfehlung.</p>
+                </div>
+                <div class="knowledge-card fade-in">
+                    <div class="knowledge-number">2</div>
+                    <h3>Trading-Methodik</h3>
+                    <p>Entwickle eine Methodik, die dein Risiko bei schlechten Kursbewegungen reduziert und bei positiven Bewegungen verstärkt.</p>
+                </div>
+            </div>
+
+            <!-- Quiz 3 -->
+            <div class="quiz-container fade-in">
+                <h3 class="quiz-title">🎯 Final Check: Dein Risikomanagement</h3>
+                <form id="quiz3">
+                    <div class="quiz-question">
+                        <p>Was sind die zwei wichtigsten Waffen gegen Risiko?</p>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="a">
+                            Glück und Timing
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="b">
+                            Wissen und Trading-Methodik
+                        </label>
+                        <label class="quiz-option">
+                            <input type="radio" name="q3" value="c">
+                            Viel Kapital und Diversifikation
+                        </label>
+                    </div>
+                    <button type="button" class="quiz-submit" onclick="checkQuiz(3, 'b')">Finale Antwort</button>
+                    <div class="quiz-result" id="quiz3-result"></div>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- CTA Section (Immer sichtbar) -->
+    <section class="cta-section">
+        <h2 class="cta-title">Die Frage ist nicht OB, sondern WIE</h2>
+        <p class="cta-subtitle">Welcher Typ Investor bist du? 🤔</p>
+        <div class="cta-buttons">
+            <a href="https://didis-charts.com/produkt/trading-club-langfristdepot/" class="hero-cta">
+                🐢 Ich bin der geduldige Typ<br>
+                <small>5-Minuten-Depot für 12-17% p.a.</small>
+            </a>
+            <a href="https://didis-charts.com/produkt/premium-newsletter-jahresabo/" class="hero-cta">
+                🐆 Ich bin der aktive Typ<br>
+                <small>Premium Trading für 20-35% p.a.</small>
+            </a>
+        </div>
+    </section>
+
+    <!-- Navigation -->
+    {% include '_navigation.html' %}
+
+    <script>
+        // Progressive Disclosure Management
+        let unlockedSections = [1]; // Section 1 ist immer sichtbar
+
+        function unlockSection(sectionNumber) {
+            const section = document.getElementById(`section-${sectionNumber}`);
+            if (section) {
+                section.classList.add('visible');
+                unlockedSections.push(sectionNumber);
+                
+                // Scroll to section
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
+                // Update progress bar
+                updateProgress();
+
+                // Save progress to localStorage
+                localStorage.setItem('trading-risiko-progress', JSON.stringify(unlockedSections));
+            }
+        }
+
+        // Quiz System
+        let quizResults = {};
+
+        function checkQuiz(quizNumber, correctAnswer) {
+            const form = document.getElementById(`quiz${quizNumber}`);
+            const result = document.getElementById(`quiz${quizNumber}-result`);
+            const selectedAnswer = form.querySelector('input[name^="q"]:checked');
+
+            if (!selectedAnswer) {
+                result.textContent = '❌ Bitte wähle eine Antwort aus!';
+                result.className = 'quiz-result warning';
+                result.style.display = 'block';
+                return;
+            }
+
+            const isCorrect = correctAnswer === 'any' || selectedAnswer.value === correctAnswer;
+            quizResults[`quiz${quizNumber}`] = isCorrect;
+
+            if (isCorrect || correctAnswer === 'any') {
+                result.textContent = '🎉 Richtig! Du hast es verstanden.';
+                result.className = 'quiz-result success';
+                result.style.display = 'block';
+
+                // Unlock next section
+                const nextSection = quizNumber + 2; // Quiz 1 unlocks Section 3
+                const unlockButton = document.getElementById(`unlock-${nextSection}`);
+                if (unlockButton) {
+                    unlockButton.disabled = false;
+                    unlockButton.textContent = unlockButton.textContent.replace('🔒', '✅');
+                }
+            } else {
+                result.textContent = '📖 Nicht ganz! Lies nochmal die Erklärung oben.';
+                result.className = 'quiz-result warning';
+                result.style.display = 'block';
+            }
+
+            // Save quiz results
+            localStorage.setItem('trading-risiko-quiz', JSON.stringify(quizResults));
+        }
+
+        // Progress Bar
+        function updateProgress() {
+            const totalSections = 6;
+            const progress = (unlockedSections.length / totalSections) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // Restore Progress from localStorage
+        function restoreProgress() {
+            const savedProgress = localStorage.getItem('trading-risiko-progress');
+            const savedQuiz = localStorage.getItem('trading-risiko-quiz');
+
+            if (savedProgress) {
+                unlockedSections = JSON.parse(savedProgress);
+                unlockedSections.forEach(num => {
+                    const section = document.getElementById(`section-${num}`);
+                    if (section) section.classList.add('visible');
+                });
+                updateProgress();
+            }
+
+            if (savedQuiz) {
+                quizResults = JSON.parse(savedQuiz);
+                // Restore unlock buttons
+                Object.keys(quizResults).forEach(quiz => {
+                    if (quizResults[quiz]) {
+                        const quizNum = parseInt(quiz.replace('quiz', ''));
+                        const nextSection = quizNum + 2;
+                        const unlockButton = document.getElementById(`unlock-${nextSection}`);
+                        if (unlockButton) {
+                            unlockButton.disabled = false;
+                            unlockButton.textContent = unlockButton.textContent.replace('🔒', '✅');
+                        }
+                    }
+                });
+            }
+        }
+
+        // Fade in animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            restoreProgress();
+            updateProgress();
+        });
+    </script>
+</body>
+</html>
+

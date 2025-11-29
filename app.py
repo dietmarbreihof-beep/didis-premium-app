@@ -1195,6 +1195,14 @@ def volume_analyse_grundlagen():
     
     return render_template('volume-analyse-grundlagen.html')
 
+@app.route('/eine-rally-fuer-jede-jahreszeit')
+def eine_rally_fuer_jede_jahreszeit():
+    """Eine Rally für jede Jahreszeit - Saisonale Börsenperformance"""
+    track_visitor()  # Analytics
+    
+    # Öffentlich zugänglich (Lead-Magnet)
+    return render_template('eine-rally-fuer-jede-jahreszeit.html')
+
 @app.route('/symmetrie-trading')
 def symmetrie_trading():
     """Interaktive Lernseite für Symmetrie im Trading"""
@@ -1206,6 +1214,16 @@ def symmetrie_trading():
     #     return redirect(url_for('login'))
     
     return render_template('symmetrie-trading.html')
+
+@app.route('/trading-mit-risiko')
+def trading_mit_risiko():
+    """Der Schlüssel zum Reichtum: Warum du mehr Risiko eingehen musst"""
+    track_visitor()  # Analytics
+    
+    # Öffentlich zugänglich (Lead-Magnet)
+    # Premium-Seite die erklärt, warum kalkuliertes Risiko für höhere Renditen notwendig ist
+    
+    return render_template('trading-mit-risiko.html')
 
 @app.route('/position-vergroessern')
 def position_vergroessern():

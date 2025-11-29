@@ -331,6 +331,29 @@
         font-weight: 600;
     }
 
+    .konsolidierung-wrapper .reset-btn {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+    }
+
+    .konsolidierung-wrapper .reset-btn:hover {
+        background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    }
+
     .konsolidierung-wrapper .factors-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -372,6 +395,16 @@
         .konsolidierung-wrapper .factors-grid {
             grid-template-columns: 1fr;
         }
+
+        .konsolidierung-wrapper .reset-btn {
+            position: relative;
+            top: auto;
+            right: auto;
+            width: 100%;
+            max-width: 300px;
+            margin: 20px auto;
+            display: block;
+        }
     }
 </style>
 
@@ -396,6 +429,11 @@
             </div>
         </div>
     </div>
+
+    <!-- Reset Button -->
+    <button class="reset-btn" onclick="resetModule()" title="Modul von vorne beginnen">
+        🔄 Von vorne beginnen
+    </button>
 
     <div class="content-container">
         <!-- Step 1: Grundlagen -->
@@ -716,6 +754,15 @@
                 <div style="text-align: center; margin-top: 50px;">
                     <p style="font-size: 1.3em; color: #b8860b; font-weight: 700;">🎉 Glückwunsch! Du hast das Konsolidierungs-Modul abgeschlossen!</p>
                     <p style="font-size: 1.1em; margin-top: 20px;">Wende dieses Wissen in deinen Trades an und beobachte, wie sich deine Win-Rate verbessert! 🚀</p>
+                    
+                    <div style="margin-top: 30px; display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                        <button class="next-step-btn" onclick="resetModule()" style="background: linear-gradient(135deg, #6c757d 0%, #495057 100%);">
+                            🔄 Modul wiederholen
+                        </button>
+                        <button class="next-step-btn" onclick="window.location.href='/modules'">
+                            📚 Zurück zur Übersicht
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -786,6 +833,25 @@
         }
     }
 
+    // Reset Module Function
+    function resetModule() {
+        if (confirm('Möchtest du das Modul wirklich zurücksetzen und von vorne beginnen?')) {
+            // Clear all localStorage data for this module
+            localStorage.removeItem('konsolidierung_progress');
+            localStorage.removeItem('konsolidierung_completed');
+            localStorage.removeItem('konsolidierung_completion_date');
+            
+            // Reset quiz answers
+            Object.keys(quizAnswers).forEach(key => delete quizAnswers[key]);
+            
+            // Go back to step 1
+            showStep(1);
+            
+            // Show confirmation
+            alert('✅ Modul wurde zurückgesetzt! Du startest jetzt bei Schritt 1.');
+        }
+    }
+
     // Load progress on page load
     window.addEventListener('DOMContentLoaded', function() {
         const savedProgress = localStorage.getItem('konsolidierung_progress');
@@ -793,6 +859,12 @@
             // Optionally ask user if they want to continue
             if (confirm('Du hast dieses Modul bereits begonnen. Möchtest du dort weitermachen?')) {
                 showStep(parseInt(savedProgress));
+            } else {
+                // User wants to start fresh - just clear storage and go to step 1
+                localStorage.removeItem('konsolidierung_progress');
+                localStorage.removeItem('konsolidierung_completed');
+                localStorage.removeItem('konsolidierung_completion_date');
+                showStep(1);
             }
         }
     });

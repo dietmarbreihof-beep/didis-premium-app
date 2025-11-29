@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eine Rally für jede Jahreszeit - Didis Trading Academy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+            padding: 20px;
+            font-size: 1.05rem;
+        }
+        
+        .rally-page-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .rally-page-container .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rally-page-container .header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .rally-page-container .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Progress Bar */
+        .rally-page-container .progress-section {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .rally-page-container .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .rally-page-container .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b, #daa520);
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+        
+        /* Collapsible Sections */
+        .rally-page-container .collapsible-section {
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .rally-page-container .section-header {
+            background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+            color: white;
+            padding: 20px 25px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .rally-page-container .section-header:hover {
+            background: linear-gradient(135deg, #b8860b, #daa520);
+        }
+
+        .rally-page-container .section-header h3 {
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .rally-page-container .arrow {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .rally-page-container .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+            padding: 0 25px;
+        }
+
+        .rally-page-container .section-content.active {
+            max-height: 3000px;
+            padding: 25px;
+        }
+
+        .rally-page-container .section-header.active .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .rally-page-container .myth-buster {
+            background: linear-gradient(45deg, #daa520, #f4e97b);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            color: #1a1a1a;
+            border-left: 5px solid #b8860b;
+        }
+        
+        .rally-page-container .myth-buster h2 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .rally-page-container .myth-buster p {
+            font-size: 1.1rem;
+        }
+        
+        .rally-page-container .seasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .rally-page-container .season-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rally-page-container .season-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            border-color: #daa520;
+        }
+        
+        .rally-page-container .season-card.winner {
+            border-color: #38a169;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(56, 161, 105, 0.1) 100%);
+        }
+        
+        .rally-page-container .season-card.lowest {
+            border-color: #e53e3e;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(229, 62, 62, 0.1) 100%);
+        }
+        
+        .rally-page-container .season-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .rally-page-container .season-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+        
+        .rally-page-container .season-performance {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2d2d2d;
+        }
+        
+        .rally-page-container .winner .season-performance {
+            color: #38a169;
+        }
+        
+        .rally-page-container .lowest .season-performance {
+            color: #e53e3e;
+        }
+        
+        .rally-page-container .season-rank {
+            font-size: 0.9rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        
+        .rally-page-container .summer-rally-definition {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 5px solid #daa520;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rally-page-container .summer-rally-definition h4 {
+            color: #b8860b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .rally-page-container .key-insights {
+            background: #ffffff;
+            border-left: 5px solid #b8860b;
+            padding: 30px;
+            margin: 40px 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .rally-page-container .key-insights h3 {
+            color: #b8860b;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .rally-page-container .insight-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .rally-page-container .insight-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(45, 45, 45, 0.1);
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .rally-page-container .insight-list li:before {
+            content: "→";
+            color: #daa520;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+        
+        .rally-page-container .conclusion {
+            background: linear-gradient(45deg, #38a169, #b8860b);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            color: white;
+        }
+        
+        .rally-page-container .conclusion h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .rally-page-container .conclusion p {
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+        
+        .rally-page-container .warning-box {
+            background: linear-gradient(45deg, #d69e2e, #f4e97b);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 5px solid #d69e2e;
+            color: #1a1a1a;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Quiz Section */
+        .rally-page-container .quiz-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #daa520;
+        }
+
+        .rally-page-container .quiz-section h3 {
+            color: #b8860b;
+            margin-bottom: 20px;
+        }
+
+        .rally-page-container .quiz-question {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f7f7f7;
+            border-radius: 8px;
+        }
+
+        .rally-page-container .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .rally-page-container .quiz-options label {
+            display: block;
+            padding: 12px 15px;
+            margin: 8px 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .rally-page-container .quiz-options label:hover {
+            border-color: #daa520;
+            background: #fffef8;
+        }
+
+        .rally-page-container .quiz-options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .rally-page-container .quiz-result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .rally-page-container .quiz-result.correct {
+            background: #d1f2df;
+            color: #155724;
+            border: 2px solid #38a169;
+            display: block;
+        }
+
+        .rally-page-container .quiz-result.incorrect {
+            background: #ffe6e6;
+            color: #721c24;
+            border: 2px solid #e53e3e;
+            display: block;
+        }
+
+        .rally-page-container .check-answer-btn {
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .rally-page-container .check-answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.3);
+        }
+
+        .rally-page-container .check-answer-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Key Takeaways */
+        .rally-page-container .key-takeaways {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid #38a169;
+        }
+
+        .rally-page-container .key-takeaways h3 {
+            color: #38a169;
+            margin-bottom: 20px;
+        }
+
+        .rally-page-container .key-takeaways ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .rally-page-container .key-takeaways li {
+            padding: 12px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .rally-page-container .key-takeaways li:before {
+            content: "✓";
+            color: #38a169;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .rally-page-container {
+                padding: 10px;
+            }
+            
+            .rally-page-container .header {
+                padding: 30px 15px;
+            }
+            
+            .rally-page-container .header h1 {
+                font-size: 2rem;
+            }
+            
+            .rally-page-container .seasons-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .rally-page-container .season-card, 
+            .rally-page-container .key-insights, 
+            .rally-page-container .summer-rally-definition, 
+            .rally-page-container .myth-buster {
+                padding: 20px;
+            }
+
+            .rally-page-container .section-content.active {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="rally-page-container">
+        <div class="header">
+            <h1>📈 Eine Rally für jede Jahreszeit</h1>
+            <p class="subtitle">Warum die Börse nicht nur im Sommer steigt</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                <strong>🎯 Dein Fortschritt</strong>
+                <span id="progress-text">0 von 6 Abschnitten abgeschlossen</span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Section 1: Der Mythos -->
+        <div class="collapsible-section" data-section="1">
+            <div class="section-header" onclick="toggleSection(1)">
+                <h3>🎯 1. Der große Mythos aufgedeckt</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="myth-buster">
+                    <h2>🔍 Was glauben die meisten Anleger?</h2>
+                    <p>Viele Anleger glauben, dass die "Sommer-Rally" die beste Zeit für Aktiengewinne ist. <strong>Das ist ein Irrtum!</strong> Tatsächlich ralliert der Markt in jeder Jahreszeit – und oft sogar stärker in Winter, Frühling und Herbst.</p>
+                </div>
+
+                <div class="summer-rally-definition">
+                    <h4>📖 Was ist eine "Sommer-Rally"?</h4>
+                    <p><strong>Definition nach Ralph Rothron:</strong> Der niedrigste Schlusskurs des Dow Jones im Mai oder Juni bis zum höchsten Schlusskurs im Juli, August oder September.</p>
+                    <p style="margin-top: 15px; color: #6b7280;">Diese Definition stammt aus historischen Beobachtungen und wird oft als Marketingtool verwendet – aber entspricht sie der Realität?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Die Daten -->
+        <div class="collapsible-section" data-section="2">
+            <div class="section-header" onclick="toggleSection(2)">
+                <h3>📊 2. Die harten Fakten - Saisonale Performance</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="seasons-grid">
+                    <div class="season-card winner">
+                        <span class="season-icon">❄️</span>
+                        <div class="season-name">Winter</div>
+                        <div class="season-performance">13,0%</div>
+                        <div class="season-rank">🏆 Beste Performance!</div>
+                    </div>
+                    
+                    <div class="season-card">
+                        <span class="season-icon">🌸</span>
+                        <div class="season-name">Frühling</div>
+                        <div class="season-performance">11,7%</div>
+                        <div class="season-rank">🥈 Zweitbeste Performance</div>
+                    </div>
+                    
+                    <div class="season-card">
+                        <span class="season-icon">🍂</span>
+                        <div class="season-name">Herbst</div>
+                        <div class="season-performance">11,2%</div>
+                        <div class="season-rank">🥉 Drittbeste Performance</div>
+                    </div>
+                    
+                    <div class="season-card lowest">
+                        <span class="season-icon">☀️</span>
+                        <div class="season-name">Sommer</div>
+                        <div class="season-performance">9,4%</div>
+                        <div class="season-rank">❌ Schwächste Performance</div>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Überraschende Erkenntnis</h4>
+                    <p><strong>Der Sommer schneidet am schlechtesten ab!</strong> Trotz des Hypes und der medialen Aufmerksamkeit für "Sommer-Rallys" zeigt diese Jahreszeit historisch die schwächste durchschnittliche Performance.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Wichtige Erkenntnisse -->
+        <div class="collapsible-section" data-section="3">
+            <div class="section-header" onclick="toggleSection(3)">
+                <h3>🔍 3. Was bedeutet das für dich als Trader?</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="key-insights">
+                    <h3>💡 Wichtige Erkenntnisse für dein Trading</h3>
+                    <ul class="insight-list">
+                        <li><strong>Saisonalität ist real:</strong> Märkte zeigen tatsächlich saisonale Muster – aber nicht immer so, wie du denkst</li>
+                        <li><strong>Winter ist König:</strong> Die beste durchschnittliche Performance mit 13,0% – perfekt für Long-Strategien</li>
+                        <li><strong>Sommer überschätzt:</strong> Trotz des Hypes die schwächste Saison mit nur 9,4% – Vorsicht vor Hype!</li>
+                        <li><strong>Selbst 2020:</strong> Die beeindruckende Sommer-Rally von 25,2% wurde vom Frühling übertroffen</li>
+                        <li><strong>Statistisch gesehen:</strong> Es gibt <em>immer</em> eine Rally – egal zu welcher Jahreszeit</li>
+                        <li><strong>Timing ist alles:</strong> Nicht die Jahreszeit entscheidet, sondern der Einstiegszeitpunkt und die Marktbedingungen</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quiz -->
+        <div class="collapsible-section" data-section="4">
+            <div class="section-header" onclick="toggleSection(4)">
+                <h3>🎓 4. Teste dein Wissen</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="quiz-section">
+                    <h3>📝 Quiz: Saisonale Börsenperformance</h3>
+                    
+                    <div class="quiz-question">
+                        <p>1. Welche Jahreszeit zeigt historisch die <strong>beste</strong> Performance?</p>
+                        <div class="quiz-options">
+                            <label>
+                                <input type="radio" name="q1" value="a"> Sommer
+                            </label>
+                            <label>
+                                <input type="radio" name="q1" value="b"> Winter
+                            </label>
+                            <label>
+                                <input type="radio" name="q1" value="c"> Frühling
+                            </label>
+                            <label>
+                                <input type="radio" name="q1" value="d"> Herbst
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <p>2. Wie hoch ist die durchschnittliche Sommer-Performance?</p>
+                        <div class="quiz-options">
+                            <label>
+                                <input type="radio" name="q2" value="a"> 13,0%
+                            </label>
+                            <label>
+                                <input type="radio" name="q2" value="b"> 11,7%
+                            </label>
+                            <label>
+                                <input type="radio" name="q2" value="c"> 9,4%
+                            </label>
+                            <label>
+                                <input type="radio" name="q2" value="d"> 15,2%
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="quiz-question">
+                        <p>3. Was ist die wichtigste Erkenntnis für Trader?</p>
+                        <div class="quiz-options">
+                            <label>
+                                <input type="radio" name="q3" value="a"> Nur im Sommer investieren
+                            </label>
+                            <label>
+                                <input type="radio" name="q3" value="b"> Rallys gibt es in jeder Jahreszeit
+                            </label>
+                            <label>
+                                <input type="radio" name="q3" value="c"> Jahreszeiten sind irrelevant
+                            </label>
+                            <label>
+                                <input type="radio" name="q3" value="d"> Im Winter sollte man nicht investieren
+                            </label>
+                        </div>
+                    </div>
+
+                    <button class="check-answer-btn" onclick="checkQuiz()">Antworten überprüfen</button>
+                    <div class="quiz-result" id="quiz-result"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Praktische Anwendung -->
+        <div class="collapsible-section" data-section="5">
+            <div class="section-header" onclick="toggleSection(5)">
+                <h3>💼 5. Praktische Trading-Strategien</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="key-insights">
+                    <h3>🎯 So nutzt du diese Erkenntnisse</h3>
+                    <ul class="insight-list">
+                        <li><strong>Sei skeptisch bei Hype:</strong> Wenn alle von "Sommer-Rally" sprechen, prüfe die tatsächlichen Daten</li>
+                        <li><strong>Nutze Wintermonate:</strong> Historisch die stärkste Zeit für Long-Positionen (13,0% durchschnittlich)</li>
+                        <li><strong>Diversifiziere zeitlich:</strong> Verteile Investments über verschiedene Jahreszeiten</li>
+                        <li><strong>Fokus auf Timing:</strong> Der Einstiegspunkt ist wichtiger als die Jahreszeit</li>
+                        <li><strong>Kombiniere mit anderen Indikatoren:</strong> Saisonalität allein ist kein Handelssignal</li>
+                        <li><strong>Backteste deine Strategie:</strong> Prüfe, ob saisonale Patterns in deinem Markt funktionieren</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Wichtiger Hinweis</h4>
+                    <p>Diese statistischen Daten sind historische Durchschnittswerte und keine Garantie für zukünftige Performance. <strong>Vergangene Ergebnisse sind kein Indikator für zukünftige Entwicklungen.</strong> Nutze Saisonalität als ein Tool unter vielen – nicht als alleinige Entscheidungsgrundlage!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Key Takeaways & Fazit -->
+        <div class="collapsible-section" data-section="6">
+            <div class="section-header" onclick="toggleSection(6)">
+                <h3>🎓 6. Key Takeaways & Fazit</h3>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="key-takeaways">
+                    <h3>✅ Die wichtigsten Punkte</h3>
+                    <ul>
+                        <li><strong>Mythos widerlegt:</strong> Die "Sommer-Rally" ist NICHT die beste Jahreszeit für Aktiengewinne</li>
+                        <li><strong>Winter gewinnt:</strong> Historisch mit 13,0% die stärkste Saison</li>
+                        <li><strong>Sommer am schwächsten:</strong> Nur 9,4% durchschnittliche Performance trotz medialer Aufmerksamkeit</li>
+                        <li><strong>Rallys überall:</strong> In jeder Jahreszeit gibt es statistisch gesehen eine Rally</li>
+                        <li><strong>Sei kritisch:</strong> Hinterfrage Markt-Hype und prüfe die Daten</li>
+                        <li><strong>Kombiniere Faktoren:</strong> Nutze Saisonalität als Teil einer umfassenden Strategie</li>
+                    </ul>
+                </div>
+
+                <div class="conclusion">
+                    <h3>💡 Die Quintessenz</h3>
+                    <p>Egal ob Marktcrash oder Unsicherheit – statistisch gesehen gibt es <strong>immer</strong> eine Rally in jeder Jahreszeit. Wichtig ist nicht das <em>Ob</em>, sondern das <em>Wann</em> und <em>Wo</em> du einsteigst!</p>
+                    <p style="margin-top: 15px; font-size: 0.95rem;">💎 Lass dich nicht von Marketing-Hype blenden – folge den Daten, nicht den Schlagzeilen!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Einheitliche Navigation -->
+    {% include '_navigation.html' %}
+
+    <script>
+        // Progressive Disclosure Management
+        let completedSections = new Set();
+        const totalSections = 6;
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('rally_progress');
+            if (saved) {
+                completedSections = new Set(JSON.parse(saved));
+                updateProgressBar();
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('rally_progress', JSON.stringify([...completedSections]));
+        }
+
+        // Toggle Section
+        function toggleSection(sectionNum) {
+            const section = document.querySelector(`[data-section="${sectionNum}"]`);
+            const header = section.querySelector('.section-header');
+            const content = section.querySelector('.section-content');
+            
+            const isActive = content.classList.contains('active');
+            
+            if (isActive) {
+                content.classList.remove('active');
+                header.classList.remove('active');
+            } else {
+                content.classList.add('active');
+                header.classList.add('active');
+                
+                // Mark as completed
+                completedSections.add(sectionNum);
+                saveProgress();
+                updateProgressBar();
+
+                // Scroll to section
+                setTimeout(() => {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        // Update Progress Bar
+        function updateProgressBar() {
+            const percentage = (completedSections.size / totalSections) * 100;
+            document.getElementById('progress-fill').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = 
+                `${completedSections.size} von ${totalSections} Abschnitten abgeschlossen`;
+        }
+
+        // Quiz Functionality
+        const correctAnswers = {
+            q1: 'b',  // Winter
+            q2: 'c',  // 9,4%
+            q3: 'b'   // Rallys in jeder Jahreszeit
+        };
+
+        function checkQuiz() {
+            let correct = 0;
+            let total = 3;
+            
+            for (let q in correctAnswers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === correctAnswers[q]) {
+                    correct++;
+                }
+            }
+
+            const resultDiv = document.getElementById('quiz-result');
+            const percentage = Math.round((correct / total) * 100);
+
+            if (correct === total) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `🎉 <strong>Perfekt!</strong> Du hast alle ${total} Fragen richtig beantwortet! Du hast das Konzept verstanden.`;
+            } else if (correct >= 2) {
+                resultDiv.className = 'quiz-result correct';
+                resultDiv.innerHTML = `👍 <strong>Gut gemacht!</strong> Du hast ${correct} von ${total} Fragen richtig (${percentage}%). Lies dir die falschen Antworten nochmal durch.`;
+            } else {
+                resultDiv.className = 'quiz-result incorrect';
+                resultDiv.innerHTML = `📖 <strong>Noch nicht ganz.</strong> Du hast ${correct} von ${total} Fragen richtig (${percentage}%). Lies dir die Abschnitte nochmal genau durch!`;
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            
+            // Auto-open first section
+            if (completedSections.size === 0) {
+                toggleSection(1);
+            }
+
+            // Add animation delays
+            document.querySelectorAll('.collapsible-section').forEach((section, index) => {
+                section.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Reset Progress (for testing)
+        function resetProgress() {
+            if (confirm('Möchtest du deinen Fortschritt wirklich zurücksetzen?')) {
+                localStorage.removeItem('rally_progress');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>
+
