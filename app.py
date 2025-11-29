@@ -850,13 +850,15 @@ def register():
                 flash('Dieser Benutzername ist bereits vergeben.', 'error')
                 return render_template('auth/register.html')
             
-            # Neuen User erstellen (email_verified=False!)
+            # Neuen User erstellen
+            # HOTFIX: email_verified=True bis Email-Config in Railway gesetzt ist
+            # TODO: Auf False ändern sobald MAIL_* Environment Variables gesetzt sind
             user = User(
                 email=email,
                 username=username,
                 first_name=first_name,
                 last_name=last_name,
-                email_verified=False,  # GEÄNDERT: Muss verifiziert werden
+                email_verified=True,  # HOTFIX: Temporär auf True (siehe TODO oben)
                 subscription_type=SubscriptionType.FREE  # Standard: FREE
             )
             user.set_password(password)
@@ -865,26 +867,14 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            # Verifizierungs-Token generieren
-            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+            # HOTFIX: Email-Versand temporär deaktiviert bis Railway Email-Config steht
+            # TODO: Aktivieren sobald MAIL_USERNAME, MAIL_PASSWORD, etc. in Railway gesetzt sind
+            # token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+            # base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+            # verification_link = f"{base_url}/verify-email/{token}"
+            # send_email(...)
             
-            # Verifizierungs-Email senden
-            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
-            verification_link = f"{base_url}/verify-email/{token}"
-            
-            email_sent = send_email(
-                to=user.email,
-                subject='Bestätige deine Email-Adresse',
-                template='verify_email',
-                username=user.username,
-                verification_link=verification_link
-            )
-            
-            if email_sent:
-                flash('Registrierung erfolgreich! Bitte prüfe deine Emails zur Verifizierung.', 'success')
-            else:
-                flash('Registrierung erfolgreich, aber Email-Versand fehlgeschlagen. Kontaktiere den Support.', 'warning')
-            
+            flash('Registrierung erfolgreich! Du kannst dich jetzt anmelden.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
@@ -962,10 +952,11 @@ def login():
             user = User.query.filter_by(username=email_or_username).first()
         
         if user and user.check_password(password):
-            # Email-Verifizierung prüfen
-            if not user.email_verified:
-                flash('Bitte bestätige zuerst deine Email-Adresse. Prüfe dein Postfach.', 'warning')
-                return render_template('auth/login.html')
+            # HOTFIX: Email-Verifizierung temporär deaktiviert
+            # TODO: Aktivieren sobald Email-Config in Railway steht
+            # if not user.email_verified:
+            #     flash('Bitte bestätige zuerst deine Email-Adresse. Prüfe dein Postfach.', 'warning')
+            #     return render_template('auth/login.html')
             
             # Account-Status prüfen
             if not user.is_active:
