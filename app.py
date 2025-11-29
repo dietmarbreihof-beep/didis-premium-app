@@ -283,6 +283,44 @@ def send_email_async(to, subject, template, **kwargs):
     thread.start()
     print(f"📨 [ASYNC] Email-Versand gestartet: {subject} → {to}")
 
+# === EMAIL DEBUG ROUTE ===
+@app.route('/admin/test-email')
+def test_email():
+    """Debug-Route zum Testen des E-Mail-Versands (nur für Admin)"""
+    # Nur für Admin
+    username = session.get('user', {}).get('username')
+    if username not in ['admin', 'didi']:
+        return "Nicht autorisiert", 403
+    
+    import json
+    result = {
+        "mail_server": app.config.get('MAIL_SERVER'),
+        "mail_port": app.config.get('MAIL_PORT'),
+        "mail_use_tls": app.config.get('MAIL_USE_TLS'),
+        "mail_username": app.config.get('MAIL_USERNAME'),
+        "mail_password": "***" + (app.config.get('MAIL_PASSWORD', '')[-4:] if app.config.get('MAIL_PASSWORD') else "NICHT GESETZT"),
+        "mail_default_sender": app.config.get('MAIL_DEFAULT_SENDER'),
+    }
+    
+    # Test-Email senden (synchron für direktes Feedback)
+    test_to = request.args.get('to', app.config.get('MAIL_USERNAME'))
+    if test_to:
+        try:
+            from flask_mail import Message as TestMessage
+            msg = TestMessage(
+                subject='🧪 Test-Email - Didis Trading Academy',
+                recipients=[test_to],
+                html='<h1>Test erfolgreich!</h1><p>Die E-Mail-Konfiguration funktioniert.</p>'
+            )
+            mail.send(msg)
+            result["test_result"] = f"✅ Email erfolgreich gesendet an: {test_to}"
+        except Exception as e:
+            import traceback
+            result["test_result"] = f"❌ Fehler: {str(e)}"
+            result["traceback"] = traceback.format_exc()
+    
+    return f"<pre>{json.dumps(result, indent=2, ensure_ascii=False)}</pre>"
+
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
     """🚀 VEREINFACHTE Startup-Logik: Stelle nur "Neue Module" Kategorie sicher"""
