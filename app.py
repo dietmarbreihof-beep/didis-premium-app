@@ -5925,6 +5925,9 @@ def admin_analytics_api():
 def admin_module_unlocks():
     """Admin-Übersicht für Modul-Freischaltungen"""
     try:
+        # Stelle sicher dass die Tabelle existiert
+        db.create_all()
+        
         # Query-Parameter
         user_filter = request.args.get('user_id', '')
         
@@ -5962,7 +5965,7 @@ def admin_module_unlocks():
         flash(f'Fehler beim Laden der Freischaltungen: {str(e)}', 'error')
         import traceback
         traceback.print_exc()
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('home'))
 
 
 @app.route('/admin/trigger-module-unlock', methods=['POST'])
@@ -5970,6 +5973,9 @@ def admin_module_unlocks():
 def admin_trigger_module_unlock():
     """Löst die Modul-Freischaltung manuell aus"""
     try:
+        # Stelle sicher dass die Tabelle existiert
+        db.create_all()
+        
         from scheduler import trigger_manual_unlock
         trigger_manual_unlock(app)
         flash('✅ Modul-Freischaltung wurde manuell ausgelöst!', 'success')
@@ -5985,27 +5991,34 @@ def admin_trigger_module_unlock():
 @admin_required
 def admin_user_unlocks(user_id):
     """Zeigt alle freigeschalteten Module für einen User"""
-    user = User.query.get_or_404(user_id)
-    
-    unlocks = UserModuleUnlock.query.filter_by(user_id=user_id).order_by(
-        UserModuleUnlock.unlock_day
-    ).all()
-    
-    # Nächstes Modul berechnen
-    subscription_level = user.subscription_type.value
-    days_since_start = user.get_days_since_subscription_start(subscription_level)
-    
-    # Alle Module für dieses Level
-    from scheduler import get_modules_for_subscription_level
-    all_modules = get_modules_for_subscription_level(subscription_level, db, LearningModule)
-    next_module = all_modules[len(unlocks)] if len(unlocks) < len(all_modules) else None
-    
-    return render_template('admin/user_unlocks.html',
-                         user=user,
-                         unlocks=unlocks,
-                         days_since_start=days_since_start,
-                         total_modules=len(all_modules),
-                         next_module=next_module)
+    try:
+        # Stelle sicher dass die Tabelle existiert
+        db.create_all()
+        
+        user = User.query.get_or_404(user_id)
+        
+        unlocks = UserModuleUnlock.query.filter_by(user_id=user_id).order_by(
+            UserModuleUnlock.unlock_day
+        ).all()
+        
+        # Nächstes Modul berechnen
+        subscription_level = user.subscription_type.value
+        days_since_start = user.get_days_since_subscription_start(subscription_level)
+        
+        # Alle Module für dieses Level
+        from scheduler import get_modules_for_subscription_level
+        all_modules = get_modules_for_subscription_level(subscription_level, db, LearningModule)
+        next_module = all_modules[len(unlocks)] if len(unlocks) < len(all_modules) else None
+        
+        return render_template('admin/user_unlocks.html',
+                             user=user,
+                             unlocks=unlocks,
+                             days_since_start=days_since_start,
+                             total_modules=len(all_modules),
+                             next_module=next_module)
+    except Exception as e:
+        flash(f'Fehler: {str(e)}', 'error')
+        return redirect(url_for('admin_module_unlocks'))
 
 
 @app.route('/admin/users')
