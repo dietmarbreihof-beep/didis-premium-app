@@ -6018,10 +6018,12 @@ def admin_toggle_user_status(user_id):
 @app.route('/admin/users/<int:user_id>/delete', methods=['POST'])
 @admin_required
 def admin_delete_user(user_id):
-    """Löscht einen User (mit Bestätigung)"""
+    """Löscht einen User (mit Bestätigung) - inklusive aller abhängigen Daten"""
     try:
         user = User.query.get_or_404(user_id)
         username = user.username
+        user_email = user.email
+        user_subscription = user.subscription_type.value
 
         # Verhindere, dass Admins sich selbst löschen
         current_username = session.get('user', {}).get('username')
@@ -6029,14 +6031,33 @@ def admin_delete_user(user_id):
             flash('Du kannst dich nicht selbst löschen!', 'error')
             return redirect(url_for('admin_users'))
 
+        # Verhindere, dass Admin-Accounts gelöscht werden
+        if user.username in ['admin', 'didi']:
+            flash('Admin-Accounts können nicht gelöscht werden!', 'error')
+            return redirect(url_for('admin_users'))
+
+        # === ABHÄNGIGE DATEN LÖSCHEN (WICHTIG: Vor User-Löschung!) ===
+        
+        # 1. Email-Verification-Tokens löschen
+        deleted_tokens = EmailVerificationToken.query.filter_by(user_id=user.id).delete()
+        print(f"[DELETE] Gelöschte Tokens für User {username}: {deleted_tokens}")
+        
+        # 2. PageVisits löschen (Analytics)
+        deleted_visits = PageVisit.query.filter_by(user_id=user.id).delete()
+        print(f"[DELETE] Gelöschte PageVisits für User {username}: {deleted_visits}")
+        
+        # 3. ModuleProgress löschen (verwendet String-ID)
+        deleted_progress = ModuleProgress.query.filter_by(user_id=str(user.id)).delete()
+        print(f"[DELETE] Gelöschte ModuleProgress für User {username}: {deleted_progress}")
+
         # Audit-Log erstellen BEVOR User gelöscht wird
         admin_username = session.get('user', {}).get('username', 'unknown')
         audit_log = AdminAuditLog(
             admin_username=admin_username,
             action_type='user_delete',
             target_user_id=user.id,
-            target_username=user.username,
-            old_value=f'{user.email} | {user.subscription_type.value}',
+            target_username=username,
+            old_value=f'{user_email} | {user_subscription}',
             new_value='DELETED',
             ip_address=request.remote_addr
         )
@@ -6045,10 +6066,12 @@ def admin_delete_user(user_id):
         db.session.delete(user)
         db.session.commit()
 
+        print(f"[DELETE] ✅ User {username} erfolgreich gelöscht (inkl. {deleted_tokens} Tokens, {deleted_visits} Visits, {deleted_progress} Progress)")
         flash(f'User {username} erfolgreich gelöscht!', 'success')
 
     except Exception as e:
         db.session.rollback()
+        print(f"[DELETE] ❌ Fehler beim Löschen von User {user_id}: {str(e)}")
         flash(f'Fehler beim Löschen des Users: {str(e)}', 'error')
 
     return redirect(url_for('admin_users'))
