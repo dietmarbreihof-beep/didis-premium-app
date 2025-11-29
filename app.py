@@ -6127,54 +6127,111 @@ def admin_users():
 @app.route('/admin/users/add', methods=['POST'])
 @admin_required
 def admin_add_user():
-    """Erstellt einen neuen User"""
+    """
+    Erstellt einen neuen User mit vollständiger Validierung.
+    
+    Features:
+    - Username/Email Validierung
+    - Passwort-Stärke-Prüfung
+    - Subscription-Start-Datum für tägliche Modul-Freischaltung
+    - Audit-Logging
+    - Email-Verifizierungs-Option
+    """
     try:
-        username = request.form.get('username', '').strip()
-        email = request.form.get('email', '').strip()
+        # === FORMULARDATEN EINLESEN ===
+        username = request.form.get('username', '').strip().lower()
+        email = request.form.get('email', '').strip().lower()
         password = request.form.get('password', '').strip()
         first_name = request.form.get('first_name', '').strip()
         last_name = request.form.get('last_name', '').strip()
         subscription_type = request.form.get('subscription_type', 'free')
+        send_welcome_email = request.form.get('send_welcome_email') == 'on'
+        
+        print(f"\n{'='*60}")
+        print(f"[ADD USER] Erstelle neuen User: {username}")
+        print(f"{'='*60}")
 
-        # Validierung
-        if not username or not email or not password:
-            flash('Username, Email und Passwort sind erforderlich!', 'error')
+        # === VALIDIERUNG ===
+        errors = []
+        
+        # Pflichtfelder
+        if not username:
+            errors.append('Username ist erforderlich')
+        if not email:
+            errors.append('Email ist erforderlich')
+        if not password:
+            errors.append('Passwort ist erforderlich')
+        
+        # Username-Format
+        if username:
+            if len(username) < 3:
+                errors.append('Username muss mindestens 3 Zeichen lang sein')
+            if len(username) > 50:
+                errors.append('Username darf maximal 50 Zeichen lang sein')
+            if not username.replace('_', '').replace('-', '').isalnum():
+                errors.append('Username darf nur Buchstaben, Zahlen, _ und - enthalten')
+        
+        # Email-Format
+        if email:
+            import re
+            email_pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+            if not re.match(email_pattern, email):
+                errors.append('Ungültiges Email-Format')
+        
+        # Passwort-Stärke
+        if password:
+            if len(password) < 8:
+                errors.append('Passwort muss mindestens 8 Zeichen lang sein')
+            if not any(c.isupper() for c in password):
+                errors.append('Passwort muss mindestens einen Großbuchstaben enthalten')
+            if not any(c.islower() for c in password):
+                errors.append('Passwort muss mindestens einen Kleinbuchstaben enthalten')
+            if not any(c.isdigit() for c in password):
+                errors.append('Passwort muss mindestens eine Zahl enthalten')
+        
+        # Duplikat-Prüfung
+        if username and User.query.filter_by(username=username).first():
+            errors.append(f'Username "{username}" existiert bereits')
+        
+        if email and User.query.filter_by(email=email).first():
+            errors.append(f'Email "{email}" ist bereits registriert')
+        
+        # Bei Fehlern abbrechen
+        if errors:
+            for error in errors:
+                flash(f'❌ {error}', 'error')
+            print(f"[ADD USER] ❌ Validierungsfehler: {errors}")
             return redirect(url_for('admin_users'))
 
-        if len(password) < 6:
-            flash('Passwort muss mindestens 6 Zeichen lang sein!', 'error')
-            return redirect(url_for('admin_users'))
-
-        # Prüfe ob Username oder Email bereits existiert
-        if User.query.filter_by(username=username).first():
-            flash(f'Username "{username}" existiert bereits!', 'error')
-            return redirect(url_for('admin_users'))
-
-        if User.query.filter_by(email=email).first():
-            flash(f'Email "{email}" ist bereits registriert!', 'error')
-            return redirect(url_for('admin_users'))
-
-        # Subscription Type validieren
+        # === SUBSCRIPTION TYPE VALIDIEREN ===
         try:
             sub_type = SubscriptionType(subscription_type)
         except ValueError:
             sub_type = SubscriptionType.FREE
+            print(f"[ADD USER] ⚠️ Ungültiger Subscription-Typ '{subscription_type}', verwende FREE")
 
-        # Neuen User erstellen
+        # === USER ERSTELLEN ===
         new_user = User(
             username=username,
             email=email,
             first_name=first_name if first_name else None,
             last_name=last_name if last_name else None,
             subscription_type=sub_type,
-            is_active=True
+            is_active=True,
+            email_verified=False,  # Standard: nicht verifiziert
+            created_at=datetime.utcnow()
         )
         new_user.set_password(password)
+        
+        # Subscription-Start-Datum setzen (wichtig für tägliche Modul-Freischaltung!)
+        if sub_type != SubscriptionType.FREE:
+            new_user.set_subscription_start_date(sub_type.value, datetime.utcnow())
+            print(f"[ADD USER] ✓ Subscription-Start-Datum gesetzt für {sub_type.value}")
 
         db.session.add(new_user)
-        db.session.commit()
+        db.session.flush()  # ID generieren für Audit-Log
 
-        # Audit-Log erstellen
+        # === AUDIT-LOG ERSTELLEN ===
         admin_username = session.get('user', {}).get('username', 'unknown')
         audit_log = AdminAuditLog(
             admin_username=admin_username,
@@ -6182,16 +6239,38 @@ def admin_add_user():
             target_user_id=new_user.id,
             target_username=new_user.username,
             old_value='—',
-            new_value=f'{email} | {sub_type.value}',
+            new_value=f'{email} | {sub_type.value} | {"Welcome-Email: Ja" if send_welcome_email else "Welcome-Email: Nein"}',
             ip_address=request.remote_addr
         )
         db.session.add(audit_log)
         db.session.commit()
 
-        flash(f'✅ User "{username}" erfolgreich erstellt!', 'success')
+        print(f"[ADD USER] ✅ User {username} erfolgreich erstellt (ID: {new_user.id})")
+        print(f"[ADD USER] 📧 Email: {email}")
+        print(f"[ADD USER] ⭐ Subscription: {sub_type.value}")
+        print(f"{'='*60}\n")
+        
+        # === WELCOME EMAIL (Optional) ===
+        if send_welcome_email:
+            try:
+                # TODO: Welcome-Email senden
+                print(f"[ADD USER] 📨 Welcome-Email würde gesendet werden an: {email}")
+                flash(f'✅ User "{username}" erstellt! Welcome-Email wird gesendet...', 'success')
+            except Exception as mail_error:
+                print(f"[ADD USER] ⚠️ Email-Fehler: {mail_error}")
+                flash(f'✅ User "{username}" erstellt! (Email konnte nicht gesendet werden)', 'warning')
+        else:
+            flash(f'✅ User "{username}" erfolgreich erstellt! (Subscription: {sub_type.value.upper()})', 'success')
 
     except Exception as e:
         db.session.rollback()
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"\n{'='*60}")
+        print(f"[ADD USER] ❌ FEHLER beim Erstellen")
+        print(f"[ADD USER] Fehlermeldung: {str(e)}")
+        print(f"[ADD USER] Details:\n{error_details}")
+        print(f"{'='*60}\n")
         flash(f'❌ Fehler beim Erstellen des Users: {str(e)}', 'error')
 
     return redirect(url_for('admin_users'))

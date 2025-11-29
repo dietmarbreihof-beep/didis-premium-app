@@ -343,44 +343,110 @@ table {
 
 <!-- Modal: User hinzufügen -->
 <div id="addUserModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>➕ Neuen User hinzufügen</h2>
-            <span class="close" onclick="closeAddUserModal()">&times;</span>
+    <div class="modal-content" style="max-width: 550px;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #10b981, #059669); color: white; margin: -30px -30px 20px -30px; padding: 20px 30px; border-radius: 10px 10px 0 0;">
+            <h2 style="color: white; margin: 0;">➕ Neuen User hinzufügen</h2>
+            <span class="close" onclick="closeAddUserModal()" style="color: white;">&times;</span>
         </div>
-        <form method="POST" action="/admin/users/add">
-            <div class="form-group">
-                <label for="username">Username *</label>
-                <input type="text" id="username" name="username" required>
+        
+        <form method="POST" action="/admin/users/add" id="addUserForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            
+            <!-- Username und Email -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label for="add_username">👤 Username *</label>
+                    <input type="text" id="add_username" name="username" required 
+                           minlength="3" maxlength="50"
+                           pattern="[a-zA-Z0-9_-]+"
+                           placeholder="z.B. max_mustermann"
+                           oninput="validateAddUserForm()">
+                    <small style="color: var(--text-muted); font-size: 0.75rem;">3-50 Zeichen, nur a-z, 0-9, _, -</small>
+                </div>
+                <div class="form-group">
+                    <label for="add_email">📧 Email *</label>
+                    <input type="email" id="add_email" name="email" required 
+                           placeholder="user@example.com"
+                           oninput="validateAddUserForm()">
+                </div>
             </div>
+            
+            <!-- Passwort mit Stärke-Anzeige -->
             <div class="form-group">
-                <label for="email">Email *</label>
-                <input type="email" id="email" name="email" required>
+                <label for="add_password">🔒 Passwort *</label>
+                <div style="position: relative;">
+                    <input type="password" id="add_password" name="password" required 
+                           minlength="8"
+                           placeholder="Min. 8 Zeichen, Groß-/Kleinbuchstaben, Zahl"
+                           oninput="checkPasswordStrength(); validateAddUserForm()">
+                    <button type="button" onclick="togglePasswordVisibility()" 
+                            style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;"
+                            title="Passwort anzeigen/verbergen">
+                        👁️
+                    </button>
+                </div>
+                <!-- Passwort-Stärke-Anzeige -->
+                <div id="passwordStrength" style="margin-top: 8px; display: none;">
+                    <div style="height: 4px; background: #e5e7eb; border-radius: 2px; overflow: hidden;">
+                        <div id="passwordStrengthBar" style="height: 100%; width: 0%; transition: all 0.3s;"></div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 4px; font-size: 0.75rem;">
+                        <span id="passwordStrengthText" style="color: var(--text-muted);"></span>
+                        <div id="passwordCriteria" style="color: var(--text-muted);"></div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="password">Passwort *</label>
-                <input type="password" id="password" name="password" required minlength="6">
+            
+            <!-- Vor- und Nachname -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label for="add_first_name">Vorname</label>
+                    <input type="text" id="add_first_name" name="first_name" 
+                           placeholder="Optional">
+                </div>
+                <div class="form-group">
+                    <label for="add_last_name">Nachname</label>
+                    <input type="text" id="add_last_name" name="last_name" 
+                           placeholder="Optional">
+                </div>
             </div>
+            
+            <!-- Subscription -->
             <div class="form-group">
-                <label for="first_name">Vorname</label>
-                <input type="text" id="first_name" name="first_name">
-            </div>
-            <div class="form-group">
-                <label for="last_name">Nachname</label>
-                <input type="text" id="last_name" name="last_name">
-            </div>
-            <div class="form-group">
-                <label for="subscription_type">Subscription</label>
-                <select id="subscription_type" name="subscription_type">
-                    <option value="free">Free</option>
-                    <option value="premium">Premium</option>
-                    <option value="elite">Elite</option>
-                    <option value="elite_pro">Elite Pro</option>
+                <label for="add_subscription_type">⭐ Subscription</label>
+                <select id="add_subscription_type" name="subscription_type" onchange="updateSubscriptionInfo()">
+                    <option value="free" data-info="Zugang zu Lead-Magnet Modulen">🆓 Free</option>
+                    <option value="premium" data-info="Tägliche Modul-Freischaltung, alle Premium-Inhalte">⭐ Premium</option>
+                    <option value="elite" data-info="Alle Premium + Elite-Module, Priority Support">💎 Elite</option>
+                    <option value="elite_pro" data-info="Alles inklusive, 1:1 Coaching, VIP-Zugang">👑 Elite Pro</option>
                 </select>
+                <div id="subscriptionInfo" style="margin-top: 6px; padding: 8px 12px; background: #f0fdf4; border-radius: 6px; font-size: 0.85rem; color: #166534;">
+                    ℹ️ Zugang zu Lead-Magnet Modulen
+                </div>
             </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px;">
-                <button type="button" class="btn" onclick="closeAddUserModal()">Abbrechen</button>
-                <button type="submit" class="btn primary">User erstellen</button>
+            
+            <!-- Welcome Email Option -->
+            <div class="form-group" style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin: 0;">
+                    <input type="checkbox" name="send_welcome_email" id="send_welcome_email" 
+                           style="width: 18px; height: 18px; cursor: pointer;">
+                    <span>📨 Welcome-Email an User senden</span>
+                </label>
+                <small style="color: var(--text-muted); font-size: 0.75rem; display: block; margin-top: 4px; margin-left: 28px;">
+                    Sendet Zugangsdaten und Willkommensnachricht
+                </small>
+            </div>
+            
+            <!-- Buttons -->
+            <div style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 25px; padding-top: 15px; border-top: 1px solid #e5e7eb;">
+                <button type="button" class="btn" onclick="closeAddUserModal()" 
+                        style="background: #e5e7eb; color: #374151;">
+                    ✖️ Abbrechen
+                </button>
+                <button type="submit" class="btn primary" id="addUserSubmitBtn"
+                        style="background: linear-gradient(135deg, #10b981, #059669); color: white; min-width: 140px;">
+                    ➕ User erstellen
+                </button>
             </div>
         </form>
     </div>
@@ -454,11 +520,172 @@ table {
 // === ADD USER MODAL ===
 function showAddUserModal() {
     document.getElementById('addUserModal').style.display = 'block';
+    // Form zurücksetzen
+    document.getElementById('addUserForm').reset();
+    document.getElementById('passwordStrength').style.display = 'none';
+    updateSubscriptionInfo();
 }
 
 function closeAddUserModal() {
     document.getElementById('addUserModal').style.display = 'none';
 }
+
+// === PASSWORT-STÄRKE-PRÜFUNG ===
+function checkPasswordStrength() {
+    const password = document.getElementById('add_password').value;
+    const strengthBar = document.getElementById('passwordStrengthBar');
+    const strengthText = document.getElementById('passwordStrengthText');
+    const criteriaDiv = document.getElementById('passwordCriteria');
+    const strengthDiv = document.getElementById('passwordStrength');
+    
+    if (password.length === 0) {
+        strengthDiv.style.display = 'none';
+        return;
+    }
+    
+    strengthDiv.style.display = 'block';
+    
+    // Kriterien prüfen
+    const hasLength = password.length >= 8;
+    const hasUpper = /[A-Z]/.test(password);
+    const hasLower = /[a-z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    
+    // Score berechnen
+    let score = 0;
+    if (hasLength) score++;
+    if (hasUpper) score++;
+    if (hasLower) score++;
+    if (hasNumber) score++;
+    if (hasSpecial) score++;
+    if (password.length >= 12) score++;
+    
+    // Farbe und Text bestimmen
+    let color, text, width;
+    if (score <= 2) {
+        color = '#ef4444'; // Rot
+        text = 'Schwach';
+        width = '25%';
+    } else if (score <= 3) {
+        color = '#f59e0b'; // Orange
+        text = 'Mittel';
+        width = '50%';
+    } else if (score <= 4) {
+        color = '#10b981'; // Grün
+        text = 'Stark';
+        width = '75%';
+    } else {
+        color = '#059669'; // Dunkelgrün
+        text = 'Sehr stark';
+        width = '100%';
+    }
+    
+    strengthBar.style.width = width;
+    strengthBar.style.backgroundColor = color;
+    strengthText.textContent = text;
+    strengthText.style.color = color;
+    
+    // Kriterien anzeigen
+    const criteria = [];
+    if (!hasLength) criteria.push('8+ Zeichen');
+    if (!hasUpper) criteria.push('Großbuchstabe');
+    if (!hasLower) criteria.push('Kleinbuchstabe');
+    if (!hasNumber) criteria.push('Zahl');
+    
+    if (criteria.length > 0) {
+        criteriaDiv.innerHTML = '❌ Fehlt: ' + criteria.join(', ');
+        criteriaDiv.style.color = '#ef4444';
+    } else {
+        criteriaDiv.innerHTML = '✅ Alle Kriterien erfüllt';
+        criteriaDiv.style.color = '#10b981';
+    }
+}
+
+// === PASSWORT ANZEIGEN/VERBERGEN ===
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('add_password');
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+    } else {
+        passwordInput.type = 'password';
+    }
+}
+
+// === SUBSCRIPTION INFO AKTUALISIEREN ===
+function updateSubscriptionInfo() {
+    const select = document.getElementById('add_subscription_type');
+    const infoDiv = document.getElementById('subscriptionInfo');
+    const selectedOption = select.options[select.selectedIndex];
+    const info = selectedOption.getAttribute('data-info');
+    
+    const icons = {
+        'free': '🆓',
+        'premium': '⭐',
+        'elite': '💎',
+        'elite_pro': '👑'
+    };
+    
+    const colors = {
+        'free': '#f0fdf4',
+        'premium': '#faf5ff',
+        'elite': '#fef3c7',
+        'elite_pro': 'linear-gradient(135deg, #fef3c7, #fef9c3)'
+    };
+    
+    const textColors = {
+        'free': '#166534',
+        'premium': '#7c3aed',
+        'elite': '#92400e',
+        'elite_pro': '#78350f'
+    };
+    
+    const value = select.value;
+    infoDiv.innerHTML = `ℹ️ ${info}`;
+    infoDiv.style.background = colors[value];
+    infoDiv.style.color = textColors[value];
+}
+
+// === FORMULAR VALIDIERUNG ===
+function validateAddUserForm() {
+    const username = document.getElementById('add_username').value.trim();
+    const email = document.getElementById('add_email').value.trim();
+    const password = document.getElementById('add_password').value;
+    const submitBtn = document.getElementById('addUserSubmitBtn');
+    
+    // Kriterien prüfen
+    const usernameValid = username.length >= 3 && /^[a-zA-Z0-9_-]+$/.test(username);
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const passwordValid = password.length >= 8 && 
+                         /[A-Z]/.test(password) && 
+                         /[a-z]/.test(password) && 
+                         /[0-9]/.test(password);
+    
+    // Button aktivieren/deaktivieren
+    if (usernameValid && emailValid && passwordValid) {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+    } else {
+        submitBtn.disabled = true;
+        submitBtn.style.opacity = '0.6';
+    }
+}
+
+// === FORMULAR SUBMISSION MIT LOADING-STATE ===
+document.addEventListener('DOMContentLoaded', function() {
+    const addForm = document.getElementById('addUserForm');
+    if (addForm) {
+        addForm.addEventListener('submit', function(e) {
+            const submitBtn = document.getElementById('addUserSubmitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ Erstelle...';
+            submitBtn.style.opacity = '0.7';
+        });
+    }
+    
+    // Initial validation
+    updateSubscriptionInfo();
+});
 
 // === DELETE USER MODAL ===
 function showDeleteModal(userId, username, email, subscription) {
