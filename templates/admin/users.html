@@ -153,10 +153,10 @@
 
                             <!-- Delete User -->
                             {% if user.username not in ['admin', 'didi'] %}
-                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;" onsubmit="return confirm('⚠️ ACHTUNG!\n\nUser {{ user.username }} wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!');">
+                            <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" style="margin: 0;" class="delete-user-form" data-username="{{ user.username }}">
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                                 <button type="submit"
-                                        class="btn"
+                                        class="btn delete-btn"
                                         style="padding: 6px 12px; font-size: 0.875rem; background: var(--danger); color: white;">
                                     🗑️ Löschen
                                 </button>
@@ -404,6 +404,33 @@ window.onclick = function(event) {
         closeAddUserModal();
     }
 }
+
+// Delete User Forms - Bestätigung mit JavaScript
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Delete forms script loaded');
+    
+    // Alle Delete-Forms finden
+    const deleteForms = document.querySelectorAll('.delete-user-form');
+    console.log('Found delete forms:', deleteForms.length);
+    
+    deleteForms.forEach(function(form) {
+        form.addEventListener('submit', function(e) {
+            const username = form.getAttribute('data-username');
+            console.log('Delete form submitted for:', username);
+            
+            const confirmed = confirm('⚠️ ACHTUNG!\n\nUser "' + username + '" wirklich LÖSCHEN?\n\nDieser Vorgang kann nicht rückgängig gemacht werden!');
+            
+            if (!confirmed) {
+                console.log('Delete cancelled by user');
+                e.preventDefault();
+                return false;
+            }
+            
+            console.log('Delete confirmed, submitting form...');
+            return true;
+        });
+    });
+});
 </script>
 
 {% endblock %}
