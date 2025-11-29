@@ -36,5 +36,8 @@ Flask-Limiter==3.5.0
 # Database Driver (für PostgreSQL in Produktion)
 psycopg2-binary==2.9.7
 
+# Scheduler für tägliche Modul-Freischaltung
+APScheduler==3.10.4
+
 # Monitoring (optional für Produktion)
 # sentry-sdk[flask]==1.38.0  # Auskommentiert - für Error Tracking

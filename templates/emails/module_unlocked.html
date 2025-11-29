@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: #f7f7f7;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a1a, #b8860b);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .header .unlock-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .header .day-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .content p {
+            color: #333;
+            line-height: 1.6;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+        .module-card {
+            background: linear-gradient(135deg, #f9fafb, #fef3c7);
+            border: 2px solid #b8860b;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .module-card .module-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .module-card h2 {
+            margin: 0 0 10px 0;
+            color: #1a1a1a;
+            font-size: 22px;
+        }
+        .module-card .description {
+            color: #666;
+            font-size: 14px;
+            margin: 0;
+        }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #daa520, #b8860b);
+            color: white !important;
+            padding: 18px 45px;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .tips-box {
+            background: #f0fdf4;
+            border-left: 4px solid #38a169;
+            padding: 15px 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tips-box h3 {
+            margin: 0 0 10px 0;
+            color: #1a1a1a;
+            font-size: 16px;
+        }
+        .tips-box p {
+            margin: 0;
+            color: #666;
+            font-size: 14px;
+        }
+        .progress-info {
+            background: #f3f4f6;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 25px 0;
+            text-align: center;
+        }
+        .progress-info .day-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #b8860b;
+        }
+        .progress-info .day-label {
+            color: #666;
+            font-size: 14px;
+        }
+        .footer {
+            color: #666;
+            font-size: 14px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+        }
+        .footer a {
+            color: #b8860b;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="unlock-icon">🔓</div>
+            <h1>Neues Modul freigeschaltet!</h1>
+            <div class="day-badge">📅 Tag {{ unlock_day }} deiner Trading-Reise</div>
+        </div>
+        <div class="content">
+            <p>Hallo <strong>{{ first_name }}</strong>,</p>
+            
+            <p>großartig! Du hast heute ein neues Lernmodul freigeschaltet:</p>
+            
+            <div class="module-card">
+                <div class="module-icon">{{ module_icon }}</div>
+                <h2>{{ module_title }}</h2>
+                {% if module_description %}
+                <p class="description">{{ module_description }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="btn-container">
+                <a href="{{ module_url }}" class="btn">🚀 Jetzt lernen</a>
+            </div>
+            
+            <div class="progress-info">
+                <div class="day-number">Tag {{ unlock_day }}</div>
+                <div class="day-label">deiner Trading-Ausbildung</div>
+            </div>
+            
+            <div class="tips-box">
+                <h3>💡 Tipp für maximalen Lernerfolg:</h3>
+                <p>Nimm dir 20-30 Minuten Zeit für jedes Modul. Wende das Gelernte direkt auf echte Charts an und mache dir Notizen. So verinnerlichst du das Wissen nachhaltig!</p>
+            </div>
+            
+            <p>Jeden Tag schaltest du ein neues Modul frei – so baust du Schritt für Schritt dein Trading-Wissen auf. 📈</p>
+            
+            <p>Viel Erfolg beim Lernen!</p>
+            
+            <div class="footer">
+                <p>Beste Grüße,<br>
+                <strong>Didi</strong><br>
+                Didis Premium Trading Academy</p>
+                <p><a href="https://didis-charts.com">didis-charts.com</a></p>
+                <p style="font-size: 12px; color: #999; margin-top: 20px;">
+                    Du erhältst diese Email, weil du bei der Didis Trading Academy registriert bist.<br>
+                    Fragen? Schreib mir einfach eine Email!
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block title %}Modul-Freischaltungen - Admin{% endblock %}
+{% block header_title %}🔓 Tägliche Modul-Freischaltung{% endblock %}
+{% block header_subtitle %}Automatische Freischaltung von Lernmodulen basierend auf Registrierungsdatum{% endblock %}
+
+{% block content %}
+
+<!-- Aktion Button -->
+<div class="card mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px;">
+        <h2 style="margin: 0;">⚡ Manuelle Freischaltung</h2>
+        <form action="{{ url_for('admin_trigger_module_unlock') }}" method="POST" style="margin: 0;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="button" style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));">
+                🔄 Jetzt Freischaltung auslösen
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Statistiken Dashboard -->
+<div class="card mb-4">
+    <h2>📊 Übersicht</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ total_unlocks }}</div>
+            <div>Gesamt Freischaltungen</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ notifications_sent }}</div>
+            <div>Emails gesendet</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #f59e0b, #d97706); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ notifications_pending }}</div>
+            <div>Emails ausstehend</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 20px; border-radius: 8px; text-align: center;">
+            <div style="font-size: 2rem; font-weight: bold;">{{ users_with_unlocks|length }}</div>
+            <div>User mit Freischaltungen</div>
+        </div>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+    <!-- User mit Freischaltungen -->
+    <div class="card">
+        <h2>👥 User mit Freischaltungen</h2>
+        <div style="overflow-x: auto;">
+            <table class="admin-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Level</th>
+                        <th>Module</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users_with_unlocks %}
+                    <tr>
+                        <td>
+                            <strong>{{ user.username }}</strong><br>
+                            <small style="color: #666;">{{ user.email }}</small>
+                        </td>
+                        <td>
+                            <span class="subscription-badge subscription-{{ user.subscription_type.value }}">
+                                {{ user.subscription_type.value|upper }}
+                            </span>
+                        </td>
+                        <td style="text-align: center; font-weight: bold;">{{ user.unlock_count }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_user_unlocks', user_id=user.id) }}" 
+                               class="button" style="padding: 5px 10px; font-size: 0.85rem;">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 40px; color: #666;">
+                            Noch keine Freischaltungen vorhanden
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Letzte Freischaltungen -->
+    <div class="card">
+        <h2>📜 Letzte Freischaltungen</h2>
+        <div style="overflow-x: auto;">
+            <table class="admin-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Zeitpunkt</th>
+                        <th>User</th>
+                        <th>Modul</th>
+                        <th>Tag</th>
+                        <th>Level</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for unlock in recent_unlocks %}
+                    <tr>
+                        <td>
+                            <small>{{ unlock.unlocked_at.strftime('%d.%m.%Y %H:%M') }}</small>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin_user_unlocks', user_id=unlock.user_id) }}" style="color: var(--gold-dark);">
+                                {{ unlock.user.username }}
+                            </a>
+                        </td>
+                        <td>
+                            <span style="margin-right: 5px;">{{ unlock.module.icon }}</span>
+                            {{ unlock.module.title|truncate(25) }}
+                        </td>
+                        <td>
+                            <span style="background: #e5e7eb; padding: 2px 8px; border-radius: 4px; font-size: 0.85rem;">
+                                Tag {{ unlock.unlock_day }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="subscription-badge subscription-{{ unlock.subscription_level }}">
+                                {{ unlock.subscription_level }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if unlock.notification_sent %}
+                                <span style="color: var(--success);">✓ Gesendet</span>
+                            {% else %}
+                                <span style="color: #f59e0b;">⏳ Ausstehend</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: #666;">
+                            Noch keine Freischaltungen vorhanden.<br>
+                            <small>Klicke auf "Jetzt Freischaltung auslösen" oder warte auf Mitternacht.</small>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Info-Box -->
+<div class="highlight-box" style="margin-top: 20px;">
+    <h3>ℹ️ So funktioniert die tägliche Modul-Freischaltung:</h3>
+    <ul style="margin: 0; padding-left: 20px;">
+        <li><strong>Automatisch:</strong> Jeden Tag um 00:05 UTC werden neue Module freigeschaltet</li>
+        <li><strong>Pro Tag:</strong> Jeder User bekommt ein Modul pro Tag, basierend auf seinem Subscription-Level</li>
+        <li><strong>Sortierung:</strong> Module werden nach ihrer sort_order freigeschaltet (global)</li>
+        <li><strong>Email:</strong> Bei jeder Freischaltung wird eine Email an den User gesendet</li>
+        <li><strong>Upgrade:</strong> Bei einem Subscription-Upgrade startet die Zählung für das neue Level bei Tag 1</li>
+    </ul>
+</div>
+
+<style>
+.admin-table {
+    border-collapse: collapse;
+}
+.admin-table th, .admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+.admin-table th {
+    background: var(--gray-dark);
+    color: white;
+    font-weight: 600;
+}
+.admin-table tr:hover {
+    background: #f9fafb;
+}
+.subscription-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.subscription-free {
+    background: #e5e7eb;
+    color: #374151;
+}
+.subscription-premium {
+    background: #3b82f6;
+    color: white;
+}
+.subscription-elite, .subscription-elite_pro {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 2fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{% endblock %}

@@ -203,6 +203,7 @@
                 {% if session.user.username in ['admin', 'didi'] %}
                 <a href="/admin/modules" style="color: var(--gold-dark); margin-right: 15px;">🗂️ Module</a>
                 <a href="/admin/users" style="color: var(--gold-dark); margin-right: 15px;">👥 Users</a>
+                <a href="/admin/module-unlocks" style="color: var(--gold-dark); margin-right: 15px;">🔓 Freischaltungen</a>
                 {% endif %}
                 <a href="/logout" style="color: #dc2626;">Logout</a>
             </div>
@@ -222,6 +223,7 @@
                 {% if session.get('user', {}).get('username') in ['admin', 'didi'] %}
                     <a href="/admin/modules">🗂️ Module-Admin</a>
                     <a href="/admin/users">👥 User-Admin</a>
+                    <a href="/admin/module-unlocks">🔓 Freischaltungen</a>
                 {% endif %}
             {% else %}
                 <a href="/login">🔐 Login</a>

@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block title %}Freischaltungen für {{ user.username }} - Admin{% endblock %}
+{% block header_title %}🔓 Freigeschaltete Module{% endblock %}
+{% block header_subtitle %}Module für {{ user.username }} ({{ user.subscription_type.value|upper }}){% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<div style="margin-bottom: 20px;">
+    <a href="{{ url_for('admin_module_unlocks') }}" style="color: var(--gold-dark);">
+        ← Zurück zur Übersicht
+    </a>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 20px;">
+    <!-- User Info -->
+    <div>
+        <div class="card">
+            <h2>👤 User-Informationen</h2>
+            <table style="width: 100%;">
+                <tr>
+                    <td style="padding: 8px 0;"><strong>Username:</strong></td>
+                    <td style="padding: 8px 0;">{{ user.username }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0;"><strong>Email:</strong></td>
+                    <td style="padding: 8px 0;">{{ user.email }}</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0;"><strong>Subscription:</strong></td>
+                    <td style="padding: 8px 0;">
+                        <span class="subscription-badge subscription-{{ user.subscription_type.value }}" style="font-size: 1rem;">
+                            {{ user.subscription_type.value|upper }}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px 0;"><strong>Registriert:</strong></td>
+                    <td style="padding: 8px 0;">{{ user.created_at.strftime('%d.%m.%Y') }}</td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Subscription-Historie -->
+        {% if user.subscription_started_at %}
+        <div class="card" style="margin-top: 20px;">
+            <h3>📅 Subscription-Start-Daten</h3>
+            <table style="width: 100%;">
+                <thead>
+                    <tr style="border-bottom: 2px solid var(--gold-dark);">
+                        <th style="padding: 8px 0; text-align: left;">Level</th>
+                        <th style="padding: 8px 0; text-align: left;">Start</th>
+                        <th style="padding: 8px 0; text-align: right;">Tage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for level, date_str in user.subscription_started_at.items() %}
+                    <tr style="border-bottom: 1px solid #e5e7eb;">
+                        <td style="padding: 8px 0;">
+                            <span class="subscription-badge subscription-{{ level }}">
+                                {{ level|upper }}
+                            </span>
+                        </td>
+                        <td style="padding: 8px 0;">{{ date_str[:10] }}</td>
+                        <td style="padding: 8px 0; text-align: right; font-weight: bold;">
+                            {{ user.get_days_since_subscription_start(level) }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Statistiken & Nächstes Modul -->
+    <div>
+        <!-- Statistiken -->
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+            <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: bold;">Tag {{ days_since_start }}</div>
+                <div>seit Subscription-Start</div>
+            </div>
+            <div style="background: linear-gradient(135deg, var(--success), #047857); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: bold;">{{ unlocks|length }}</div>
+                <div>Module freigeschaltet</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+                <div style="font-size: 2.5rem; font-weight: bold;">{{ total_modules - unlocks|length }}</div>
+                <div>noch ausstehend</div>
+            </div>
+        </div>
+        
+        <!-- Fortschrittsbalken -->
+        <div class="card" style="margin-bottom: 20px;">
+            <h3>📊 Fortschritt: {{ unlocks|length }} / {{ total_modules }} Module</h3>
+            {% set progress = (unlocks|length / total_modules * 100) if total_modules > 0 else 0 %}
+            <div style="background: #e5e7eb; border-radius: 12px; height: 30px; overflow: hidden;">
+                <div style="background: linear-gradient(135deg, var(--success), #047857); height: 100%; width: {{ progress }}%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; transition: width 0.5s ease;">
+                    {% if progress > 10 %}{{ progress|round(1) }}%{% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Nächstes Modul -->
+        {% if next_module %}
+        <div class="highlight-box" style="border-left-color: var(--gold-dark);">
+            <h3>📅 Nächstes Modul (morgen)</h3>
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 2.5rem;">{{ next_module.icon }}</span>
+                <div>
+                    <strong style="font-size: 1.2rem;">{{ next_module.title }}</strong>
+                    <p style="margin: 5px 0 0 0; color: #666;">
+                        {{ next_module.description|truncate(100) if next_module.description else '' }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="highlight-box" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left-color: var(--success);">
+            <h3>🎉 Alle Module freigeschaltet!</h3>
+            <p style="margin: 0;">Dieser User hat Zugriff auf alle verfügbaren Module seines Subscription-Levels.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Liste der freigeschalteten Module -->
+<div class="card" style="margin-top: 20px;">
+    <h2>📚 Freigeschaltete Module</h2>
+    <div style="overflow-x: auto;">
+        <table class="admin-table" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th width="60">Tag</th>
+                    <th>Modul</th>
+                    <th>Freigeschaltet am</th>
+                    <th>Email-Status</th>
+                    <th>Aktionen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unlock in unlocks %}
+                <tr>
+                    <td>
+                        <span style="background: var(--gray-dark); color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold;">
+                            {{ unlock.unlock_day }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="font-size: 1.5rem;">{{ unlock.module.icon }}</span>
+                            <div>
+                                <strong>{{ unlock.module.title }}</strong>
+                                <p style="margin: 3px 0 0 0; color: #666; font-size: 0.85rem;">
+                                    {{ unlock.module.description|truncate(50) if unlock.module.description else '' }}
+                                </p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {{ unlock.unlocked_at.strftime('%d.%m.%Y um %H:%M') }}
+                    </td>
+                    <td>
+                        {% if unlock.notification_sent %}
+                            <span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 4px;">
+                                ✓ Gesendet
+                                {% if unlock.notification_sent_at %}
+                                <br><small>{{ unlock.notification_sent_at.strftime('%d.%m. %H:%M') }}</small>
+                                {% endif %}
+                            </span>
+                        {% else %}
+                            <span style="background: #fef3c7; color: #92400e; padding: 4px 10px; border-radius: 4px;">
+                                ⏳ Ausstehend
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('module_view', slug=unlock.module.slug) }}" 
+                           class="button" style="padding: 5px 12px; font-size: 0.85rem;" target="_blank">
+                            👁️ Anzeigen
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 40px; color: #666;">
+                        Noch keine Module freigeschaltet.<br>
+                        <small>Das erste Modul wird bei der nächsten Freischaltung (Mitternacht) verfügbar sein.</small>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.admin-table {
+    border-collapse: collapse;
+}
+.admin-table th, .admin-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+.admin-table th {
+    background: var(--gray-dark);
+    color: white;
+    font-weight: 600;
+}
+.admin-table tr:hover {
+    background: #f9fafb;
+}
+.subscription-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.subscription-free {
+    background: #e5e7eb;
+    color: #374151;
+}
+.subscription-premium {
+    background: #3b82f6;
+    color: white;
+}
+.subscription-elite, .subscription-elite_pro {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+@media (max-width: 768px) {
+    div[style*="grid-template-columns: 1fr 2fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{% endblock %}

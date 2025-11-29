@@ -402,6 +402,10 @@ class User(db.Model):
     subscription_type = db.Column(db.Enum(SubscriptionType), default=SubscriptionType.FREE, nullable=False)
     subscription_updated_at = db.Column(db.DateTime)
     subscription_updated_by = db.Column(db.String(80))  # Admin username who changed it
+    
+    # Tägliche Modul-Freischaltung: Start-Datum pro Subscription-Level
+    # Format: {"free": "2025-01-01T00:00:00", "premium": "2025-02-15T00:00:00"}
+    subscription_started_at = db.Column(db.JSON, default=dict)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -416,6 +420,48 @@ class User(db.Model):
         if not module.required_subscription_levels:
             return True
         return self.subscription_type.value in module.required_subscription_levels
+    
+    def get_subscription_start_date(self, subscription_level):
+        """Gibt das Start-Datum für ein bestimmtes Subscription-Level zurück"""
+        if not self.subscription_started_at:
+            # Fallback: Registrierungsdatum für FREE
+            if subscription_level == 'free':
+                return self.created_at
+            return None
+        
+        date_str = self.subscription_started_at.get(subscription_level)
+        if date_str:
+            try:
+                return datetime.fromisoformat(date_str)
+            except (ValueError, TypeError):
+                pass
+        
+        # Fallback für FREE: Registrierungsdatum
+        if subscription_level == 'free':
+            return self.created_at
+        return None
+    
+    def set_subscription_start_date(self, subscription_level, start_date=None):
+        """Setzt das Start-Datum für ein Subscription-Level"""
+        if start_date is None:
+            start_date = datetime.utcnow()
+        
+        if not self.subscription_started_at:
+            self.subscription_started_at = {}
+        
+        # Kopie erstellen für SQLAlchemy Change Detection
+        new_dates = dict(self.subscription_started_at)
+        new_dates[subscription_level] = start_date.isoformat()
+        self.subscription_started_at = new_dates
+    
+    def get_days_since_subscription_start(self, subscription_level):
+        """Berechnet die Anzahl der Tage seit Subscription-Start"""
+        start_date = self.get_subscription_start_date(subscription_level)
+        if not start_date:
+            return 0
+        
+        delta = datetime.utcnow() - start_date
+        return max(1, delta.days + 1)  # Mindestens Tag 1
 
 class EmailVerificationToken(db.Model):
     """Token für Email-Verifizierung und Passwort-Reset"""
@@ -453,6 +499,35 @@ class AdminAuditLog(db.Model):
 
     def __repr__(self):
         return f'<AdminAuditLog {self.admin_username} {self.action_type} on {self.target_username}>'
+
+class UserModuleUnlock(db.Model):
+    """Tägliche Modul-Freischaltung: Speichert freigeschaltete Module pro User"""
+    __tablename__ = 'user_module_unlocks'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    module_id = db.Column(db.Integer, db.ForeignKey('learning_modules.id'), nullable=False)
+    
+    # Freischaltungs-Details
+    unlocked_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    unlock_day = db.Column(db.Integer, nullable=False)  # Tag seit Subscription-Start (1, 2, 3, ...)
+    subscription_level = db.Column(db.String(20), nullable=False)  # "free", "premium", "elite"
+    
+    # Email-Benachrichtigung
+    notification_sent = db.Column(db.Boolean, default=False)
+    notification_sent_at = db.Column(db.DateTime, nullable=True)
+    
+    # Relationships
+    user = db.relationship('User', backref=db.backref('module_unlocks', lazy=True))
+    module = db.relationship('LearningModule', backref=db.backref('user_unlocks', lazy=True))
+    
+    # Unique Constraint: Ein Modul kann pro User nur einmal freigeschaltet werden
+    __table_args__ = (
+        db.UniqueConstraint('user_id', 'module_id', name='unique_user_module_unlock'),
+    )
+    
+    def __repr__(self):
+        return f'<UserModuleUnlock user={self.user_id} module={self.module_id} day={self.unlock_day}>'
 
 # === TOKEN GENERATION ===
 
@@ -600,11 +675,58 @@ class LearningModule(db.Model):
             'sort_order': self.sort_order
         }
     
-    def user_has_access(self, user_subscription="free"):
-        """Prüft ob User Zugriff hat"""
+    def user_has_access(self, user_subscription="free", user_id=None):
+        """
+        Prüft ob User Zugriff auf dieses Modul hat.
+        
+        Zugriff wird gewährt wenn:
+        1. Das Modul ein Lead-Magnet ist (kostenlos für alle)
+        2. Das Modul für das Subscription-Level freigeschaltet wurde UND
+           der User dieses Modul bereits erhalten hat (tägliche Freischaltung)
+        
+        Args:
+            user_subscription: Subscription-Level des Users ("free", "premium", etc.)
+            user_id: Optional - User-ID für Prüfung der täglichen Freischaltung
+        """
+        # Lead-Magnete sind immer verfügbar
         if self.is_lead_magnet:
             return True
-        return user_subscription in self.required_subscription_levels
+        
+        # Prüfe ob Subscription-Level passt
+        if user_subscription not in (self.required_subscription_levels or []):
+            return False
+        
+        # Wenn keine User-ID übergeben wurde, nur Subscription-Level prüfen (Rückwärtskompatibilität)
+        if user_id is None:
+            return True
+        
+        # Prüfe ob Modul für diesen User freigeschaltet wurde
+        unlock = UserModuleUnlock.query.filter_by(
+            user_id=user_id,
+            module_id=self.id
+        ).first()
+        
+        return unlock is not None
+    
+    def is_unlocked_for_user(self, user_id):
+        """
+        Prüft ob dieses Modul für einen User freigeschaltet wurde.
+        
+        Args:
+            user_id: User-ID
+            
+        Returns:
+            True wenn freigeschaltet, False sonst
+        """
+        if self.is_lead_magnet:
+            return True
+        
+        unlock = UserModuleUnlock.query.filter_by(
+            user_id=user_id,
+            module_id=self.id
+        ).first()
+        
+        return unlock is not None
 
 class ModuleProgress(db.Model):
     """User Progress Tracking"""
@@ -862,6 +984,9 @@ def register():
                 subscription_type=SubscriptionType.FREE  # Standard: FREE
             )
             user.set_password(password)
+            
+            # Start-Datum für FREE-Subscription setzen (für tägliche Modul-Freischaltung)
+            user.set_subscription_start_date('free', datetime.utcnow())
             
             # User in Database speichern
             db.session.add(user)
@@ -1153,6 +1278,9 @@ def stripe_webhook():
                     user.subscription_type = new_subscription
                     user.subscription_updated_at = datetime.utcnow()
                     user.subscription_updated_by = 'stripe_webhook'
+                    
+                    # Start-Datum für neue Subscription setzen (für tägliche Modul-Freischaltung)
+                    user.set_subscription_start_date(new_subscription.value, datetime.utcnow())
                     
                     db.session.commit()
                     
@@ -5789,6 +5917,97 @@ def admin_analytics_api():
         
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+# === ADMIN: MODUL-FREISCHALTUNG ===
+
+@app.route('/admin/module-unlocks')
+@admin_required
+def admin_module_unlocks():
+    """Admin-Übersicht für Modul-Freischaltungen"""
+    try:
+        # Query-Parameter
+        user_filter = request.args.get('user_id', '')
+        
+        # Basis-Query mit Eager Loading
+        query = UserModuleUnlock.query.order_by(UserModuleUnlock.unlocked_at.desc())
+        
+        if user_filter:
+            query = query.filter_by(user_id=int(user_filter))
+        
+        # Letzte 100 Freischaltungen
+        recent_unlocks = query.limit(100).all()
+        
+        # Statistiken
+        total_unlocks = UserModuleUnlock.query.count()
+        notifications_sent = UserModuleUnlock.query.filter_by(notification_sent=True).count()
+        notifications_pending = total_unlocks - notifications_sent
+        
+        # User mit Freischaltungen
+        users_with_unlocks = db.session.query(
+            User.id, User.username, User.email, User.subscription_type,
+            db.func.count(UserModuleUnlock.id).label('unlock_count')
+        ).outerjoin(UserModuleUnlock).group_by(User.id).having(
+            db.func.count(UserModuleUnlock.id) > 0
+        ).order_by(db.desc('unlock_count')).limit(50).all()
+        
+        return render_template('admin/module_unlocks.html',
+                             recent_unlocks=recent_unlocks,
+                             total_unlocks=total_unlocks,
+                             notifications_sent=notifications_sent,
+                             notifications_pending=notifications_pending,
+                             users_with_unlocks=users_with_unlocks,
+                             user_filter=user_filter)
+                             
+    except Exception as e:
+        flash(f'Fehler beim Laden der Freischaltungen: {str(e)}', 'error')
+        import traceback
+        traceback.print_exc()
+        return redirect(url_for('admin_dashboard'))
+
+
+@app.route('/admin/trigger-module-unlock', methods=['POST'])
+@admin_required  
+def admin_trigger_module_unlock():
+    """Löst die Modul-Freischaltung manuell aus"""
+    try:
+        from scheduler import trigger_manual_unlock
+        trigger_manual_unlock(app)
+        flash('✅ Modul-Freischaltung wurde manuell ausgelöst!', 'success')
+    except Exception as e:
+        flash(f'❌ Fehler bei der Freischaltung: {str(e)}', 'error')
+        import traceback
+        traceback.print_exc()
+    
+    return redirect(url_for('admin_module_unlocks'))
+
+
+@app.route('/admin/user/<int:user_id>/unlocks')
+@admin_required
+def admin_user_unlocks(user_id):
+    """Zeigt alle freigeschalteten Module für einen User"""
+    user = User.query.get_or_404(user_id)
+    
+    unlocks = UserModuleUnlock.query.filter_by(user_id=user_id).order_by(
+        UserModuleUnlock.unlock_day
+    ).all()
+    
+    # Nächstes Modul berechnen
+    subscription_level = user.subscription_type.value
+    days_since_start = user.get_days_since_subscription_start(subscription_level)
+    
+    # Alle Module für dieses Level
+    from scheduler import get_modules_for_subscription_level
+    all_modules = get_modules_for_subscription_level(subscription_level, db, LearningModule)
+    next_module = all_modules[len(unlocks)] if len(unlocks) < len(all_modules) else None
+    
+    return render_template('admin/user_unlocks.html',
+                         user=user,
+                         unlocks=unlocks,
+                         days_since_start=days_since_start,
+                         total_modules=len(all_modules),
+                         next_module=next_module)
+
+
 @app.route('/admin/users')
 @admin_required
 def admin_users():
@@ -5956,6 +6175,11 @@ def admin_change_subscription(user_id):
         user.subscription_type = new_sub_type
         user.subscription_updated_at = datetime.utcnow()
         user.subscription_updated_by = session.get('user', {}).get('username')
+        
+        # Start-Datum für neue Subscription setzen (für tägliche Modul-Freischaltung)
+        # Nur setzen wenn noch kein Start-Datum für dieses Level existiert
+        if not user.get_subscription_start_date(new_subscription):
+            user.set_subscription_start_date(new_subscription, datetime.utcnow())
 
         # Audit-Log erstellen
         admin_username = session.get('user', {}).get('username', 'unknown')
@@ -6098,9 +6322,19 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"[WARNING] Volumen-Modul-Init fehlgeschlagen: {e}")
     
+    # === SCHEDULER FÜR TÄGLICHE MODUL-FREISCHALTUNG ===
+    try:
+        from scheduler import init_scheduler
+        init_scheduler(app)
+        print("[INFO] 🕐 APScheduler initialisiert - Tägliche Modul-Freischaltung aktiv")
+    except Exception as e:
+        print(f"[WARNING] Scheduler-Init fehlgeschlagen: {e}")
+        import traceback
+        traceback.print_exc()
+    
     print("[START] Didis Premium Trading Academy mit Menüsystem startet...")
     print("[INFO] Öffne Browser: http://localhost:5000")
-    print("[INFO] Features: Menüsystem, Lead-Magnete, Admin-Panel")
+    print("[INFO] Features: Menüsystem, Lead-Magnete, Admin-Panel, Tägliche Modul-Freischaltung")
     print("[INFO] Login-Accounts:")
     print("   - admin/admin (Elite Access + Admin)")
     print("   - didi/didi (Elite Access + Admin)")
