@@ -220,11 +220,12 @@ def track_visitor():
 app.before_request(track_visitor)
 print("Analytics-Tracking aktiviert")
 
-# === EMAIL HELPER FUNCTION ===
+# === EMAIL HELPER FUNCTIONS ===
+import threading
 
 def send_email(to, subject, template, **kwargs):
     """
-    Sendet eine Email mit HTML-Template
+    Sendet eine Email mit HTML-Template (SYNCHRON)
     
     Args:
         to: Empfänger-Email
@@ -249,6 +250,38 @@ def send_email(to, subject, template, **kwargs):
         import traceback
         traceback.print_exc()
         return False
+
+def send_email_async(to, subject, template, **kwargs):
+    """
+    Sendet eine Email mit HTML-Template im Background-Thread (ASYNCHRON)
+    Verhindert Timeouts bei langsamen SMTP-Servern (z.B. Gmail)
+    
+    Args:
+        to: Empfänger-Email
+        subject: Email-Betreff
+        template: Name des Templates (ohne .html)
+        **kwargs: Variablen für Template-Rendering
+    """
+    def send_async():
+        with app.app_context():
+            try:
+                msg = Message(
+                    subject=subject,
+                    recipients=[to],
+                    html=render_template(f'emails/{template}.html', **kwargs)
+                )
+                mail.send(msg)
+                print(f"✅ [ASYNC] Email gesendet: {subject} → {to}")
+            except Exception as e:
+                print(f"❌ [ASYNC] Email-Fehler: {e}")
+                import traceback
+                traceback.print_exc()
+    
+    # Starte Email-Versand in separatem Thread
+    thread = threading.Thread(target=send_async, name=f"email-{to}")
+    thread.daemon = True  # Thread beendet sich mit Hauptprozess
+    thread.start()
+    print(f"📨 [ASYNC] Email-Versand gestartet: {subject} → {to}")
 
 # === AUTO-SYNC ON STARTUP ===
 def init_modules_on_startup():
@@ -990,14 +1023,22 @@ def register():
             db.session.add(user)
             db.session.commit()
             
-            # TEMPORÄR DEAKTIVIERT: E-Mail-Versand verursacht SMTP-Timeout auf Railway
-            # TODO: Asynchronen Email-Versand implementieren (z.B. mit Celery oder Background Thread)
-            # Bis dahin: User direkt aktivieren ohne Email-Verifizierung
-            user.email_verified = True
-            db.session.commit()
-            print(f"✅ User {username} registriert (Email-Verifizierung temporär deaktiviert)")
+            # Verifizierungs-Email ASYNCHRON senden (verhindert Railway-Timeout)
+            token = generate_verification_token(user.id, 'verify_email', expiry_hours=24)
+            base_url = os.environ.get('BASE_URL', request.url_root.rstrip('/'))
+            verification_link = f"{base_url}/verify-email/{token}"
             
-            flash('Registrierung erfolgreich! Du kannst dich jetzt anmelden.', 'success')
+            send_email_async(
+                to=email,
+                subject='Bestätige deine Email-Adresse - Didis Trading Academy',
+                template='verify_email',
+                username=username,
+                verification_link=verification_link
+            )
+            
+            print(f"✅ User {username} registriert - Verifizierungs-Email wird asynchron gesendet")
+            
+            flash('Registrierung erfolgreich! Bitte prüfe dein Email-Postfach und bestätige deine Email-Adresse.', 'success')
             return redirect(url_for('login'))
             
         except Exception as e:
