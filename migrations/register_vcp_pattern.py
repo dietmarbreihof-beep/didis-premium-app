@@ -43,18 +43,23 @@ def register_vcp_module():
             module = LearningModule()
             print("[NEW] Erstelle neues Modul...")
         
-        # 2. Hauptkategorie finden/erstellen
-        print("\n[SEARCH] Suche Hauptkategorie 'System III - Elite Trading'...")
-        category = ModuleCategory.query.filter_by(slug='elite-system-iii').first()
+        # 2. Hauptkategorie finden - Technische Analyse oder Neue Module
+        # HINWEIS: elite-system-iii wurde entfernt, Module landen in neue-module
+        print("\n[SEARCH] Suche Hauptkategorie 'Technische Analyse'...")
+        category = ModuleCategory.query.filter_by(slug='technische-analyse').first()
         
         if not category:
-            print("   [INFO] Hauptkategorie nicht gefunden. Erstelle neue Kategorie...")
+            print("   [INFO] Technische Analyse nicht gefunden. Suche 'Neue Module'...")
+            category = ModuleCategory.query.filter_by(slug='neue-module').first()
+            
+        if not category:
+            print("   [INFO] Erstelle Kategorie 'Neue Module'...")
             category = ModuleCategory(
-                name='System III - Elite Trading',
-                slug='elite-system-iii',
-                description='Fortgeschrittene Trading-Strategien nach Mark Minervini und Lance Breitstein',
-                icon='crown',
-                sort_order=3,
+                name='🆕 Neue Module',
+                slug='neue-module',
+                description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
+                icon='🆕',
+                sort_order=999,
                 is_published=True
             )
             db.session.add(category)

@@ -38,17 +38,19 @@ def register_vcp_railway():
             print("[NEW] Erstelle neues Modul...")
             module = LearningModule()
         
-        # Get category
-        category = ModuleCategory.query.filter_by(slug='elite-system-iii').first()
+        # Get category - Technische Analyse oder Neue Module
+        # HINWEIS: elite-system-iii wurde entfernt
+        category = ModuleCategory.query.filter_by(slug='technische-analyse').first()
         if not category:
-            print("[ERROR] Kategorie 'elite-system-iii' nicht gefunden!")
-            print("[INFO] Erstelle Kategorie...")
+            category = ModuleCategory.query.filter_by(slug='neue-module').first()
+        if not category:
+            print("[INFO] Erstelle Kategorie 'Neue Module'...")
             category = ModuleCategory(
-                name='System III - Elite Trading',
-                slug='elite-system-iii',
-                description='Fortgeschrittene Trading-Strategien nach Mark Minervini und Lance Breitstein',
-                icon='crown',
-                sort_order=3,
+                name='🆕 Neue Module',
+                slug='neue-module',
+                description='Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben',
+                icon='🆕',
+                sort_order=999,
                 is_published=True
             )
             db.session.add(category)

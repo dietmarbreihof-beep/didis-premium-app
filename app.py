@@ -4044,8 +4044,8 @@ def find_or_create_category_for_module(category_slug):
         'trading-konzepte': {'name': '5. Trading Konzepte', 'icon': '🎯', 'order': 5},
         'grundlagen': {'name': '0. Grundlagen', 'icon': '🏛️', 'order': 0},
         'trading-strategien': {'name': '6. Trading Strategien', 'icon': '📚', 'order': 6},
-        'trading-philosophie': {'name': '7. Trading Philosophie', 'icon': '🧬', 'order': 7},
-        'elite-system-iii': {'name': '5. Elite - System III', 'icon': '👑', 'order': 5}
+        'trading-philosophie': {'name': '7. Trading Philosophie', 'icon': '🧬', 'order': 7}
+        # 'elite-system-iii' wurde entfernt - Kategorie existiert nicht mehr
     }
     
     cat_def = category_definitions.get(category_slug, {
@@ -4662,46 +4662,8 @@ def init_demo_modules():
     )
     db.session.add(elite_module)
     
-    # === 5. ELITE - SYSTEM III KATEGORIE ===
-    cat5 = ModuleCategory(
-        name='5. Elite - System III',
-        slug='elite-system-iii',
-        icon='👑',
-        description='Professionelle Trading-Systeme für Elite-Trader - System III Methodologie',
-        sort_order=5
-    )
-    db.session.add(cat5)
-    db.session.flush()
-    
-    # Subcategory für System III
-    sub5_1 = ModuleSubcategory(
-        category_id=cat5.id,
-        name='5.1 Trade-Vorbereitung',
-        slug='trade-vorbereitung',
-        icon='📋',
-        description='Systematische Trade-Vorbereitung nach dem "Mice au Place" System',
-        sort_order=1
-    )
-    db.session.add(sub5_1)
-    db.session.flush()
-    
-    # Trading-Playbook System III Modul
-    trading_playbook_system_iii = LearningModule(
-        category_id=cat5.id,
-        subcategory_id=sub5_1.id,
-        title='Trading-Playbook System III',
-        slug='trading-playbook-system-iii',
-        description='Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.',
-        icon='📋',
-        template_file='trading_playbook_system_iii.html',
-        content_type='html',
-        is_published=True,
-        required_subscription_levels=['elite'],
-        estimated_duration=60,
-        difficulty_level='expert',
-        sort_order=1
-    )
-    db.session.add(trading_playbook_system_iii)
+    # === 5. ELITE - SYSTEM III KATEGORIE === (ENTFERNT - existiert nicht mehr)
+    # Die Kategorie wurde permanent gelöscht. Module wurden nach "🆕 Neue Module" verschoben.
     
     # Trading Mindset Masterclass - Playbook (Premium)
     playbook_module = LearningModule(
@@ -4766,13 +4728,7 @@ def sync_modules_from_local():
                 'description': 'Mentale Aspekte des Tradings und Emotionskontrolle',
                 'sort_order': 4
             },
-            {
-                'name': '5. Elite - System III',
-                'slug': 'elite-system-iii', 
-                'icon': '👑',
-                'description': 'Professionelle Trading-Systeme für Elite-Trader - System III Methodologie',
-                'sort_order': 5
-            },
+            # 5. Elite - System III wurde ENTFERNT - Kategorie existiert nicht mehr
             {
                 'name': '🆕 Neue Module',
                 'slug': 'neue-module',
@@ -4785,47 +4741,9 @@ def sync_modules_from_local():
         
         # 🔧 HIER LOKALE MODULE DEFINIEREN - Werden automatisch zu Railway synced!
         local_modules = [
-            # Elite System III
-            {
-                'title': 'Trading-Playbook System III',
-                'slug': 'trading-playbook-system-iii',
-                'category_slug': 'elite-system-iii',
-                'subcategory_name': '5.1 Trade-Vorbereitung',
-                'description': 'Professionelle Trade-Vorbereitung nach dem "Mice au Place" System. Von der Marktanalyse bis zur perfekten Trade-Execution.',
-                'icon': '📋',
-                'template_file': 'trading_playbook_system_iii.html',
-                'content_type': 'html',
-                'required_subscription_levels': ['elite'],
-                'estimated_duration': 60,
-                'difficulty_level': 'expert', 
-                'sort_order': 1
-            },
-            {
-                'title': 'Trading-Playbook Masterclass',
-                'slug': 'trading-playbook-masterclass',
-                'category_slug': 'elite-system-iii',
-                'description': 'Die ultimative Masterclass über Metalearning und den Trading-Prozess',
-                'icon': '👑',
-                'template_file': 'trading_playbook_masterclass.html',
-                'content_type': 'html',
-                'required_subscription_levels': ['elite'],
-                'estimated_duration': 120,
-                'difficulty_level': 'advanced',
-                'sort_order': 2
-            },
-            {
-                'title': 'Trading Playbook',
-                'slug': 'playbook',
-                'category_slug': 'elite-system-iii',
-                'description': 'Das komplette Trading Playbook mit allen Strategien',
-                'icon': '📖',
-                'template_file': 'Playbook.html',
-                'content_type': 'html',
-                'required_subscription_levels': ['elite'],
-                'estimated_duration': 90,
-                'difficulty_level': 'advanced',
-                'sort_order': 3
-            },
+            # Elite System III Module wurden ENTFERNT - Kategorie existiert nicht mehr
+            # Module befinden sich jetzt in "🆕 Neue Module" und können manuell zugewiesen werden
+            
             # Technische Analyse
             {
                 'title': 'Magic Line Strategie',

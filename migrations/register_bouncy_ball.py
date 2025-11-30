@@ -39,24 +39,24 @@ def register_bouncy_ball_module():
                 print(f"✅ Modul erfolgreich aktualisiert!")
                 return
             
-            # Suche die richtige Kategorie - Didis-Charts System III
-            category = ModuleCategory.query.filter_by(slug='elite-system-iii').first()
+            # Suche passende Kategorie - Technische Analyse oder Neue Module
+            # HINWEIS: elite-system-iii wurde entfernt, Module landen in neue-module
+            category = ModuleCategory.query.filter_by(slug='technische-analyse').first()
             if not category:
-                # Fallback: Technische Analyse
-                category = ModuleCategory.query.filter_by(slug='technische-analyse').first()
+                # Fallback: Neue Module
+                category = ModuleCategory.query.filter_by(slug='neue-module').first()
             
             if not category:
                 print("❌ Fehler: Keine passende Kategorie gefunden!")
-                print("   Erstelle Kategorie 'Didis-Charts System III'...")
+                print("   Erstelle Kategorie 'Neue Module'...")
                 
                 category = ModuleCategory(
-                    name="Didis-Charts System III",
-                    slug="elite-system-iii",
-                    description="Didis-Charts Elite Trading System - Fortgeschrittene Intraday-Strategien",
-                    icon="👑",
-                    sort_order=6,
-                    is_published=True,
-                    required_subscription_level='elite'
+                    name="🆕 Neue Module",
+                    slug="neue-module",
+                    description="Automatisch erkannte Module - Bitte in die richtige Kategorie verschieben",
+                    icon="🆕",
+                    sort_order=999,
+                    is_published=True
                 )
                 db.session.add(category)
                 db.session.commit()
