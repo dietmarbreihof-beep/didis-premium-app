@@ -341,6 +341,29 @@ Features: Interactive Charts, Quiz, Key Takeaways
 - Serie: Teil 3 von 3 (nach "Wie man Trader wird" und "Dein Trading-Stil")
 ```
 
+**Beispiel 1h: Moving Averages - Qullamaggie's Strategie (NEU - November 2025)**
+```
+@new-module-page Moving Averages Qullamaggie
+- HTML-Seite: templates/moving-averages-qullamaggie.html ✅
+- Quelle: 2. Lance Breitstein/Moving Averages System/Moving Averages Qullamaggie´s Strategy.txt ✅
+- Kategorie: Technische Analyse → Moving Averages ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro/Masterclass) ✅
+- Features: Progressive Disclosure (8 Sections), Quiz-System (5 Fragen), Zitat-Boxen, Vergleichstabellen, Screenshots, Key Takeaways
+- Screenshots: ATEC_20MA_Surfing.png, 20SMA_Widerstand.png ✅
+- Schwierigkeit: Fortgeschritten ⭐⭐
+- Dauer: 45 Minuten
+- Route: /moving-averages-qullamaggie ✅
+- Kernthemen:
+  • Was sind Moving Averages (SMA vs EMA)
+  • Warum funktionieren sie? (Qullamaggie: "Maybe it's magic")
+  • Die wichtigsten MAs: 10, 20, 50 SMA
+  • MAs als Support & Resistance (mit Flip-Konzept)
+  • Entry-Strategie: Stair-Step-Pattern
+  • Exit-Strategie: Trailing mit 10/20 MA
+  • Marktfilter: Wann traden, wann nicht
+  • Market Wizards: Qullamaggie & Lance Breitstein
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
