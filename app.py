@@ -1512,6 +1512,21 @@ def modules():
     # Admin und Didi haben immer Zugriff auf alle Module
     is_admin = username in ['admin', 'didi']
     
+    # Progress-Daten für eingeloggten User laden
+    user_progress = {}
+    if session.get('logged_in'):
+        user_id = str(session.get('user_id', ''))
+        if user_id:
+            try:
+                progress_entries = ModuleProgress.query.filter_by(user_id=user_id).all()
+                for p in progress_entries:
+                    user_progress[p.module_id] = {
+                        'completed': p.completed_at is not None,
+                        'progress_percentage': p.progress_percentage
+                    }
+            except Exception as e:
+                print(f"Fehler beim Laden der Progress-Daten: {e}")
+    
     # Erweiterte Menüstruktur mit direkten Modulen
     try:
         categories = ModuleCategory.query.filter_by(is_active=True).order_by(ModuleCategory.sort_order).all()
@@ -1532,6 +1547,8 @@ def modules():
                 module_data = module.to_dict()
                 # Admin und Didi haben immer Zugriff
                 module_data['user_has_access'] = is_admin or module.user_has_access(user_subscription)
+                # Progress-Status hinzufügen
+                module_data['is_completed'] = user_progress.get(module.id, {}).get('completed', False)
                 cat_data['direct_modules'].append(module_data)
             
             # Auch für Module in Unterkategorien den Zugriff prüfen
@@ -1541,6 +1558,8 @@ def modules():
                     if module_obj:
                         # Admin und Didi haben immer Zugriff
                         module_data['user_has_access'] = is_admin or module_obj.user_has_access(user_subscription)
+                        # Progress-Status hinzufügen
+                        module_data['is_completed'] = user_progress.get(module_data['id'], {}).get('completed', False)
             
             menu_structure.append(cat_data)
             

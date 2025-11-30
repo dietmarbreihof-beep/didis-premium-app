@@ -52,6 +52,12 @@
                 <option value="premium">Premium</option>
                 <option value="elite">Elite</option>
             </select>
+            
+            <select id="completionFilter" onchange="filterModules()" style="padding: 10px; border: 2px solid #e5e7eb; border-radius: 6px;">
+                <option value="">Alle Status</option>
+                <option value="completed">✅ Abgeschlossen</option>
+                <option value="open">📖 Noch offen</option>
+            </select>
         </div>
         
         <div style="display: flex; gap: 10px;">
@@ -107,12 +113,15 @@
                     <div class="module-card {{ 'accessible' if module.user_has_access else 'locked' }}" 
                          data-module-title="{{ module.title|lower }}" 
                          data-difficulty="{{ module.difficulty_level }}"
-                         data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}">
+                         data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}"
+                         data-completed="{{ 'true' if module.is_completed else 'false' }}">
                         
                         <div class="module-header">
                             <span class="module-icon">{{ module.icon }}</span>
                             <h4>{{ module.title }}</h4>
-                            {% if not module.user_has_access %}
+                            {% if module.is_completed %}
+                                <span class="completed-icon">✅</span>
+                            {% elif not module.user_has_access %}
                                 <span class="lock-icon">🔒</span>
                             {% endif %}
                         </div>
@@ -127,6 +136,9 @@
                         <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
                         
                         <div class="module-badges">
+                            {% if module.is_completed %}
+                                <span class="badge badge-completed">✅ ABGESCHLOSSEN</span>
+                            {% endif %}
                             {% if not module.is_published %}
                                 <span class="badge" style="background: #f59e0b; color: white;">📝 ENTWURF</span>
                             {% endif %}
@@ -164,12 +176,15 @@
                 <div class="module-card {{ 'accessible' if module.user_has_access else 'locked' }}" 
                      data-module-title="{{ module.title|lower }}" 
                      data-difficulty="{{ module.difficulty_level }}"
-                     data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}">
+                     data-access-type="{{ 'lead_magnet' if module.is_lead_magnet else (module.required_subscription_levels|join(',') if module.required_subscription_levels else 'free') }}"
+                     data-completed="{{ 'true' if module.is_completed else 'false' }}">
                     
                     <div class="module-header">
                         <span class="module-icon">{{ module.icon }}</span>
                         <h4>{{ module.title }}</h4>
-                        {% if not module.user_has_access %}
+                        {% if module.is_completed %}
+                            <span class="completed-icon">✅</span>
+                        {% elif not module.user_has_access %}
                             <span class="lock-icon">🔒</span>
                         {% endif %}
                     </div>
@@ -184,6 +199,9 @@
                     <p class="module-description">{{ module.description[:120] }}{% if module.description|length > 120 %}...{% endif %}</p>
                     
                     <div class="module-badges">
+                        {% if module.is_completed %}
+                            <span class="badge badge-completed">✅ ABGESCHLOSSEN</span>
+                        {% endif %}
                         {% if not module.is_published %}
                             <span class="badge" style="background: #f59e0b; color: white;">📝 ENTWURF</span>
                         {% endif %}
@@ -454,6 +472,16 @@
     color: white;
 }
 
+.badge-completed {
+    background: linear-gradient(135deg, #059669, #047857);
+    color: white;
+}
+
+.completed-icon {
+    color: #059669;
+    font-size: 1.2rem;
+}
+
 .module-actions {
     text-align: center;
 }
@@ -576,6 +604,7 @@ function filterModules() {
     const searchTerm = document.getElementById('moduleSearch').value.toLowerCase();
     const difficultyFilter = document.getElementById('difficultyFilter').value;
     const accessFilter = document.getElementById('accessFilter').value;
+    const completionFilter = document.getElementById('completionFilter').value;
     
     const moduleCards = document.querySelectorAll('.module-card');
     
@@ -583,6 +612,7 @@ function filterModules() {
         const title = card.getAttribute('data-module-title');
         const difficulty = card.getAttribute('data-difficulty');
         const accessType = card.getAttribute('data-access-type');
+        const isCompleted = card.getAttribute('data-completed') === 'true';
         
         let showCard = true;
         
@@ -609,6 +639,15 @@ function filterModules() {
             }
         }
         
+        // Abschluss-Status
+        if (completionFilter) {
+            if (completionFilter === 'completed' && !isCompleted) {
+                showCard = false;
+            } else if (completionFilter === 'open' && isCompleted) {
+                showCard = false;
+            }
+        }
+        
         card.style.display = showCard ? 'block' : 'none';
     });
     
@@ -618,12 +657,12 @@ function filterModules() {
         const visibleModules = category.querySelectorAll('.module-card:not([style*="display: none"])');
         const categoryContent = category.querySelector('.category-content');
         
-        if (visibleModules.length === 0 && (searchTerm || difficultyFilter || accessFilter)) {
+        if (visibleModules.length === 0 && (searchTerm || difficultyFilter || accessFilter || completionFilter)) {
             category.style.display = 'none';
         } else {
             category.style.display = 'block';
             // Auto-expand bei Suche
-            if (searchTerm || difficultyFilter || accessFilter) {
+            if (searchTerm || difficultyFilter || accessFilter || completionFilter) {
                 categoryContent.style.display = 'block';
                 const expandIcon = category.querySelector('.expand-icon');
                 if (expandIcon) expandIcon.classList.add('expanded');
