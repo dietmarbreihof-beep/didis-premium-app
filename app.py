@@ -2977,8 +2977,21 @@ def poker_cards_comparison():
     """Poker vs. Trading - Vergleich der Denkweisen"""
     track_visitor()
     
+    # Modul aus Datenbank laden (auch wenn nicht published, da Lead-Magnet)
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='poker-cards-comparison').first()
+    except:
+        pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
     # Lead-Magnet - kein Login erforderlich
-    return render_template('poker-cards-comparison.html')
+    return render_template('poker-cards-comparison.html', 
+                         module=module,
+                         prev_module=prev_module,
+                         next_module=next_module)
 
 @app.route('/wie-man-trader-wird')
 def wie_man_trader_wird():
