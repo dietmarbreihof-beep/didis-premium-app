@@ -132,22 +132,19 @@
                                         <span class="badge elite">👑 Elite</span>
                                         {% elif 'premium' in (module.required_subscription_levels or []) %}
                                         <span class="badge premium">💰 Premium</span>
-                                        {% else %}
-                                        <span class="badge basic">🔓 Basic</span>
                                         {% endif %}
                                         
                                         {% if module.is_published %}
                                         <span class="badge published">✅ Live</span>
                                         {% else %}
-                                        <span class="badge draft">📝 Entwurf</span>
+                                        <span class="badge draft">📝 Nicht veröffentlicht</span>
                                         {% endif %}
                                     </div>
                                 </div>
                                 <div class="module-actions">
                                     <select onchange="changeModuleSubscription({{ module.id }}, this.value)" class="subscription-select">
                                         <option value="free" {% if module.is_lead_magnet %}selected{% endif %}>🆓 Kostenlos</option>
-                                        <option value="basic" {% if not module.is_lead_magnet and not module.required_subscription_levels %}selected{% endif %}>🔓 Basic</option>
-                                        <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
+                                        <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) and 'elite' not in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
                                         <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                                     </select>
                                     <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
@@ -191,22 +188,19 @@
                                 <span class="badge elite">👑 Elite</span>
                                 {% elif 'premium' in (module.required_subscription_levels or []) %}
                                 <span class="badge premium">💰 Premium</span>
-                                {% else %}
-                                <span class="badge basic">🔓 Basic</span>
                                 {% endif %}
                                 
                                 {% if module.is_published %}
                                 <span class="badge published">✅ Live</span>
                                 {% else %}
-                                <span class="badge draft">📝 Entwurf</span>
+                                <span class="badge draft">📝 Nicht veröffentlicht</span>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="module-actions">
                             <select onchange="changeModuleSubscription({{ module.id }}, this.value)" class="subscription-select">
                                 <option value="free" {% if module.is_lead_magnet %}selected{% endif %}>🆓 Kostenlos</option>
-                                <option value="basic" {% if not module.is_lead_magnet and not module.required_subscription_levels %}selected{% endif %}>🔓 Basic</option>
-                                <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
+                                <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) and 'elite' not in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
                                 <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                             </select>
                             <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
@@ -256,22 +250,19 @@
                                 <span class="badge elite">👑 Elite</span>
                                 {% elif 'premium' in (module.required_subscription_levels or []) %}
                                 <span class="badge premium">💰 Premium</span>
-                                {% else %}
-                                <span class="badge basic">🔓 Basic</span>
                                 {% endif %}
                                 
                                 {% if module.is_published %}
                                 <span class="badge published">✅ Live</span>
                                 {% else %}
-                                <span class="badge draft">📝 Entwurf</span>
+                                <span class="badge draft">📝 Nicht veröffentlicht</span>
                                 {% endif %}
                             </div>
                         </div>
                         <div class="module-actions">
                             <select onchange="changeModuleSubscription({{ module.id }}, this.value)" class="subscription-select">
                                 <option value="free" {% if module.is_lead_magnet %}selected{% endif %}>🆓 Kostenlos</option>
-                                <option value="basic" {% if not module.is_lead_magnet and not module.required_subscription_levels %}selected{% endif %}>🔓 Basic</option>
-                                <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
+                                <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) and 'elite' not in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
                                 <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
                             </select>
                             <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
@@ -2077,10 +2068,6 @@ function updateModuleBadge(moduleId, level) {
             case 'free':
                 badge.classList.add('free');
                 badge.textContent = '🆓 Kostenlos';
-                break;
-            case 'basic':
-                badge.classList.add('basic');
-                badge.textContent = '🔓 Basic';
                 break;
             case 'premium':
                 badge.classList.add('premium');

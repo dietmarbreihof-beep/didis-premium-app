@@ -751,8 +751,10 @@ class LearningModule(db.Model):
         
         Zugriff wird gewährt wenn:
         1. Das Modul ein Lead-Magnet ist (kostenlos für alle)
-        2. Das Modul für das Subscription-Level freigeschaltet wurde UND
-           der User dieses Modul bereits erhalten hat (tägliche Freischaltung)
+        2. Das User-Level ist mindestens so hoch wie das erforderliche Level
+        
+        Hierarchie (höher = mehr Zugriff):
+        elite_pro > elite > premium > basic > free
         
         Args:
             user_subscription: Subscription-Level des Users ("free", "premium", etc.)
@@ -762,8 +764,28 @@ class LearningModule(db.Model):
         if self.is_lead_magnet:
             return True
         
-        # Prüfe ob Subscription-Level passt
-        if user_subscription not in (self.required_subscription_levels or []):
+        # Keine Subscription-Anforderungen = für alle verfügbar
+        required_levels = self.required_subscription_levels or []
+        if not required_levels:
+            return True
+        
+        # Hierarchie der Subscription-Levels (Index = Rang, höher = besser)
+        level_hierarchy = ['free', 'basic', 'premium', 'elite', 'elite_pro', 'masterclass']
+        
+        # User-Level-Rang ermitteln
+        user_level = user_subscription.lower() if user_subscription else 'free'
+        user_rank = level_hierarchy.index(user_level) if user_level in level_hierarchy else 0
+        
+        # Minimales erforderliches Level ermitteln
+        min_required_rank = 999
+        for req_level in required_levels:
+            req_level_lower = req_level.lower() if req_level else 'free'
+            if req_level_lower in level_hierarchy:
+                rank = level_hierarchy.index(req_level_lower)
+                min_required_rank = min(min_required_rank, rank)
+        
+        # User hat Zugriff wenn sein Rang >= dem erforderlichen Rang ist
+        if user_rank < min_required_rank:
             return False
         
         # Wenn keine User-ID übergeben wurde, nur Subscription-Level prüfen (Rückwärtskompatibilität)
@@ -5606,11 +5628,9 @@ def admin_change_module_subscription():
             return jsonify({'success': False, 'error': 'Modul nicht gefunden'})
         
         # Subscription-Level setzen
+        # Hierarchie: elite > premium > free
         if subscription_level == 'free':
             module.is_lead_magnet = True
-            module.required_subscription_levels = []
-        elif subscription_level == 'basic':
-            module.is_lead_magnet = False
             module.required_subscription_levels = []
         elif subscription_level == 'premium':
             module.is_lead_magnet = False
@@ -5618,13 +5638,20 @@ def admin_change_module_subscription():
         elif subscription_level == 'elite':
             module.is_lead_magnet = False
             module.required_subscription_levels = ['elite']
+        else:
+            # Fallback: Premium als Standard
+            module.is_lead_magnet = False
+            module.required_subscription_levels = ['premium']
         
         db.session.commit()
         
-        return jsonify({'success': True})
+        app.logger.info(f"Module {module.title} subscription changed to {subscription_level} by admin")
+        
+        return jsonify({'success': True, 'message': f'Subscription auf {subscription_level} geändert'})
         
     except Exception as e:
         db.session.rollback()
+        app.logger.error(f"Error changing module subscription: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
 @app.route('/admin/move-module', methods=['POST'])
