@@ -609,7 +609,23 @@
                                 <option value="Reflation">🚀 Reflation - Wirtschaftswachstum</option>
                                 <option value="Inflation">🔥 Inflation - Steigende Preise</option>
                                 <option value="Deflation">❄️ Deflation - Fallende Preise</option>
+                                <option value="Stagflation">⚠️ Stagflation - Stagnation + Inflation</option>
                             </select>
+                            
+                            <!-- Wichtiger Hinweis für Benutzer -->
+                            <div style="background: linear-gradient(135deg, rgba(218, 165, 32, 0.15) 0%, rgba(184, 134, 11, 0.1) 100%); border: 2px solid #daa520; border-radius: 12px; padding: 20px; margin-bottom: 25px; position: relative; overflow: hidden;">
+                                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                                    <span style="font-size: 2em; line-height: 1;">💡</span>
+                                    <div>
+                                        <strong style="color: #b8860b; font-size: 1.1em; display: block; margin-bottom: 8px;">Wichtiger Hinweis</strong>
+                                        <p style="color: #1a1a1a; margin: 0; font-size: 1.05em; line-height: 1.5;">
+                                            Der Wert der Marktampel liegt in den <strong style="color: #b8860b;">Sektoren</strong>, die du weiter unten siehst. 
+                                            Die Allokation hier ist ein <em>Beispiel-Startpunkt</em> zum Lernen der Grundprinzipien.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(218, 165, 32, 0.1); border-radius: 50%;"></div>
+                            </div>
                             
                             <div id="portfolio-chart"></div>
                         </div>
@@ -719,30 +735,31 @@ let portfolioData = {
 };
 
 // Sector Performance Data (% of Cumulative Performance by Market Regime)
+// Stagflation = Stagnation + Inflation: Fast alle Sektoren leiden, Cash ist King
 const sectorPerformanceData = {
-    "SPY": { sector: "S&P 500", goldilocks: 62, reflation: 43, inflation: 1, deflation: -6, riskOn: 105, riskOff: -5 },
-    "XLC": { sector: "Communication Services", goldilocks: 219, reflation: 102, inflation: -165, deflation: -56, riskOn: 321, riskOff: -221 },
-    "XLY": { sector: "Consumer Discretionary", goldilocks: 68, reflation: 39, inflation: -12, deflation: 4, riskOn: 108, riskOff: -8 },
-    "XLP": { sector: "Consumer Staples", goldilocks: 45, reflation: 34, inflation: 16, deflation: 5, riskOn: 79, riskOff: 21 },
-    "XLE": { sector: "Energy", goldilocks: 95, reflation: 44, inflation: 33, deflation: -72, riskOn: 139, riskOff: -39 },
-    "XLF": { sector: "Financials", goldilocks: 89, reflation: 54, inflation: 4, deflation: -47, riskOn: 143, riskOff: -43 },
-    "XLV": { sector: "Health Care", goldilocks: 36, reflation: 23, inflation: 19, deflation: 22, riskOn: 60, riskOff: 40 },
-    "XLI": { sector: "Industrials", goldilocks: 68, reflation: 46, inflation: 3, deflation: -17, riskOn: 114, riskOff: -14 },
-    "XLK": { sector: "Information Technology", goldilocks: 43, reflation: 42, inflation: -1, deflation: 16, riskOn: 85, riskOff: 15 },
-    "XLB": { sector: "Materials", goldilocks: 99, reflation: 30, inflation: -2, deflation: -27, riskOn: 129, riskOff: -29 },
-    "XLRE": { sector: "Real Estate", goldilocks: 110, reflation: 30, inflation: 25, deflation: -65, riskOn: 140, riskOff: -40 },
-    "XLU": { sector: "Utilities", goldilocks: 58, reflation: 16, inflation: 37, deflation: -11, riskOn: 73, riskOff: 27 },
-    "SPHD": { sector: "Dividend Compounders", goldilocks: 54, reflation: 30, inflation: 9, deflation: 7, riskOn: 84, riskOff: 16 },
-    "IWF": { sector: "Growth", goldilocks: 60, reflation: 48, inflation: -7, deflation: -1, riskOn: 108, riskOff: -8 },
-    "SPHB": { sector: "High Beta", goldilocks: 114, reflation: 29, inflation: -14, deflation: -30, riskOn: 143, riskOff: -43 },
-    "IWB": { sector: "Large Caps", goldilocks: 42, reflation: 34, inflation: 25, deflation: -1, riskOn: 77, riskOff: 23 },
-    "SPLV": { sector: "Low Beta", goldilocks: 66, reflation: 45, inflation: 0, deflation: -11, riskOn: 111, riskOff: -11 },
-    "QQQ": { sector: "Mega Cap Growth", goldilocks: 47, reflation: 43, inflation: -1, deflation: 12, riskOn: 89, riskOff: 11 },
-    "IWR": { sector: "Mid Caps", goldilocks: 78, reflation: 39, inflation: 3, deflation: -19, riskOn: 117, riskOff: -17 },
-    "MTUM": { sector: "Momentum", goldilocks: 62, reflation: 34, inflation: 2, deflation: 3, riskOn: 95, riskOff: 5 },
-    "QUAL": { sector: "Quality", goldilocks: 47, reflation: 42, inflation: -4, deflation: 15, riskOn: 89, riskOff: 11 },
-    "IWM": { sector: "Small Caps", goldilocks: 102, reflation: 46, inflation: 2, deflation: -50, riskOn: 149, riskOff: -49 },
-    "IWD": { sector: "Value", goldilocks: 86, reflation: 41, inflation: 10, deflation: -37, riskOn: 127, riskOff: -27 }
+    "SPY": { sector: "S&P 500", goldilocks: 62, reflation: 43, inflation: 1, deflation: -6, stagflation: -15, riskOn: 105, riskOff: -5 },
+    "XLC": { sector: "Communication Services", goldilocks: 219, reflation: 102, inflation: -165, deflation: -56, stagflation: -85, riskOn: 321, riskOff: -221 },
+    "XLY": { sector: "Consumer Discretionary", goldilocks: 68, reflation: 39, inflation: -12, deflation: 4, stagflation: -35, riskOn: 108, riskOff: -8 },
+    "XLP": { sector: "Consumer Staples", goldilocks: 45, reflation: 34, inflation: 16, deflation: 5, stagflation: 8, riskOn: 79, riskOff: 21 },
+    "XLE": { sector: "Energy", goldilocks: 95, reflation: 44, inflation: 33, deflation: -72, stagflation: 25, riskOn: 139, riskOff: -39 },
+    "XLF": { sector: "Financials", goldilocks: 89, reflation: 54, inflation: 4, deflation: -47, stagflation: -28, riskOn: 143, riskOff: -43 },
+    "XLV": { sector: "Health Care", goldilocks: 36, reflation: 23, inflation: 19, deflation: 22, stagflation: 12, riskOn: 60, riskOff: 40 },
+    "XLI": { sector: "Industrials", goldilocks: 68, reflation: 46, inflation: 3, deflation: -17, stagflation: -22, riskOn: 114, riskOff: -14 },
+    "XLK": { sector: "Information Technology", goldilocks: 43, reflation: 42, inflation: -1, deflation: 16, stagflation: -18, riskOn: 85, riskOff: 15 },
+    "XLB": { sector: "Materials", goldilocks: 99, reflation: 30, inflation: -2, deflation: -27, stagflation: 5, riskOn: 129, riskOff: -29 },
+    "XLRE": { sector: "Real Estate", goldilocks: 110, reflation: 30, inflation: 25, deflation: -65, stagflation: -40, riskOn: 140, riskOff: -40 },
+    "XLU": { sector: "Utilities", goldilocks: 58, reflation: 16, inflation: 37, deflation: -11, stagflation: 15, riskOn: 73, riskOff: 27 },
+    "SPHD": { sector: "Dividend Compounders", goldilocks: 54, reflation: 30, inflation: 9, deflation: 7, stagflation: 3, riskOn: 84, riskOff: 16 },
+    "IWF": { sector: "Growth", goldilocks: 60, reflation: 48, inflation: -7, deflation: -1, stagflation: -25, riskOn: 108, riskOff: -8 },
+    "SPHB": { sector: "High Beta", goldilocks: 114, reflation: 29, inflation: -14, deflation: -30, stagflation: -45, riskOn: 143, riskOff: -43 },
+    "IWB": { sector: "Large Caps", goldilocks: 42, reflation: 34, inflation: 25, deflation: -1, stagflation: -10, riskOn: 77, riskOff: 23 },
+    "SPLV": { sector: "Low Beta", goldilocks: 66, reflation: 45, inflation: 0, deflation: -11, stagflation: -5, riskOn: 111, riskOff: -11 },
+    "QQQ": { sector: "Mega Cap Growth", goldilocks: 47, reflation: 43, inflation: -1, deflation: 12, stagflation: -20, riskOn: 89, riskOff: 11 },
+    "IWR": { sector: "Mid Caps", goldilocks: 78, reflation: 39, inflation: 3, deflation: -19, stagflation: -30, riskOn: 117, riskOff: -17 },
+    "MTUM": { sector: "Momentum", goldilocks: 62, reflation: 34, inflation: 2, deflation: 3, stagflation: -12, riskOn: 95, riskOff: 5 },
+    "QUAL": { sector: "Quality", goldilocks: 47, reflation: 42, inflation: -4, deflation: 15, stagflation: -8, riskOn: 89, riskOff: 11 },
+    "IWM": { sector: "Small Caps", goldilocks: 102, reflation: 46, inflation: 2, deflation: -50, stagflation: -55, riskOn: 149, riskOff: -49 },
+    "IWD": { sector: "Value", goldilocks: 86, reflation: 41, inflation: 10, deflation: -37, stagflation: -15, riskOn: 127, riskOff: -27 }
 };
 
 // Regime Data
@@ -774,7 +791,23 @@ const regimeData = {
         "Style": { status: "neutral", value: "Quality" },
         "Regional": { status: "preferred", value: "US" },
         "Currencies": { status: "preferred", value: "US Dollar" }
+    },
+    "Stagflation": {
+        "Asset-Typ": { status: "avoid", value: "Risk Assets" },
+        "Beta": { status: "avoid", value: "High Beta" },
+        "Style": { status: "avoid", value: "Growth" },
+        "Regional": { status: "avoid", value: "All Regions" },
+        "Currencies": { status: "preferred", value: "Cash" }
     }
+};
+
+// Empfohlene Portfolio-Allokation pro Regime
+const regimeAllocations = {
+    "Goldilocks": { cash: 0, sp500: 60, gold: 30, bitcoin: 10 },
+    "Reflation": { cash: 5, sp500: 60, gold: 30, bitcoin: 5 },
+    "Inflation": { cash: 30, sp500: 30, gold: 35, bitcoin: 5 },
+    "Deflation": { cash: 55, sp500: 15, gold: 30, bitcoin: 0 },
+    "Stagflation": { cash: 100, sp500: 0, gold: 0, bitcoin: 0 }
 };
 
 function showTab(tabName) {
@@ -866,8 +899,39 @@ function updateRegimeAnalysis() {
     
     regimeIndicators.innerHTML = html;
     
+    // Update portfolio allocation based on regime
+    updatePortfolioForRegime(selectedRegime);
+    
     // Update sector performance table
     updateSectorTable(selectedRegime);
+}
+
+function updatePortfolioForRegime(regime) {
+    const allocation = regimeAllocations[regime] || regimeAllocations["Goldilocks"];
+    
+    // Update slider values
+    document.getElementById('cash').value = allocation.cash;
+    document.getElementById('sp500').value = allocation.sp500;
+    document.getElementById('gold').value = allocation.gold;
+    document.getElementById('bitcoin').value = allocation.bitcoin;
+    
+    // Update portfolio data
+    portfolioData.cash = allocation.cash;
+    portfolioData.sp500 = allocation.sp500;
+    portfolioData.gold = allocation.gold;
+    portfolioData.bitcoin = allocation.bitcoin;
+    
+    // Update display values
+    document.getElementById('cash-value').textContent = allocation.cash + '%';
+    document.getElementById('sp500-value').textContent = allocation.sp500 + '%';
+    document.getElementById('gold-value').textContent = allocation.gold + '%';
+    document.getElementById('bitcoin-value').textContent = allocation.bitcoin + '%';
+    
+    // Update alert and chart
+    const alertDiv = document.getElementById('portfolio-alert');
+    alertDiv.innerHTML = `<div class="alert alert-success">✅ Empfohlene ${regime}-Allokation geladen!</div>`;
+    
+    updateChart();
 }
 
 function updateSectorTable(selectedRegime) {
