@@ -224,11 +224,10 @@
     
     #portfolio-chart {
         width: 100%;
-        height: 450px;
+        height: 350px;
         background: white;
         border-radius: 12px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        padding: 20px;
+        padding: 15px;
     }
     
     /* Alert Boxen mit Gold-Design */
@@ -511,139 +510,137 @@
             <p>Professionelle Trading-Analyse & Portfolio-Management</p>
         </div>
 
+        <!-- Main Content - Volle Breite -->
         <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3">
+            <!-- Tabs -->
+            <div class="col-12">
+                <div class="tabs">
+                    <button class="tab active" onclick="showTab('portfolio')">📊 Portfolio Analyzer</button>
+                    <button class="tab" onclick="showTab('trading')">📈 Live Trading</button>
+                </div>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="col-md-9">
-            <!-- Tabs -->
-            <div class="tabs">
-                <button class="tab active" onclick="showTab('portfolio')">📊 Portfolio Analyzer</button>
-                <button class="tab" onclick="showTab('trading')">📈 Live Trading</button>
+        <!-- Portfolio Tab -->
+        <div id="portfolio-tab" class="tab-content active">
+            <div class="content-card" style="margin-bottom: 30px;">
+                <h2>0.1 Marktampel & Allokation</h2>
+                <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 0;">
+                    Optimiere dein Portfolio basierend auf verschiedenen Marktregimen und maximiere deine Rendite bei kontrolliertem Risiko.
+                </p>
             </div>
-
-            <!-- Portfolio Tab -->
-            <div id="portfolio-tab" class="tab-content active">
-                <div class="content-card">
-                    <h2>0.1 Marktampel & Allokation</h2>
-                    <p style="color: #6b7280; font-size: 1.1em; margin-bottom: 30px;">
-                        Optimiere dein Portfolio basierend auf verschiedenen Marktregimen und maximiere deine Rendite bei kontrolliertem Risiko.
-                    </p>
+            
+            <div class="row">
+                <!-- LINKE SPALTE: Portfolio Allocation + Kuchendiagramm -->
+                <div class="col-md-6">
+                    <div class="content-card">
+                        <h4>🎯 Portfolio Allocation</h4>
+                        
+                        <div class="portfolio-slider">
+                            <label for="cash">💰 Cash (%)</label>
+                            <div class="slider-container">
+                                <input type="range" id="cash" min="0" max="100" value="0" oninput="updatePortfolio()">
+                                <span class="slider-value" id="cash-value">0%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="portfolio-slider">
+                            <label for="sp500">📈 S&P 500 ETF (%)</label>
+                            <div class="slider-container">
+                                <input type="range" id="sp500" min="0" max="100" value="60" oninput="updatePortfolio()">
+                                <span class="slider-value" id="sp500-value">60%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="portfolio-slider">
+                            <label for="gold">🏆 Gold (%)</label>
+                            <div class="slider-container">
+                                <input type="range" id="gold" min="0" max="100" value="30" oninput="updatePortfolio()">
+                                <span class="slider-value" id="gold-value">30%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="portfolio-slider">
+                            <label for="bitcoin">₿ Bitcoin (%)</label>
+                            <div class="slider-container">
+                                <input type="range" id="bitcoin" min="0" max="100" value="10" oninput="updatePortfolio()">
+                                <span class="slider-value" id="bitcoin-value">10%</span>
+                            </div>
+                        </div>
+                        
+                        <div id="portfolio-alert"></div>
+                    </div>
+                    
+                    <!-- Kuchendiagramm direkt unter den Slidern -->
+                    <div class="content-card" style="margin-top: 20px;">
+                        <div id="portfolio-chart"></div>
+                    </div>
                 </div>
                 
-                <div class="row">
-                    <!-- Portfolio Input -->
-                    <div class="col-md-4">
-                        <div class="content-card">
-                            <h4>🎯 Portfolio Allocation</h4>
-                            
-                            <div class="portfolio-slider">
-                                <label for="cash">💰 Cash (%)</label>
-                                <div class="slider-container">
-                                    <input type="range" id="cash" min="0" max="100" value="0" oninput="updatePortfolio()">
-                                    <span class="slider-value" id="cash-value">0%</span>
-                                </div>
-                            </div>
-                            
-                            <div class="portfolio-slider">
-                                <label for="sp500">📈 S&P 500 ETF (%)</label>
-                                <div class="slider-container">
-                                    <input type="range" id="sp500" min="0" max="100" value="60" oninput="updatePortfolio()">
-                                    <span class="slider-value" id="sp500-value">60%</span>
-                                </div>
-                            </div>
-                            
-                            <div class="portfolio-slider">
-                                <label for="gold">🏆 Gold (%)</label>
-                                <div class="slider-container">
-                                    <input type="range" id="gold" min="0" max="100" value="30" oninput="updatePortfolio()">
-                                    <span class="slider-value" id="gold-value">30%</span>
-                                </div>
-                            </div>
-                            
-                            <div class="portfolio-slider">
-                                <label for="bitcoin">₿ Bitcoin (%)</label>
-                                <div class="slider-container">
-                                    <input type="range" id="bitcoin" min="0" max="100" value="10" oninput="updatePortfolio()">
-                                    <span class="slider-value" id="bitcoin-value">10%</span>
-                                </div>
-                            </div>
-                            
-                            <div id="portfolio-alert"></div>
+                <!-- RECHTE SPALTE: Dropdown + Regime Analysis -->
+                <div class="col-md-6">
+                    <div class="content-card">
+                        <h4>📊 Market Regime Analysis</h4>
+                        <p style="color: #6b7280; margin-bottom: 20px;">
+                            Wähle das aktuelle Marktregime aus, um die optimale Asset-Allokation zu ermitteln.
+                        </p>
+                        
+                        <select id="regime-select" class="form-control mb-3" onchange="updateRegimeAnalysis()" style="margin-bottom: 25px;" title="Marktregime auswählen" aria-label="Wähle das aktuelle Marktregime">
+                            <option value="Goldilocks">🌟 Goldilocks - Ideale Bedingungen</option>
+                            <option value="Reflation">🚀 Reflation - Wirtschaftswachstum</option>
+                            <option value="Inflation">🔥 Inflation - Steigende Preise</option>
+                            <option value="Deflation">❄️ Deflation - Fallende Preise</option>
+                        </select>
+                        
+                        <!-- Regime Analysis Karten - jetzt hier oben -->
+                        <h5 id="regime-title" style="margin-bottom: 20px; color: #1a1a1a; font-weight: 700;">🎯 Goldilocks Regime Analysis</h5>
+                        <p style="color: #6b7280; margin-bottom: 20px; font-size: 0.95em;">
+                            Welche Asset-Klassen in diesem Regime bevorzugt, neutral oder gemieden werden sollten:
+                        </p>
+                        <div class="row" id="regime-indicators" style="margin: 0 -5px;">
+                            <!-- Wird durch JavaScript gefüllt -->
                         </div>
                     </div>
                     
-                    <!-- Portfolio Visualization -->
-                    <div class="col-md-8">
-                        <div class="content-card">
-                            <h4>📊 Market Regime Analysis</h4>
-                            <p style="color: #6b7280; margin-bottom: 20px;">
-                                Wähle das aktuelle Marktregime aus, um die optimale Asset-Allokation zu ermitteln.
-                            </p>
-                            
-                            <select id="regime-select" class="form-control mb-3" onchange="updateRegimeAnalysis()" style="margin-bottom: 30px;" title="Marktregime auswählen" aria-label="Wähle das aktuelle Marktregime">
-                                <option value="Goldilocks">🌟 Goldilocks - Ideale Bedingungen</option>
-                                <option value="Reflation">🚀 Reflation - Wirtschaftswachstum</option>
-                                <option value="Inflation">🔥 Inflation - Steigende Preise</option>
-                                <option value="Deflation">❄️ Deflation - Fallende Preise</option>
-                            </select>
-                            
-                            <!-- Wichtiger Hinweis für Benutzer -->
-                            <div style="background: linear-gradient(135deg, rgba(218, 165, 32, 0.15) 0%, rgba(184, 134, 11, 0.1) 100%); border: 2px solid #daa520; border-radius: 12px; padding: 20px; margin-bottom: 25px; position: relative; overflow: hidden;">
-                                <div style="display: flex; align-items: flex-start; gap: 15px;">
-                                    <span style="font-size: 2em; line-height: 1;">💡</span>
-                                    <div>
-                                        <strong style="color: #b8860b; font-size: 1.1em; display: block; margin-bottom: 8px;">Wichtiger Hinweis</strong>
-                                        <p style="color: #1a1a1a; margin: 0; font-size: 1.05em; line-height: 1.5;">
-                                            Der Wert der Marktampel liegt in den <strong style="color: #b8860b;">Sektoren</strong>, die du weiter unten siehst. 
-                                            Die Allokation hier ist ein <em>Beispiel-Startpunkt</em> zum Lernen der Grundprinzipien.
-                                        </p>
-                                    </div>
-                                </div>
-                                <div style="position: absolute; top: -20px; right: -20px; width: 80px; height: 80px; background: rgba(218, 165, 32, 0.1); border-radius: 50%;"></div>
+                    <!-- Wichtiger Hinweis -->
+                    <div class="content-card" style="margin-top: 20px; background: linear-gradient(135deg, rgba(218, 165, 32, 0.15) 0%, rgba(184, 134, 11, 0.1) 100%); border: 2px solid #daa520;">
+                        <div style="display: flex; align-items: flex-start; gap: 15px;">
+                            <span style="font-size: 2em; line-height: 1;">💡</span>
+                            <div>
+                                <strong style="color: #b8860b; font-size: 1.1em; display: block; margin-bottom: 8px;">Wichtiger Hinweis</strong>
+                                <p style="color: #1a1a1a; margin: 0; font-size: 1.05em; line-height: 1.5;">
+                                    Der Wert der Marktampel liegt in den <strong style="color: #b8860b;">Sektoren</strong>, die du weiter unten siehst. 
+                                    Die Allokation hier ist ein <em>Beispiel-Startpunkt</em> zum Lernen der Grundprinzipien.
+                                </p>
                             </div>
-                            
-                            <div id="portfolio-chart"></div>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <!-- Sector Performance Table - Volle Breite -->
+            <div class="content-card" style="margin-top: 30px;">
+                <h4>📊 Sector Performance by Market Regime</h4>
+                <p style="color: #6b7280; margin-bottom: 30px;">
+                    Kumulative Performance verschiedener Sektoren und ETFs nach Marktregimen. Die Tabelle zeigt nur die Werte für das ausgewählte Regime.
+                </p>
                 
-                <!-- Sector Performance Table -->
-                <div class="content-card">
-                    <h4>📊 Sector Performance by Market Regime</h4>
-                    <p style="color: #6b7280; margin-bottom: 30px;">
-                        Kumulative Performance verschiedener Sektoren und ETFs nach Marktregimen. Die Tabelle zeigt nur die Werte für das ausgewählte Regime.
-                    </p>
-                    
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="sector-performance-table">
-                            <thead>
-                                <tr>
-                                    <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Symbol</th>
-                                    <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Sector</th>
-                                    <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;" id="regime-column-header">GOLDILOCKS</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sector-table-body">
-                                <!-- Wird durch JavaScript gefüllt -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                
-                <!-- Regime Analysis -->
-                <div class="content-card">
-                    <h4 id="regime-title">🎯 Goldilocks Regime Analysis</h4>
-                    <p style="color: #6b7280; margin-bottom: 30px;">
-                        Diese Analyse zeigt dir, welche Asset-Klassen in dem gewählten Marktregime bevorzugt, neutral oder gemieden werden sollten.
-                    </p>
-                    <div class="row" id="regime-indicators">
-                        <!-- Wird durch JavaScript gefüllt -->
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover" id="sector-performance-table">
+                        <thead>
+                            <tr>
+                                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Symbol</th>
+                                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;">Sector</th>
+                                <th style="background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%); color: white; border: none; padding: 15px;" id="regime-column-header">GOLDILOCKS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sector-table-body">
+                            <!-- Wird durch JavaScript gefüllt -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
+        </div>
 
             <!-- Trading Tab -->
             <div id="trading-tab" class="tab-content">
@@ -857,10 +854,10 @@ function updateRegimeAnalysis() {
     Object.entries(currentRegime).forEach(([category, data]) => {
         const statusClass = `regime-${data.status}`;
         html += `
-            <div class="col-md-2">
-                <div class="regime-card ${statusClass}">
-                    <strong>${category}</strong><br>
-                    ${data.value}
+            <div style="flex: 0 0 50%; max-width: 50%; padding: 5px;">
+                <div class="regime-card ${statusClass}" style="padding: 12px; margin: 0;">
+                    <strong style="font-size: 0.9em;">${category}</strong><br>
+                    <span style="font-size: 0.85em;">${data.value}</span>
                 </div>
             </div>
         `;
