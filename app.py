@@ -3019,6 +3019,26 @@ def moving_averages_qullamaggie():
     
     return render_template('moving-averages-qullamaggie.html')
 
+@app.route('/wie-trader-exponentiell-besser-werden')
+def wie_trader_exponentiell_besser_werden():
+    """Wie Trader exponentiell besser werden - Die Mathematik der Kreativität"""
+    track_visitor()
+    
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    is_admin = username in ['admin', 'didi']
+    
+    # Premium-Modul - Zugriff für Premium, Elite, Elite Pro, Masterclass
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='wie-trader-exponentiell-besser-werden'))
+    
+    return render_template('wie-trader-exponentiell-besser-werden.html')
+
 
 # === API ROUTES ===
 

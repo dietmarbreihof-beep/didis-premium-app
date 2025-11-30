@@ -1,0 +1,1111 @@
+{% extends "base.html" %}
+
+{% block title %}Wie Trader exponentiell besser werden - Die Mathematik der Kreativität{% endblock %}
+
+{% block content %}
+<div class="exponentiell-besser-wrapper">
+<style>
+    .exponentiell-besser-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .exponentiell-besser-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 70%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 40px;
+        opacity: 0.95;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    /* Video Embed Section */
+    .video-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 15px;
+        padding: 40px;
+        margin: 40px auto;
+        max-width: 900px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .video-section h3 {
+        color: white;
+        font-size: 1.5em;
+        margin: 0 0 20px 0;
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-tip {
+        color: white;
+        margin-top: 20px;
+        font-size: 0.95em;
+        opacity: 0.9;
+        text-align: center;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 0 auto 30px;
+        max-width: 1200px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-header h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.3em;
+    }
+
+    .progress-percentage {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: #daa520;
+    }
+
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 4px solid #daa520;
+    }
+
+    .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        cursor: pointer;
+    }
+
+    .section-number {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3em;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .section-title {
+        flex: 1;
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.8em;
+        font-weight: 700;
+    }
+
+    .section-toggle {
+        background: none;
+        border: none;
+        font-size: 1.5em;
+        color: #daa520;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .section-toggle.expanded {
+        transform: rotate(180deg);
+    }
+
+    .section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, padding 0.5s ease;
+        padding: 0;
+    }
+
+    .section-content.expanded {
+        max-height: 5000px;
+        padding-top: 25px;
+    }
+
+    .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.4em;
+        margin: 25px 0 15px 0;
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 10px;
+    }
+
+    .section-card p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin-bottom: 15px;
+    }
+
+    .section-card ul, .section-card ol {
+        color: #444;
+        line-height: 1.8;
+        margin: 15px 0;
+        padding-left: 25px;
+    }
+
+    .section-card li {
+        margin-bottom: 10px;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(244, 233, 123, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.15em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1a1a1a;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left: 4px solid #d69e2e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .warning-box strong {
+        color: #92400e;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-left: 4px solid #38a169;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .insight-box strong {
+        color: #2f6846;
+    }
+
+    /* Trading Application Box */
+    .trading-application {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        border-left: 5px solid #daa520;
+    }
+
+    .trading-application h4 {
+        color: #f4e97b;
+        margin-top: 0;
+        font-size: 1.3em;
+    }
+
+    .trading-application p {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.8;
+    }
+
+    /* Quiz Section */
+    .quiz-section {
+        background: #f9f9f9;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-question {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .quiz-option {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        background: #fff8e1;
+        transform: translateX(5px);
+    }
+
+    .quiz-option.selected {
+        border-color: #daa520;
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    }
+
+    .quiz-option.correct {
+        border-color: #38a169;
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    }
+
+    .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+    }
+
+    .quiz-feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-feedback.show {
+        display: block;
+    }
+
+    .quiz-feedback.correct {
+        background: #e8f5e9;
+        color: #2f6846;
+        border-left: 4px solid #38a169;
+    }
+
+    .quiz-feedback.incorrect {
+        background: #ffebee;
+        color: #c62828;
+        border-left: 4px solid #e53e3e;
+    }
+
+    .quiz-button {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(218, 165, 32, 0.4);
+    }
+
+    .quiz-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Key Takeaways */
+    .key-takeaways {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+        border-left: 5px solid #b8860b;
+    }
+
+    .key-takeaways h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin: 0 0 25px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .key-takeaways li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(184, 134, 11, 0.2);
+        font-size: 1.1em;
+        line-height: 1.8;
+    }
+
+    .key-takeaways li:last-child {
+        border-bottom: none;
+    }
+
+    .key-takeaways li::before {
+        content: "✓";
+        color: #b8860b;
+        font-weight: 800;
+        font-size: 1.3em;
+        margin-right: 15px;
+    }
+
+    /* Next Button */
+    .next-section-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 30px auto;
+        box-shadow: 0 4px 20px rgba(218, 165, 32, 0.3);
+    }
+
+    .next-section-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(218, 165, 32, 0.4);
+    }
+
+    .next-section-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .video-section {
+            padding: 20px;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-title {
+            font-size: 1.4em;
+        }
+
+        .content-container {
+            padding: 0 15px;
+        }
+    }
+</style>
+
+<!-- Hero Section mit Video -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">📈 Trading-Psychologie</div>
+        <h1>Wie Trader exponentiell besser werden</h1>
+        <p class="subtitle">
+            Die Mathematik der Kreativität auf den Aktienhandel übertragen
+        </p>
+
+        <!-- Video Embed -->
+        <div class="video-section">
+            <h3>🎥 Die Mathematik der Kreativität</h3>
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/6aohcF4XBSc" 
+                    title="Die Mathematik der Kreativität | Warum das Genie einer Formel folgt"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <p class="video-tip">
+                💡 <strong>Tipp:</strong> Schaue dir das Video zuerst an, um die Grundlagen zu verstehen, bevor du mit dem interaktiven Lernmodul beginnst.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-tracker">
+    <div class="progress-header">
+        <h3>📊 Dein Fortschritt</h3>
+        <span class="progress-percentage" id="progress-percentage">0%</span>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progress-bar"></div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    
+    <!-- Section 1: Gesetz der großen Zahlen -->
+    <div class="section-card" data-section="1">
+        <div class="section-header" onclick="toggleSection(1)">
+            <div class="section-number">1</div>
+            <h2 class="section-title">Quantität erzeugt Qualität</h2>
+            <button class="section-toggle" id="toggle-1">▼</button>
+        </div>
+        <div class="section-content" id="content-1">
+            <p>
+                Kreative Erfolge folgen statistischer Wahrscheinlichkeit. Je mehr Versuche jemand unternimmt, 
+                desto wahrscheinlicher ist es, dass er ein Meisterwerk produziert.
+            </p>
+
+            <div class="highlight-box">
+                <strong>💡 Das Gesetz der großen Zahlen</strong>
+                <p>
+                    Die Menge an Versuchen ist ein wichtiger Faktor für kreativen Erfolg. Thomas Edison meldete 
+                    über 1.000 Patente an - nicht alle waren brillant, aber die Quantität führte zu Qualität.
+                </p>
+            </div>
+
+            <h3>📈 Übertragung auf den Aktienhandel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    So wie Thomas Edison oder Picasso viele Versuche unternommen haben, um einen Durchbruch zu erzielen, 
+                    kann ein Trader viele verschiedene Aktien, Strategien oder Marktbedingungen analysieren. 
+                    <strong>Je mehr Analysen oder simulierte Trades du durchführst, desto höher ist die Wahrscheinlichkeit, 
+                    ein wirklich erfolgreiches Trading-Muster oder eine Investitionsgelegenheit zu finden.</strong>
+                </p>
+                <ul>
+                    <li>📊 Analysiere täglich 20-50 Charts (statt nur 5)</li>
+                    <li>📝 Führe ein detailliertes Trading-Journal</li>
+                    <li>🔄 Teste verschiedene Strategien in der Simulation</li>
+                    <li>📈 Erhöhe die Anzahl deiner Trade-Ideen systematisch</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 1: Was ist der wichtigste Faktor für kreativen Erfolg laut dem Gesetz der großen Zahlen?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Die Qualität jedes einzelnen Versuchs
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Die Anzahl der Versuche (Quantität)
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Das Talent des Künstlers
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Die verfügbare Zeit
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(1, 'b', 'Richtig! Die Quantität der Versuche ist entscheidend. Je mehr du analysierst und tradest, desto höher die Wahrscheinlichkeit für erfolgreiche Trades.')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-1"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Zipfs Gesetz der Ideen -->
+    <div class="section-card locked" data-section="2">
+        <div class="section-header" onclick="toggleSection(2)">
+            <div class="section-number">2</div>
+            <h2 class="section-title">Zipfs Gesetz der Ideen</h2>
+            <button class="section-toggle" id="toggle-2">▼</button>
+        </div>
+        <div class="section-content" id="content-2">
+            <p>
+                Zipfs Gesetz besagt, dass in jeder großen Menge die Häufigkeit von Ergebnissen einer vorhersehbaren 
+                Kurve folgt: mit wenigen sehr häufigen Ergebnissen und vielen mittelmäßigen.
+            </p>
+
+            <div class="insight-box">
+                <strong>📊 Die Verteilung von Ideen</strong>
+                <p>
+                    Die meisten Ideen sind durchschnittlich, einige sind gut und nur wenige sind brillant. 
+                    Diese Kurve zeigt sich in verschiedenen Bereichen: Hits, Bestsellern und viralen Inhalten.
+                </p>
+            </div>
+
+            <h3>📈 Übertragung auf den Aktienhandel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    <strong>Die meisten deiner Trade-Ideen werden durchschnittlich sein, einige werden gut sein, 
+                    und nur wenige werden außergewöhnlich profitabel sein.</strong> Das ist normal und erwartbar. 
+                    Die Kunst liegt darin, die wenigen brillanten Ideen zu erkennen und zu nutzen.
+                </p>
+                <ul>
+                    <li>📊 Erwarte, dass 80% deiner Ideen durchschnittlich sind</li>
+                    <li>⭐ Fokussiere dich auf die Top 20% deiner besten Setups</li>
+                    <li>🎯 Entwickle ein System zur Identifikation von "Brilliant Ideas"</li>
+                    <li>📈 Nutze Position Sizing: Mehr Kapital in die besten Ideen</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 2: Wie verteilen sich Ideen laut Zipfs Gesetz?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Alle Ideen sind gleichwertig
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Die meisten sind durchschnittlich, wenige sind brillant
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Die meisten sind brillant, wenige sind schlecht
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Die Verteilung ist zufällig
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(2, 'b', 'Richtig! Die meisten Ideen sind durchschnittlich, einige sind gut, und nur wenige sind brillant. Das ist normal und erwartbar.')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-2"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Kombinatorische Kreativität -->
+    <div class="section-card locked" data-section="3">
+        <div class="section-header" onclick="toggleSection(3)">
+            <div class="section-number">3</div>
+            <h2 class="section-title">Kombinatorische Kreativität</h2>
+            <button class="section-toggle" id="toggle-3">▼</button>
+        </div>
+        <div class="section-content" id="content-3">
+            <p>
+                Kreativität kann als kombinatorischer Prozess verstanden werden, bei dem bestehende Elemente 
+                in neuen Kombinationen verwendet werden.
+            </p>
+
+            <div class="highlight-box">
+                <strong>🧩 Kombinationen mathematisch modellieren</strong>
+                <p>
+                    Diese Kombinationen können mathematisch modelliert werden (Permutationen und Kombinationen), 
+                    wodurch eine begrenzte Anzahl von Bausteinen eine enorme Anzahl neuer Anordnungen hervorbringen kann.
+                </p>
+            </div>
+
+            <h3>📈 Übertragung auf den Aktienhandel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    Beim Trading werden oft verschiedene Indikatoren, Marktdaten und Strategien auf neuartige Weise 
+                    kombiniert, um ein einzigartiges Handelssystem zu bilden. <strong>Dies ist vergleichbar mit der Art, 
+                    wie Hip-Hop-Samples oder Memes bestehende Elemente kombinieren, um etwas Neues zu schaffen.</strong>
+                </p>
+                <ul>
+                    <li>🔗 Kombiniere verschiedene Indikatoren (z.B. AVWAP + Volume + Momentum)</li>
+                    <li>📊 Erstelle neue Trading-Setups durch Kombination bekannter Patterns</li>
+                    <li>🎯 Entwickle einzigartige Entry/Exit-Strategien</li>
+                    <li>💡 Nutze verschiedene Zeitrahmen für bessere Signale</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 3: Was bedeutet kombinatorische Kreativität im Trading?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Neue Indikatoren erfinden
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Bestehende Elemente in neuen Kombinationen verwenden
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Nur eine Strategie perfektionieren
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Zufällige Trades durchführen
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(3, 'b', 'Richtig! Kombinatorische Kreativität bedeutet, bestehende Elemente (Indikatoren, Patterns, Strategien) in neuen, einzigartigen Kombinationen zu verwenden.')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Zeit & Wachstum (10.000-Stunden-Regel) -->
+    <div class="section-card locked" data-section="4">
+        <div class="section-header" onclick="toggleSection(4)">
+            <div class="section-number">4</div>
+            <h2 class="section-title">Exponentielles Wachstum durch Zeit</h2>
+            <button class="section-toggle" id="toggle-4">▼</button>
+        </div>
+        <div class="section-content" id="content-4">
+            <p>
+                Die Zeit und der Aufwand spielen eine wichtige Rolle bei der Kreativität. Die 10.000-Stunden-Regel 
+                von Malcolm Gladwell zeigt: Die Fähigkeit wächst exponentiell, je länger man sich mit kreativer Praxis beschäftigt.
+            </p>
+
+            <div class="insight-box">
+                <strong>⏰ Der Zinseszinseffekt des Lernens</strong>
+                <p>
+                    Dieser Prozess kann mit dem Zinseszinseffekt verglichen werden: Die Investition in kreative Praxis 
+                    führt zu einem immer schnelleren Wachstum. Durchbrüche werden wahrscheinlicher, je mehr Zeit du investierst.
+                </p>
+            </div>
+
+            <h3>📈 Übertragung auf den Aktienhandel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    <strong>Der Gedanke, dass das Können einer Exponentialkurve folgt, trifft definitiv auf das Trading zu.</strong> 
+                    Ein Anfänger macht vielleicht nur langsame Fortschritte, aber mit beständigem Üben und Lernen kann sich 
+                    seine Fähigkeit, Märkte zu analysieren, Risiken zu managen und Trades auszuführen, im Laufe der Zeit 
+                    erheblich beschleunigen und zu einem Durchbruch in seiner Trading-Leistung führen.
+                </p>
+                <ul>
+                    <li>📚 Investiere täglich 2-3 Stunden in Chart-Analyse</li>
+                    <li>📝 Führe ein detailliertes Trading-Journal</li>
+                    <li>🔄 Wiederhole erfolgreiche Patterns systematisch</li>
+                    <li>📈 Erwarte exponentielles Wachstum nach 1-2 Jahren</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 4: Wie wächst die Trading-Fähigkeit laut der 10.000-Stunden-Regel?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Linear (gleichmäßig)
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Exponentiell (immer schneller)
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Sprunghaft (nur bei bestimmten Ereignissen)
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Gar nicht (Talent ist angeboren)
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(4, 'b', 'Richtig! Die Fähigkeit wächst exponentiell - wie der Zinseszinseffekt. Je mehr Zeit du investierst, desto schneller wird dein Wachstum.')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Rand der Komplexität -->
+    <div class="section-card locked" data-section="5">
+        <div class="section-header" onclick="toggleSection(5)">
+            <div class="section-number">5</div>
+            <h2 class="section-title">Der Rand der Komplexität</h2>
+            <button class="section-toggle" id="toggle-5">▼</button>
+        </div>
+        <div class="section-content" id="content-5">
+            <p>
+                Kreativität entsteht oft an der Grenze zwischen Chaos und Ordnung, wo unerwartete, aber sinnvolle 
+                Verbindungen entstehen.
+            </p>
+
+            <div class="warning-box">
+                <strong>⚖️ Die Balance zwischen Chaos und Ordnung</strong>
+                <p>
+                    Diese Balance ist der Schlüssel zu kreativem Erfolg: Zu viel Chaos führt zu nichts, 
+                    und zu viel Ordnung führt zu keiner Innovation. Die reichsten Muster entstehen in der Balance.
+                </p>
+            </div>
+
+            <h3>📈 Übertragung auf den Aktienhandel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    <strong>Erfolgreiches Trading bedeutet oft, ein Gleichgewicht zwischen starren Regeln (Ordnung) 
+                    und der Anpassung an unvorhersehbare Marktbewegungen (Chaos) zu finden.</strong> Zu viel Starrheit 
+                    kann Gelegenheiten verpassen, während zu viel Zufälligkeit zu Verlusten führt. Diesen "Rand des Chaos" 
+                    zu finden, ist der Schlüssel.
+                </p>
+                <ul>
+                    <li>📐 Entwickle klare Trading-Regeln (Ordnung)</li>
+                    <li>🔄 Bleibe flexibel bei Marktänderungen (Chaos)</li>
+                    <li>⚖️ Finde die Balance zwischen System und Intuition</li>
+                    <li>🎯 Passe deine Strategie an, ohne deine Prinzipien zu opfern</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 5: Was bedeutet "Rand der Komplexität" im Trading?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Nur starre Regeln befolgen
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Die Balance zwischen Ordnung (Regeln) und Chaos (Flexibilität)
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Komplett zufällig traden
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Nur auf Intuition vertrauen
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(5, 'b', 'Richtig! Der "Rand der Komplexität" bedeutet die Balance zwischen starren Regeln (Ordnung) und Flexibilität bei Marktänderungen (Chaos).')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-5"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6: Die Formel für Kreativität -->
+    <div class="section-card locked" data-section="6">
+        <div class="section-header" onclick="toggleSection(6)">
+            <div class="section-number">6</div>
+            <h2 class="section-title">Die Formel für exponentielles Wachstum</h2>
+            <button class="section-toggle" id="toggle-6">▼</button>
+        </div>
+        <div class="section-content" id="content-6">
+            <p>
+                Die Formel für Kreativität besteht aus Wahrscheinlichkeit, Kombinationen, Zeit und Balance. 
+                Alle diese Faktoren sind wichtig für kreativen Erfolg.
+            </p>
+
+            <div class="highlight-box">
+                <strong>🧮 Die Formel</strong>
+                <p style="font-size: 1.3em; text-align: center; font-weight: 700; color: #1a1a1a; margin: 20px 0;">
+                    Kreativität = Versuche × Kombinationen × Zeit × Chaos-Ordnung-Balance
+                </p>
+                <p>
+                    Um kreativer zu werden, solltest du: produzieren, kombinieren, Zeit investieren und 
+                    die Balance zwischen Chaos und Ordnung finden.
+                </p>
+            </div>
+
+            <h3>📈 Die Trading-Formel</h3>
+            <div class="trading-application">
+                <h4>🎯 Praktische Anwendung</h4>
+                <p>
+                    <strong>Übertragen auf das Trading bedeutet das:</strong>
+                </p>
+                <ul>
+                    <li><strong>Versuche:</strong> Viele Charts analysieren, viele Trades simulieren</li>
+                    <li><strong>Kombinationen:</strong> Verschiedene Indikatoren und Strategien kombinieren</li>
+                    <li><strong>Zeit:</strong> Täglich 2-3 Stunden investieren, langfristig denken (2-5 Jahre)</li>
+                    <li><strong>Balance:</strong> Klare Regeln haben, aber flexibel bei Marktänderungen bleiben</li>
+                </ul>
+            </div>
+
+            <!-- Quiz -->
+            <div class="quiz-section">
+                <div class="quiz-question">Frage 6: Welche Faktoren gehören zur Formel für exponentielles Wachstum?</div>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="selectOption(this, 'a')">
+                        A) Nur Talent und Glück
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'b')">
+                        B) Versuche, Kombinationen, Zeit und Balance
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'c')">
+                        C) Nur die Anzahl der Trades
+                    </div>
+                    <div class="quiz-option" onclick="selectOption(this, 'd')">
+                        D) Nur die verfügbare Zeit
+                    </div>
+                </div>
+                <button class="quiz-button" onclick="checkAnswer(6, 'b', 'Richtig! Die Formel besteht aus: Versuche (Quantität), Kombinationen (Kreativität), Zeit (Investition) und Balance (Chaos-Ordnung).')">Antwort prüfen</button>
+                <div class="quiz-feedback" id="feedback-6"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Takeaways -->
+    <div class="key-takeaways">
+        <h2>🎯 Key Takeaways</h2>
+        <ul>
+            <li>
+                <strong>Quantität erzeugt Qualität:</strong> Je mehr Charts du analysierst und Trades du durchführst, 
+                desto höher ist die Wahrscheinlichkeit für erfolgreiche Setups.
+            </li>
+            <li>
+                <strong>Zipfs Gesetz akzeptieren:</strong> Die meisten deiner Ideen werden durchschnittlich sein - 
+                das ist normal. Fokussiere dich auf die Top 20% deiner besten Setups.
+            </li>
+            <li>
+                <strong>Kombinatorische Kreativität nutzen:</strong> Kombiniere bestehende Indikatoren, Patterns 
+                und Strategien in neuen, einzigartigen Wegen.
+            </li>
+            <li>
+                <strong>Exponentielles Wachstum durch Zeit:</strong> Investiere täglich 2-3 Stunden in Chart-Analyse 
+                und erwarte exponentielles Wachstum nach 1-2 Jahren konsequenter Praxis.
+            </li>
+            <li>
+                <strong>Den Rand der Komplexität finden:</strong> Balance zwischen starren Regeln (Ordnung) und 
+                Flexibilität bei Marktänderungen (Chaos) - das ist der Schlüssel zum Erfolg.
+            </li>
+            <li>
+                <strong>Die Formel anwenden:</strong> Versuche × Kombinationen × Zeit × Balance = Exponentielles Wachstum
+            </li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    // Progressive Disclosure System
+    let currentStep = parseInt(localStorage.getItem('exponentiell-besser-step')) || 1;
+    let completedSections = JSON.parse(localStorage.getItem('exponentiell-besser-completed')) || [];
+
+    // Initialize
+    function init() {
+        updateProgress();
+        updateSectionVisibility();
+        
+        // Load saved state
+        completedSections.forEach(section => {
+            const card = document.querySelector(`[data-section="${section}"]`);
+            if (card) {
+                card.classList.remove('locked');
+                const content = card.querySelector('.section-content');
+                const toggle = card.querySelector('.section-toggle');
+                if (content && toggle) {
+                    content.classList.add('expanded');
+                    toggle.classList.add('expanded');
+                }
+            }
+        });
+    }
+
+    function toggleSection(sectionNum) {
+        const card = document.querySelector(`[data-section="${sectionNum}"]`);
+        if (card.classList.contains('locked') && sectionNum > currentStep) {
+            return; // Don't allow skipping ahead
+        }
+
+        const content = card.querySelector('.section-content');
+        const toggle = card.querySelector('.section-toggle');
+        
+        if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            toggle.classList.remove('expanded');
+        } else {
+            content.classList.add('expanded');
+            toggle.classList.add('expanded');
+            
+            // Mark as completed
+            if (!completedSections.includes(sectionNum)) {
+                completedSections.push(sectionNum);
+                localStorage.setItem('exponentiell-besser-completed', JSON.stringify(completedSections));
+            }
+            
+            // Unlock next section
+            if (sectionNum === currentStep) {
+                currentStep++;
+                localStorage.setItem('exponentiell-besser-step', currentStep);
+                updateSectionVisibility();
+            }
+        }
+        
+        updateProgress();
+    }
+
+    function updateSectionVisibility() {
+        for (let i = 1; i <= 6; i++) {
+            const card = document.querySelector(`[data-section="${i}"]`);
+            if (i <= currentStep) {
+                card.classList.remove('locked');
+            } else {
+                card.classList.add('locked');
+            }
+        }
+    }
+
+    function updateProgress() {
+        const total = 6;
+        const completed = completedSections.length;
+        const percentage = Math.round((completed / total) * 100);
+        
+        document.getElementById('progress-percentage').textContent = percentage + '%';
+        document.getElementById('progress-bar').style.width = percentage + '%';
+    }
+
+    // Quiz System
+    let selectedAnswers = {};
+
+    function selectOption(element, answer) {
+        const quizSection = element.closest('.quiz-section');
+        const options = quizSection.querySelectorAll('.quiz-option');
+        
+        // Remove previous selection
+        options.forEach(opt => {
+            opt.classList.remove('selected');
+        });
+        
+        // Mark selected
+        element.classList.add('selected');
+        const questionNum = quizSection.closest('.section-card').dataset.section;
+        selectedAnswers[questionNum] = answer;
+    }
+
+    function checkAnswer(questionNum, correctAnswer, feedbackText) {
+        const userAnswer = selectedAnswers[questionNum];
+        const feedback = document.getElementById(`feedback-${questionNum}`);
+        const quizSection = feedback.closest('.quiz-section');
+        const options = quizSection.querySelectorAll('.quiz-option');
+        
+        if (!userAnswer) {
+            alert('Bitte wähle zuerst eine Antwort aus!');
+            return;
+        }
+        
+        // Mark correct/incorrect
+        options.forEach(opt => {
+            opt.classList.remove('correct', 'incorrect');
+            if (opt.onclick && opt.onclick.toString().includes(`'${correctAnswer}'`)) {
+                opt.classList.add('correct');
+            }
+            if (opt.classList.contains('selected') && userAnswer !== correctAnswer) {
+                opt.classList.add('incorrect');
+            }
+        });
+        
+        // Show feedback
+        feedback.textContent = feedbackText;
+        feedback.classList.add('show');
+        feedback.classList.remove('correct', 'incorrect');
+        feedback.classList.add(userAnswer === correctAnswer ? 'correct' : 'incorrect');
+        
+        // Disable button
+        const button = quizSection.querySelector('.quiz-button');
+        button.disabled = true;
+        
+        // Mark section as quiz-completed
+        if (userAnswer === correctAnswer) {
+            const card = quizSection.closest('.section-card');
+            if (!completedSections.includes(parseInt(questionNum))) {
+                completedSections.push(parseInt(questionNum));
+                localStorage.setItem('exponentiell-besser-completed', JSON.stringify(completedSections));
+                updateProgress();
+            }
+        }
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+
+{% include '_navigation.html' %}
+
+{% endblock %}
+
