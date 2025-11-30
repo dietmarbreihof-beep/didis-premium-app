@@ -26,6 +26,33 @@
         padding: 0 20px !important;
     }
     
+    /* Grid System für 2-Spalten-Layout */
+    .marktampel-page .row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        margin: 0 -15px !important;
+    }
+    
+    .marktampel-page .col-12 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+    }
+    
+    .marktampel-page .col-md-6 {
+        flex: 0 0 50% !important;
+        max-width: 50% !important;
+        padding: 0 15px !important;
+    }
+    
+    @media (max-width: 768px) {
+        .marktampel-page .col-md-6 {
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+            margin-bottom: 20px !important;
+        }
+    }
+    
     /* Hero Header mit Primär-Verlauf */
     .marktampel-page .main-header {
         background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
