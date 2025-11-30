@@ -1,0 +1,1212 @@
+{% extends "base.html" %}
+
+{% block title %}Sugar Babies - Die 50%+ Move Strategie{% endblock %}
+
+{% block content %}
+<div class="sugar-babies-wrapper">
+<style>
+    .sugar-babies-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .sugar-babies-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin: 0;
+    }
+
+    .stat-label {
+        font-size: 0.95em;
+        margin-top: 5px;
+        opacity: 0.9;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #e5e5e5;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #daa520 0%, #b8860b 100%);
+        transition: width 0.3s ease;
+        width: 0%;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.3s ease;
+    }
+
+    .section-card.locked {
+        opacity: 0.5;
+        pointer-events: none;
+        position: relative;
+    }
+
+    .section-card.locked::after {
+        content: '🔒 Schließe zuerst den vorherigen Abschnitt ab';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1.1em;
+        white-space: nowrap;
+    }
+
+    .section-card h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-card h2 .emoji {
+        font-size: 1.2em;
+    }
+
+    .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.5em;
+        margin: 30px 0 15px 0;
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 10px;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, #f4e97b 0%, #daa520 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.2em;
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left: 4px solid #d69e2e;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+    }
+
+    .success-box {
+        background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        border-left: 4px solid #38a169;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 25px 0;
+    }
+
+    /* Formula Cards */
+    .formula-grid {
+        display: grid;
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .formula-card {
+        background: #f7f7f7;
+        border: 2px solid #daa520;
+        border-radius: 12px;
+        padding: 25px;
+        position: relative;
+    }
+
+    .formula-card h4 {
+        color: #b8860b;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+
+    .formula-code {
+        background: #1a1a1a;
+        color: #f4e97b;
+        padding: 15px;
+        border-radius: 8px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.95em;
+        margin: 15px 0;
+        overflow-x: auto;
+    }
+
+    .copy-btn {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: all 0.3s ease;
+    }
+
+    .copy-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(184, 134, 11, 0.4);
+    }
+
+    /* Quiz System */
+    .quiz-container {
+        background: #f7f7f7;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-question {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .quiz-option {
+        background: white;
+        border: 2px solid #e5e5e5;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 10px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        transform: translateX(5px);
+    }
+
+    .quiz-option.selected {
+        border-color: #daa520;
+        background: #fff9e6;
+    }
+
+    .quiz-option.correct {
+        border-color: #38a169;
+        background: #d4edda;
+    }
+
+    .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: #f8d7da;
+    }
+
+    .quiz-feedback {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 600;
+    }
+
+    .quiz-feedback.correct {
+        background: #d4edda;
+        color: #155724;
+        border-left: 4px solid #38a169;
+    }
+
+    .quiz-feedback.incorrect {
+        background: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid #e53e3e;
+    }
+
+    /* Buttons */
+    .btn-gold {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.4);
+    }
+
+    .btn-next {
+        background: linear-gradient(135deg, #38a169 0%, #2d8659 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-next:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(56, 161, 105, 0.4);
+    }
+
+    /* Key Takeaways */
+    .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .key-takeaways h3 {
+        color: #f4e97b;
+        margin-bottom: 25px;
+        font-size: 2em;
+    }
+
+    .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .key-takeaways li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1.8;
+    }
+
+    .key-takeaways li:last-child {
+        border-bottom: none;
+    }
+
+    .key-takeaways li strong {
+        color: #f4e97b;
+    }
+
+    /* Screenshot */
+    .screenshot-container {
+        text-align: center;
+        margin: 30px 0;
+    }
+
+    .screenshot-container img {
+        max-width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .screenshot-container img:hover {
+        transform: scale(1.02);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1>🍬 Sugar Babies</h1>
+    <p class="subtitle">Die verfeinerte EP-Strategie für 50%+ Moves</p>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">5-300%</div>
+            <div class="stat-label">Account-Bewegung</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">50%+</div>
+            <div class="stat-label">Potenzielle Moves</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">20-40</div>
+            <div class="stat-label">Trades pro Jahr</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3-6 Monate</div>
+            <div class="stat-label">Laufzeit</div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Container -->
+<div class="content-container">
+    <div class="progress-container">
+        <div class="progress-header">
+            <h3 style="margin: 0; color: #1a1a1a;">📊 Dein Fortschritt</h3>
+            <span id="progress-text" style="font-weight: 700; color: #b8860b;">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+    </div>
+
+    <!-- Section 1: Was sind Sugar Babies? -->
+    <div class="section-card" data-section="1">
+        <h2><span class="emoji">🍬</span> Was sind Sugar Babies?</h2>
+        
+        <p style="font-size: 1.1em; line-height: 1.8; color: #2d2d2d;">
+            Sugar Babies sind eine <strong>verfeinerte Version der EP-Strategie</strong>, die darauf abzielt, 
+            Aktien zu finden, die das Potenzial für <strong>50%+ Moves</strong> haben. 
+            Diese Aktien sind diejenigen, in die sich der Markt für <strong>3-6 Monate oder sogar 2-3 Jahre verliebt</strong>.
+        </p>
+
+        <div class="highlight-box">
+            <strong>🎯 Das Ziel:</strong>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Finde Aktien, die <strong>kontinuierlich große Moves machen</strong> – nicht nur einmal, 
+                sondern über einen längeren Zeitraum. Diese "Sugar Babies" können dein Portfolio 
+                <strong>exponentiell wachsen lassen</strong>.
+            </p>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ Warum Sugar Babies?</h4>
+            <ul style="line-height: 2; margin-left: 20px;">
+                <li><strong>EP + EP9 + Sugar Babies = Turbo-charged Returns</strong></li>
+                <li>Kombiniere verschiedene Strategien für maximale Performance</li>
+                <li>Fokus auf Qualität statt Quantität</li>
+                <li>Weniger Trades, aber größere Gewinne</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(1)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 2: Die Kern-Kriterien -->
+    <div class="section-card locked" data-section="2">
+        <h2><span class="emoji">📊</span> Die Kern-Kriterien</h2>
+        
+        <p style="font-size: 1.1em; line-height: 1.8; color: #2d2d2d;">
+            Sugar Babies haben ein <strong>eindeutiges Erkennungsmerkmal</strong>, das sie von normalen Breakouts unterscheidet:
+        </p>
+
+        <div class="highlight-box">
+            <strong>🔥 Das Sugar Baby Signal:</strong>
+            <p style="margin: 15px 0; font-size: 1.3em; text-align: center; font-weight: 700;">
+                4% Breakout + 9M Volume
+            </p>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Eine Aktie muss <strong>mindestens 4% steigen</strong> UND dabei 
+                <strong>mindestens 9 Millionen Aktien</strong> umsetzen, um als Sugar Baby Kandidat zu gelten.
+            </p>
+        </div>
+
+        <h3>Warum diese Kriterien?</h3>
+        
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #daa520;">
+                <h4 style="color: #b8860b; margin-bottom: 10px;">4% Breakout</h4>
+                <p style="line-height: 1.8;">
+                    Ein <strong>4%+ Move</strong> zeigt echte Stärke. Kleinere Moves können Zufall sein, 
+                    aber 4%+ signalisiert institutionelles Interesse und echte Momentum.
+                </p>
+            </div>
+
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #daa520;">
+                <h4 style="color: #b8860b; margin-bottom: 10px;">9M Volume</h4>
+                <p style="line-height: 1.8;">
+                    <strong>9 Millionen Aktien</strong> ist eine massive Volumen-Spike. Das bedeutet, 
+                    dass große Player (Institutionen, Hedge Funds) aktiv sind – nicht nur Retail-Trader.
+                </p>
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <strong>⚠️ Wichtig:</strong>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Beide Kriterien müssen <strong>gleichzeitig</strong> erfüllt sein. 
+                Ein 4% Move ohne Volume ist nicht genug. Hohes Volume ohne 4% Move ist auch nicht genug.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(2)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 3: True Count - Das Geheimnis -->
+    <div class="section-card locked" data-section="3">
+        <h2><span class="emoji">🔢</span> True Count - Das Geheimnis</h2>
+        
+        <p style="font-size: 1.1em; line-height: 1.8; color: #2d2d2d;">
+            Der <strong>True Count</strong> ist das Herzstück der Sugar Babies Strategie. 
+            Er zeigt dir, wie oft eine Aktie in der Vergangenheit das Sugar Baby Signal gezeigt hat.
+        </p>
+
+        <div class="highlight-box">
+            <strong>💡 True Count Definition:</strong>
+            <p style="margin: 15px 0; line-height: 1.8;">
+                Der True Count misst, <strong>wie viele Male</strong> eine Aktie in den letzten 
+                <strong>X Tagen</strong> (504/252/126 Tage) das 4%+9M Signal gezeigt hat.
+            </p>
+        </div>
+
+        <h3>Warum ist True Count wichtig?</h3>
+        
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🎯 Qualität vs Quantität</h4>
+                <p style="line-height: 1.8;">
+                    Eine Aktie mit <strong>hohem True Count</strong> (z.B. 10+ in 252 Tagen) zeigt, 
+                    dass sie <strong>konsistent große Moves macht</strong>. Das ist ein Zeichen für 
+                    echte Sugar Baby Qualität.
+                </p>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">📈 Trend-Erkennung</h4>
+                <p style="line-height: 1.8;">
+                    Wenn eine Aktie <strong>mehrfach</strong> das Signal zeigt, bedeutet das, 
+                    dass der Markt sich wirklich in sie verliebt hat. Das ist kein Zufall mehr, 
+                    sondern ein <strong>konsistenter Trend</strong>.
+                </p>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🔄 Neue Sugar Babies</h4>
+                <p style="line-height: 1.8;">
+                    <strong>Neue Sugar Babies entstehen ständig</strong>. Deshalb schaust du dir auch 
+                    die letzten 5/10/20/50 Tage an (9/5, 9/10, 9/20, 9/50 Spalten im EG100 Layout), 
+                    um <strong>frisch entstehende</strong> Sugar Babies zu finden.
+                </p>
+            </div>
+        </div>
+
+        <div class="success-box">
+            <h4>✅ True Count Interpretation:</h4>
+            <ul style="line-height: 2; margin-left: 20px;">
+                <li><strong>Hoher True Count (10+):</strong> Etablierte Sugar Baby, konsistente Moves</li>
+                <li><strong>Mittlerer True Count (5-9):</strong> Aufstrebende Sugar Baby, vielversprechend</li>
+                <li><strong>Niedriger True Count (1-4):</strong> Potenzielle neue Sugar Baby, früh erkennen</li>
+                <li><strong>True Count = 0:</strong> Noch kein Signal, aber könnte bald eines werden</li>
+            </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(3)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 4: EG100 Scanner - Die Formeln -->
+    <div class="section-card locked" data-section="4">
+        <h2><span class="emoji">🔍</span> EG100 Scanner - Die Formeln</h2>
+        
+        <p style="font-size: 1.1em; line-height: 1.8; color: #2d2d2d;">
+            Der <strong>EG100 Scanner</strong> ist eine Liste von Aktien mit dem aggressivsten Kaufdruck 
+            oder Momentum in Perioden von 5 bis 252 Tagen. Hier sind die wichtigsten Formeln für TC2000:
+        </p>
+
+        <div class="screenshot-container">
+            <img src="{{ url_for('static', filename='screenshots/SugarBabies_Scanner.png') }}" 
+                 alt="Sugar Babies Scanner Screenshot" 
+                 onclick="openLightbox(this.src)">
+        </div>
+
+        <h3>True Count Formeln (9M Volume)</h3>
+        
+        <div class="formula-grid">
+            <div class="formula-card">
+                <h4>9/252 - 1 Jahr True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 252 Tagen (1 Jahr) das 4%+9M Signal auftrat.
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 252)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 252)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>9/126 - 6 Monate True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 126 Tagen (6 Monate) das Signal auftrat.
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 126)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 126)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>9/50 - 50 Tage True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 50 Tagen das Signal auftrat.
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 50)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 50)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>9/20 - 20 Tage True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 20 Tagen das Signal auftrat (frische Sugar Babies).
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 20)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 20)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>9/10 - 10 Tage True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 10 Tagen das Signal auftrat.
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 10)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 10)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>9/5 - 5 Tage True Count</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Zählt wie oft in den letzten 5 Tagen das Signal auftrat (sehr frische Sugar Babies).
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 5)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=8900000, 5)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+        </div>
+
+        <h3>Alternative Formeln (100K Volume)</h3>
+        
+        <div class="formula-grid">
+            <div class="formula-card">
+                <h4>4/252 - 1 Jahr (100K Volume)</h4>
+                <p style="margin-bottom: 10px; color: #666;">
+                    Alternative mit niedrigerem Volume-Threshold (100K statt 9M).
+                </p>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=100000, 252)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=100000, 252)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>4/126 - 6 Monate (100K Volume)</h4>
+                <div class="formula-code">
+                    CountTrue(c/c1>=1.04 and v>v1 and v>=100000, 126)
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'CountTrue(c/c1>=1.04 and v>v1 and v>=100000, 126)')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+        </div>
+
+        <h3>Zusätzliche Ranking-Formeln</h3>
+        
+        <div class="formula-grid">
+            <div class="formula-card">
+                <h4>ROC10 - Rate of Change (10 Tage)</h4>
+                <div class="formula-code">
+                    c/c10
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'c/c10')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>ROC5 - Rate of Change (5 Tage)</h4>
+                <div class="formula-code">
+                    c/c5
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'c/c5')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>TI65 - Trend Intensity</h4>
+                <div class="formula-code">
+                    avgc7/avgc65
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'avgc7/avgc65')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+
+            <div class="formula-card">
+                <h4>MDT - Mean Distance to Trend</h4>
+                <div class="formula-code">
+                    c/avgc126
+                </div>
+                <button class="copy-btn" onclick="copyFormula(this, 'c/avgc126')">
+                    📋 Formel kopieren
+                </button>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>💡 Tipp:</strong>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Die EG100 Liste wird <strong>jedes Wochenende</strong> erstellt und dient sowohl für 
+                <strong>Anticipation</strong> (frühe Erkennung) als auch für <strong>Breakouts</strong> 
+                (reaktive Trades).
+            </p>
+        </div>
+
+        <!-- Quiz 1 -->
+        <div class="quiz-container">
+            <div class="quiz-question">Quiz 1: Was ist das Hauptkriterium für ein Sugar Baby Signal?</div>
+            <div class="quiz-option" onclick="checkAnswer(1, 'a', false)">
+                a) 2% Breakout + 5M Volume
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(1, 'b', true)">
+                b) 4% Breakout + 9M Volume
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(1, 'c', false)">
+                c) 6% Breakout + 10M Volume
+            </div>
+            <div id="feedback1" class="quiz-feedback" style="display: none;"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(4)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 5: Entry-Strategie und Stop Loss -->
+    <div class="section-card locked" data-section="5">
+        <h2><span class="emoji">🎯</span> Entry-Strategie und Stop Loss</h2>
+        
+        <h3>Entry-Timing</h3>
+        
+        <p style="font-size: 1.1em; line-height: 1.8; color: #2d2d2d;">
+            Sugar Babies können auf verschiedene Weise gehandelt werden:
+        </p>
+
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">1. Range Expansion Bar (REB)</h4>
+                <p style="line-height: 1.8;">
+                    Du musst <strong>nicht</strong> auf einen 2LYNCH oder Konsolidierung warten. 
+                    Eine <strong>Range Expansion Bar</strong> allein kann ausreichen, wenn sie das 
+                    4%+9M Signal zeigt.
+                </p>
+                <div class="warning-box" style="margin-top: 15px;">
+                    <strong>⚠️ Wichtig:</strong> Stelle sicher, dass es <strong>nicht 3 Tage in Folge</strong> 
+                    steigt. Die Range Expansion Bar muss der <strong>Start eines 3-5 Tage Swings</strong> sein, 
+                    nicht das Ende einer bereits laufenden Bewegung.
+                </div>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">2. Anticipation Entry</h4>
+                <p style="line-height: 1.8;">
+                    Wenn du eine Sugar Baby <strong>früh erkennst</strong> (z.B. durch EG100 Scanner), 
+                    kannst du <strong>vor dem Breakout</strong> einsteigen. Das erlaubt dir:
+                </p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li>Engeren Stop Loss (weil du früher einsteigst)</li>
+                    <li>Größere Position (weil Risiko geringer)</li>
+                    <li>Mehr Profit-Potenzial (weil du den ganzen Move mitnimmst)</li>
+                </ul>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">3. Breakout Entry</h4>
+                <p style="line-height: 1.8;">
+                    Der klassische Entry: Warte auf das <strong>4%+9M Signal</strong> und steige dann ein. 
+                    Du musst nicht warten, bis die Aktie bereits 4% gestiegen ist – du kannst auch bei 
+                    <strong>weniger als 4%</strong> einsteigen, wenn das Signal klar ist.
+                </p>
+                <div class="warning-box" style="margin-top: 15px;">
+                    <strong>⚠️ Risiko:</strong> Wenn die Aktie intraday wieder fällt, könntest du gestoppt werden.
+                </div>
+            </div>
+        </div>
+
+        <h3>Stop Loss Strategie</h3>
+        
+        <div class="highlight-box">
+            <strong>🛡️ Stop Loss Regel für Sugar Babies:</strong>
+            <p style="margin: 15px 0; font-size: 1.3em; text-align: center; font-weight: 700;">
+                10% Stop Loss
+            </p>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Sugar Babies brauchen <strong>mehr Raum zum Laufen</strong> als normale Trades. 
+                Ein enger Stop würde dich zu oft rauswerfen. Deshalb: <strong>10% Stop Loss</strong>.
+            </p>
+        </div>
+
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #daa520;">
+                <h4 style="color: #b8860b; margin-bottom: 10px;">Position Sizing</h4>
+                <p style="line-height: 1.8;">
+                    Mit einem <strong>10% Stop Loss</strong> musst du möglicherweise <strong>kleinere Positionen</strong> 
+                    nehmen, um dein Risiko zu kontrollieren. ODER: Finde Sugar Babies in <strong>Anticipation</strong>, 
+                    steige früher ein, setze einen engeren Stop und nimm dafür eine <strong>größere Position</strong>.
+                </p>
+            </div>
+
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #daa520;">
+                <h4 style="color: #b8860b; margin-bottom: 10px;">Erweiterte Setups vermeiden</h4>
+                <p style="line-height: 1.8;">
+                    Steige <strong>nicht in bereits erweiterte Setups</strong> ein. Wenn eine Aktie bereits 
+                    3 Tage in Folge gestiegen ist, ist sie wahrscheinlich zu spät. Warte auf die nächste 
+                    Range Expansion Bar oder den nächsten Sugar Baby Kandidaten.
+                </p>
+            </div>
+        </div>
+
+        <!-- Quiz 2 -->
+        <div class="quiz-container">
+            <div class="quiz-question">Quiz 2: Welcher Stop Loss ist für Sugar Babies empfohlen?</div>
+            <div class="quiz-option" onclick="checkAnswer(2, 'a', false)">
+                a) 5% Stop Loss
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(2, 'b', true)">
+                b) 10% Stop Loss
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(2, 'c', false)">
+                c) 15% Stop Loss
+            </div>
+            <div id="feedback2" class="quiz-feedback" style="display: none;"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(5)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 6: Timing und Marktbedingungen -->
+    <div class="section-card locked" data-section="6">
+        <h2><span class="emoji">⏰</span> Timing und Marktbedingungen</h2>
+        
+        <h3>Wann funktionieren Sugar Babies?</h3>
+        
+        <div class="success-box">
+            <h4>✅ Marktbedingungen:</h4>
+            <ul style="line-height: 2; margin-left: 20px;">
+                <li><strong>Sugar Babies funktionieren in JEDEN Marktbedingungen</strong></li>
+                <li>Sie funktionieren <strong>besser in Bull Markets</strong>, aber auch in Bear Markets</li>
+                <li>Sie brauchen <strong>KEINE News</strong> – das technische Signal reicht</li>
+            </ul>
+        </div>
+
+        <h3>Täglicher Workflow</h3>
+        
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">📊 Fokus auf Top 50 Sugar Babies</h4>
+                <p style="line-height: 1.8;">
+                    Schaue dir täglich die <strong>Top 50 Sugar Babies</strong> aus dem EG100 Scanner an. 
+                    Diese sind die vielversprechendsten Kandidaten.
+                </p>
+            </div>
+
+            <div style="background: white; border: 2px solid #daa520; border-radius: 12px; padding: 25px;">
+                <h4 style="color: #b8860b; margin-bottom: 15px;">🔄 3x täglich prüfen</h4>
+                <p style="line-height: 1.8;">
+                    Prüfe die Top 50 Sugar Babies <strong>3 Mal am Tag</strong>:
+                </p>
+                <ul style="line-height: 2; margin-left: 20px; margin-top: 10px;">
+                    <li><strong>Morgens:</strong> Vor Markteröffnung – Anticipation Setups</li>
+                    <li><strong>Mittags:</strong> Während des Tages – Breakout-Signale</li>
+                    <li><strong>Abends:</strong> Nach Marktschluss – Review und Planung</li>
+                </ul>
+            </div>
+        </div>
+
+        <h3>Trade-Erwartungen</h3>
+        
+        <div class="highlight-box">
+            <strong>🎯 Ziel: 20-40 Trades pro Jahr</strong>
+            <p style="margin: 10px 0 0 0; line-height: 1.8;">
+                Sugar Babies sind <strong>nicht für tägliches Trading</strong> gedacht. 
+                Du suchst nach <strong>hochwertigen Setups</strong>, die das Potenzial für 
+                <strong>50%+ Moves</strong> haben. Qualität über Quantität!
+            </p>
+        </div>
+
+        <div style="display: grid; gap: 20px; margin: 30px 0;">
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #38a169;">
+                <h4 style="color: #2d8659; margin-bottom: 10px;">✅ Was funktioniert:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>Range Expansion Bars (auch ohne 2LYNCH)</li>
+                    <li>Anticipation Entries (frühe Erkennung)</li>
+                    <li>Breakout Entries (reaktive Trades)</li>
+                    <li>Alle Marktbedingungen</li>
+                </ul>
+            </div>
+
+            <div style="background: #f7f7f7; padding: 20px; border-radius: 8px; border-left: 4px solid #e53e3e;">
+                <h4 style="color: #c53030; margin-bottom: 10px;">❌ Was vermeiden:</h4>
+                <ul style="line-height: 2; margin-left: 20px;">
+                    <li>Erweiterte Setups (3+ Tage in Folge gestiegen)</li>
+                    <li>Zu enge Stop Losses (< 10%)</li>
+                    <li>Zu viele Trades (Fokus auf Qualität!)</li>
+                    <li>News-abhängige Trades (braucht keine News!)</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Quiz 3 -->
+        <div class="quiz-container">
+            <div class="quiz-question">Quiz 3: Wie oft solltest du die Top 50 Sugar Babies täglich prüfen?</div>
+            <div class="quiz-option" onclick="checkAnswer(3, 'a', false)">
+                a) 1x täglich
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(3, 'b', true)">
+                b) 3x täglich
+            </div>
+            <div class="quiz-option" onclick="checkAnswer(3, 'c', false)">
+                c) 5x täglich
+            </div>
+            <div id="feedback3" class="quiz-feedback" style="display: none;"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-next" onclick="completeSection(6)">✅ Abschnitt abschließen →</button>
+        </div>
+    </div>
+
+    <!-- Section 7: Key Takeaways -->
+    <div class="section-card locked" data-section="7">
+        <h2><span class="emoji">🎯</span> Key Takeaways</h2>
+        
+        <div class="key-takeaways">
+            <h3>🎯 Sugar Babies Master - Die wichtigsten Erkenntnisse</h3>
+            <ul>
+                <li><strong>Sugar Babies sind verfeinerte EP-Strategie</strong> – sie zielen auf 50%+ Moves ab, nicht nur auf normale Breakouts.</li>
+                
+                <li><strong>Das Signal ist eindeutig:</strong> 4% Breakout + 9M Volume. Beide Kriterien müssen gleichzeitig erfüllt sein.</li>
+                
+                <li><strong>True Count ist das Geheimnis</strong> – er zeigt dir, wie konsistent eine Aktie große Moves macht.</li>
+                
+                <li><strong>Neue Sugar Babies entstehen ständig</strong> – schaue dir die letzten 5/10/20/50 Tage an, um frische Kandidaten zu finden.</li>
+                
+                <li><strong>10% Stop Loss ist Standard</strong> – Sugar Babies brauchen mehr Raum zum Laufen. Kleinere Positionen oder frühere Entries sind die Lösung.</li>
+                
+                <li><strong>Range Expansion Bar reicht</strong> – du brauchst nicht unbedingt 2LYNCH oder Konsolidierung. Aber: Nicht 3 Tage in Folge gestiegen!</li>
+                
+                <li><strong>Sugar Babies funktionieren überall</strong> – in Bull Markets, Bear Markets, mit oder ohne News.</li>
+                
+                <li><strong>Fokus auf Top 50, 3x täglich prüfen</strong> – Qualität über Quantität. 20-40 Trades pro Jahr sind das Ziel.</li>
+                
+                <li><strong>Anticipation ist der Schlüssel</strong> – frühe Erkennung erlaubt engere Stops und größere Positionen.</li>
+                
+                <li><strong>EP + EP9 + Sugar Babies = Turbo-charged Returns</strong> – kombiniere verschiedene Strategien für maximale Performance.</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 40px;">
+            <strong>🚀 Nächste Schritte:</strong>
+            <ol style="margin: 15px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                <li>Erstelle einen <strong>EG100 Scanner</strong> in TC2000 mit allen True Count Formeln</li>
+                <li>Fokussiere dich auf die <strong>Top 50 Sugar Babies</strong> täglich</li>
+                <li>Prüfe die Liste <strong>3x täglich</strong> (morgens, mittags, abends)</li>
+                <li>Beginne mit <strong>Paper Trading</strong> für 2-4 Wochen</li>
+                <li>Dokumentiere jeden Trade in deinem <strong>Trading Journal</strong></li>
+                <li>Nach 10-20 Trades: Analysiere Win-Rate und durchschnittlichen Profit</li>
+                <li>Kombiniere mit <strong>EP und EP9 Strategien</strong> für maximale Returns</li>
+            </ol>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px;">
+            <button class="btn-gold" onclick="completeModule()">🎓 Modul abschließen</button>
+        </div>
+    </div>
+
+</div>
+
+<!-- Lightbox Modal -->
+<div id="lightboxModal" style="display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); cursor: pointer;" onclick="closeLightbox()">
+    <img id="lightboxImage" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%; border-radius: 12px;">
+    <span style="position: absolute; top: 20px; right: 40px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+</div>
+
+<!-- Navigation Include -->
+{% include '_navigation.html' %}
+
+<script>
+    // Progressive Disclosure State
+    let currentSection = 1;
+    let completedSections = new Set([1]);
+    const totalSections = 7;
+    
+    // Quiz State
+    let quizAnswers = {
+        1: { correct: 'b', answered: false },
+        2: { correct: 'b', answered: false },
+        3: { correct: 'b', answered: false }
+    };
+    let quizScore = 0;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProgress();
+        updateProgressBar();
+    });
+
+    // Load Progress from localStorage
+    function loadProgress() {
+        const saved = localStorage.getItem('sugar_babies_progress');
+        if (saved) {
+            const data = JSON.parse(saved);
+            currentSection = data.currentSection || 1;
+            completedSections = new Set(data.completedSections || [1]);
+            quizScore = data.quizScore || 0;
+            
+            // Unlock completed sections
+            completedSections.forEach(section => {
+                const sectionCard = document.querySelector(`[data-section="${section}"]`);
+                if (sectionCard) {
+                    sectionCard.classList.remove('locked');
+                }
+            });
+        }
+    }
+
+    // Save Progress to localStorage
+    function saveProgress() {
+        const data = {
+            currentSection: currentSection,
+            completedSections: Array.from(completedSections),
+            quizScore: quizScore
+        };
+        localStorage.setItem('sugar_babies_progress', JSON.stringify(data));
+    }
+
+    // Update Progress Bar
+    function updateProgressBar() {
+        const progress = (completedSections.size / totalSections) * 100;
+        document.getElementById('progress-fill').style.width = progress + '%';
+        document.getElementById('progress-text').textContent = Math.round(progress) + '%';
+    }
+
+    // Complete Section
+    function completeSection(sectionNumber) {
+        completedSections.add(sectionNumber);
+        currentSection = sectionNumber + 1;
+        
+        // Unlock next section
+        const nextSection = document.querySelector(`[data-section="${currentSection}"]`);
+        if (nextSection) {
+            nextSection.classList.remove('locked');
+            setTimeout(() => {
+                nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 300);
+        }
+        
+        updateProgressBar();
+        saveProgress();
+    }
+
+    // Quiz Functions
+    function checkAnswer(quizNumber, selectedOption, isCorrect) {
+        const quiz = quizAnswers[quizNumber];
+        if (quiz.answered) return; // Already answered
+        
+        quiz.answered = true;
+        const feedback = document.getElementById('feedback' + quizNumber);
+        const options = document.querySelectorAll(`#feedback${quizNumber}`).length > 0 
+            ? document.querySelectorAll(`[onclick*="checkAnswer(${quizNumber}"]`)
+            : [];
+        
+        // Mark all options
+        document.querySelectorAll(`[onclick*="checkAnswer(${quizNumber}"]`).forEach(opt => {
+            opt.classList.remove('selected', 'correct', 'incorrect');
+            if (opt.textContent.trim().startsWith(selectedOption + ')')) {
+                opt.classList.add('selected');
+                if (isCorrect) {
+                    opt.classList.add('correct');
+                    quizScore++;
+                } else {
+                    opt.classList.add('incorrect');
+                }
+            }
+        });
+        
+        // Show feedback
+        if (feedback) {
+            feedback.style.display = 'block';
+            if (isCorrect) {
+                feedback.className = 'quiz-feedback correct';
+                feedback.innerHTML = '🎉 <strong>Richtig!</strong> Du hast das Konzept verstanden!';
+            } else {
+                feedback.className = 'quiz-feedback incorrect';
+                feedback.innerHTML = '❌ <strong>Nicht ganz richtig.</strong> Versuche es nochmal oder lies den Abschnitt erneut.';
+            }
+        }
+        
+        saveProgress();
+    }
+
+    // Copy Formula Function
+    function copyFormula(button, formula) {
+        navigator.clipboard.writeText(formula).then(() => {
+            const originalText = button.textContent;
+            button.textContent = '✓ Kopiert!';
+            button.style.background = '#38a169';
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.style.background = '';
+            }, 2000);
+        }).catch(() => {
+            alert('Formel kopiert: ' + formula);
+        });
+    }
+
+    // Lightbox Functions
+    function openLightbox(imageSrc) {
+        const modal = document.getElementById('lightboxModal');
+        const modalImg = document.getElementById('lightboxImage');
+        modal.style.display = 'block';
+        modalImg.src = imageSrc;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        const modal = document.getElementById('lightboxModal');
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Close lightbox on ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeLightbox();
+        }
+    });
+
+    // Complete Module
+    function completeModule() {
+        const finalScore = quizScore;
+        const totalQuizzes = Object.keys(quizAnswers).length;
+        
+        alert(`🎉 Modul abgeschlossen!\n\nQuiz-Score: ${finalScore}/${totalQuizzes}\n\nHerzlichen Glückwunsch! Du hast die Sugar Babies Strategie gemeistert.`);
+        
+        // Mark as completed
+        completedSections.add(totalSections);
+        saveProgress();
+        updateProgressBar();
+    }
+</script>
+
+{% endblock %}
+
