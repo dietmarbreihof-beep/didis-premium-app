@@ -681,7 +681,7 @@
         <div class="crash-stats">
             <div class="stat-card">
                 <div class="stat-value">-15.28%</div>
-                <div class="stat-label">S&P 500 Jahresverlust</div>
+                <div class="stat-label">S&P 500 Max Drawdown</div>
             </div>
             <div class="stat-card">
                 <div class="stat-value">45.3</div>
@@ -1004,7 +1004,73 @@
             </div>
         </div>
 
-        <!-- Interactive Quiz Section -->
+        <!-- Recovery and Lessons Section -->
+        <div class="content-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2 class="section-title">Die Erholung und wichtige Lektionen</h2>
+                <i class="fas fa-chevron-down expand-icon"></i>
+            </div>
+            <div class="section-content" id="section5">
+                <h3>Von der Panik zur Rekord-Rally</h3>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">9.<br>April</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Historische Tageserholung</div>
+                            <p><strong>S&P 500: +9,52% in einem Tag</strong><br>
+                            Größter Tagesgewinn seit 2008, ausgelöst durch Trump's Zoll-Pause-Ankündigung</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">13.<br>Mai</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Positiv für 2025</div>
+                            <p><strong>S&P 500 drehte ins Plus</strong><br>
+                            Komplette Erholung der Jahresverluste in nur 5 Wochen</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">27.<br>Juni</div>
+                        <div class="timeline-content">
+                            <div class="timeline-title">Neue Allzeithochs</div>
+                            <p><strong>S&P 500 und Nasdaq auf Rekordniveau</strong><br>
+                            Vollständige Erholung und neue Höchststände in unter 3 Monaten</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <div class="insight-title">
+                        <i class="fas fa-graduation-cap"></i>
+                        Die wichtigsten Trading-Lektionen
+                    </div>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li><strong>Extreme Sentiment = Wendepunkte:</strong> VIX über 40 und extreme Fear-Werte signalisieren oft Marktbodens</li>
+                        <li><strong>Politische Risiken sind temporär:</strong> Märkte übertreiben politische Schocks, erholen sich aber schnell</li>
+                        <li><strong>Defensive Rotation funktioniert:</strong> In Krisen fliehen Investoren in sichere Sektoren</li>
+                        <li><strong>Die besten Rallys beginnen bei maximaler Angst:</strong> +9,52% an einem Tag nach Kapitulation</li>
+                        <li><strong>Quality überlebt:</strong> Starke Unternehmen erholen sich schneller und stärker</li>
+                    </ul>
+                </div>
+
+                <div class="warning-box">
+                    <div class="warning-title">
+                        <i class="fas fa-shield-alt"></i>
+                        Risikomanagement-Erkenntnisse
+                    </div>
+                    <p><strong>Diversifikation war entscheidend:</strong> Während Tech -20% verlor, gewannen Utilities +11,5%. Ein ausgewogenes Portfolio hätte die Verluste deutlich begrenzt. Die Fondsmanager mit 4,8% Cash-Positionen konnten die Tiefststände für Nachkäufe nutzen.</p>
+                </div>
+
+                <div class="interactive-element" onclick="selectElement(this, 5)">
+                    <strong>Crash-Überlebens-Strategie:</strong> Halte immer Liquiditätsreserven, diversifiziere über Sektoren, und kaufe bei extremen Sentiment-Readings nach. Die größten Gewinne entstehen, wenn andere in Panik verkaufen.
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Quiz Section - NACH allen Inhalten -->
         <div class="content-section">
             <div class="section-header" onclick="toggleSection(this)">
                 <h2 class="section-title">🧠 Wissenstest: Börsencrash März 2025</h2>
@@ -1081,72 +1147,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Recovery and Lessons Section -->
-        <div class="content-section">
-            <div class="section-header" onclick="toggleSection(this)">
-                <h2 class="section-title">Die Erholung und wichtige Lektionen</h2>
-                <i class="fas fa-chevron-down expand-icon"></i>
-            </div>
-            <div class="section-content" id="section5">
-                <h3>Von der Panik zur Rekord-Rally</h3>
-                
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">9.<br>April</div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">Historische Tageserholung</div>
-                            <p><strong>S&P 500: +9,52% in einem Tag</strong><br>
-                            Größter Tagesgewinn seit 2008, ausgelöst durch Trump's Zoll-Pause-Ankündigung</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-date">13.<br>Mai</div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">Positiv für 2025</div>
-                            <p><strong>S&P 500 drehte ins Plus</strong><br>
-                            Komplette Erholung der Jahresverluste in nur 5 Wochen</p>
-                        </div>
-                    </div>
-
-                    <div class="timeline-item">
-                        <div class="timeline-date">27.<br>Juni</div>
-                        <div class="timeline-content">
-                            <div class="timeline-title">Neue Allzeithochs</div>
-                            <p><strong>S&P 500 und Nasdaq auf Rekordniveau</strong><br>
-                            Vollständige Erholung und neue Höchststände in unter 3 Monaten</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="insight-box">
-                    <div class="insight-title">
-                        <i class="fas fa-graduation-cap"></i>
-                        Die wichtigsten Trading-Lektionen
-                    </div>
-                    <ul style="margin-left: 20px; line-height: 1.8;">
-                        <li><strong>Extreme Sentiment = Wendepunkte:</strong> VIX über 40 und extreme Fear-Werte signalisieren oft Marktbodens</li>
-                        <li><strong>Politische Risiken sind temporär:</strong> Märkte übertreiben politische Schocks, erholen sich aber schnell</li>
-                        <li><strong>Defensive Rotation funktioniert:</strong> In Krisen fliehen Investoren in sichere Sektoren</li>
-                        <li><strong>Die besten Rallys beginnen bei maximaler Angst:</strong> +9,52% an einem Tag nach Kapitulation</li>
-                        <li><strong>Quality überlebt:</strong> Starke Unternehmen erholen sich schneller und stärker</li>
-                    </ul>
-                </div>
-
-                <div class="warning-box">
-                    <div class="warning-title">
-                        <i class="fas fa-shield-alt"></i>
-                        Risikomanagement-Erkenntnisse
-                    </div>
-                    <p><strong>Diversifikation war entscheidend:</strong> Während Tech -20% verlor, gewannen Utilities +11,5%. Ein ausgewogenes Portfolio hätte die Verluste deutlich begrenzt. Die Fondsmanager mit 4,8% Cash-Positionen konnten die Tiefststände für Nachkäufe nutzen.</p>
-                </div>
-
-                <div class="interactive-element" onclick="selectElement(this, 5)">
-                    <strong>Crash-Überlebens-Strategie:</strong> Halte immer Liquiditätsreserven, diversifiziere über Sektoren, und kaufe bei extremen Sentiment-Readings nach. Die größten Gewinne entstehen, wenn andere in Panik verkaufen.
-                </div>
-            </div>
-        </div>
     </div>
 
     <script>
@@ -1156,7 +1156,7 @@
         // Quiz Data - 10 Fragen zum Börsencrash März 2025
         const quizData = [
             {
-                question: "Um wie viel Prozent fiel der S&P 500 vom Jahreshoch bis zum Tiefpunkt am 8. April 2025?",
+                question: "Wie hoch war der maximale Drawdown des S&P 500 vom Hoch bis zum Tiefpunkt am 8. April 2025?",
                 options: [
                     "10,28%",
                     "15,28%", 
@@ -1164,7 +1164,7 @@
                     "12,75%"
                 ],
                 correct: 1,
-                explanation: "Der S&P 500 verlor 15,28% seit Jahresbeginn und erreichte am 8. April bei 4.982,77 Punkten seinen Tiefpunkt."
+                explanation: "Der S&P 500 verlor 15,28% vom Hoch und erreichte am 8. April bei 4.982,77 Punkten seinen Tiefpunkt - das war der maximale Drawdown."
             },
             {
                 question: "Welchen Höchststand erreichte der VIX-Volatilitätsindex während des Crashs?",
