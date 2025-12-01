@@ -601,6 +601,53 @@
         font-weight: 600;
     }
 
+    .ev-wrapper .reset-btn {
+        background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+        color: white;
+        border: 2px solid #9ca3af;
+        padding: 15px 35px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+        margin: 20px 10px;
+    }
+
+    .ev-wrapper .reset-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 25px rgba(107, 114, 128, 0.4);
+        background: linear-gradient(135deg, #4b5563 0%, #374151 100%);
+        border-color: #d1d5db;
+    }
+    
+    .ev-wrapper .reset-btn-hero {
+        position: relative;
+        z-index: 10;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        padding: 12px 28px;
+        border-radius: 12px;
+        font-size: 1em;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        display: inline-block;
+        margin: 15px 10px 0 10px;
+        backdrop-filter: blur(10px);
+    }
+
+    .ev-wrapper .reset-btn-hero:hover {
+        transform: scale(1.05);
+        background: rgba(255, 255, 255, 0.3);
+        border-color: rgba(255, 255, 255, 0.6);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+
     @media (max-width: 768px) {
         .ev-wrapper .hero-section h1 {
             font-size: 2em;
@@ -633,6 +680,10 @@
     <div class="hero-section">
         <h1>💰 Expected Value Mastery</h1>
         <p class="subtitle">Das fundamentalste Konzept im Trading</p>
+        
+        <button class="reset-btn-hero" onclick="resetModule()" title="Modul von vorne beginnen">
+            🔄 Modul zurücksetzen
+        </button>
         
         <div class="stats-container">
             <div class="stat-card">
@@ -1060,6 +1111,12 @@
                 <div style="text-align: center; margin-top: 50px;">
                     <p style="font-size: 1.3em; color: #b8860b; font-weight: 700;">🎉 Glückwunsch! Du hast Expected Value Mastery abgeschlossen!</p>
                     <p style="font-size: 1.1em; margin-top: 20px;">Wende dieses Konzept in JEDEM Trade an und beobachte, wie sich deine Performance transformiert! 💰🚀</p>
+                    
+                    <div style="margin-top: 40px;">
+                        <button class="reset-btn" onclick="resetModule()">
+                            🔄 Modul von vorne wiederholen
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1201,6 +1258,53 @@
             trackCompletion();
         }
     });
+
+    // Reset Module Function
+    function resetModule() {
+        if (confirm('Möchtest du das Modul wirklich zurücksetzen? Dein Fortschritt wird gelöscht.')) {
+            // Clear localStorage
+            localStorage.removeItem('expected_value_progress');
+            localStorage.removeItem('expected_value_completed');
+            localStorage.removeItem('expected_value_completion_date');
+            
+            // Reset calculator fields
+            document.getElementById('avgWin').value = '';
+            document.getElementById('winRate').value = '';
+            document.getElementById('avgLoss').value = '';
+            document.getElementById('lossRate').value = '';
+            
+            // Hide result box
+            const resultBox = document.getElementById('resultBox');
+            if (resultBox) {
+                resultBox.classList.remove('show');
+            }
+            
+            // Reset quiz answers
+            const quizContainers = document.querySelectorAll('.quiz-container');
+            quizContainers.forEach(container => {
+                const options = container.querySelectorAll('.quiz-option');
+                options.forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                const feedback = container.querySelector('.quiz-feedback');
+                if (feedback) {
+                    feedback.className = 'quiz-feedback';
+                    feedback.innerHTML = '';
+                }
+            });
+            
+            // Clear quiz answers object
+            for (let key in quizAnswers) {
+                delete quizAnswers[key];
+            }
+            
+            // Go back to step 1
+            showStep(1);
+            
+            // Success message
+            alert('✅ Modul wurde zurückgesetzt! Du kannst jetzt von vorne beginnen.');
+        }
+    }
 </script>
 
 {% include '_navigation.html' %}
