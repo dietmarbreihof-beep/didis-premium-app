@@ -1602,24 +1602,44 @@ def modules():
 @app.route('/module/<slug>')
 def module_view(slug):
     """Erweiterte Modul-Ansicht"""
-    try:
-        module = LearningModule.query.filter_by(slug=slug, is_published=True).first()
-    except:
-        module = None
-        
-    if not module:
-        flash('Modul nicht gefunden.', 'error')
-        return redirect(url_for('home'))
-    
-    # Zugriff prüfen
+    # Zugriff prüfen (muss VOR Modul-Abfrage passieren, damit Admins auch nicht-veröffentlichte Module sehen)
     user_subscription = "free"
     username = None
     if session.get('logged_in'):
         user_subscription = session.get('user', {}).get('membership', 'free')
         username = session.get('user', {}).get('username')
     
-    # Admin und Didi haben immer Zugriff auf alle Module
+    # Admin und Didi haben immer Zugriff auf alle Module (auch nicht-veröffentlichte)
     is_admin = username in ['admin', 'didi']
+    
+    # Debug: Log für Admins
+    if is_admin:
+        print(f"[DEBUG] Admin-Zugriff auf Modul: slug={slug}, username={username}")
+    
+    # Modul laden: Admins sehen auch nicht-veröffentlichte Module
+    try:
+        if is_admin:
+            # Admin: Lade Modul unabhängig vom Veröffentlichungsstatus
+            module = LearningModule.query.filter_by(slug=slug).first()
+            if not module:
+                # Fallback: Versuche auch ohne Slug-Filter (falls Slug leer ist)
+                print(f"[DEBUG] Modul mit slug='{slug}' nicht gefunden, suche alle Module...")
+                all_modules = LearningModule.query.all()
+                print(f"[DEBUG] Gefundene Module: {[(m.id, m.slug, m.title) for m in all_modules[:5]]}")
+        else:
+            # Normaler User: Nur veröffentlichte Module
+            module = LearningModule.query.filter_by(slug=slug, is_published=True).first()
+    except Exception as e:
+        print(f"[ERROR] Fehler beim Laden des Moduls: {e}")
+        module = None
+        
+    if not module:
+        error_msg = f'Modul nicht gefunden (slug: {slug}).'
+        if is_admin:
+            error_msg += ' Als Admin solltest du alle Module sehen können. Prüfe ob das Modul einen Slug hat.'
+        flash(error_msg, 'error')
+        print(f"[ERROR] Modul nicht gefunden: slug={slug}, is_admin={is_admin}")
+        return redirect(url_for('home'))
     
     if not is_admin and not module.user_has_access(user_subscription):
         flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
@@ -1674,7 +1694,8 @@ def module_view(slug):
         return render_template(module.template_file, 
                              module=module, 
                              prev_module=prev_module, 
-                             next_module=next_module)
+                             next_module=next_module,
+                             is_admin=is_admin)
     else:
         # Standard-Template für neue Module
         # Navigation-Daten ermitteln
@@ -1682,7 +1703,68 @@ def module_view(slug):
         return render_template('module_default.html', 
                              module=module, 
                              prev_module=prev_module, 
-                             next_module=next_module)
+                             next_module=next_module,
+                             is_admin=is_admin)
+
+@app.route('/admin/module-preview/<int:module_id>')
+@admin_required
+def admin_module_preview(module_id):
+    """Admin-Vorschau für Module direkt über ID (auch ohne Slug und auch unveröffentlichte Module)"""
+    import os
+    
+    try:
+        # Lade Modul unabhängig vom Veröffentlichungsstatus (Admin-Vorschau!)
+        module = LearningModule.query.get_or_404(module_id)
+    except:
+        flash('Modul nicht gefunden.', 'error')
+        return redirect(url_for('admin_modules'))
+    
+    # Admin-Navigation (auch unveröffentlichte Module einbeziehen)
+    prev_module, next_module = get_admin_module_navigation(module)
+    
+    # Content-Type bestimmen
+    if module.content_type == "streamlit" and module.external_url:
+        return redirect(module.external_url)
+    elif module.template_file:
+        # Prüfe ob Template-Datei existiert
+        template_path = os.path.join(app.root_path, 'templates', module.template_file)
+        if not os.path.exists(template_path):
+            # Template existiert nicht - zeige Fallback mit Hinweis
+            flash(f'⚠️ Template-Datei "{module.template_file}" nicht gefunden. Zeige Standard-Vorschau.', 'warning')
+            return render_template('module_default.html', 
+                                 module=module, 
+                                 prev_module=prev_module, 
+                                 next_module=next_module,
+                                 is_admin=True)
+        
+        # Prüfe ob es eine standalone HTML-Seite ist
+        if module.template_file in ['better-volume-lernseite.html', 'trading_archetypen.html']:
+            try:
+                return send_from_directory('templates', module.template_file)
+            except Exception as e:
+                print(f"Fehler beim Laden von standalone HTML: {e}")
+                pass
+        
+        try:
+            return render_template(module.template_file, 
+                                 module=module, 
+                                 prev_module=prev_module, 
+                                 next_module=next_module,
+                                 is_admin=True)
+        except Exception as e:
+            # Template-Fehler - zeige Fallback mit Fehlermeldung
+            flash(f'⚠️ Fehler beim Laden des Templates "{module.template_file}": {str(e)}', 'error')
+            return render_template('module_default.html', 
+                                 module=module, 
+                                 prev_module=prev_module, 
+                                 next_module=next_module,
+                                 is_admin=True)
+    else:
+        return render_template('module_default.html', 
+                             module=module, 
+                             prev_module=prev_module, 
+                             next_module=next_module,
+                             is_admin=True)
 
 @app.route('/module/better-volume-indicator')
 def better_volume_indicator():
@@ -1926,6 +2008,68 @@ def expected_value():
     prev_module, next_module = get_module_navigation(module) if module else (None, None)
     
     return render_template('expected_value.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
+@app.route('/einfluss-geld-beziehung')
+def einfluss_geld_beziehung():
+    """Einfluss der persönlichen Beziehung zum Geld - Trading Psychologie"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='einfluss-geld-beziehung').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='einfluss-geld-beziehung'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('einfluss-geld-beziehung.html', 
                          module=module, 
                          prev_module=prev_module, 
                          next_module=next_module)
@@ -2760,6 +2904,49 @@ def get_module_navigation(current_module):
     next_module = modules_in_category[current_index + 1] if current_index < len(modules_in_category) - 1 else None
     
     return prev_module, next_module
+
+
+def get_admin_module_navigation(current_module):
+    """
+    Ermittelt vorheriges und nächstes Modul für Admin-Navigation.
+    Unterschied zu get_module_navigation: Bezieht ALLE Module ein (auch unveröffentlichte)!
+    """
+    if not current_module:
+        return None, None
+    
+    # Prüfe ob es ein echtes Datenbank-Modul ist
+    if not hasattr(current_module, 'category_id') or not hasattr(current_module, 'id'):
+        # Temporäres Modul (SimpleNamespace) - keine Navigation verfügbar
+        return None, None
+    
+    try:
+        # ADMIN: Alle Module in derselben Kategorie (auch unveröffentlichte!), sortiert nach sort_order
+        modules_in_category = LearningModule.query.filter_by(
+            category_id=current_module.category_id
+            # KEIN is_published Filter für Admin!
+        ).order_by(LearningModule.sort_order, LearningModule.id).all()
+        
+        current_index = None
+        for i, module in enumerate(modules_in_category):
+            if module.id == current_module.id:
+                current_index = i
+                break
+        
+        if current_index is None:
+            return None, None
+    except Exception as e:
+        # Bei Fehlern keine Navigation anzeigen
+        print(f"Fehler bei Admin-Navigation-Ermittlung: {e}")
+        return None, None
+    
+    # Vorheriges Modul
+    prev_module = modules_in_category[current_index - 1] if current_index > 0 else None
+    
+    # Nächstes Modul
+    next_module = modules_in_category[current_index + 1] if current_index < len(modules_in_category) - 1 else None
+    
+    return prev_module, next_module
+
 
 # === NEUE LERNMODULE (CURSOR) - Premium Content ===
 
