@@ -364,6 +364,45 @@ Features: Interactive Charts, Quiz, Key Takeaways
   • Market Wizards: Qullamaggie & Lance Breitstein
 ```
 
+**Beispiel 1i: Breaking News Trading (NEU - Dezember 2025)**
+```
+@new-module-page Breaking News Trading
+- HTML-Seite: templates/breaking-news-trading.html ✅
+- Quelle: 2. Lance Breitstein/News/Breaking News 3 Parts.txt ✅
+- Kategorie: Trading-Setups → News Trading ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (3 Teile), Quiz-System (3 Fragen), News-Quellen-Übersicht, Filter-Checkliste, Tägliches Protokoll, Key Takeaways
+- Schwierigkeit: Fortgeschritten ⭐⭐
+- Dauer: 45 Minuten
+- Route: /breaking-news-trading ✅
+- Kernthemen:
+  • Teil 1: News-Quellen & Zugang (Bloomberg, Reuters, NewsEdge, Squawks, CNBC, Twitter)
+  • Teil 2: Filter-Systeme aufbauen (Backtesting + Forward Testing)
+  • Teil 3: Headlines analysieren (2 Kernfragen: Material? Frisch?)
+  • Konsistente Kategorien: M&A, Index-Changes, Offerings
+  • Tägliches News-Protokoll führen
+```
+
+**Beispiel 1j: Trading Strategie Typen (NEU - Dezember 2025)**
+```
+@new-module-page Trading Strategie Typen
+- HTML-Seite: templates/trading-strategie-typen.html ✅
+- Quelle: 2. Lance Breitstein/Trading Konzepte/Typen Trading Strategy.txt ✅
+- Kategorie: Trading-Psychologie → Strategie-Framework ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (7 Sections), Quiz-System (3 Fragen), Interaktive Strategie-Cards, Vergleichstabelle, Markt-Umfeld-Analyse, Reflexions-Box, Key Takeaways
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 30 Minuten
+- Route: /trading-strategie-typen ✅
+- Kernthemen:
+  • Die zwei fundamentalen Trading-Typen: Price Expansion vs Price Reversion
+  • Price Expansion: Breakouts, Breakdowns, Breaking News, Overnight Momentum
+  • Price Reversion: Kapitulation, Counter-Trend, Mean Reversion
+  • Marktumgebungen: Bull/Bear Märkte → Expansion; Paniken → Reversion
+  • Warum du BEIDE Typen beherrschen solltest
+  • Diversifiziere dein Playbook für jedes Marktumfeld
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
@@ -387,7 +426,7 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 ---
 
-**Zuletzt aktualisiert:** 29. November 2025  
+**Zuletzt aktualisiert:** 3. Dezember 2025  
 **Projekt:** Didis Premium Trading Academy  
 **Version:** 1.0
 

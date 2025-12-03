@@ -1,0 +1,1202 @@
+{% extends "base.html" %}
+
+{% block title %}Trading Strategie Typen - Price Expansion vs Price Reversion{% endblock %}
+
+{% block content %}
+<div class="strategy-types-wrapper">
+<style>
+    .strategy-types-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .strategy-types-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(218,165,32,0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.5; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-section .author {
+        font-size: 1.1em;
+        opacity: 0.8;
+        font-style: italic;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Two Column Cards in Hero */
+    .strategy-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        max-width: 900px;
+        margin: 40px auto 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    @media (max-width: 768px) {
+        .strategy-preview-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .hero-section h1 {
+            font-size: 2em;
+        }
+    }
+
+    .strategy-preview-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        padding: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-align: left;
+        transition: all 0.3s ease;
+    }
+
+    .strategy-preview-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+    }
+
+    .strategy-preview-card h3 {
+        font-size: 1.5em;
+        margin: 0 0 15px 0;
+        color: #f4e97b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .strategy-preview-card p {
+        margin: 0;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        background: white;
+        padding: 20px 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: 0 auto 30px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .progress-bar {
+        flex: 1;
+        height: 12px;
+        background: #e0e0e0;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+        border-radius: 6px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    .progress-text {
+        font-weight: 700;
+        color: #1a1a1a;
+        min-width: 100px;
+        text-align: right;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 16px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.5s ease;
+        opacity: 1;
+    }
+
+    .section-card.locked {
+        opacity: 0.4;
+        pointer-events: none;
+        filter: blur(2px);
+        position: relative;
+    }
+
+    .section-card.locked::after {
+        content: '🔒 Vorherigen Abschnitt abschließen';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        padding: 20px 40px;
+        border-radius: 12px;
+        font-weight: 700;
+        font-size: 1.1em;
+        white-space: nowrap;
+        z-index: 10;
+    }
+
+    .section-card h2 {
+        color: #1a1a1a;
+        font-size: 2em;
+        margin: 0 0 25px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-card h3 {
+        color: #2d2d2d;
+        font-size: 1.5em;
+        margin: 35px 0 20px 0;
+        border-bottom: 2px solid #daa520;
+        padding-bottom: 10px;
+    }
+
+    .section-card p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    /* Strategy Type Cards */
+    .strategy-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+        margin: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+        .strategy-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .strategy-card {
+        border-radius: 16px;
+        padding: 35px;
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    .strategy-card.expansion {
+        background: linear-gradient(135deg, #1a5f1a 0%, #2d8f2d 100%);
+        color: white;
+        border: 2px solid #38a169;
+    }
+
+    .strategy-card.reversion {
+        background: linear-gradient(135deg, #1a1a5f 0%, #2d2d8f 100%);
+        color: white;
+        border: 2px solid #6366f1;
+    }
+
+    .strategy-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .strategy-card.selected {
+        box-shadow: 0 0 0 4px #f4e97b;
+    }
+
+    .strategy-card h4 {
+        font-size: 1.6em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .strategy-card ul {
+        margin: 0;
+        padding-left: 25px;
+    }
+
+    .strategy-card li {
+        margin-bottom: 12px;
+        line-height: 1.5;
+    }
+
+    /* Example Cards */
+    .example-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 30px 0;
+    }
+
+    .example-card {
+        background: white;
+        border: 2px solid #daa520;
+        border-radius: 12px;
+        padding: 25px;
+        transition: all 0.3s ease;
+    }
+
+    .example-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(184, 134, 11, 0.25);
+    }
+
+    .example-card .example-type {
+        font-size: 0.85em;
+        color: #b8860b;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+    }
+
+    .example-card h5 {
+        font-size: 1.3em;
+        color: #1a1a1a;
+        margin: 0 0 15px 0;
+    }
+
+    .example-card p {
+        color: #666;
+        font-size: 1em;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(244,233,123,0.3) 0%, rgba(218,165,32,0.3) 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 30px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.2em;
+        display: block;
+        margin-bottom: 12px;
+        color: #1a1a1a;
+    }
+
+    .highlight-box p {
+        margin: 0;
+        color: #333;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        color: white;
+    }
+
+    .insight-box h4 {
+        color: #f4e97b;
+        font-size: 1.3em;
+        margin: 0 0 15px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .insight-box p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 0;
+    }
+
+    /* Market Environment Cards */
+    .market-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 25px;
+        margin: 30px 0;
+    }
+
+    @media (max-width: 768px) {
+        .market-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .market-card {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        border-top: 4px solid;
+        transition: all 0.3s ease;
+    }
+
+    .market-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .market-card.bull { border-top-color: #38a169; }
+    .market-card.bear { border-top-color: #e53e3e; }
+    .market-card.ipo { border-top-color: #6366f1; }
+    .market-card.panic { border-top-color: #d69e2e; }
+
+    .market-card h5 {
+        font-size: 1.3em;
+        color: #1a1a1a;
+        margin: 0 0 15px 0;
+    }
+
+    .market-card .favors {
+        font-size: 1.1em;
+        font-weight: 700;
+        margin: 15px 0;
+    }
+
+    .market-card .favors.expansion { color: #38a169; }
+    .market-card .favors.reversion { color: #6366f1; }
+
+    /* Quiz Styles */
+    .quiz-container {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        border-radius: 16px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .quiz-container h3 {
+        color: #f4e97b;
+        font-size: 1.5em;
+        margin: 0 0 30px 0;
+        border-bottom: none;
+        text-align: center;
+    }
+
+    .quiz-question {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 12px;
+        padding: 30px;
+        margin-bottom: 20px;
+    }
+
+    .quiz-question h4 {
+        color: white;
+        font-size: 1.2em;
+        margin: 0 0 20px 0;
+    }
+
+    .quiz-options {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .quiz-option {
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        padding: 18px 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: white;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .quiz-option:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #daa520;
+    }
+
+    .quiz-option.selected {
+        background: rgba(218, 165, 32, 0.3);
+        border-color: #daa520;
+    }
+
+    .quiz-option.correct {
+        background: rgba(56, 161, 105, 0.4);
+        border-color: #38a169;
+    }
+
+    .quiz-option.incorrect {
+        background: rgba(229, 62, 62, 0.4);
+        border-color: #e53e3e;
+    }
+
+    .quiz-feedback {
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+        text-align: center;
+        font-weight: 600;
+        display: none;
+    }
+
+    .quiz-feedback.show { display: block; }
+    .quiz-feedback.correct { background: rgba(56, 161, 105, 0.3); color: #9ae6b4; }
+    .quiz-feedback.incorrect { background: rgba(229, 62, 62, 0.3); color: #feb2b2; }
+
+    /* Unlock Button */
+    .unlock-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        padding: 18px 40px;
+        border-radius: 12px;
+        border: none;
+        font-weight: 700;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 20px rgba(184, 134, 11, 0.4);
+        margin-top: 30px;
+    }
+
+    .unlock-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 8px 30px rgba(184, 134, 11, 0.5);
+    }
+
+    .unlock-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Key Takeaways */
+    .takeaways-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #b8860b 100%);
+        border-radius: 16px;
+        padding: 50px 40px;
+        margin: 40px 0;
+        color: white;
+    }
+
+    .takeaways-section h2 {
+        color: #f4e97b;
+        font-size: 2em;
+        margin: 0 0 30px 0;
+        text-align: center;
+    }
+
+    .takeaways-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+    }
+
+    .takeaway-item {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .takeaway-item h4 {
+        font-size: 1.2em;
+        color: #f4e97b;
+        margin: 0 0 12px 0;
+    }
+
+    .takeaway-item p {
+        margin: 0;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    /* Reflection Box */
+    .reflection-box {
+        background: white;
+        border: 3px dashed #daa520;
+        border-radius: 16px;
+        padding: 35px;
+        margin: 40px 0;
+    }
+
+    .reflection-box h4 {
+        color: #b8860b;
+        font-size: 1.3em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .reflection-box textarea {
+        width: 100%;
+        min-height: 120px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 15px;
+        font-family: inherit;
+        font-size: 1em;
+        resize: vertical;
+        transition: border-color 0.3s ease;
+    }
+
+    .reflection-box textarea:focus {
+        outline: none;
+        border-color: #daa520;
+    }
+
+    .reflection-box .save-note {
+        display: inline-block;
+        background: #daa520;
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .reflection-box .save-note:hover {
+        background: #b8860b;
+        transform: translateY(-2px);
+    }
+
+    /* Comparison Table */
+    .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 30px 0;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .comparison-table th {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        padding: 18px 20px;
+        text-align: left;
+        font-weight: 700;
+    }
+
+    .comparison-table th:first-child {
+        background: #2d2d2d;
+    }
+
+    .comparison-table td {
+        background: white;
+        padding: 16px 20px;
+        border-bottom: 1px solid #eee;
+        vertical-align: top;
+    }
+
+    .comparison-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .comparison-table tr:hover td {
+        background: #fafafa;
+    }
+
+    /* Badge */
+    .badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+    }
+
+    .badge.expansion { background: #c6f6d5; color: #22543d; }
+    .badge.reversion { background: #c3dafe; color: #3730a3; }
+    .badge.both { background: #fef3c7; color: #92400e; }
+
+    /* Scroll Animation */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease-out;
+    }
+
+    .fade-in.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1>📊 Trading Strategie Typen</h1>
+    <p class="subtitle">Die zwei fundamentalen Wege, den Markt zu handeln</p>
+    <p class="author">Basierend auf Lance Breitstein's Trading-Framework</p>
+    
+    <div class="strategy-preview-grid">
+        <div class="strategy-preview-card">
+            <h3>📈 Price Expansion</h3>
+            <p>Trades, die auf fortgesetzte Trends und neue Preisbereiche setzen</p>
+        </div>
+        <div class="strategy-preview-card">
+            <h3>📉 Price Reversion</h3>
+            <p>Trades, die auf Rückkehr zu vorherigen Preisniveaus setzen</p>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress-container">
+    <div style="font-weight: 600; color: #666;">Dein Fortschritt:</div>
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-text" id="progressText">0% abgeschlossen</div>
+</div>
+
+<div class="content-container">
+    
+    <!-- Section 1: Introduction -->
+    <div class="section-card fade-in" id="section-1">
+        <h2><span class="emoji">🎯</span> Was machen wir als Trader eigentlich?</h2>
+        
+        <p>Bevor wir in die Spezifika von Trading-Strategien eintauchen, lass uns kurz innehalten und reflektieren: <strong>Was versuchen wir als Trader eigentlich zu erreichen?</strong></p>
+        
+        <div class="insight-box">
+            <h4>💡 Die fundamentale Wahrheit</h4>
+            <p>Im Gegensatz zu Market Makern oder High-Frequency-Algorithmen, die versuchen den Spread zu verdienen und dabei relativ uninteressiert an der Preisrichtung sind, sind wir das <strong>genaue Gegenteil</strong>.</p>
+        </div>
+        
+        <p>Praktisch jede Trading-Strategie, die ich nutze, macht eine sehr spezifische Wette auf die Preisrichtung. Wir wetten unvermeidlich darauf, ob eine Aktie steigen oder fallen wird.</p>
+        
+        <div class="highlight-box">
+            <strong>📌 Wichtige Erkenntnis</strong>
+            <p>Wir können kein Geld verdienen, wenn eine Aktie flach bleibt und sich in keine Richtung bewegt. Deshalb brauchen wir Bewegung – die Frage ist nur: <strong>Welche Art von Bewegung?</strong></p>
+        </div>
+        
+        <p>Mit diesem Verständnis können wir fast alle Trading-Strategien in <strong>zwei fundamentale Kategorien</strong> einteilen:</p>
+        
+        <div class="strategy-grid">
+            <div class="strategy-card expansion">
+                <h4>📈 Price Expansion</h4>
+                <ul>
+                    <li>Preis bewegt sich in neues Territorium</li>
+                    <li>Ein Trend setzt sich fort</li>
+                    <li>Breakouts nach Konsolidierungsphasen</li>
+                </ul>
+            </div>
+            <div class="strategy-card reversion">
+                <h4>📉 Price Reversion</h4>
+                <ul>
+                    <li>Preis kehrt zu vorherigen Bereichen zurück</li>
+                    <li>Übertreibungen werden korrigiert</li>
+                    <li>Mean Reversion Prinzip</li>
+                </ul>
+            </div>
+        </div>
+        
+        <button class="unlock-btn" onclick="unlockSection(2)">
+            Weiter: Price Expansion im Detail →
+        </button>
+    </div>
+
+    <!-- Section 2: Price Expansion -->
+    <div class="section-card fade-in locked" id="section-2">
+        <h2><span class="emoji">📈</span> Price Expansion verstehen</h2>
+        
+        <p><strong>Price Expansion</strong> ist, wenn Preise (für den betrachteten Zeitrahmen) in neues Territorium vordringen und ein Trend sich fortsetzt.</p>
+        
+        <div class="insight-box">
+            <h4>🔍 Wann tritt Price Expansion auf?</h4>
+            <p>Beispiele für Price Expansion Trades findest du oft nach Perioden der <strong>Konsolidierung</strong>, <strong>Preisakzeptanz</strong> und relativer <strong>Preisstabilität</strong>.</p>
+        </div>
+        
+        <h3>Typische Price Expansion Strategien</h3>
+        
+        <div class="example-grid">
+            <div class="example-card">
+                <div class="example-type">Klassiker</div>
+                <h5>🚀 Breakouts</h5>
+                <p>Kauf nach dem Ausbruch aus einer Konsolidierung oder über ein wichtiges Widerstandsniveau.</p>
+            </div>
+            <div class="example-card">
+                <div class="example-type">Klassiker</div>
+                <h5>📉 Breakdowns</h5>
+                <p>Short-Positionen nach dem Durchbruch unter wichtige Unterstützungsniveaus.</p>
+            </div>
+            <div class="example-card">
+                <div class="example-type">News-basiert</div>
+                <h5>📰 Breaking News Trades</h5>
+                <p>Schnelle Reaktion auf marktbewegende Nachrichten, die einen neuen Trend starten.</p>
+            </div>
+            <div class="example-card">
+                <div class="example-type">Overnight</div>
+                <h5>🌙 Overnight Momentum</h5>
+                <p>Continuation Plays, die auf starke After-Hours Bewegungen aufbauen.</p>
+            </div>
+        </div>
+        
+        <div class="highlight-box">
+            <strong>💡 Pro-Tipp</strong>
+            <p>Price Expansion funktioniert am besten, wenn du <strong>mit dem Trend</strong> handelst. Die Kraft des Momentums ist auf deiner Seite.</p>
+        </div>
+        
+        <button class="unlock-btn" onclick="unlockSection(3)">
+            Weiter: Price Reversion verstehen →
+        </button>
+    </div>
+
+    <!-- Section 3: Price Reversion -->
+    <div class="section-card fade-in locked" id="section-3">
+        <h2><span class="emoji">📉</span> Price Reversion verstehen</h2>
+        
+        <p><strong>Price Reversion</strong> (oder Mean Reversion) sind Wetten darauf, dass eine Aktie zu vorherigen Preisbereichen zurückkehren wird – anstatt weiter in neue Preisterritorien vorzudringen.</p>
+        
+        <div class="insight-box">
+            <h4>🎯 Das Kernprinzip</h4>
+            <p>Preise neigen dazu, nach extremen Bewegungen zu ihrem "Mittelwert" zurückzukehren. Übertreibungen werden korrigiert.</p>
+        </div>
+        
+        <h3>Typische Price Reversion Strategien</h3>
+        
+        <div class="example-grid">
+            <div class="example-card">
+                <div class="example-type">High Probability</div>
+                <h5>💥 Kapitulation Trades</h5>
+                <p>Kauf nach panikartigen Sell-Offs, wenn der Verkaufsdruck erschöpft ist.</p>
+            </div>
+            <div class="example-card">
+                <div class="example-type">Timing-kritisch</div>
+                <h5>✅ Warten auf die rechte Seite des V</h5>
+                <p>Nicht ins fallende Messer greifen – warten bis die Reversal bestätigt ist.</p>
+            </div>
+            <div class="example-card">
+                <div class="example-type">Fortgeschritten</div>
+                <h5>🔄 Counter-Trend Trades</h5>
+                <p>Gegen den vorherrschenden Trend handeln, wenn Erschöpfungssignale auftreten.</p>
+            </div>
+        </div>
+        
+        <div class="reflection-box">
+            <h4>🤔 Selbstreflexion</h4>
+            <p>Mit welchem dieser beiden Typen identifizierst du dich mehr? Bist du eher ein Breakout-Trader oder ein Kapitulation-Trader?</p>
+            <textarea placeholder="Notiere hier deine Gedanken... (wird lokal gespeichert)" id="reflection-1"></textarea>
+            <button class="save-note" onclick="saveReflection(1)">💾 Notiz speichern</button>
+        </div>
+        
+        <button class="unlock-btn" onclick="unlockSection(4)">
+            Weiter: Warum beide Typen wichtig sind →
+        </button>
+    </div>
+
+    <!-- Section 4: Why Both Matter -->
+    <div class="section-card fade-in locked" id="section-4">
+        <h2><span class="emoji">⚖️</span> Warum du BEIDE Typen beherrschen solltest</h2>
+        
+        <p>Dieses Framework ist wichtig, weil es uns erlaubt, unser Trading leichter zu klassifizieren und unsere Strategien zu verfeinern.</p>
+        
+        <div class="highlight-box">
+            <strong>🎯 Lance's persönliche Erfahrung</strong>
+            <p>"Ich würde mich selbst als einen viel stärkeren Kapitulation-Trader klassifizieren als einen Breakout-Trader. Aber in Bezug auf optimales Trading wollen wir ein Playbook haben, das BEIDE Typen umfasst."</p>
+        </div>
+        
+        <h3>Marktumgebungen und ihre Präferenzen</h3>
+        
+        <div class="market-grid">
+            <div class="market-card bull">
+                <h5>📈 Stetige Bull/Bear Märkte</h5>
+                <div class="favors expansion">→ Favorisiert: Continuation Trader</div>
+                <p>In ruhigen Trends funktionieren Breakout-Strategien besonders gut.</p>
+            </div>
+            <div class="market-card ipo">
+                <h5>🚀 Starke IPO-Märkte</h5>
+                <div class="favors expansion">→ Favorisiert: Continuation Trader</div>
+                <p>Neue Aktien mit Momentum bieten ideale Expansion-Gelegenheiten.</p>
+            </div>
+            <div class="market-card panic">
+                <h5>😱 Große Paniken</h5>
+                <div class="favors reversion">→ Favorisiert: Reversion Trader</div>
+                <p>Kapitulation und Übertreibungen bieten perfekte Mean-Reversion Setups.</p>
+            </div>
+            <div class="market-card bear">
+                <h5>🎢 Low Float Zyklen</h5>
+                <div class="favors reversion">→ Wechselnd!</div>
+                <p>Es gibt Zyklen, wo Low Floats gut reverten, und andere wo sie dein Gesicht abreißen.</p>
+            </div>
+        </div>
+        
+        <div class="insight-box">
+            <h4>🎓 Die Lektion</h4>
+            <p>Als Trader wollen wir idealerweise ein <strong>diverses Playbook</strong>, das uns ermöglicht, die besten Gelegenheiten im Markt zu zerstören – egal welches Umfeld herrscht.</p>
+        </div>
+        
+        <button class="unlock-btn" onclick="unlockSection(5)">
+            Weiter: Vergleichstabelle →
+        </button>
+    </div>
+
+    <!-- Section 5: Comparison -->
+    <div class="section-card fade-in locked" id="section-5">
+        <h2><span class="emoji">📊</span> Price Expansion vs. Price Reversion</h2>
+        
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Aspekt</th>
+                    <th>Price Expansion</th>
+                    <th>Price Reversion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Grundidee</strong></td>
+                    <td>Trend setzt sich fort</td>
+                    <td>Übertreibung wird korrigiert</td>
+                </tr>
+                <tr>
+                    <td><strong>Typische Setups</strong></td>
+                    <td>Breakouts, Momentum, News</td>
+                    <td>Kapitulation, Counter-Trend</td>
+                </tr>
+                <tr>
+                    <td><strong>Bester Markt</strong></td>
+                    <td>Trending, Bull/Bear</td>
+                    <td>Volatile, Paniken</td>
+                </tr>
+                <tr>
+                    <td><strong>Win-Rate</strong></td>
+                    <td>Oft niedriger</td>
+                    <td>Oft höher</td>
+                </tr>
+                <tr>
+                    <td><strong>R/R-Profil</strong></td>
+                    <td>Höhere R-Multiples möglich</td>
+                    <td>Kleinere, aber häufigere Gewinne</td>
+                </tr>
+                <tr>
+                    <td><strong>Timing</strong></td>
+                    <td>Mit dem Momentum</td>
+                    <td>Gegen die Crowd</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="highlight-box">
+            <strong>💡 Wichtig zu verstehen</strong>
+            <p>Beide Typen haben ihre Berechtigung. Der Schlüssel ist zu wissen, <strong>welches Umfeld gerade vorherrscht</strong> und entsprechend zu handeln.</p>
+        </div>
+        
+        <button class="unlock-btn" onclick="unlockSection(6)">
+            Weiter: Quiz – Teste dein Wissen →
+        </button>
+    </div>
+
+    <!-- Section 6: Quiz -->
+    <div class="section-card fade-in locked" id="section-6">
+        <h2><span class="emoji">🧠</span> Quiz: Teste dein Verständnis</h2>
+        
+        <div class="quiz-container">
+            <h3>3 Fragen zu Trading Strategie Typen</h3>
+            
+            <!-- Quiz Question 1 -->
+            <div class="quiz-question" id="quiz-1">
+                <h4>Frage 1: Welcher Strategie-Typ setzt auf fortgesetzte Trends?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="1" data-correct="true" onclick="selectQuizOption(this)">
+                        A) Price Expansion
+                    </div>
+                    <div class="quiz-option" data-question="1" data-correct="false" onclick="selectQuizOption(this)">
+                        B) Price Reversion
+                    </div>
+                    <div class="quiz-option" data-question="1" data-correct="false" onclick="selectQuizOption(this)">
+                        C) Market Making
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-1"></div>
+            </div>
+            
+            <!-- Quiz Question 2 -->
+            <div class="quiz-question" id="quiz-2">
+                <h4>Frage 2: Welches Marktumfeld favorisiert Reversion-Trader?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="2" data-correct="false" onclick="selectQuizOption(this)">
+                        A) Stetige Bull-Märkte
+                    </div>
+                    <div class="quiz-option" data-question="2" data-correct="false" onclick="selectQuizOption(this)">
+                        B) Starke IPO-Märkte
+                    </div>
+                    <div class="quiz-option" data-question="2" data-correct="true" onclick="selectQuizOption(this)">
+                        C) Große Paniken und volatile Märkte
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-2"></div>
+            </div>
+            
+            <!-- Quiz Question 3 -->
+            <div class="quiz-question" id="quiz-3">
+                <h4>Frage 3: Warum solltest du BEIDE Typen beherrschen?</h4>
+                <div class="quiz-options">
+                    <div class="quiz-option" data-question="3" data-correct="false" onclick="selectQuizOption(this)">
+                        A) Um mehr Trades zu machen
+                    </div>
+                    <div class="quiz-option" data-question="3" data-correct="true" onclick="selectQuizOption(this)">
+                        B) Um in jedem Marktumfeld profitabel zu sein
+                    </div>
+                    <div class="quiz-option" data-question="3" data-correct="false" onclick="selectQuizOption(this)">
+                        C) Weil alle Profis das machen
+                    </div>
+                </div>
+                <div class="quiz-feedback" id="feedback-3"></div>
+            </div>
+        </div>
+        
+        <div id="quiz-complete" style="display: none; text-align: center; margin-top: 30px;">
+            <div class="insight-box">
+                <h4>🎉 Quiz abgeschlossen!</h4>
+                <p id="quiz-result">Du hast X von 3 Fragen richtig beantwortet.</p>
+            </div>
+            <button class="unlock-btn" onclick="unlockSection(7)">
+                Weiter: Key Takeaways →
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 7: Key Takeaways -->
+    <div class="section-card fade-in locked" id="section-7">
+        <div class="takeaways-section">
+            <h2>🎯 Key Takeaways</h2>
+            
+            <div class="takeaways-grid">
+                <div class="takeaway-item">
+                    <h4>1. Zwei fundamentale Typen</h4>
+                    <p>Alle Trading-Strategien lassen sich in Price Expansion oder Price Reversion einteilen.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>2. Keine ist "besser"</h4>
+                    <p>Beide Typen haben ihre Zeit – der Markt bestimmt, welche gerade funktioniert.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>3. Diversifiziere dein Playbook</h4>
+                    <p>Beherrsche beide Typen, um in jedem Marktumfeld profitabel zu sein.</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>4. Kenne deine Stärken</h4>
+                    <p>Es ist okay, einen Typ zu bevorzugen – aber erkenne deine Bias.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="reflection-box" style="margin-top: 40px;">
+            <h4>✍️ Dein Action Item</h4>
+            <p>Analysiere deine letzten 10 Trades: Wie viele waren Price Expansion, wie viele Price Reversion?</p>
+            <textarea placeholder="Meine Analyse... (wird lokal gespeichert)" id="reflection-2"></textarea>
+            <button class="save-note" onclick="saveReflection(2)">💾 Notiz speichern</button>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <p style="font-size: 1.3em; color: #666; margin-bottom: 20px;">
+                🎓 Modul abgeschlossen! Weiter zum nächsten Schritt:
+            </p>
+            <a href="/modules" class="unlock-btn" style="text-decoration: none;">
+                📚 Zurück zur Modulübersicht
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+<script>
+    // Progress Management
+    let unlockedSections = [1];
+    let quizAnswered = {};
+    let quizCorrect = 0;
+
+    function updateProgress() {
+        const totalSections = 7;
+        const progress = Math.round((unlockedSections.length / totalSections) * 100);
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressText').textContent = progress + '% abgeschlossen';
+        
+        // Save to localStorage
+        localStorage.setItem('strategy-types-progress', JSON.stringify(unlockedSections));
+    }
+
+    function unlockSection(sectionNumber) {
+        const section = document.getElementById('section-' + sectionNumber);
+        if (section && !unlockedSections.includes(sectionNumber)) {
+            section.classList.remove('locked');
+            unlockedSections.push(sectionNumber);
+            
+            setTimeout(() => {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+            
+            updateProgress();
+        }
+    }
+
+    // Quiz System
+    function selectQuizOption(element) {
+        const questionNum = element.dataset.question;
+        const isCorrect = element.dataset.correct === 'true';
+        
+        // Already answered?
+        if (quizAnswered[questionNum]) return;
+        quizAnswered[questionNum] = true;
+        
+        // Clear previous selections
+        const options = element.parentNode.querySelectorAll('.quiz-option');
+        options.forEach(opt => opt.classList.remove('selected', 'correct', 'incorrect'));
+        
+        // Mark answer
+        element.classList.add('selected');
+        if (isCorrect) {
+            element.classList.add('correct');
+            quizCorrect++;
+        } else {
+            element.classList.add('incorrect');
+            // Show correct answer
+            options.forEach(opt => {
+                if (opt.dataset.correct === 'true') {
+                    opt.classList.add('correct');
+                }
+            });
+        }
+        
+        // Show feedback
+        const feedback = document.getElementById('feedback-' + questionNum);
+        if (isCorrect) {
+            feedback.textContent = '🎉 Richtig! Sehr gut verstanden!';
+            feedback.className = 'quiz-feedback show correct';
+        } else {
+            feedback.textContent = '❌ Nicht ganz. Die richtige Antwort ist markiert.';
+            feedback.className = 'quiz-feedback show incorrect';
+        }
+        
+        // Check if all answered
+        if (Object.keys(quizAnswered).length === 3) {
+            setTimeout(() => {
+                document.getElementById('quiz-result').textContent = 
+                    `Du hast ${quizCorrect} von 3 Fragen richtig beantwortet.`;
+                document.getElementById('quiz-complete').style.display = 'block';
+            }, 1000);
+        }
+    }
+
+    // Reflection Notes
+    function saveReflection(noteNum) {
+        const textarea = document.getElementById('reflection-' + noteNum);
+        localStorage.setItem('strategy-types-note-' + noteNum, textarea.value);
+        
+        // Visual feedback
+        const btn = textarea.nextElementSibling;
+        btn.textContent = '✅ Gespeichert!';
+        setTimeout(() => {
+            btn.textContent = '💾 Notiz speichern';
+        }, 2000);
+    }
+
+    // Load saved reflections
+    function loadReflections() {
+        for (let i = 1; i <= 2; i++) {
+            const saved = localStorage.getItem('strategy-types-note-' + i);
+            if (saved) {
+                const textarea = document.getElementById('reflection-' + i);
+                if (textarea) textarea.value = saved;
+            }
+        }
+    }
+
+    // Scroll animations
+    function handleScrollAnimations() {
+        const fadeElements = document.querySelectorAll('.fade-in');
+        fadeElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 0.85) {
+                el.classList.add('visible');
+            }
+        });
+    }
+
+    // Load saved progress on page load
+    function loadProgress() {
+        const saved = localStorage.getItem('strategy-types-progress');
+        if (saved) {
+            unlockedSections = JSON.parse(saved);
+            unlockedSections.forEach(num => {
+                const section = document.getElementById('section-' + num);
+                if (section) section.classList.remove('locked');
+            });
+        }
+        updateProgress();
+        loadReflections();
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+        loadProgress();
+        handleScrollAnimations();
+    });
+    
+    window.addEventListener('scroll', handleScrollAnimations);
+</script>
+</div>
+{% endblock %}
+
