@@ -453,6 +453,138 @@
         margin-right: 10px;
     }
 
+    /* Checklist Styles */
+    .checklist-container {
+        margin: 30px 0;
+    }
+
+    .checklist-step {
+        margin-bottom: 25px;
+    }
+
+    .checklist-item {
+        display: flex;
+        align-items: flex-start;
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 12px;
+        border: 2px solid #e0e0e0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .checklist-item:hover {
+        border-color: #daa520;
+        background: #fff8e1;
+        transform: translateX(5px);
+    }
+
+    .checklist-item input[type="checkbox"] {
+        display: none;
+    }
+
+    .checkmark {
+        width: 28px;
+        height: 28px;
+        border: 3px solid #b8860b;
+        border-radius: 6px;
+        margin-right: 15px;
+        margin-top: 5px;
+        flex-shrink: 0;
+        position: relative;
+        transition: all 0.3s ease;
+        background: white;
+    }
+
+    .checklist-item input[type="checkbox"]:checked + .checkmark {
+        background: linear-gradient(135deg, #daa520, #b8860b);
+        border-color: #b8860b;
+    }
+
+    .checklist-item input[type="checkbox"]:checked + .checkmark::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: bold;
+        font-size: 1.2em;
+    }
+
+    .checklist-content {
+        flex: 1;
+    }
+
+    .checklist-content h4 {
+        margin: 0 0 10px 0;
+        color: #1a1a1a;
+        font-size: 1.3em;
+    }
+
+    .checklist-content p {
+        margin: 8px 0;
+        color: #333;
+        line-height: 1.6;
+    }
+
+    .checklist-content ul,
+    .checklist-content ol {
+        margin: 10px 0;
+        padding-left: 25px;
+        color: #333;
+    }
+
+    .checklist-content li {
+        margin: 8px 0;
+        line-height: 1.6;
+    }
+
+    .checklist-item input[type="checkbox"]:checked ~ .checklist-content {
+        opacity: 0.7;
+    }
+
+    .checklist-item input[type="checkbox"]:checked ~ .checklist-content h4 {
+        text-decoration: line-through;
+        color: #666;
+    }
+
+    .checklist-summary {
+        margin-top: 40px;
+        padding: 30px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #fff8e1 100%);
+        border-radius: 12px;
+        border: 2px solid #daa520;
+        text-align: center;
+    }
+
+    .checklist-progress {
+        margin-top: 20px;
+    }
+
+    .checklist-progress p {
+        margin-bottom: 15px;
+        font-size: 1.1em;
+        color: #1a1a1a;
+    }
+
+    .checklist-progress-bar {
+        height: 20px;
+        background: #e0e0e0;
+        border-radius: 10px;
+        overflow: hidden;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+
+    .checklist-progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #daa520, #f4e97b);
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
         .hero-section h1 {
@@ -932,11 +1064,219 @@
         </ul>
     </div>
 
+    <!-- Tägliche Routine Checkliste -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(8)">
+            <h2>✅ Tägliche Routine - Schritt-für-Schritt Checkliste</h2>
+            <span class="section-toggle" id="toggle8">▶️</span>
+        </div>
+        <div class="section-content" id="content8">
+            <div class="highlight-box">
+                <h3>⏱️ Zeitaufwand: 5-10 Minuten täglich</h3>
+                <p>
+                    Diese Checkliste hilft dir dabei, jeden Tag systematisch vorzugehen und keine wichtigen Schritte zu vergessen. 
+                    Dein Fortschritt wird automatisch gespeichert und bleibt auch nach dem Schließen der Seite erhalten.
+                </p>
+            </div>
+
+            <div class="checklist-container">
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step1" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>1. Scan ausführen</h4>
+                            <p>Starte den "Delayed Reaction 9 Million" Scan mit folgenden Parametern:</p>
+                            <ul>
+                                <li>Preisbewegung: ±4% oder mehr</li>
+                                <li>Volume: V > V1 (heute > gestern)</li>
+                                <li>Mindest-Volume: > 9 Millionen</li>
+                                <li>Zeitraum: Letzte 25 Tage</li>
+                                <li>Mindestpreis: $3</li>
+                            </ul>
+                            <p><strong>Erwartetes Ergebnis:</strong> ~450 Aktien</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step2" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>2. Erste Filterung - Heute bereits im Plus?</h4>
+                            <p>Entferne alle Aktien, die heute bereits deutlich im Plus sind.</p>
+                            <p><strong>Was du suchst:</strong> Aktien die entweder:</p>
+                            <ul>
+                                <li>Eine Konsolidierung zeigen (seitwärts bewegen)</li>
+                                <li>Einen Pullback haben (zurückgezogen sind)</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step3" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>3. Pattern-Suche durchführen</h4>
+                            <p>Durchsuche die gefilterte Liste nach:</p>
+                            <ul>
+                                <li><strong>Pullbacks:</strong> Ordentlicher Pullback bei niedrigem Volume</li>
+                                <li><strong>Konsolidierungen:</strong> Seitwärtsbewegung nach initialem Ausbruch</li>
+                            </ul>
+                            <p><strong>Wichtig:</strong> Beide Seiten durchsuchen - sowohl positive als auch negative Moves (Long & Short)</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step4" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>4. Katalysator-Check</h4>
+                            <p>Für jeden Kandidaten prüfe:</p>
+                            <ul>
+                                <li>Was war der ursprüngliche Katalysator?</li>
+                                <li>Ist es ein <strong>echter Katalysator</strong> (substanzielle Neuigkeit) oder nur eine Story?</li>
+                                <li>Hat der Markt positiv auf den Katalysator reagiert?</li>
+                                <li>Ist der Katalysator noch relevant?</li>
+                            </ul>
+                            <p><strong>Regel:</strong> Nur Kandidaten mit klarem, substanziellem Katalysator behalten!</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step5" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>5. Timing prüfen</h4>
+                            <p>Für jeden Kandidaten prüfe:</p>
+                            <ul>
+                                <li>Wie viele Tage sind seit dem Katalysator-Ereignis vergangen?</li>
+                                <li>Beste Setups: 3-5 Tage Pullback/Konsolidierung</li>
+                                <li>Gute Setups: Weniger als 10 Tage</li>
+                                <li><strong>Maximum:</strong> 25 Tage - danach kein delayed reaction mehr</li>
+                            </ul>
+                            <p><strong>Warnung:</strong> Wenn es bereits der zweite Leg ist, ist es kein delayed reaction mehr!</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step6" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>6. Priorisierung - Reduziere auf 2-3 Kandidaten</h4>
+                            <p>Bewerte jeden Kandidaten nach:</p>
+                            <ol>
+                                <li><strong>Katalysator-Qualität:</strong> Echter vs. Story-Katalysator</li>
+                                <li><strong>Pattern-Qualität:</strong> Sauberes Setup (Pullback/Konsolidierung)</li>
+                                <li><strong>Timing:</strong> Noch innerhalb der 25-Tage-Frist?</li>
+                                <li><strong>Volume:</strong> War das initiale Volume wirklich signifikant?</li>
+                                <li><strong>Markt-Reaktion:</strong> Positive Reaktion auf Katalysator?</li>
+                            </ol>
+                            <p><strong>Ziel:</strong> Nur die 2-3 besten Kandidaten behalten!</p>
+                            <p><strong>Entferne:</strong> Aktien die bereits große Moves gemacht haben, Story-Stocks, zu viel Verkaufsdruck</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step7" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>7. Watchlist erstellen</h4>
+                            <p>Erstelle deine finale Watchlist mit nur 2-3 Aktien.</p>
+                            <p><strong>Wichtig:</strong> Diese sind deine einzigen Kandidaten für heute. Konzentriere dich nur auf diese!</p>
+                            <p><strong>Notiere für jede Aktie:</strong></p>
+                            <ul>
+                                <li>Der Katalysator (warum ist sie interessant?)</li>
+                                <li>Das Pattern (Pullback oder Konsolidierung?)</li>
+                                <li>Das Timing (wie viele Tage seit Katalysator?)</li>
+                                <li>Dein Entry-Level (wo willst du einsteigen?)</li>
+                            </ul>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step8" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>8. Entry-Strategie vorbereiten</h4>
+                            <p>Für jede Aktie auf deiner Watchlist:</p>
+                            <ul>
+                                <li><strong>NICHT warten</strong> auf Bestätigung des Ausbruchs</li>
+                                <li><strong>Steige ein</strong> sobald die Aktie positiv eröffnet oder einen Ausbruchsversuch startet</li>
+                                <li><strong>Entry-Ziel:</strong> Erste 1-2% des Moves</li>
+                                <li><strong>Beobachte</strong> die Aktie während der Handelszeiten</li>
+                            </ul>
+                            <p><strong>Erinnerung:</strong> Wenn du auf Bestätigung wartest, brauchst du den ganzen Scan-Prozess nicht!</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step9" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>9. Alte Kandidaten überprüfen</h4>
+                            <p>Prüfe deine Watchlist vom Vortag:</p>
+                            <ul>
+                                <li>Haben sie ausgebüchst? → Trade ausführen oder entfernen</li>
+                                <li>Zeigen sie noch ein gutes Setup? → Behalten</li>
+                                <li>Reagieren sie nicht gut? → <strong>Entfernen</strong> (es gibt genug andere Möglichkeiten)</li>
+                                <li>Ist der Katalysator noch relevant? → Prüfen</li>
+                            </ul>
+                            <p><strong>Regel:</strong> Wenn eine Aktie nicht gut reagiert, lass sie fallen!</p>
+                        </div>
+                    </label>
+                </div>
+
+                <div class="checklist-step">
+                    <label class="checklist-item">
+                        <input type="checkbox" id="step10" onchange="saveChecklist()">
+                        <span class="checkmark"></span>
+                        <div class="checklist-content">
+                            <h4>10. Zeit-Check</h4>
+                            <p>Prüfe deine Zeit:</p>
+                            <ul>
+                                <li>Wenn es <strong>mehr als 10 Minuten</strong> gedauert hat → Du machst etwas falsch</li>
+                                <li>Wenn es <strong>5-10 Minuten</strong> gedauert hat → Perfekt! ✅</li>
+                                <li>Wenn es <strong>weniger als 5 Minuten</strong> gedauert hat → Prüfe ob du alle Schritte gemacht hast</li>
+                            </ul>
+                            <p><strong>Ziel:</strong> Effizient und systematisch arbeiten, nicht zu lange überlegen</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="checklist-summary">
+                <button class="quiz-button" onclick="resetChecklist()">🔄 Checkliste zurücksetzen</button>
+                <div class="checklist-progress">
+                    <p><strong>Fortschritt:</strong> <span id="checklistProgress">0</span> von 10 Schritten abgeschlossen</p>
+                    <div class="checklist-progress-bar">
+                        <div class="checklist-progress-fill" id="checklistProgressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script>
     let currentSection = 0;
-    const totalSections = 7;
+    const totalSections = 8;
 
     function toggleSection(sectionNumber) {
         const content = document.getElementById(`content${sectionNumber}`);
@@ -1051,11 +1391,70 @@
         resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
 
+    // Checklist Functions
+    function saveChecklist() {
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        const checklistState = {};
+        
+        checkboxes.forEach((checkbox, index) => {
+            checklistState[`step${index + 1}`] = checkbox.checked;
+        });
+        
+        // Save to localStorage with date
+        const today = new Date().toDateString();
+        localStorage.setItem(`depChecklist_${today}`, JSON.stringify(checklistState));
+        
+        updateChecklistProgress();
+    }
+
+    function loadChecklist() {
+        const today = new Date().toDateString();
+        const savedState = localStorage.getItem(`depChecklist_${today}`);
+        
+        if (savedState) {
+            const checklistState = JSON.parse(savedState);
+            Object.keys(checklistState).forEach(key => {
+                const checkbox = document.getElementById(key);
+                if (checkbox) {
+                    checkbox.checked = checklistState[key];
+                }
+            });
+        }
+        
+        updateChecklistProgress();
+    }
+
+    function resetChecklist() {
+        if (confirm('Möchtest du die Checkliste wirklich zurücksetzen? Alle Fortschritte werden gelöscht.')) {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            
+            const today = new Date().toDateString();
+            localStorage.removeItem(`depChecklist_${today}`);
+            
+            updateChecklistProgress();
+        }
+    }
+
+    function updateChecklistProgress() {
+        const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+        const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+        const total = checkboxes.length;
+        const percentage = (checked / total) * 100;
+        
+        document.getElementById('checklistProgress').textContent = checked;
+        document.getElementById('checklistProgressFill').style.width = percentage + '%';
+    }
+
     // Initialize
     document.addEventListener('DOMContentLoaded', function() {
         updateProgress();
         // Auto-expand first section
         toggleSection(1);
+        // Load checklist state
+        loadChecklist();
     });
 </script>
 
