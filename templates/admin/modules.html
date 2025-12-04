@@ -87,7 +87,7 @@
                 <div class="category-header level-1" onclick="toggleCategory({{ category.id }}); console.log('Header clicked for category {{ category.id }}');">
                     <span class="expand-icon" id="expand-{{ category.id }}">▶</span>
                     <span class="category-icon">{{ category.icon }}</span>
-                    <span class="category-name">{{ category.name }}</span>
+                    <span class="category-name" ondblclick="editCategoryInline({{ category.id }}, '{{ category.name|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Bearbeiten">{{ category.name }}</span>
                     <span class="category-stats">({{ category.subcategories|length }} Unterkategorien, {{ category.modules|length }} Module)</span>
                     <div class="category-actions" onclick="event.stopPropagation();">
                         <button class="action-btn" onclick="editCategory({{ category.id }});" title="Bearbeiten">✏️</button>
@@ -106,7 +106,7 @@
                         <div class="category-header level-2" onclick="toggleSubcategory({{ subcategory.id }}); console.log('Header clicked for subcategory {{ subcategory.id }}');">
                             <span class="expand-icon" id="expand-sub-{{ subcategory.id }}">▶</span>
                             <span class="category-icon">{{ subcategory.icon }}</span>
-                            <span class="category-name">{{ subcategory.name }}</span>
+                            <span class="category-name" ondblclick="editSubcategoryInline({{ subcategory.id }}, '{{ subcategory.name|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Bearbeiten">{{ subcategory.name }}</span>
                             <span class="category-stats">({{ subcategory.modules|length }} Module)</span>
                             <div class="category-actions" onclick="event.stopPropagation();">
                                 <button class="action-btn" onclick="editSubcategory({{ subcategory.id }});" title="Bearbeiten">✏️</button>
@@ -799,10 +799,26 @@
 .category-name {
     flex: 1;
     font-size: 16px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.category-name:hover {
+    background-color: #fef3c7;
 }
 
 .category-level-2 .category-name {
     font-size: 14px;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.category-level-2 .category-name:hover {
+    background-color: #fef3c7;
 }
 
 .category-stats {
@@ -1881,16 +1897,27 @@ function toggleUnassigned() {
 function editCategory(categoryId) {
     // Fetch category data and populate modal
     fetch(`/admin/get-category/${categoryId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 document.getElementById('edit_category_id').value = data.category.id;
-                document.getElementById('edit_category_name').value = data.category.name;
-                document.getElementById('edit_category_icon').value = data.category.icon;
+                document.getElementById('edit_category_name').value = data.category.name || '';
+                document.getElementById('edit_category_icon').value = data.category.icon || '📊';
                 document.getElementById('edit_category_description').value = data.category.description || '';
-                document.getElementById('edit_category_sort_order').value = data.category.sort_order;
+                document.getElementById('edit_category_sort_order').value = data.category.sort_order || 100;
                 document.getElementById('editCategoryModal').style.display = 'block';
+            } else {
+                alert('Fehler beim Laden der Kategorie: ' + (data.error || 'Unbekannter Fehler'));
             }
+        })
+        .catch(error => {
+            console.error('Error fetching category:', error);
+            alert('Fehler beim Laden der Kategorie: ' + error.message);
         });
 }
 
@@ -1898,17 +1925,192 @@ function editCategory(categoryId) {
 function editSubcategory(subcategoryId) {
     // Fetch subcategory data and populate modal
     fetch(`/admin/get-subcategory/${subcategoryId}`)
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
                 document.getElementById('edit_subcategory_id').value = data.subcategory.id;
                 document.getElementById('edit_subcategory_category_id').value = data.subcategory.category_id;
-                document.getElementById('edit_subcategory_name').value = data.subcategory.name;
-                document.getElementById('edit_subcategory_icon').value = data.subcategory.icon;
-                document.getElementById('edit_subcategory_sort_order').value = data.subcategory.sort_order;
+                document.getElementById('edit_subcategory_name').value = data.subcategory.name || '';
+                document.getElementById('edit_subcategory_icon').value = data.subcategory.icon || '📋';
+                document.getElementById('edit_subcategory_sort_order').value = data.subcategory.sort_order || 100;
                 document.getElementById('editSubcategoryModal').style.display = 'block';
+            } else {
+                alert('Fehler beim Laden der Unterkategorie: ' + (data.error || 'Unbekannter Fehler'));
             }
+        })
+        .catch(error => {
+            console.error('Error fetching subcategory:', error);
+            alert('Fehler beim Laden der Unterkategorie: ' + error.message);
         });
+}
+
+// Inline Edit Category Name
+function editCategoryInline(categoryId, currentName) {
+    const categoryElement = document.querySelector(`[data-category-id="${categoryId}"] .category-name`);
+    if (!categoryElement) return;
+    
+    const originalText = categoryElement.textContent;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.className = 'inline-edit-input';
+    input.style.cssText = 'border: 2px solid #daa520; border-radius: 4px; padding: 4px 8px; font-size: 16px; font-weight: 600; width: 100%; max-width: 300px;';
+    
+    const saveEdit = () => {
+        const newName = input.value.trim();
+        if (newName && newName !== originalText) {
+            // Update via API
+            fetch(`/admin/get-category/${categoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const formData = new FormData();
+                        formData.append('category_id', categoryId);
+                        formData.append('name', newName);
+                        formData.append('icon', data.category.icon || '📊');
+                        formData.append('description', data.category.description || '');
+                        formData.append('sort_order', data.category.sort_order || 100);
+                        
+                        // CSRF-Token hinzufügen (aus Modal-Formular holen, falls verfügbar)
+                        const csrfToken = document.querySelector('#editCategoryModal input[name="csrf_token"]')?.value || 
+                                         document.querySelector('meta[name="csrf-token"]')?.content || 
+                                         document.querySelector('input[name="csrf_token"]')?.value || 
+                                         getCookie('csrf_token');
+                        if (csrfToken) {
+                            formData.append('csrf_token', csrfToken);
+                        }
+                        
+                        fetch('/admin/edit-category', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                categoryElement.textContent = newName;
+                                showNotification('success', 'Kategorie-Titel erfolgreich aktualisiert.');
+                            } else {
+                                throw new Error('Fehler beim Speichern');
+                            }
+                        })
+                        .catch(error => {
+                            alert('Fehler beim Speichern: ' + error.message);
+                            categoryElement.textContent = originalText;
+                        });
+                    }
+                });
+        } else {
+            categoryElement.textContent = originalText;
+        }
+        input.remove();
+    };
+    
+    const cancelEdit = () => {
+        categoryElement.textContent = originalText;
+        input.remove();
+    };
+    
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelEdit();
+        }
+    });
+    
+    categoryElement.textContent = '';
+    categoryElement.appendChild(input);
+    input.focus();
+    input.select();
+}
+
+// Inline Edit Subcategory Name
+function editSubcategoryInline(subcategoryId, currentName) {
+    const subcategoryElement = document.querySelector(`[data-subcategory-id="${subcategoryId}"] .category-name`);
+    if (!subcategoryElement) return;
+    
+    const originalText = subcategoryElement.textContent;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.className = 'inline-edit-input';
+    input.style.cssText = 'border: 2px solid #daa520; border-radius: 4px; padding: 4px 8px; font-size: 14px; font-weight: 600; width: 100%; max-width: 250px;';
+    
+    const saveEdit = () => {
+        const newName = input.value.trim();
+        if (newName && newName !== originalText) {
+            // Update via API
+            fetch(`/admin/get-subcategory/${subcategoryId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const formData = new FormData();
+                        formData.append('subcategory_id', subcategoryId);
+                        formData.append('category_id', data.subcategory.category_id);
+                        formData.append('name', newName);
+                        formData.append('icon', data.subcategory.icon || '📋');
+                        formData.append('sort_order', data.subcategory.sort_order || 100);
+                        
+                        // CSRF-Token hinzufügen (aus Modal-Formular holen)
+                        const csrfToken = document.querySelector('#editSubcategoryModal input[name="csrf_token"]')?.value || 
+                                         document.querySelector('meta[name="csrf-token"]')?.content || 
+                                         document.querySelector('input[name="csrf_token"]')?.value || 
+                                         getCookie('csrf_token');
+                        if (csrfToken) {
+                            formData.append('csrf_token', csrfToken);
+                        }
+                        
+                        fetch('/admin/edit-subcategory', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                subcategoryElement.textContent = newName;
+                                showNotification('success', 'Unterkategorie-Titel erfolgreich aktualisiert.');
+                            } else {
+                                throw new Error('Fehler beim Speichern');
+                            }
+                        })
+                        .catch(error => {
+                            alert('Fehler beim Speichern: ' + error.message);
+                            subcategoryElement.textContent = originalText;
+                        });
+                    }
+                });
+        } else {
+            subcategoryElement.textContent = originalText;
+        }
+        input.remove();
+    };
+    
+    const cancelEdit = () => {
+        subcategoryElement.textContent = originalText;
+        input.remove();
+    };
+    
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelEdit();
+        }
+    });
+    
+    subcategoryElement.textContent = '';
+    subcategoryElement.appendChild(input);
+    input.focus();
+    input.select();
 }
 
 // Add Subcategory to specific category
