@@ -8,10 +8,19 @@
     
     
     {% if session.get('logged_in') %}
-        <div class="alert alert-success">
-            <h3>✅ Erfolgreich eingeloggt!</h3>
-            <p>Du hast Zugriff auf die Premium-Module:</p>
-        </div>
+        {% set user_membership = session.get('user', {}).get('membership', 'free') %}
+        {% if user_membership in ['premium', 'elite', 'elite_pro', 'masterclass'] %}
+            <div class="alert alert-success">
+                <h3>✅ Erfolgreich eingeloggt!</h3>
+                <p>Du hast Zugriff auf die Premium-Module:</p>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <h3>✅ Willkommen bei Didis Trading Academy!</h3>
+                <p>Du bist aktuell mit einem <strong>Free-Account</strong> eingeloggt.</p>
+                <p>Upgrade auf Premium oder Elite, um Zugriff auf alle Premium-Module zu erhalten.</p>
+            </div>
+        {% endif %}
         
         <div class="grid-2" style="margin: 30px 0; gap: 20px;">
             <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
