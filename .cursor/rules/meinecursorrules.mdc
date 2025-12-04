@@ -771,6 +771,243 @@ def get_module_navigation(current_module):
 
 ---
 
+## 🎯 **ACCORDION-STANDARDS**
+**⚠️ PFLICHT: Jedes neue Modul MUSS mit Accordion-Pattern aufgebaut sein!**
+
+### 📍 **Was ist ein Accordion?**
+Ein **Accordion** ist ein UI-Pattern mit aufklappbaren Abschnitten, die durch Klick auf den Header erweitert/reduziert werden. Es ermöglicht Progressive Disclosure - Inhalte werden schrittweise enthüllt, nicht alles auf einmal.
+
+### ✅ **Warum Accordion für alle Module?**
+- **Bessere UX:** Nutzer sehen nicht sofort alles, sondern können sich Schritt für Schritt durcharbeiten
+- **Übersichtlichkeit:** Lange Inhalte werden strukturiert und überschaubar
+- **Fokus:** Ein Abschnitt nach dem anderen fördert Konzentration
+- **Fortschritts-Tracking:** Visueller Fortschritt motiviert zum Weiterlernen
+- **Konsistenz:** Einheitliche Benutzerführung über alle Module hinweg
+
+### 📋 **Accordion-Struktur (PFLICHT für jedes Modul):**
+
+```html
+<!-- Section Card mit Accordion -->
+<div class="section-card">
+    <div class="section-header" onclick="toggleSection(1)">
+        <h2>1️⃣ Titel des Abschnitts</h2>
+        <span class="section-toggle" id="toggle1">▶️</span>
+    </div>
+    <div class="section-content" id="content1">
+        <!-- Inhalt hier -->
+    </div>
+</div>
+```
+
+### 🎨 **CSS-Struktur (Standard):**
+
+```css
+.section-card {
+    background: white;
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #daa520;
+    transition: all 0.3s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.section-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, padding 0.3s ease;
+    padding: 0;
+}
+
+.section-content.expanded {
+    max-height: 5000px;
+    padding: 20px 0;
+}
+
+.section-toggle {
+    font-size: 1.5em;
+    color: #b8860b;
+    transition: transform 0.3s ease;
+}
+
+.section-toggle.expanded {
+    transform: rotate(90deg);
+}
+```
+
+### 🔧 **JavaScript-Funktion (Standard):**
+
+```javascript
+let currentSection = 0;
+const totalSections = 8; // Anzahl der Accordion-Sections
+
+function toggleSection(sectionNumber) {
+    const content = document.getElementById(`content${sectionNumber}`);
+    const toggle = document.getElementById(`toggle${sectionNumber}`);
+    
+    if (content.classList.contains('expanded')) {
+        content.classList.remove('expanded');
+        toggle.classList.remove('expanded');
+        toggle.textContent = '▶️';
+    } else {
+        // Collapse all other sections (optional - kann auch mehrere offen lassen)
+        for (let i = 1; i <= totalSections; i++) {
+            const otherContent = document.getElementById(`content${i}`);
+            const otherToggle = document.getElementById(`toggle${i}`);
+            if (otherContent && otherToggle && i !== sectionNumber) {
+                otherContent.classList.remove('expanded');
+                otherToggle.classList.remove('expanded');
+                otherToggle.textContent = '▶️';
+            }
+        }
+        
+        // Expand current section
+        content.classList.add('expanded');
+        toggle.classList.add('expanded');
+        toggle.textContent = '🔽';
+        
+        // Update progress
+        currentSection = Math.max(currentSection, sectionNumber);
+        updateProgress();
+    }
+}
+
+function updateProgress() {
+    const progress = (currentSection / totalSections) * 100;
+    // Update progress bar, circle, etc.
+}
+```
+
+### 📐 **Typische Accordion-Struktur für Module:**
+
+1. **Hero-Section** (kein Accordion - immer sichtbar)
+   - Titel, Untertitel
+   - Video (falls vorhanden)
+   - Stats-Grid
+
+2. **Progress Tracker** (kein Accordion - immer sichtbar)
+   - Fortschrittsbalken
+   - Prozentanzeige
+
+3. **Content Sections** (Accordion - aufklappbar)
+   - Section 1: Einführung/Grundlagen
+   - Section 2: Hauptinhalt Teil 1
+   - Section 3: Hauptinhalt Teil 2
+   - Section 4: Praktische Beispiele
+   - Section 5: Erweiterte Konzepte
+   - Section 6: Quiz (optional)
+   - Section 7: Checkliste (optional)
+   - Section 8: Key Takeaways (optional)
+
+4. **Key Takeaways** (kein Accordion - immer sichtbar)
+   - Zusammenfassung der wichtigsten Punkte
+
+5. **Navigation** (kein Accordion - immer sichtbar)
+   - {% include '_navigation.html' %}
+
+### ✅ **Checkliste für Accordion-Implementierung:**
+
+- [ ] **Hero-Section** vorhanden (kein Accordion)
+- [ ] **Progress Tracker** vorhanden (kein Accordion)
+- [ ] **Mindestens 3-8 Content Sections** mit Accordion-Pattern
+- [ ] **Section-Header** mit Nummerierung (1️⃣, 2️⃣, etc.) und Titel
+- [ ] **Toggle-Icon** (▶️ geschlossen, 🔽 geöffnet)
+- [ ] **Smooth Transitions** (CSS transitions für max-height)
+- [ ] **JavaScript toggleSection()** Funktion implementiert
+- [ ] **Progress-Tracking** aktualisiert bei Section-Öffnung
+- [ ] **Erste Section** automatisch geöffnet beim Laden
+- [ ] **Key Takeaways** am Ende (kein Accordion)
+- [ ] **Navigation** am Ende (kein Accordion)
+- [ ] **Responsive Design** getestet (Mobile/Tablet)
+
+### 🎯 **Best Practices:**
+
+1. **Abschnittsanzahl:** 5-8 Sections sind optimal (nicht zu viele, nicht zu wenige)
+2. **Erste Section:** Automatisch öffnen beim Laden der Seite
+3. **Nur eine Section offen:** Oder mehrere - je nach UX-Ziel
+4. **Nummerierung:** Verwende Emojis (1️⃣, 2️⃣) oder Zahlen für klare Struktur
+5. **Icons:** ▶️ für geschlossen, 🔽 für geöffnet (oder Pfeile)
+6. **Smooth Animations:** CSS transitions für professionelles Gefühl
+7. **Progress Tracking:** Zeige Fortschritt visuell an
+
+### 🚨 **Häufige Fehler (VERMEIDEN!):**
+
+**1. Fehlende Accordion-Struktur:**
+```html
+<!-- ❌ FALSCH: Alles auf einmal sichtbar -->
+<div>
+    <h2>Abschnitt 1</h2>
+    <p>Inhalt...</p>
+    <h2>Abschnitt 2</h2>
+    <p>Inhalt...</p>
+</div>
+
+<!-- ✅ RICHTIG: Accordion-Pattern -->
+<div class="section-card">
+    <div class="section-header" onclick="toggleSection(1)">
+        <h2>1️⃣ Abschnitt 1</h2>
+        <span class="section-toggle" id="toggle1">▶️</span>
+    </div>
+    <div class="section-content" id="content1">...</div>
+</div>
+```
+
+**2. Fehlende JavaScript-Funktion:**
+```javascript
+// ❌ FALSCH: Keine toggleSection Funktion
+// Accordion funktioniert nicht
+
+// ✅ RICHTIG: toggleSection implementiert
+function toggleSection(sectionNumber) {
+    // ... Implementierung
+}
+```
+
+**3. Falsche CSS-Klassen:**
+```css
+/* ❌ FALSCH: Falsche Klassennamen */
+.my-section { ... }
+
+/* ✅ RICHTIG: Standard-Klassennamen */
+.section-card { ... }
+.section-header { ... }
+.section-content { ... }
+.section-toggle { ... }
+```
+
+**4. Kein Progress-Tracking:**
+```javascript
+// ❌ FALSCH: Kein Progress-Tracking
+function toggleSection(sectionNumber) {
+    // Nur toggle, kein Progress-Update
+}
+
+// ✅ RICHTIG: Progress wird aktualisiert
+function toggleSection(sectionNumber) {
+    // ... toggle logic
+    currentSection = Math.max(currentSection, sectionNumber);
+    updateProgress();
+}
+```
+
+### 📖 **Referenz-Beispiele:**
+
+- ✅ `templates/dep-trading.html` - Vollständiges Accordion-Pattern mit 8 Sections
+- ✅ `templates/breaking-news-trading.html` - Accordion mit 3 Hauptteilen
+- ✅ `templates/momentum-burst.html` - Accordion mit Quiz-Integration
+
+**📖 Vollständige Dokumentation:** Siehe bestehende Module für Referenz-Implementierungen
+
+---
+
 ## 🚨 **KRITISCHE SICHERHEITSMÄNGEL**
 
 ### 1. **Passwort-Sicherheit**

@@ -24,7 +24,7 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ## 📄 HTML-SEITEN
 
 ### @new-module-page
-→ Erstelle eine neue HTML-Modul-Seite basierend auf dem Design-System: 1) extends "base.html", 2) Wrapper-Div mit Klasse für CSS-Scoping, 3) Hero-Header mit Primär-Verlauf, 4) Content-Cards mit Gold-Akzenten, 5) Responsive Grid-Layout, 6) Navigation-Include am Ende, 7) JavaScript für Interaktivität, 8) "Du"-Anrede durchgängig
+→ Erstelle eine neue HTML-Modul-Seite basierend auf dem Design-System: 1) extends "base.html", 2) Wrapper-Div mit Klasse für CSS-Scoping, 3) Hero-Header mit Primär-Verlauf, 4) **ACCORDION-PATTERN PFLICHT** - Content-Cards als aufklappbare Sections (5-8 Sections), 5) Progress Tracker mit Fortschrittsbalken, 6) Responsive Grid-Layout, 7) Navigation-Include am Ende, 8) JavaScript toggleSection() Funktion für Accordion, 9) "Du"-Anrede durchgängig. **WICHTIG:** Jedes Modul MUSS Accordion-Struktur haben!
 
 ### @fix-du-anrede
 → Korrigiere ALLE "Sie/Ihr/Ihnen/Ihrem" zu "du/dein/dir/deinem" in dieser Datei. Verwende konsequent die persönliche "Du"-Anrede gemäß Cursor Rules. Prüfe auch Platzhalter-Texte und Beschreibungen.
@@ -62,8 +62,11 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 
 ## 📚 LERNMODULE
 
+### @accordion-pattern
+→ Implementiere Accordion-Pattern für Module: 1) Section-Cards mit .section-header und .section-content, 2) toggleSection() JavaScript-Funktion, 3) CSS transitions für smooth expand/collapse, 4) Progress Tracker aktualisiert bei Section-Öffnung, 5) Toggle-Icons (▶️ geschlossen, 🔽 geöffnet), 6) Erste Section automatisch geöffnet, 7) Nummerierung mit Emojis (1️⃣, 2️⃣), 8) Standard-Klassennamen (.section-card, .section-header, .section-content, .section-toggle). **PFLICHT:** Alle Module müssen Accordion-Struktur haben!
+
 ### @progressive-disclosure
-→ Erstelle Progressive-Disclosure-Modul: 1) Session-State für current_step, 2) Jeder Schritt nur sichtbar wenn current_step >= X, 3) Next-Button nur bei current_step == X, 4) Bereits abgeschlossene Schritte bleiben sichtbar, 5) Quiz nach jedem Schritt, 6) Key Takeaways am Ende
+→ Erstelle Progressive-Disclosure-Modul mit **ACCORDION-PATTERN**: 1) Accordion-Struktur mit 5-8 aufklappbaren Sections, 2) toggleSection() JavaScript-Funktion, 3) Progress Tracker zeigt Fortschritt, 4) Erste Section automatisch geöffnet, 5) Smooth CSS transitions (max-height), 6) Section-Header mit Nummerierung (1️⃣, 2️⃣), 7) Toggle-Icons (▶️/🔽), 8) Quiz optional als Accordion-Section, 9) Key Takeaways am Ende (kein Accordion), 10) Navigation am Ende (kein Accordion). **WICHTIG:** Accordion ist Standard für alle Module!
 
 ### @quiz-system
 → Füge Quiz hinzu: 1) st.expander für kompakte Darstellung, 2) st.radio für Multiple-Choice, 3) Eindeutige keys (quiz_X_Y), 4) Score-Berechnung, 5) Instant-Feedback mit st.success/warning, 6) Motivierende Emojis (🎉/👍/📖)
@@ -226,7 +229,7 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ## 🔍 QUICK REFERENCE
 
 **Design:** @design-system, @premium-card, @gold-button  
-**HTML:** @new-module-page, @fix-du-anrede, @add-navigation  
+**HTML:** @new-module-page, @accordion-pattern, @fix-du-anrede, @add-navigation  
 **Trading:** @avwap-implementation, @ev-calculator, @volume-analysis  
 **Git:** @git-push-railway, @commit-message  
 **Debug:** @fix-page-display, @debug-css, @accessibility-check  
@@ -428,6 +431,7 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 **Zuletzt aktualisiert:** 3. Dezember 2025  
 **Projekt:** Didis Premium Trading Academy  
-**Version:** 1.0
+**Version:** 1.1  
+**Wichtig:** Alle Module verwenden jetzt Accordion-Pattern als Standard!
 
 
