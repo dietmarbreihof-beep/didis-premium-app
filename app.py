@@ -2193,7 +2193,7 @@ def how_to_find_dep():
     # Navigation-Daten ermitteln
     prev_module, next_module = get_module_navigation(module) if module else (None, None)
     
-    return render_template('how-to-find-dep.html', 
+    return render_template('dep-trading.html', 
                          module=module, 
                          prev_module=prev_module, 
                          next_module=next_module)

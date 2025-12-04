@@ -1,0 +1,1067 @@
+{% extends "base.html" %}
+
+{% block title %}DEP Trading - Deep Episodic Pivots finden{% endblock %}
+
+{% block content %}
+<div class="dep-trading-wrapper">
+<style>
+    .dep-trading-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .dep-trading-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        position: relative;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        position: relative;
+    }
+
+    /* Video Section */
+    .video-section {
+        max-width: 900px;
+        margin: 30px auto 0;
+        position: relative;
+        z-index: 10;
+    }
+
+    .video-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        padding: 30px;
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .video-wrapper {
+        position: relative;
+        width: 100%;
+        height: 0;
+        padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .video-wrapper iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    .video-info {
+        color: white;
+        text-align: center;
+    }
+
+    .video-info h3 {
+        margin: 0 0 15px 0;
+        font-size: 1.3em;
+    }
+
+    .video-info p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.95em;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 30px auto 0;
+        position: relative;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin: 0;
+    }
+
+    .stat-label {
+        font-size: 0.95em;
+        margin-top: 5px;
+        opacity: 0.9;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        padding: 25px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: -30px auto 40px;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .progress-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .progress-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #daa520, #b8860b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    .progress-text h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.1em;
+    }
+
+    .progress-text p {
+        margin: 5px 0 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .progress-bar-container {
+        flex: 1;
+        min-width: 200px;
+        max-width: 400px;
+    }
+
+    .progress-bar {
+        height: 12px;
+        background: #e5e5e5;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #daa520, #f4e97b);
+        border-radius: 6px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        margin-bottom: 20px;
+    }
+
+    .section-header h2 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.8em;
+        flex: 1;
+    }
+
+    .section-toggle {
+        font-size: 1.5em;
+        color: #b8860b;
+        transition: transform 0.3s ease;
+    }
+
+    .section-toggle.expanded {
+        transform: rotate(90deg);
+    }
+
+    .section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, padding 0.3s ease;
+        padding: 0;
+    }
+
+    .section-content.expanded {
+        max-height: 5000px;
+        padding: 20px 0;
+    }
+
+    .section-content p {
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 15px;
+        font-size: 1.05em;
+    }
+
+    .section-content ul, .section-content ol {
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 15px;
+        padding-left: 30px;
+    }
+
+    .section-content li {
+        margin-bottom: 10px;
+        font-size: 1.05em;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+        padding: 25px;
+        border-radius: 12px;
+        margin: 20px 0;
+        border-left: 5px solid #ff9800;
+    }
+
+    .highlight-box h3 {
+        color: #e65100;
+        margin-top: 0;
+        font-size: 1.3em;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #ffe0b2 0%, #ffcc80 100%);
+        padding: 25px;
+        border-radius: 12px;
+        margin: 20px 0;
+        border-left: 5px solid #ff9800;
+    }
+
+    .warning-box h3 {
+        color: #e65100;
+        margin-top: 0;
+        font-size: 1.3em;
+    }
+
+    .success-box {
+        background: linear-gradient(135deg, #c8e6c9 0%, #a5d6a7 100%);
+        padding: 25px;
+        border-radius: 12px;
+        margin: 20px 0;
+        border-left: 5px solid #4caf50;
+    }
+
+    .success-box h3 {
+        color: #2e7d32;
+        margin-top: 0;
+        font-size: 1.3em;
+    }
+
+    /* Quiz Styles */
+    .quiz-container {
+        background: #f9f9f9;
+        padding: 30px;
+        border-radius: 12px;
+        margin: 30px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-question {
+        margin-bottom: 25px;
+    }
+
+    .quiz-question h4 {
+        color: #1a1a1a;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+    }
+
+    .quiz-option {
+        display: block;
+        padding: 15px;
+        margin: 10px 0;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        background: #fff8e1;
+    }
+
+    .quiz-option input[type="radio"] {
+        margin-right: 10px;
+    }
+
+    .quiz-option.correct {
+        background: #c8e6c9;
+        border-color: #4caf50;
+    }
+
+    .quiz-option.incorrect {
+        background: #ffcdd2;
+        border-color: #f44336;
+    }
+
+    .quiz-result {
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-result.show {
+        display: block;
+    }
+
+    .quiz-result.correct {
+        background: #c8e6c9;
+        border: 2px solid #4caf50;
+    }
+
+    .quiz-result.incorrect {
+        background: #ffcdd2;
+        border: 2px solid #f44336;
+    }
+
+    .quiz-button {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .quiz-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(218, 165, 32, 0.4);
+    }
+
+    /* Key Takeaways */
+    .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 12px;
+        margin: 40px 0;
+    }
+
+    .key-takeaways h2 {
+        color: #f4e97b;
+        margin-top: 0;
+        font-size: 2em;
+    }
+
+    .key-takeaways ul {
+        list-style: none;
+        padding-left: 0;
+    }
+
+    .key-takeaways li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 1.1em;
+    }
+
+    .key-takeaways li:last-child {
+        border-bottom: none;
+    }
+
+    .key-takeaways li::before {
+        content: '✓ ';
+        color: #f4e97b;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.4em;
+        }
+
+        .progress-tracker {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1>🎯 DEP Trading - Deep Episodic Pivots</h1>
+    <p class="subtitle">Finde die besten delayed reaction Setups mit einem einfachen Scan</p>
+    
+    <!-- Video Embed -->
+    <div class="video-section">
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe 
+                    src="https://www.youtube.com/embed/iVfoE3fjKh4" 
+                    title="How to find DEP - Deep Episodic Pivots"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                    allowfullscreen>
+                </iframe>
+            </div>
+            <div class="video-info">
+                <h3>🎥 StockBee erklärt DEP Trading</h3>
+                <p>💡 Schaue dir das Video zuerst an, um die Grundlagen zu verstehen</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">1</div>
+            <div class="stat-label">Scan benötigt</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">5-10</div>
+            <div class="stat-label">Minuten täglich</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">2-3</div>
+            <div class="stat-label">Kandidaten pro Tag</div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-tracker">
+    <div class="progress-info">
+        <div class="progress-circle" id="progressCircle">0%</div>
+        <div class="progress-text">
+            <h3>Dein Fortschritt</h3>
+            <p id="progressText">Beginne mit dem ersten Abschnitt</p>
+        </div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    
+    <!-- Section 1: Was ist DEP? -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(1)">
+            <h2>1️⃣ Was ist DEP (Deep Episodic Pivot)?</h2>
+            <span class="section-toggle" id="toggle1">▶️</span>
+        </div>
+        <div class="section-content" id="content1">
+            <p>
+                Ein <strong>Deep Episodic Pivot (DEP)</strong> ist ein Trading-Setup, bei dem eine Aktie nach einem 
+                signifikanten Katalysator-Ereignis zunächst reagiert, dann eine Pause einlegt und später eine 
+                "delayed reaction" zeigt - also eine verzögerte Reaktion auf den ursprünglichen Katalysator.
+            </p>
+            
+            <div class="highlight-box">
+                <h3>💡 Warum funktioniert DEP?</h3>
+                <p>
+                    Nicht alle Marktteilnehmer reagieren sofort auf Nachrichten. Einige brauchen Zeit, um die 
+                    Bedeutung eines Katalysators zu verstehen. Diese verzögerte Reaktion bietet dir eine 
+                    zweite Chance, in einen Trade einzusteigen - oft zu besseren Preisen als beim ersten Ausbruch.
+                </p>
+            </div>
+
+            <p>
+                <strong>Die Kernidee:</strong> Du findest Aktien, die bereits auf einen Katalysator reagiert haben, 
+                aber jetzt eine Pause einlegen und sich für einen zweiten Ausbruch vorbereiten.
+            </p>
+        </div>
+    </div>
+
+    <!-- Section 2: Der Scan-Prozess -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(2)">
+            <h2>2️⃣ Der Scan-Prozess</h2>
+            <span class="section-toggle" id="toggle2">▶️</span>
+        </div>
+        <div class="section-content" id="content2">
+            <p>
+                Der gesamte Prozess basiert auf <strong>einem einzigen Scan</strong> - dem "Delayed Reaction 9 Million" Scan.
+            </p>
+
+            <div class="highlight-box">
+                <h3>📊 Scan-Parameter</h3>
+                <ul>
+                    <li><strong>Preisbewegung:</strong> ±4% oder mehr (nach oben oder unten)</li>
+                    <li><strong>Volume:</strong> V > V1 (heutiges Volume größer als gestriges)</li>
+                    <li><strong>Mindest-Volume:</strong> > 9 Millionen</li>
+                    <li><strong>Zeitraum:</strong> Innerhalb der letzten 25 Tage</li>
+                    <li><strong>Mindestpreis:</strong> $3 (um Low-Price-Stocks auszuschließen)</li>
+                </ul>
+            </div>
+
+            <p>
+                <strong>Ergebnis:</strong> Du erhältst etwa 450 Aktien, die diese Kriterien erfüllen. 
+                Jetzt beginnt die eigentliche Arbeit: die Filterung.
+            </p>
+
+            <div class="warning-box">
+                <h3>⚠️ Wichtiger Hinweis</h3>
+                <p>
+                    Aktien, die <strong>heute bereits deutlich im Plus sind</strong>, sind nicht das, was du suchst. 
+                    Du willst Aktien finden, die entweder:
+                </p>
+                <ul>
+                    <li>Eine <strong>Konsolidierung</strong> zeigen (seitwärts bewegen)</li>
+                    <li>Einen <strong>Pullback</strong> haben (zurückgezogen sind)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: Setup-Typen erkennen -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(3)">
+            <h2>3️⃣ Setup-Typen erkennen</h2>
+            <span class="section-toggle" id="toggle3">▶️</span>
+        </div>
+        <div class="section-content" id="content3">
+            <p>
+                Es gibt <strong>zwei Haupt-Setup-Typen</strong>, die du bei DEP-Trades suchst:
+            </p>
+
+            <div class="highlight-box">
+                <h3>📈 Setup-Typ 1: Konsolidierung</h3>
+                <p>
+                    Die Aktie hat nach dem Katalysator-Ereignis einen Ausbruch gemacht, bewegt sich jetzt aber 
+                    seitwärts und konsolidiert. Das ist ein Zeichen dafür, dass sie sich für den nächsten 
+                    Ausbruch vorbereitet.
+                </p>
+                <ul>
+                    <li>Seitwärtsbewegung nach dem initialen Ausbruch</li>
+                    <li>Niedrigeres Volume während der Konsolidierung</li>
+                    <li>Keine größeren Verluste</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h3>📉 Setup-Typ 2: Pullback</h3>
+                <p>
+                    Die Aktie hat nach dem Katalysator-Ereignis einen Ausbruch gemacht, ist aber jetzt 
+                    zurückgezogen (pullback). Du suchst nach einem <strong>ordentlichen Pullback bei niedrigem Volume</strong>.
+                </p>
+                <ul>
+                    <li>Zurückgezogen nach dem initialen Ausbruch</li>
+                    <li>Niedrigeres Volume während des Pullbacks</li>
+                    <li>Keine Panik-Verkäufe (keine großen roten Kerzen)</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ Was du suchst</h3>
+                <ul>
+                    <li><strong>Long-Setups:</strong> Pullback oder Konsolidierung nach einem positiven Katalysator</li>
+                    <li><strong>Short-Setups:</strong> Pullback oder Konsolidierung nach einem negativen Katalysator</li>
+                    <li><strong>Wichtig:</strong> Beide Seiten durchsuchen - sowohl positive als auch negative Moves</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Timing & Catalyst -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(4)">
+            <h2>4️⃣ Timing & Katalysator-Erkennung</h2>
+            <span class="section-toggle" id="toggle4">▶️</span>
+        </div>
+        <div class="section-content" id="content4">
+            <p>
+                <strong>Timing ist entscheidend</strong> bei DEP-Trades. Nicht alle Setups sind gleichwertig.
+            </p>
+
+            <div class="highlight-box">
+                <h3>⏰ Timing-Regeln</h3>
+                <ul>
+                    <li><strong>Beste Setups:</strong> 3-5 Tage Pullback/Konsolidierung, dann sofortiger Ausbruch</li>
+                    <li><strong>Gute Setups:</strong> Weniger als 10 Tage bis zum Ausbruch</li>
+                    <li><strong>Maximum:</strong> 25 Tage - danach ist es kein delayed reaction mehr</li>
+                    <li><strong>Short-Setups:</strong> Können länger brauchen (oft 10+ Tage)</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Wichtige Warnung</h3>
+                <p>
+                    Wenn eine Aktie nach 25 Tagen immer noch kein Setup zeigt, ist sie <strong>kein delayed reaction</strong> mehr. 
+                    Sie hat bereits reagiert und ist jetzt in einem anderen Stadium.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔍 Katalysator-Erkennung</h3>
+                <p>
+                    <strong>DEP ist eine katalysator-basierte Methode.</strong> Wenn du Katalysatoren nicht verstehst, 
+                    solltest du diese Methode nicht verwenden.
+                </p>
+                <ul>
+                    <li><strong>Echter Katalysator:</strong> Substanzielle Neuigkeit, die den fundamentalen Wert ändert</li>
+                    <li><strong>Story-Katalysator:</strong> Oft übertrieben, wenig Substanz</li>
+                    <li><strong>Wichtig:</strong> Du musst den Katalysator verstehen und bewerten können</li>
+                </ul>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ Gute Katalysatoren erkennen</h3>
+                <ul>
+                    <li>M&A-Deals (Fusionen & Übernahmen)</li>
+                    <li>Index-Änderungen</li>
+                    <li>Wichtige Produktankündigungen</li>
+                    <li>Signifikante Earnings-Surprises</li>
+                    <li>Regulatorische Änderungen</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 5: Priorisierung -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(5)">
+            <h2>5️⃣ Priorisierung - Nur die besten Setups</h2>
+            <span class="section-toggle" id="toggle5">▶️</span>
+        </div>
+        <div class="section-content" id="content5">
+            <p>
+                <strong>Der häufigste Fehler:</strong> Zu viele Kandidaten auf der Watchlist. Wenn deine Liste 
+                30-40 Aktien enthält, machst du etwas falsch.
+            </p>
+
+            <div class="warning-box">
+                <h3>⚠️ Die Regel</h3>
+                <p>
+                    <strong>Nur 2-3 Kandidaten pro Tag!</strong> Mehr brauchst du nicht. Wenn du mehr hast, 
+                    priorisiere nicht richtig.
+                </p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🎯 Priorisierungs-Kriterien</h3>
+                <ol>
+                    <li><strong>Katalysator prüfen:</strong> Hast du einen klaren, substanziellen Katalysator?</li>
+                    <li><strong>Pattern prüfen:</strong> Zeigt die Aktie ein sauberes Setup (Pullback/Konsolidierung)?</li>
+                    <li><strong>Timing prüfen:</strong> Ist es noch innerhalb der 25-Tage-Frist?</li>
+                    <li><strong>Volume prüfen:</strong> War das initiale Volume wirklich signifikant?</li>
+                    <li><strong>Markt-Reaktion:</strong> Hat der Markt positiv auf den Katalysator reagiert?</li>
+                </ol>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ Was du NICHT willst</h3>
+                <ul>
+                    <li>Aktien, die bereits einen großen Move gemacht haben (kein Spielraum mehr)</li>
+                    <li>"Story-Stocks" ohne echten Katalysator</li>
+                    <li>Aktien mit zu viel Verkaufsdruck in der Basis</li>
+                    <li>Biotech-Aktien nach 1000%+ Moves (oft Fallen)</li>
+                    <li>Aktien, die bereits mehrfach versucht haben auszubrechen und gescheitert sind</li>
+                </ul>
+            </div>
+
+            <p>
+                <strong>Die Philosophie:</strong> Wenn eine Aktie nicht gut reagiert, lass sie fallen. Es gibt 
+                genug andere Möglichkeiten. Warum Zeit mit etwas verschwenden, das nicht funktioniert?
+            </p>
+        </div>
+    </div>
+
+    <!-- Section 6: Der tägliche Workflow -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(6)">
+            <h2>6️⃣ Der tägliche Workflow</h2>
+            <span class="section-toggle" id="toggle6">▶️</span>
+        </div>
+        <div class="section-content" id="content6">
+            <p>
+                <strong>Zeitaufwand:</strong> 5-10 Minuten täglich. Wenn es länger dauert, machst du etwas falsch.
+            </p>
+
+            <div class="highlight-box">
+                <h3>📋 Tägliche Routine</h3>
+                <ol>
+                    <li><strong>Scan ausführen:</strong> "Delayed Reaction 9 Million" Scan starten</li>
+                    <li><strong>Erste Filterung:</strong> Entferne Aktien, die heute bereits deutlich im Plus sind</li>
+                    <li><strong>Pattern-Suche:</strong> Durchsuche die Liste nach Pullbacks und Konsolidierungen</li>
+                    <li><strong>Katalysator-Check:</strong> Prüfe jeden Kandidaten auf einen echten Katalysator</li>
+                    <li><strong>Priorisierung:</strong> Reduziere auf 2-3 beste Kandidaten</li>
+                    <li><strong>Watchlist erstellen:</strong> Nur diese 2-3 Aktien beobachten</li>
+                </ol>
+            </div>
+
+            <div class="success-box">
+                <h3>✅ Entry-Strategie</h3>
+                <p>
+                    <strong>Wichtig:</strong> Du wartest NICHT auf eine Bestätigung des Ausbruchs. Wenn du das tust, 
+                    brauchst du den ganzen Scan-Prozess nicht.
+                </p>
+                <ul>
+                    <li>Beobachte deine 2-3 Kandidaten</li>
+                    <li>Sobald sie <strong>positiv eröffnen</strong> oder einen <strong>Ausbruchsversuch starten</strong>, steige ein</li>
+                    <li>Entry sollte in den <strong>ersten 1-2%</strong> des Moves sein</li>
+                    <li>Nicht warten, bis der Ausbruch bestätigt ist - dann ist es zu spät</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h3>⚠️ Häufige Fehler</h3>
+                <ul>
+                    <li>Zu viele Kandidaten auf der Watchlist (30-40 statt 2-3)</li>
+                    <li>Zu lange warten auf Bestätigung (Entry zu spät)</li>
+                    <li>Katalysatoren nicht verstehen (Story statt Substanz)</li>
+                    <li>Nicht täglich scannen (Setups verpassen)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Section -->
+    <div class="section-card">
+        <div class="section-header" onclick="toggleSection(7)">
+            <h2>🧠 Quiz - Teste dein Wissen</h2>
+            <span class="section-toggle" id="toggle7">▶️</span>
+        </div>
+        <div class="section-content" id="content7">
+            <div class="quiz-container">
+                <div class="quiz-question">
+                    <h4>1. Welche Scan-Parameter werden für den "Delayed Reaction 9 Million" Scan verwendet?</h4>
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="a">
+                        ±2% Move, Volume > 5M, letzte 10 Tage
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="b">
+                        ±4% Move, Volume > 9M, letzte 25 Tage
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q1" value="c">
+                        ±6% Move, Volume > 15M, letzte 30 Tage
+                    </label>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>2. Wie viele Kandidaten sollten maximal auf deiner täglichen Watchlist sein?</h4>
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="a">
+                        10-15 Kandidaten
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="b">
+                        2-3 Kandidaten
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q2" value="c">
+                        5-7 Kandidaten
+                    </label>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>3. Wie lange sollte ein gutes DEP-Setup maximal brauchen, um auszubrechen?</h4>
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="a">
+                        10 Tage
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="b">
+                        25 Tage
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q3" value="c">
+                        30 Tage
+                    </label>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>4. Was ist der häufigste Fehler bei DEP-Trading?</h4>
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="a">
+                        Zu früh einsteigen
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="b">
+                        Zu viele Kandidaten auf der Watchlist
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q4" value="c">
+                        Zu spät aussteigen
+                    </label>
+                </div>
+
+                <div class="quiz-question">
+                    <h4>5. Wann solltest du in einen DEP-Trade einsteigen?</h4>
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="a">
+                        Nach Bestätigung des Ausbruchs
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="b">
+                        Sobald die Aktie positiv eröffnet oder einen Ausbruchsversuch startet
+                    </label>
+                    <label class="quiz-option">
+                        <input type="radio" name="q5" value="c">
+                        Nach 3 Tagen Pullback
+                    </label>
+                </div>
+
+                <button class="quiz-button" onclick="checkQuiz()">✅ Quiz abschließen</button>
+
+                <div class="quiz-result" id="quizResult">
+                    <div class="correct-answer" style="display: none;">
+                        <h3>🎉 Perfekt!</h3>
+                        <p>Du hast alle Fragen richtig beantwortet. Du verstehst die DEP-Methode!</p>
+                    </div>
+                    <div class="incorrect-answer" style="display: none;">
+                        <h3>📚 Noch etwas üben</h3>
+                        <p>Einige Antworten waren nicht korrekt. Schaue dir die markierten Antworten an und wiederhole die entsprechenden Abschnitte.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Key Takeaways -->
+    <div class="key-takeaways">
+        <h2>🎯 Key Takeaways</h2>
+        <ul>
+            <li>Ein einziger Scan ("Delayed Reaction 9 Million") reicht aus</li>
+            <li>Suche nach Pullbacks oder Konsolidierungen bei niedrigem Volume</li>
+            <li>Timing ist entscheidend: Beste Setups brechen innerhalb von 3-10 Tagen aus</li>
+            <li>Katalysator-Verständnis ist essentiell - ohne Katalysator kein DEP-Trade</li>
+            <li>Priorisiere rigoros: Nur 2-3 Kandidaten pro Tag auf der Watchlist</li>
+            <li>Tägliche Routine: 5-10 Minuten reichen aus</li>
+            <li>Entry früh: Steige ein, sobald die Aktie einen Ausbruchsversuch startet, nicht erst nach Bestätigung</li>
+            <li>Wenn eine Aktie nicht gut reagiert, lass sie fallen - es gibt genug andere Möglichkeiten</li>
+        </ul>
+    </div>
+
+</div>
+
+<script>
+    let currentSection = 0;
+    const totalSections = 7;
+
+    function toggleSection(sectionNumber) {
+        const content = document.getElementById(`content${sectionNumber}`);
+        const toggle = document.getElementById(`toggle${sectionNumber}`);
+        
+        if (content.classList.contains('expanded')) {
+            content.classList.remove('expanded');
+            toggle.classList.remove('expanded');
+            toggle.textContent = '▶️';
+        } else {
+            // Collapse all other sections
+            for (let i = 1; i <= totalSections; i++) {
+                const otherContent = document.getElementById(`content${i}`);
+                const otherToggle = document.getElementById(`toggle${i}`);
+                if (otherContent && otherToggle && i !== sectionNumber) {
+                    otherContent.classList.remove('expanded');
+                    otherToggle.classList.remove('expanded');
+                    otherToggle.textContent = '▶️';
+                }
+            }
+            
+            // Expand current section
+            content.classList.add('expanded');
+            toggle.classList.add('expanded');
+            toggle.textContent = '🔽';
+            
+            // Update progress
+            currentSection = Math.max(currentSection, sectionNumber);
+            updateProgress();
+        }
+    }
+
+    function updateProgress() {
+        const progress = (currentSection / totalSections) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressCircle').textContent = Math.round(progress) + '%';
+        
+        if (currentSection === 0) {
+            document.getElementById('progressText').textContent = 'Beginne mit dem ersten Abschnitt';
+        } else if (currentSection === totalSections) {
+            document.getElementById('progressText').textContent = 'Alle Abschnitte abgeschlossen! 🎉';
+        } else {
+            document.getElementById('progressText').textContent = `${currentSection} von ${totalSections} Abschnitten abgeschlossen`;
+        }
+    }
+
+    function checkQuiz() {
+        const answers = {
+            q1: 'b',
+            q2: 'b',
+            q3: 'b',
+            q4: 'b',
+            q5: 'b'
+        };
+
+        let score = 0;
+        let totalQuestions = Object.keys(answers).length;
+        let allCorrect = true;
+
+        // Reset styles
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.classList.remove('correct', 'incorrect');
+        });
+
+        // Check each answer
+        Object.keys(answers).forEach(question => {
+            const selected = document.querySelector(`input[name="${question}"]:checked`);
+            const correctAnswer = answers[question];
+            
+            if (selected) {
+                if (selected.value === correctAnswer) {
+                    score++;
+                    selected.closest('.quiz-option').classList.add('correct');
+                } else {
+                    allCorrect = false;
+                    selected.closest('.quiz-option').classList.add('incorrect');
+                    // Show correct answer
+                    const correctOption = document.querySelector(`input[name="${question}"][value="${correctAnswer}"]`);
+                    if (correctOption) {
+                        correctOption.closest('.quiz-option').classList.add('correct');
+                    }
+                }
+            } else {
+                allCorrect = false;
+                // Show correct answer if nothing selected
+                const correctOption = document.querySelector(`input[name="${question}"][value="${correctAnswer}"]`);
+                if (correctOption) {
+                    correctOption.closest('.quiz-option').classList.add('correct');
+                }
+            }
+        });
+
+        // Show result
+        const resultDiv = document.getElementById('quizResult');
+        const correctMsg = resultDiv.querySelector('.correct-answer');
+        const incorrectMsg = resultDiv.querySelector('.incorrect-answer');
+        
+        resultDiv.classList.add('show');
+        resultDiv.classList.remove('correct', 'incorrect');
+        
+        if (allCorrect) {
+            resultDiv.classList.add('correct');
+            correctMsg.style.display = 'block';
+            incorrectMsg.style.display = 'none';
+        } else {
+            resultDiv.classList.add('incorrect');
+            correctMsg.style.display = 'none';
+            incorrectMsg.style.display = 'block';
+        }
+
+        // Scroll to result
+        resultDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        updateProgress();
+        // Auto-expand first section
+        toggleSection(1);
+    });
+</script>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+</div>
+{% endblock %}
+
