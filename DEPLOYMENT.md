@@ -25,8 +25,8 @@ FLASK_DEBUG=False     # WICHTIG: Auf False setzen!
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=deine-email@domain.com
-MAIL_PASSWORD=dein-app-passwort
+MAIL_USERNAME=your-email@domain.com
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 
 # Session Configuration für Produktion
 SESSION_COOKIE_SECURE=True   # HTTPS erforderlich

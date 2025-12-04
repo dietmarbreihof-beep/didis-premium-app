@@ -23,8 +23,9 @@ SECRET_KEY=test-secret-key-change-me
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=deine-test-email@gmail.com
-MAIL_PASSWORD=dein-app-passwort
+MAIL_USERNAME=your-test-email@gmail.com
+# Generiere unter: https://myaccount.google.com/apppasswords
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 MAIL_DEFAULT_SENDER=noreply@didis-academy.com
 BASE_URL=http://localhost:5000
 ```

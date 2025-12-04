@@ -13,8 +13,10 @@ SECRET_KEY=your-secret-key-here-change-me
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=deine-email@gmail.com
-MAIL_PASSWORD=dein-app-passwort-hier
+MAIL_USERNAME=your-email@gmail.com
+# WICHTIG: Niemals echte Passwörter in Code/Doku committen!
+# Generiere ein App-Passwort: https://myaccount.google.com/apppasswords
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 MAIL_DEFAULT_SENDER=noreply@didis-academy.com
 
 # Base URL für Email-Links
@@ -53,8 +55,8 @@ Im Railway Dashboard unter "Variables":
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=deine-email@gmail.com
-MAIL_PASSWORD=dein-app-passwort
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 MAIL_DEFAULT_SENDER=noreply@didis-academy.com
 BASE_URL=https://didis-premium-app-production.up.railway.app
 ```

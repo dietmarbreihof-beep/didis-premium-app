@@ -96,8 +96,8 @@ DATABASE_URL=sqlite:///didis_academy.db
 FLASK_ENV=development
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
-MAIL_USERNAME=deine-email@domain.com
-MAIL_PASSWORD=dein-app-passwort
+MAIL_USERNAME=your-email@domain.com
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 ```
 
 ### 5. Datenbank initialisieren

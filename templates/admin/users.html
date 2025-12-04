@@ -7,6 +7,21 @@
 
 {% block content %}
 
+<!-- Quick Actions -->
+<div class="card mb-4" style="padding: 15px 25px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <span style="font-weight: 600; font-size: 1.1rem;">🔧 Schnellzugriff</span>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{{ url_for('admin_user_activity') }}" class="btn" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">
+                📊 User-Aktivitäts-Statistik
+            </a>
+            <a href="{{ url_for('admin_analytics') }}" class="btn" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
+                📈 Allgemeine Analytics
+            </a>
+        </div>
+    </div>
+</div>
+
 <!-- Statistiken Dashboard -->
 <div class="card mb-4">
     <h2>📊 Übersicht</h2>

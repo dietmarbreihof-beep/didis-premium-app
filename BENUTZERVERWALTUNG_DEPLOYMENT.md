@@ -41,8 +41,9 @@ SECRET_KEY=<kryptographisch-sicherer-key>
 MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
-MAIL_USERNAME=<deine-email@gmail.com>
-MAIL_PASSWORD=<app-passwort>
+MAIL_USERNAME=<your-email@gmail.com>
+# Generiere unter: https://myaccount.google.com/apppasswords
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 MAIL_DEFAULT_SENDER=noreply@didis-academy.com
 BASE_URL=https://didis-premium-app-production.up.railway.app
 DATABASE_URL=<wird-automatisch-gesetzt>

@@ -1,0 +1,974 @@
+{% extends "base.html" %}
+
+{% block title %}Einfluss der persönlichen Beziehung zum Geld - Trading Psychologie{% endblock %}
+
+{% block content %}
+<div class="geld-beziehung-wrapper">
+<style>
+    .geld-beziehung-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .geld-beziehung-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 70%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .hero-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-weight: 700;
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 0 auto 30px;
+        max-width: 1200px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .progress-header h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.3em;
+    }
+
+    .progress-percentage {
+        font-size: 1.5em;
+        font-weight: 800;
+        color: #daa520;
+    }
+
+    .progress-bar-container {
+        background: #e0e0e0;
+        border-radius: 10px;
+        height: 12px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+        height: 100%;
+        border-radius: 10px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section-card h2 {
+        color: #1a1a1a;
+        font-size: 1.8em;
+        margin: 0 0 20px 0;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .section-number {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2em;
+        font-weight: 800;
+        flex-shrink: 0;
+    }
+
+    .section-card p {
+        color: #444;
+        line-height: 1.8;
+        font-size: 1.05em;
+        margin-bottom: 15px;
+    }
+
+    .section-card ul, .section-card ol {
+        color: #444;
+        line-height: 1.8;
+        margin: 15px 0;
+        padding-left: 25px;
+    }
+
+    .section-card li {
+        margin-bottom: 10px;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(244, 233, 123, 0.3) 0%, rgba(218, 165, 32, 0.2) 100%);
+        border-left: 4px solid #b8860b;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .highlight-box strong {
+        font-size: 1.15em;
+        display: block;
+        margin-bottom: 10px;
+        color: #1a1a1a;
+    }
+
+    .warning-box {
+        background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        border-left: 4px solid #d69e2e;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .warning-box strong {
+        color: #92400e;
+    }
+
+    .insight-box {
+        background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+        border-left: 4px solid #38a169;
+        border-radius: 8px;
+        padding: 20px 25px;
+        margin: 25px 0;
+    }
+
+    .insight-box strong {
+        color: #2f6846;
+    }
+
+    /* Quote Box */
+    .quote-box {
+        background: #1a1a1a;
+        color: white;
+        border-radius: 12px;
+        padding: 30px;
+        margin: 30px 0;
+        position: relative;
+    }
+
+    .quote-box::before {
+        content: '"';
+        font-size: 4em;
+        color: #daa520;
+        position: absolute;
+        top: 10px;
+        left: 20px;
+        opacity: 0.5;
+    }
+
+    .quote-box p {
+        color: white;
+        font-size: 1.2em;
+        font-style: italic;
+        padding-left: 40px;
+        margin: 0;
+    }
+
+    .quote-author {
+        text-align: right;
+        margin-top: 15px;
+        color: #daa520;
+        font-weight: 600;
+    }
+
+    /* Quiz Styles */
+    .quiz-container {
+        background: #f8f9fa;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-question {
+        font-size: 1.2em;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .quiz-options {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .quiz-option {
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px 20px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        background: rgba(218, 165, 32, 0.05);
+    }
+
+    .quiz-option.selected {
+        border-color: #daa520;
+        background: rgba(218, 165, 32, 0.1);
+    }
+
+    .quiz-option.correct {
+        border-color: #38a169;
+        background: rgba(56, 161, 105, 0.1);
+    }
+
+    .quiz-option.incorrect {
+        border-color: #e53e3e;
+        background: rgba(229, 62, 62, 0.1);
+    }
+
+    .quiz-feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-feedback.show {
+        display: block;
+    }
+
+    .quiz-feedback.correct {
+        background: rgba(56, 161, 105, 0.1);
+        border-left: 4px solid #38a169;
+        color: #2f6846;
+    }
+
+    .quiz-feedback.incorrect {
+        background: rgba(229, 62, 62, 0.1);
+        border-left: 4px solid #e53e3e;
+        color: #c53030;
+    }
+
+    /* Next Button */
+    .next-button {
+        background: linear-gradient(135deg, #daa520 0%, #b8860b 100%);
+        color: white;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 12px;
+        font-size: 1.1em;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 30px auto 0;
+        box-shadow: 0 4px 15px rgba(218, 165, 32, 0.3);
+    }
+
+    .next-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(218, 165, 32, 0.4);
+    }
+
+    .next-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Key Takeaways */
+    .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin: 40px 0;
+    }
+
+    .key-takeaways h3 {
+        color: #daa520;
+        font-size: 1.8em;
+        margin: 0 0 25px 0;
+    }
+
+    .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .key-takeaways li {
+        padding: 15px 0 15px 40px;
+        position: relative;
+        font-size: 1.1em;
+        line-height: 1.6;
+    }
+
+    .key-takeaways li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #daa520;
+        font-size: 1.5em;
+        font-weight: 800;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-card h2 {
+            font-size: 1.4em;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">🧠 Trading Psychologie</div>
+        <h1>Einfluss der persönlichen Beziehung zum Geld</h1>
+        <p class="subtitle">Wie deine Kindheit und deine Erfahrungen dein Trading-Verhalten prägen</p>
+        <div style="margin-top: 30px; opacity: 0.9;">
+            <p style="font-size: 1.1em;">Mit Dr. Jonathan Katz & Lance Breitstein</p>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="content-container">
+    <div class="progress-tracker">
+        <div class="progress-header">
+            <h3>Dein Fortschritt</h3>
+            <span class="progress-percentage" id="progressPercentage">0%</span>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+    </div>
+
+    <!-- Section 1: Einführung -->
+    <div class="section-card" id="section-1" data-step="1">
+        <h2>
+            <span class="section-number">1</span>
+            Warum Geld mehr ist als nur eine Zahl
+        </h2>
+        <p>Als Trader liebst du wahrscheinlich Geld – das ist völlig normal. Aber hast du dir schon einmal Gedanken darüber gemacht, <strong>was Geld für dich wirklich bedeutet</strong>?</p>
+        
+        <div class="highlight-box">
+            <strong>💡 Die Kernfrage:</strong>
+            <p>Deine Beziehung zu Geld wird nicht nur durch deine Trading-Erfahrungen geprägt, sondern vor allem durch deine Kindheit, deine Familie und deine Lebenserfahrungen.</p>
+        </div>
+
+        <p>Diese Beziehung beeinflusst:</p>
+        <ul>
+            <li><strong>Deine Risikotoleranz</strong> – Bist du zu konservativ oder zu aggressiv?</li>
+            <li><strong>Dein Overtrading</strong> – Warum handelst du zu viel?</li>
+            <li><strong>Dein FOMO</strong> – Was löst diese Angst wirklich aus?</li>
+            <li><strong>Deine Ziele</strong> – Was willst du wirklich erreichen?</li>
+            <li><strong>Deine Reaktion auf Verluste</strong> – Warum fühlst du dich so schlecht?</li>
+        </ul>
+
+        <div class="insight-box">
+            <strong>🎯 Wichtig:</strong>
+            <p>Dieses Modul hilft dir, deine eigene Beziehung zu Geld zu verstehen und zu erkennen, wie sie dein Trading beeinflusst. Es ist ein Thema, das viele Trader nie wirklich durchdenken – aber es kann der Schlüssel zu besserem Trading sein.</p>
+        </div>
+    </div>
+
+    <!-- Section 2: Geld als sensibles Thema -->
+    <div class="section-card" id="section-2" data-step="2" style="display: none;">
+        <h2>
+            <span class="section-number">2</span>
+            Geld ist das sensibelste Thema überhaupt
+        </h2>
+        <p>Dr. Jonathan Katz macht eine wichtige Beobachtung: <strong>Geld ist für die meisten Menschen das sensibelste Thema</strong> – noch sensibler als Sex oder andere persönliche Themen.</p>
+
+        <div class="quote-box">
+            <p>Geld ist wahrscheinlich das sensibelste Thema, über das man mit Menschen sprechen kann. Viele Menschen fühlen sich beim Reden über Geld unwohler als beim Reden über ihr Sexleben.</p>
+            <div class="quote-author">– Dr. Jonathan Katz</div>
+        </div>
+
+        <p><strong>Warum ist das so?</strong></p>
+        <p>Geld ist mit komplexen emotionalen und psychologischen Variablen verbunden, die oft aus unserer Kindheit stammen:</p>
+        <ul>
+            <li>Familienerfahrungen mit Geld (mehr oder weniger)</li>
+            <li>Finanzielle Traumata (Verluste, Schulden, Armut)</li>
+            <li>Unausgesprochene Überzeugungen über Geld</li>
+            <li>Gesellschaftliche Erwartungen und Druck</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Warnung:</strong>
+            <p>Viele Trader handeln diese Muster aus, ohne sich wirklich bewusst zu sein, was sie antreibt. Sie handeln mit ihrem P&L, ohne die zugrunde liegenden psychologischen Faktoren zu verstehen.</p>
+        </div>
+    </div>
+
+    <!-- Section 3: Wie Geld-Beziehung Trading beeinflusst -->
+    <div class="section-card" id="section-3" data-step="3" style="display: none;">
+        <h2>
+            <span class="section-number">3</span>
+            Wie deine Geld-Beziehung dein Trading prägt
+        </h2>
+        <p>Dr. Katz erklärt, dass Trader oft Muster ausleben, die mit ihrem P&L zu tun haben, ohne sich der Rolle bewusst zu sein, die Geld in ihrem Leben gespielt hat.</p>
+
+        <div class="highlight-box">
+            <strong>🔍 Typische Muster:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Männer assoziieren Erfolg mit Geld</strong> – Geld wird zum Maßstab für Leistung</li>
+                <li><strong>Social Media verstärkt den Druck</strong> – Konsumismus und "Lifestyle"-Darstellungen</li>
+                <li><strong>Übertriebene Ziele</strong> – Manche Trader müssen ein bestimmtes Vermögen erreichen</li>
+                <li><strong>Übermäßige Risikoaversion</strong> – Angst vor Verlusten aufgrund der eigenen Finanzgeschichte</li>
+            </ul>
+        </div>
+
+        <p><strong>Zwei Extreme:</strong></p>
+        <ul>
+            <li><strong>Zu konservativ:</strong> Trader, die aus Angst vor Verlusten nicht richtig riskieren können</li>
+            <li><strong>Zu aggressiv:</strong> Trader, die übermäßig riskieren, um ein bestimmtes Ziel zu erreichen</li>
+        </ul>
+
+        <div class="insight-box">
+            <strong>💡 Die Lösung:</strong>
+            <p>Verstehe deine eigene Geschichte mit Geld. Was bedeutet Geld für dich? Was bedeutet es, Geld zu haben oder nicht zu haben? Diese Selbsterkenntnis ist der Schlüssel zur besseren Geldverwaltung im Trading.</p>
+        </div>
+    </div>
+
+    <!-- Quiz 1 -->
+    <div class="section-card" id="quiz-1" data-step="3.5" style="display: none;">
+        <h2>
+            <span class="section-number">?</span>
+            Quiz: Deine Geld-Beziehung
+        </h2>
+        <div class="quiz-container">
+            <div class="quiz-question">Warum ist Geld für viele Menschen das sensibelste Thema?</div>
+            <ul class="quiz-options">
+                <li class="quiz-option" data-correct="true">Weil es mit komplexen emotionalen Variablen aus der Kindheit verbunden ist</li>
+                <li class="quiz-option" data-correct="false">Weil es ein Tabu-Thema in der Gesellschaft ist</li>
+                <li class="quiz-option" data-correct="false">Weil niemand gerne über Finanzen spricht</li>
+                <li class="quiz-option" data-correct="false">Weil es zu kompliziert ist</li>
+            </ul>
+            <div class="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Section 4: P&L als Scorecard -->
+    <div class="section-card" id="section-4" data-step="4" style="display: none;">
+        <h2>
+            <span class="section-number">4</span>
+            P&L als Scorecard – Warum Zahlen so mächtig sind
+        </h2>
+        <p>Ein P&L ist eigentlich nur eine rote oder grüne Zahl auf dem Bildschirm. Aber warum fühlt sich ein guter Tag so gut an und ein schlechter Tag so schlimm?</p>
+
+        <div class="quote-box">
+            <p>Ein P&L kann deine Herzfrequenz erhöhen, dein Cortisol in die Höhe treiben. An einem wirklich guten Tag fühlst du dich wie auf dem Gipfel der Welt – aber bei großen Verlusten kannst du dich buchstäblich suizidal fühlen.</p>
+            <div class="quote-author">– Lance Breitstein</div>
+        </div>
+
+        <p><strong>Warum diese extreme Reaktion?</strong></p>
+        <p>Weil Geld für viele Trader die <strong>Scorecard</strong> ist – der Maßstab für Erfolg und Selbstwert. Wenn du schlecht performst, fühlst du:</p>
+        <ul>
+            <li>Scham und Verlegenheit</li>
+            <li>Niedrigen Selbstwert</li>
+            <li>Das Gefühl, versagt zu haben</li>
+        </ul>
+
+        <div class="warning-box">
+            <strong>⚠️ Das Problem:</strong>
+            <p>Wenn Trader viel Geld verdienen, geben sie es oft für Häuser, Autos oder andere externe Dinge aus – um ihren Erfolg zu demonstrieren. Aber das ist oft leer, weil sie versuchen, eine innere Leere zu füllen, ohne zu verstehen, was sie wirklich antreibt.</p>
+        </div>
+    </div>
+
+    <!-- Section 5: Vergleichsspiel und Hedonic Treadmill -->
+    <div class="section-card" id="section-5" data-step="5" style="display: none;">
+        <h2>
+            <span class="section-number">5</span>
+            Das Vergleichsspiel und der Hedonic Treadmill
+        </h2>
+        <p>Viele Trader geraten in einen mächtigen Zyklus: Sie vergleichen sich mit anderen, versuchen mehr zu erreichen, mehr Geld zu verdienen, mehr auszugeben – und landen auf einem <strong>Hedonic Treadmill</strong> (hedonistisches Laufband).</p>
+
+        <div class="highlight-box">
+            <strong>🔄 Der Zyklus:</strong>
+            <ol style="margin-top: 10px;">
+                <li>Du siehst andere Trader mit Erfolg (Social Media, Foren)</li>
+                <li>Du willst das auch erreichen</li>
+                <li>Du handelst mehr, riskierst mehr</li>
+                <li>Du verdienst Geld</li>
+                <li>Du gibst es für externe Dinge aus</li>
+                <li>Du fühlst dich immer noch nicht erfüllt</li>
+                <li>Du beginnst von vorne</li>
+            </ol>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Die Frage, die du dir stellen musst:</strong>
+            <p>Was ist dir wirklich wichtig? Verstehst du dein eigenes Erfolgsniveau, oder versuchst du, ein Erfolgsniveau zu erreichen, das von Erwartungen aus deiner Kindheit, deiner Familie oder deinen Peers bestimmt wird?</p>
+        </div>
+
+        <p><strong>Die Lösung:</strong> Setze dich hin und schaue zurück – was ist dir wirklich wichtig? Was sind deine eigenen Werte, nicht die Werte, die andere dir auferlegt haben?</p>
+    </div>
+
+    <!-- Quiz 2 -->
+    <div class="section-card" id="quiz-2" data-step="5.5" style="display: none;">
+        <h2>
+            <span class="section-number">?</span>
+            Quiz: P&L und Selbstwert
+        </h2>
+        <div class="quiz-container">
+            <div class="quiz-question">Warum reagieren Trader so emotional auf P&L-Zahlen?</div>
+            <ul class="quiz-options">
+                <li class="quiz-option" data-correct="false">Weil Geld wichtig ist</li>
+                <li class="quiz-option" data-correct="true">Weil Geld die Scorecard ist – der Maßstab für Erfolg und Selbstwert</li>
+                <li class="quiz-option" data-correct="false">Weil Verluste schmerzhaft sind</li>
+                <li class="quiz-option" data-correct="false">Weil Trading stressig ist</li>
+            </ul>
+            <div class="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Section 6: Überkonservativität durch Armutserfahrung -->
+    <div class="section-card" id="section-6" data-step="6" style="display: none;">
+        <h2>
+            <span class="section-number">6</span>
+            Wenn Armutserfahrung zu übermäßiger Vorsicht führt
+        </h2>
+        <p>Stell dir vor, du bist ohne Geld aufgewachsen. Jetzt, wenn du P&L machst, bist du sehr defensiv. Du willst das Geld nicht loslassen, du willst nicht richtig riskieren, du hast Probleme, deine Position zu vergrößern.</p>
+
+        <div class="highlight-box">
+            <strong>🎯 Der Prozess:</strong>
+            <p><strong>Schritt 1:</strong> Selbstbewusstsein entwickeln – erkenne das Muster</p>
+            <p><strong>Schritt 2:</strong> Langsam und schrittweise vorgehen</p>
+            <p><strong>Schritt 3:</strong> Kleine, inkrementelle Schritte machen</p>
+        </div>
+
+        <div class="insight-box">
+            <strong>💡 Wichtig:</strong>
+            <p>Wenn du sehr risikoavers bist, musst du den Prozess des Sizing-Up oder des Erhöhens deines Risikos sehr langsam und schrittweise angehen. Wenn du zu schnell gehst und scheiterst, fällst du in deinem Kopf noch weiter zurück.</p>
+        </div>
+
+        <p><strong>Kann man seine Prägung wirklich ändern?</strong></p>
+        <p>Dr. Katz sagt: <strong>Ja, aber langsam.</strong> Wir sind alle auf eine bestimmte Weise verdrahtet. Du wirst nicht aus einer schüchternen Person eine sehr gesellige Person machen. Aber du kannst helfen, dass diese Person etwas sozialer wird.</p>
+
+        <div class="quote-box">
+            <p>Akzeptiere, wer du bist, aber versuche trotzdem die Änderungen zu machen, die du willst. Nicht mit einer idealisierten Vorstellung davon, wie du sein solltest, sondern mit langsamen Fortschritten und großer Freude an diesen Veränderungen.</p>
+            <div class="quote-author">– Dr. Jonathan Katz</div>
+        </div>
+    </div>
+
+    <!-- Section 7: Warnsignale erkennen -->
+    <div class="section-card" id="section-7" data-step="7" style="display: none;">
+        <h2>
+            <span class="section-number">7</span>
+            Warnsignale – Wann solltest du genauer hinschauen?
+        </h2>
+        <p>Es gibt bestimmte Warnsignale, die darauf hindeuten, dass du eine ungesunde Beziehung zu Geld hast:</p>
+
+        <div class="warning-box">
+            <strong>🚨 Warnsignale:</strong>
+            <ul style="margin-top: 10px;">
+                <li><strong>Große Angst beim Reden über Geld</strong> – Wenn du dich sehr unwohl fühlst, wenn du über Finanzen sprichst, könnte das auf finanzielle Traumata aus deiner Kindheit hindeuten</li>
+                <li><strong>Übermäßige Sparsamkeit</strong> – Trader mit Vermögen, die sich nicht trauen, vernünftig auszugeben</li>
+                <li><strong>Übermäßiges Ausgeben</strong> – Trader, die von jedem verdienten Dollar 99 Cent ausgeben</li>
+            </ul>
+        </div>
+
+        <p><strong>Die Extreme:</strong></p>
+        <ul>
+            <li><strong>Zu sparsam:</strong> Du hast Geld, aber du kannst es nicht ausgeben, selbst wenn es vernünftig wäre</li>
+            <li><strong>Zu verschwenderisch:</strong> Du gibst fast alles aus, was du verdienst</li>
+        </ul>
+
+        <div class="insight-box">
+            <strong>💡 Selbsterkenntnis:</strong>
+            <p>Diese Extreme sind oft Indikatoren dafür, dass du eine ungesunde Beziehung zu Geld hast. Die Lösung ist, zu verstehen, was diese Muster antreibt – was sind die zugrunde liegenden Variablen und Auslöser für dich persönlich?</p>
+        </div>
+    </div>
+
+    <!-- Quiz 3 -->
+    <div class="section-card" id="quiz-3" data-step="7.5" style="display: none;">
+        <h2>
+            <span class="section-number">?</span>
+            Quiz: Warnsignale
+        </h2>
+        <div class="quiz-container">
+            <div class="quiz-question">Welches ist KEIN Warnsignal für eine ungesunde Geld-Beziehung?</div>
+            <ul class="quiz-options">
+                <li class="quiz-option" data-correct="false">Große Angst beim Reden über Geld</li>
+                <li class="quiz-option" data-correct="false">Übermäßige Sparsamkeit trotz Vermögen</li>
+                <li class="quiz-option" data-correct="true">Vernünftiges Ausgeben und Sparen</li>
+                <li class="quiz-option" data-correct="false">Übermäßiges Ausgeben (99 Cent von jedem Dollar)</li>
+            </ul>
+            <div class="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Section 8: FOMO und Overtrading -->
+    <div class="section-card" id="section-8" data-step="8" style="display: none;">
+        <h2>
+            <span class="section-number">8</span>
+            FOMO und Overtrading – Nicht jeder hat dasselbe Problem
+        </h2>
+        <p>Hast du FOMO oder overtradest du? Das bedeutet nicht automatisch, dass du ein Problem hast – <strong>jeder hat diese Tendenzen in gewissem Maße</strong>.</p>
+
+        <div class="highlight-box">
+            <strong>🔍 Der Unterschied:</strong>
+            <p>FOMO und Overtrading kommen in verschiedenen Formen, Größen und Farben. Was dich auslöst, kann sich stark von dem unterscheiden, was jemand anderen auslöst.</p>
+        </div>
+
+        <p><strong>Die Lösung:</strong></p>
+        <ul>
+            <li>Verstehe deine eigenen zugrunde liegenden Variablen</li>
+            <li>Erkenne deine persönlichen Auslöser</li>
+            <li>Nimm dann korrigierende Schritte</li>
+        </ul>
+
+        <div class="insight-box">
+            <strong>💡 Wichtig:</strong>
+            <p>Es gibt keine universelle Erklärung für das Verhalten von Menschen. Das ist der "Special Sauce" in der Arbeit mit einem Psychologen – wirklich zu verstehen, was die zugrunde liegenden Variablen und Auslöser für <strong>dich persönlich</strong> sind.</p>
+        </div>
+    </div>
+
+    <!-- Section 9: Psychologen und Geld-Themen -->
+    <div class="section-card" id="section-9" data-step="9" style="display: none;">
+        <h2>
+            <span class="section-number">9</span>
+            Kann ein normaler Psychologe helfen?
+        </h2>
+        <p>Die Frage: Kann ein durchschnittlicher Psychologe, der nicht speziell auf Trading-Psychologie spezialisiert ist, bei diesen Themen helfen?</p>
+
+        <div class="highlight-box">
+            <strong>✅ Die Antwort:</strong>
+            <p>Ja, aber es ist interessant – in der traditionelleren Psychologie-Arbeit werden oft eher zwischenmenschliche Themen angesprochen. Aber es gibt oft eine Beziehung zwischen Geldproblemen und anderen verwandten Problemen.</p>
+        </div>
+
+        <p><strong>Was ein Psychologe erkennen kann:</strong></p>
+        <ul>
+            <li>Deine Finanzgeschichte erzählt viel über deine Familienerziehung</li>
+            <li>Kommunikationsniveaus – was wurde besprochen, was nicht?</li>
+            <li>Geteilte Überzeugungen und fehlerhafte Annahmen</li>
+        </ul>
+
+        <div class="insight-box">
+            <strong>💡 Empfehlung:</strong>
+            <p>Dr. Katz sagt, dass er Geld-Themen immer mit Menschen bespricht, weil die Finanzgeschichte viel über die Familienerziehung, Kommunikation und Überzeugungen verrät. Wenn du mit einem Psychologen arbeitest, solltest du diese Themen ansprechen.</p>
+        </div>
+    </div>
+
+    <!-- Quiz 4 -->
+    <div class="section-card" id="quiz-4" data-step="9.5" style="display: none;">
+        <h2>
+            <span class="section-number">?</span>
+            Quiz: FOMO und Overtrading
+        </h2>
+        <div class="quiz-container">
+            <div class="quiz-question">Was ist der wichtigste Schritt, um FOMO und Overtrading zu überwinden?</div>
+            <ul class="quiz-options">
+                <li class="quiz-option" data-correct="false">Einfach weniger traden</li>
+                <li class="quiz-option" data-correct="true">Deine eigenen zugrunde liegenden Variablen und Auslöser verstehen</li>
+                <li class="quiz-option" data-correct="false">Mehr Disziplin haben</li>
+                <li class="quiz-option" data-correct="false">Bessere Trading-Strategien lernen</li>
+            </ul>
+            <div class="quiz-feedback"></div>
+        </div>
+    </div>
+
+    <!-- Key Takeaways -->
+    <div class="section-card" id="section-10" data-step="10" style="display: none;">
+        <div class="key-takeaways">
+            <h3>🎯 Key Takeaways</h3>
+            <ul>
+                <li>Geld ist für die meisten Menschen das sensibelste Thema – noch sensibler als andere persönliche Themen</li>
+                <li>Deine Beziehung zu Geld wird durch deine Kindheit, Familie und Lebenserfahrungen geprägt</li>
+                <li>Diese Beziehung beeinflusst deine Risikotoleranz, dein Overtrading, dein FOMO und deine Ziele</li>
+                <li>P&L wird zur Scorecard – zum Maßstab für Erfolg und Selbstwert</li>
+                <li>Das Vergleichsspiel führt oft zu einem Hedonic Treadmill – einem endlosen Zyklus</li>
+                <li>Wenn du sehr risikoavers bist, musst du langsam und schrittweise vorgehen</li>
+                <li>Warnsignale: Große Angst beim Reden über Geld, übermäßige Sparsamkeit oder Verschwendung</li>
+                <li>FOMO und Overtrading haben unterschiedliche Auslöser für jeden – verstehe deine eigenen</li>
+                <li>Selbsterkenntnis ist der Schlüssel – verstehe, was Geld für dich bedeutet</li>
+                <li>Akzeptiere, wer du bist, aber mache langsame, inkrementelle Fortschritte</li>
+            </ul>
+        </div>
+
+        <div class="highlight-box" style="margin-top: 30px;">
+            <strong>📚 Weiterführende Ressourcen:</strong>
+            <p>Lance empfiehlt die Arbeit von <strong>Morgan Housel</strong> – einen großartigen Autor und Podcaster, der viel über die Psychologie des Geldes geschrieben hat. Wenn du mehr lernen willst, schaue dir seine Bücher, Blogs und Podcasts an.</p>
+        </div>
+    </div>
+
+    <!-- Final Quiz -->
+    <div class="section-card" id="quiz-final" data-step="10.5" style="display: none;">
+        <h2>
+            <span class="section-number">✓</span>
+            Abschluss-Quiz: Deine Geld-Beziehung verstehen
+        </h2>
+        <div class="quiz-container">
+            <div class="quiz-question">Was ist der wichtigste Schritt zur Verbesserung deiner Trading-Psychologie in Bezug auf Geld?</div>
+            <ul class="quiz-options">
+                <li class="quiz-option" data-correct="false">Mehr Geld verdienen</li>
+                <li class="quiz-option" data-correct="false">Bessere Trading-Strategien lernen</li>
+                <li class="quiz-option" data-correct="true">Selbsterkenntnis entwickeln – verstehen, was Geld für dich bedeutet und wie deine Kindheit dein Verhalten prägt</li>
+                <li class="quiz-option" data-correct="false">Einen Psychologen aufsuchen</li>
+            </ul>
+            <div class="quiz-feedback"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Progressive Disclosure System
+    let currentStep = 1;
+    const totalSteps = 10.5;
+    const quizAnswers = {};
+
+    // Load progress from localStorage
+    function loadProgress() {
+        const saved = localStorage.getItem('geld-beziehung-progress');
+        if (saved) {
+            const data = JSON.parse(saved);
+            currentStep = data.currentStep || 1;
+            if (data.quizAnswers) {
+                Object.assign(quizAnswers, data.quizAnswers);
+            }
+        }
+        updateProgress();
+        showCurrentStep();
+    }
+
+    // Save progress to localStorage
+    function saveProgress() {
+        localStorage.setItem('geld-beziehung-progress', JSON.stringify({
+            currentStep: currentStep,
+            quizAnswers: quizAnswers
+        }));
+    }
+
+    // Update progress bar
+    function updateProgress() {
+        const percentage = Math.round((currentStep / totalSteps) * 100);
+        document.getElementById('progressPercentage').textContent = percentage + '%';
+        document.getElementById('progressBar').style.width = percentage + '%';
+    }
+
+    // Show current step and all previous steps
+    function showCurrentStep() {
+        // Hide all sections
+        document.querySelectorAll('.section-card').forEach(card => {
+            card.style.display = 'none';
+        });
+
+        // Show all steps up to current
+        for (let i = 1; i <= currentStep; i++) {
+            const step = i.toString().replace('.', '-');
+            const section = document.getElementById(`section-${step}`) || 
+                           document.getElementById(`quiz-${step}`);
+            if (section) {
+                section.style.display = 'block';
+                section.classList.add('visible');
+            }
+        }
+
+        // Restore quiz answers
+        restoreQuizAnswers();
+    }
+
+    // Quiz handling
+    function setupQuizzes() {
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const quizContainer = this.closest('.quiz-container');
+                const feedback = quizContainer.querySelector('.quiz-feedback');
+                const isCorrect = this.dataset.correct === 'true';
+                const questionId = quizContainer.closest('.section-card').id;
+
+                // Disable all options in this quiz
+                quizContainer.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.style.pointerEvents = 'none';
+                });
+
+                // Mark selected
+                this.classList.add('selected');
+
+                // Mark correct/incorrect
+                if (isCorrect) {
+                    this.classList.add('correct');
+                    feedback.textContent = '✅ Richtig! Sehr gut gemacht.';
+                    feedback.className = 'quiz-feedback show correct';
+                    quizAnswers[questionId] = true;
+                } else {
+                    this.classList.add('incorrect');
+                    // Mark correct answer
+                    quizContainer.querySelectorAll('.quiz-option').forEach(opt => {
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('correct');
+                        }
+                    });
+                    feedback.textContent = '❌ Nicht ganz richtig. Schaue dir die richtige Antwort an.';
+                    feedback.className = 'quiz-feedback show incorrect';
+                    quizAnswers[questionId] = false;
+                }
+
+                saveProgress();
+            });
+        });
+    }
+
+    // Restore quiz answers
+    function restoreQuizAnswers() {
+        document.querySelectorAll('.quiz-container').forEach(container => {
+            const questionId = container.closest('.section-card').id;
+            if (quizAnswers.hasOwnProperty(questionId)) {
+                const wasCorrect = quizAnswers[questionId];
+                const feedback = container.querySelector('.quiz-feedback');
+                if (wasCorrect !== undefined) {
+                    container.querySelectorAll('.quiz-option').forEach(opt => {
+                        opt.style.pointerEvents = 'none';
+                        if (opt.dataset.correct === 'true') {
+                            opt.classList.add('correct');
+                        }
+                        if (opt.classList.contains('selected')) {
+                            if (wasCorrect) {
+                                opt.classList.add('correct');
+                            } else {
+                                opt.classList.add('incorrect');
+                            }
+                        }
+                    });
+                    if (wasCorrect) {
+                        feedback.textContent = '✅ Richtig! Sehr gut gemacht.';
+                        feedback.className = 'quiz-feedback show correct';
+                    } else {
+                        feedback.textContent = '❌ Nicht ganz richtig. Schaue dir die richtige Antwort an.';
+                        feedback.className = 'quiz-feedback show incorrect';
+                    }
+                }
+            }
+        });
+    }
+
+    // Next button handler
+    function setupNextButtons() {
+        // Create next buttons for each section
+        document.querySelectorAll('.section-card').forEach(card => {
+            const step = parseFloat(card.dataset.step);
+            if (step && step < totalSteps) {
+                const nextButton = document.createElement('button');
+                nextButton.className = 'next-button';
+                nextButton.textContent = step % 1 === 0 ? 'Weiter →' : 'Nächste Frage →';
+                nextButton.onclick = () => {
+                    currentStep = Math.min(currentStep + 0.5, totalSteps);
+                    updateProgress();
+                    showCurrentStep();
+                    saveProgress();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                card.appendChild(nextButton);
+            }
+        });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+        loadProgress();
+        setupQuizzes();
+        setupNextButtons();
+        
+        // Fade in animation
+        setTimeout(() => {
+            document.querySelectorAll('.section-card.visible').forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            });
+        }, 100);
+    });
+</script>
+
+{% include '_navigation.html' %}
+{% endblock %}
+
+

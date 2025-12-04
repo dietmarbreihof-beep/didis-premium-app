@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User-Aktivitäts-Statistik{% endblock %}
+
+{% block header_title %}📊 User-Aktivitäts-Statistik{% endblock %}
+{% block header_subtitle %}Detaillierte Übersicht über Modul-Nutzung und User-Aktivität{% endblock %}
+
+{% block content %}
+
+<!-- Zeitraum-Filter -->
+<div class="card mb-4">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+        <h2 style="margin: 0;">🕐 Zeitraum wählen</h2>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <a href="{{ url_for('admin_user_activity', days=7) }}" 
+               class="btn {% if days == 7 %}active{% endif %}">7 Tage</a>
+            <a href="{{ url_for('admin_user_activity', days=14) }}" 
+               class="btn {% if days == 14 %}active{% endif %}">14 Tage</a>
+            <a href="{{ url_for('admin_user_activity', days=30) }}" 
+               class="btn {% if days == 30 %}active{% endif %}">30 Tage</a>
+            <a href="{{ url_for('admin_user_activity', days=90) }}" 
+               class="btn {% if days == 90 %}active{% endif %}">90 Tage</a>
+            <a href="{{ url_for('admin_user_activity', days=365) }}" 
+               class="btn {% if days == 365 %}active{% endif %}">1 Jahr</a>
+        </div>
+    </div>
+</div>
+
+<!-- Gesamt-Statistiken -->
+<div class="card mb-4">
+    <h2>📈 Gesamt-Übersicht (letzte {{ days }} Tage)</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 20px;">
+        <div style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: bold;">{{ active_users_count }}</div>
+            <div style="opacity: 0.9;">Aktive User</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #10b981, #047857); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: bold;">{{ total_page_views }}</div>
+            <div style="opacity: 0.9;">Seitenaufrufe</div>
+        </div>
+        <div style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: bold;">{{ top_modules|length }}</div>
+            <div style="opacity: 0.9;">Aktive Module</div>
+        </div>
+        <div style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; padding: 25px; border-radius: 12px; text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: bold;">
+                {% if active_users_count > 0 %}
+                    {{ (total_page_views / active_users_count)|round(1) }}
+                {% else %}
+                    0
+                {% endif %}
+            </div>
+            <div style="opacity: 0.9;">Ø Seiten/User</div>
+        </div>
+    </div>
+</div>
+
+<!-- Zwei-Spalten Layout für User und Module -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    
+    <!-- User-Aktivität -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">👥 User-Aktivität</h2>
+            <span style="color: var(--text-muted); font-size: 0.875rem;">{{ user_stats|length }} User</span>
+        </div>
+        
+        {% if user_stats %}
+        <div style="max-height: 600px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="position: sticky; top: 0; background: var(--bg-primary);">
+                    <tr style="text-align: left; border-bottom: 2px solid var(--border-color);">
+                        <th style="padding: 10px;">User</th>
+                        <th style="padding: 10px; text-align: center;">Aufrufe</th>
+                        <th style="padding: 10px; text-align: center;">Module</th>
+                        <th style="padding: 10px;">Letzter Besuch</th>
+                        <th style="padding: 10px; text-align: center;">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in user_stats %}
+                    <tr style="border-bottom: 1px solid var(--border-color); {% if stat.page_views == 0 %}opacity: 0.5;{% endif %}">
+                        <td style="padding: 10px;">
+                            <div style="font-weight: 600;">{{ stat.user.username }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted);">
+                                {% if stat.user.subscription_type.value == 'free' %}🆓 Free
+                                {% elif stat.user.subscription_type.value == 'premium' %}⭐ Premium
+                                {% elif stat.user.subscription_type.value == 'elite' %}💎 Elite
+                                {% elif stat.user.subscription_type.value == 'elite_pro' %}👑 Elite Pro
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <span style="background: {% if stat.page_views > 50 %}#10b981{% elif stat.page_views > 10 %}#3b82f6{% else %}#6b7280{% endif %}; 
+                                         color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">
+                                {{ stat.page_views }}
+                            </span>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <span style="background: var(--gold-classic); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.875rem; font-weight: 600;">
+                                {{ stat.module_views }}
+                            </span>
+                        </td>
+                        <td style="padding: 10px; font-size: 0.875rem; color: var(--text-secondary);">
+                            {% if stat.last_visit %}
+                                {{ stat.last_visit.strftime('%d.%m.%Y') }}<br>
+                                <span style="color: var(--text-muted);">{{ stat.last_visit.strftime('%H:%M') }} Uhr</span>
+                            {% else %}
+                                <span style="color: var(--text-muted);">—</span>
+                            {% endif %}
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <a href="{{ url_for('admin_user_activity_detail', user_id=stat.user.id) }}" 
+                               class="btn small" 
+                               style="padding: 5px 12px; font-size: 0.75rem; background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
+                                🔍 Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+            <p>Keine User-Aktivität im gewählten Zeitraum.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Top Module -->
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">🏆 Top Module</h2>
+            <span style="color: var(--text-muted); font-size: 0.875rem;">Nach Aufrufen</span>
+        </div>
+        
+        {% if top_modules %}
+        <div style="max-height: 600px; overflow-y: auto;">
+            {% for module in top_modules %}
+            <div style="display: flex; align-items: center; padding: 15px; border-bottom: 1px solid var(--border-color); gap: 15px;">
+                <!-- Rang -->
+                <div style="width: 40px; height: 40px; border-radius: 50%; 
+                            background: {% if loop.index <= 3 %}linear-gradient(135deg, var(--gold-classic), var(--gold-dark)){% else %}var(--bg-secondary){% endif %}; 
+                            color: {% if loop.index <= 3 %}white{% else %}var(--text-primary){% endif %}; 
+                            display: flex; align-items: center; justify-content: center; 
+                            font-weight: bold; font-size: 1.1rem; flex-shrink: 0;">
+                    {{ loop.index }}
+                </div>
+                
+                <!-- Modul-Info -->
+                <div style="flex: 1; min-width: 0;">
+                    <div style="font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ module.name }}
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        {{ module.url }}
+                    </div>
+                </div>
+                
+                <!-- Statistiken -->
+                <div style="text-align: right; flex-shrink: 0;">
+                    <div style="font-size: 1.25rem; font-weight: bold; color: var(--gold-classic);">{{ module.views }}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">{{ module.unique_users }} User</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+            <p>Keine Modul-Aufrufe im gewählten Zeitraum.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Tägliche Aktivität Chart -->
+<div class="card" style="margin-top: 20px;">
+    <h2>📅 Tägliche Aktivität</h2>
+    {% if daily_activity %}
+    <div style="padding: 20px;">
+        <div style="display: flex; align-items: flex-end; gap: 3px; height: 200px; overflow-x: auto; padding-bottom: 30px;">
+            {% set max_views = daily_activity|map(attribute=1)|max %}
+            {% for date, views, users in daily_activity %}
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 25px; flex: 1;">
+                <!-- Balken -->
+                <div style="width: 100%; max-width: 40px; 
+                            height: {% if max_views > 0 %}{{ (views / max_views * 150)|int }}{% else %}0{% endif %}px; 
+                            min-height: 4px;
+                            background: linear-gradient(180deg, var(--gold-classic), var(--gold-dark)); 
+                            border-radius: 4px 4px 0 0;
+                            position: relative;"
+                     title="{{ date }}: {{ views }} Aufrufe, {{ users }} User">
+                    <!-- Tooltip bei Hover -->
+                    <span style="position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); 
+                                 background: #1a1a1a; color: white; padding: 4px 8px; border-radius: 4px; 
+                                 font-size: 0.7rem; white-space: nowrap; opacity: 0; transition: opacity 0.2s;
+                                 pointer-events: none;">
+                        {{ views }} Aufrufe
+                    </span>
+                </div>
+                <!-- Datum -->
+                <div style="font-size: 0.65rem; color: var(--text-muted); writing-mode: vertical-rl; 
+                            text-orientation: mixed; transform: rotate(180deg); margin-top: 5px; height: 50px;">
+                    {{ date.strftime('%d.%m') if date is not string else date }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+        <p>Keine Aktivitätsdaten vorhanden.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Navigation -->
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; gap: 15px; flex-wrap: wrap;">
+    <a href="{{ url_for('admin_users') }}" class="btn" style="background: var(--bg-secondary);">
+        👥 User-Verwaltung
+    </a>
+    <a href="{{ url_for('admin_analytics') }}" class="btn" style="background: var(--bg-secondary);">
+        📈 Allgemeine Analytics
+    </a>
+    <a href="{{ url_for('admin_modules') }}" class="btn" style="background: var(--bg-secondary);">
+        📚 Module verwalten
+    </a>
+</div>
+
+<style>
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn.active {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+.btn.small {
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+}
+
+.card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+}
+
+.mb-4 {
+    margin-bottom: 20px;
+}
+
+/* Hover-Effekt für Balken-Tooltips */
+div[title]:hover span {
+    opacity: 1 !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+    
+    .btn {
+        padding: 8px 14px;
+        font-size: 0.875rem;
+    }
+}
+</style>
+
+{% endblock %}
+

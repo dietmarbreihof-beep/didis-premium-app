@@ -83,7 +83,8 @@ MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=True
 MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
+# Generiere unter: https://myaccount.google.com/apppasswords
+MAIL_PASSWORD=<GENERATE_VIA_GOOGLE_APP_PASSWORDS>
 MAIL_DEFAULT_SENDER=noreply@didis-academy.com
 ```
 

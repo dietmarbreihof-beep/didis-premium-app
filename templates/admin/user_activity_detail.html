@@ -1,0 +1,362 @@
+{% extends "base.html" %}
+
+{% block title %}User-Aktivität: {{ user.username }}{% endblock %}
+
+{% block header_title %}📊 {{ user.username }} - Aktivitäts-Details{% endblock %}
+{% block header_subtitle %}Detaillierte Übersicht über Modul-Nutzung und Lernfortschritt{% endblock %}
+
+{% block content %}
+
+<!-- User-Info Header -->
+<div class="card mb-4" style="background: linear-gradient(135deg, #1a1a1a, #2d2d2d); color: white;">
+    <div style="display: grid; grid-template-columns: auto 1fr auto; gap: 30px; align-items: center;">
+        <!-- Avatar -->
+        <div style="width: 80px; height: 80px; border-radius: 50%; 
+                    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); 
+                    display: flex; align-items: center; justify-content: center; 
+                    font-size: 2rem; font-weight: bold; color: white;">
+            {{ user.username[0]|upper }}
+        </div>
+        
+        <!-- User-Details -->
+        <div>
+            <h2 style="margin: 0 0 5px 0; color: white; font-size: 1.5rem;">{{ user.username }}</h2>
+            <div style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+                {{ user.email }}
+                {% if user.first_name or user.last_name %}
+                    · {{ user.first_name }} {{ user.last_name }}
+                {% endif %}
+            </div>
+            <div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap;">
+                <!-- Subscription Badge -->
+                <span style="background: {% if user.subscription_type.value == 'elite_pro' %}linear-gradient(135deg, #ffd700, #ffed4e){% elif user.subscription_type.value == 'elite' %}linear-gradient(135deg, var(--gold-classic), var(--gold-dark)){% elif user.subscription_type.value == 'premium' %}#8b5cf6{% else %}#6b7280{% endif %}; 
+                             color: {% if user.subscription_type.value in ['elite', 'elite_pro'] %}#1a1a1a{% else %}white{% endif %}; 
+                             padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">
+                    {% if user.subscription_type.value == 'free' %}🆓 Free
+                    {% elif user.subscription_type.value == 'premium' %}⭐ Premium
+                    {% elif user.subscription_type.value == 'elite' %}💎 Elite
+                    {% elif user.subscription_type.value == 'elite_pro' %}👑 Elite Pro
+                    {% endif %}
+                </span>
+                <!-- Status Badge -->
+                <span style="background: {% if user.is_active %}#10b981{% else %}#ef4444{% endif %}; 
+                             color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem;">
+                    {% if user.is_active %}✓ Aktiv{% else %}✗ Inaktiv{% endif %}
+                </span>
+            </div>
+        </div>
+        
+        <!-- Quick Stats -->
+        <div style="text-align: right;">
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6);">Registriert</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">
+                {{ user.created_at.strftime('%d.%m.%Y') if user.created_at else '—' }}
+            </div>
+            <div style="font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 10px;">Letzter Login</div>
+            <div style="font-size: 1.1rem; font-weight: 600;">
+                {{ user.last_login.strftime('%d.%m.%Y %H:%M') if user.last_login else 'Nie' }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Statistik-Karten -->
+<div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;">
+    <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: bold; color: #3b82f6;">{{ total_visits }}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Gesamt-Aufrufe</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: bold; color: var(--gold-classic);">{{ total_module_visits }}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Modul-Aufrufe</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: bold; color: #10b981;">{{ module_visits|length }}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Verschiedene Module</div>
+    </div>
+    <div class="card" style="text-align: center; padding: 20px;">
+        <div style="font-size: 2rem; font-weight: bold; color: #8b5cf6;">{{ progress_entries|length }}</div>
+        <div style="color: var(--text-muted); font-size: 0.875rem;">Fortschritt-Einträge</div>
+    </div>
+</div>
+
+<!-- Zeitraum-Filter -->
+<div class="card mb-4" style="padding: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <span style="font-weight: 600;">🕐 Zeitraum:</span>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="{{ url_for('admin_user_activity_detail', user_id=user.id, days=7) }}" 
+               class="btn small {% if days == 7 %}active{% endif %}">7 Tage</a>
+            <a href="{{ url_for('admin_user_activity_detail', user_id=user.id, days=30) }}" 
+               class="btn small {% if days == 30 %}active{% endif %}">30 Tage</a>
+            <a href="{{ url_for('admin_user_activity_detail', user_id=user.id, days=90) }}" 
+               class="btn small {% if days == 90 %}active{% endif %}">90 Tage</a>
+            <a href="{{ url_for('admin_user_activity_detail', user_id=user.id, days=365) }}" 
+               class="btn small {% if days == 365 %}active{% endif %}">1 Jahr</a>
+        </div>
+    </div>
+</div>
+
+<!-- Zwei-Spalten Layout -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    
+    <!-- Besuchte Module -->
+    <div class="card">
+        <h2>📚 Besuchte Module (letzte {{ days }} Tage)</h2>
+        {% if module_visits %}
+        <div style="max-height: 400px; overflow-y: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead style="position: sticky; top: 0; background: var(--bg-primary);">
+                    <tr style="text-align: left; border-bottom: 2px solid var(--border-color);">
+                        <th style="padding: 10px;">Modul</th>
+                        <th style="padding: 10px; text-align: center;">Aufrufe</th>
+                        <th style="padding: 10px;">Zuletzt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for module in module_visits %}
+                    <tr style="border-bottom: 1px solid var(--border-color);">
+                        <td style="padding: 10px;">
+                            <div style="font-weight: 600;">{{ module.name }}</div>
+                            <div style="font-size: 0.7rem; color: var(--text-muted); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                {{ module.url }}
+                            </div>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">
+                            <span style="background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark)); 
+                                         color: white; padding: 4px 12px; border-radius: 20px; font-weight: 600;">
+                                {{ module.views }}
+                            </span>
+                        </td>
+                        <td style="padding: 10px; font-size: 0.8rem; color: var(--text-secondary);">
+                            {{ module.last_visit.strftime('%d.%m.%Y') }}<br>
+                            <span style="color: var(--text-muted);">{{ module.last_visit.strftime('%H:%M') }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+            <p>Keine Modul-Besuche im gewählten Zeitraum.</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <!-- Lernfortschritt -->
+    <div class="card">
+        <h2>📈 Lernfortschritt</h2>
+        {% if progress_entries %}
+        <div style="max-height: 400px; overflow-y: auto;">
+            {% for entry in progress_entries %}
+            <div style="padding: 15px; border-bottom: 1px solid var(--border-color);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <span style="font-weight: 600;">{{ entry.module_name }}</span>
+                    <span style="font-size: 0.875rem; color: var(--text-muted);">
+                        {{ entry.progress.last_accessed.strftime('%d.%m.%Y') if entry.progress.last_accessed else '—' }}
+                    </span>
+                </div>
+                <!-- Fortschrittsbalken -->
+                <div style="background: var(--bg-secondary); border-radius: 10px; height: 24px; overflow: hidden; position: relative;">
+                    <div style="background: linear-gradient(90deg, #10b981, #059669); height: 100%; width: {{ entry.progress.progress_percentage }}%; 
+                                transition: width 0.5s ease; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px;">
+                        {% if entry.progress.progress_percentage > 15 %}
+                        <span style="color: white; font-size: 0.75rem; font-weight: 600;">{{ entry.progress.progress_percentage }}%</span>
+                        {% endif %}
+                    </div>
+                    {% if entry.progress.progress_percentage <= 15 %}
+                    <span style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 0.75rem; font-weight: 600;">
+                        {{ entry.progress.progress_percentage }}%
+                    </span>
+                    {% endif %}
+                </div>
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px; display: flex; justify-content: space-between;">
+                    <span>Gestartet: {{ entry.progress.started_at.strftime('%d.%m.%Y') if entry.progress.started_at else '—' }}</span>
+                    {% if entry.progress.completed_at %}
+                    <span style="color: #10b981;">✓ Abgeschlossen: {{ entry.progress.completed_at.strftime('%d.%m.%Y') }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+            <p>Keine Fortschritts-Daten vorhanden.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Tägliche Aktivität -->
+<div class="card" style="margin-top: 20px;">
+    <h2>📅 Tägliche Aktivität</h2>
+    {% if daily_activity %}
+    <div style="padding: 20px;">
+        <div style="display: flex; align-items: flex-end; gap: 4px; height: 150px; overflow-x: auto;">
+            {% set max_views = daily_activity|map(attribute=1)|max %}
+            {% for date, views in daily_activity %}
+            <div style="display: flex; flex-direction: column; align-items: center; min-width: 35px; flex: 1;">
+                <!-- Anzahl -->
+                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 5px;">{{ views }}</div>
+                <!-- Balken -->
+                <div style="width: 100%; max-width: 30px; 
+                            height: {% if max_views > 0 %}{{ (views / max_views * 100)|int }}{% else %}0{% endif %}px; 
+                            min-height: 4px;
+                            background: linear-gradient(180deg, #3b82f6, #1e40af); 
+                            border-radius: 4px 4px 0 0;">
+                </div>
+                <!-- Datum -->
+                <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 5px; text-align: center;">
+                    {{ date.strftime('%d.%m') if date is not string else date }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% else %}
+    <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+        <p>Keine Aktivitätsdaten für den gewählten Zeitraum.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Letzte Seitenbesuche -->
+<div class="card" style="margin-top: 20px;">
+    <h2>🕐 Letzte Seitenbesuche</h2>
+    {% if all_visits %}
+    <div style="max-height: 400px; overflow-y: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.875rem;">
+            <thead style="position: sticky; top: 0; background: var(--bg-primary);">
+                <tr style="text-align: left; border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 10px;">Zeitpunkt</th>
+                    <th style="padding: 10px;">Seite</th>
+                    <th style="padding: 10px;">Gerät</th>
+                    <th style="padding: 10px;">Browser</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for visit in all_visits[:50] %}
+                <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 10px; white-space: nowrap; color: var(--text-secondary);">
+                        {{ visit.visited_at.strftime('%d.%m.%Y %H:%M:%S') }}
+                    </td>
+                    <td style="padding: 10px;">
+                        <div style="max-width: 400px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="{{ visit.page_url }}">
+                            {{ visit.page_url.replace('https://', '').replace('http://', '') }}
+                        </div>
+                    </td>
+                    <td style="padding: 10px;">
+                        <span style="background: {% if visit.device_type == 'mobile' %}#f59e0b{% elif visit.device_type == 'tablet' %}#8b5cf6{% else %}#3b82f6{% endif %}; 
+                                     color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">
+                            {% if visit.device_type == 'mobile' %}📱{% elif visit.device_type == 'tablet' %}📱{% else %}💻{% endif %} {{ visit.device_type or 'unknown' }}
+                        </span>
+                    </td>
+                    <td style="padding: 10px; color: var(--text-muted); font-size: 0.8rem;">
+                        {{ visit.browser or 'Unknown' }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if all_visits|length > 50 %}
+        <div style="padding: 15px; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border-color);">
+            Zeige 50 von {{ all_visits|length }} Einträgen
+        </div>
+        {% endif %}
+    </div>
+    {% else %}
+    <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+        <p>Keine Seitenbesuche im gewählten Zeitraum.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Navigation -->
+<div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; gap: 15px; flex-wrap: wrap;">
+    <a href="{{ url_for('admin_user_activity') }}" class="btn" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">
+        ← Zurück zur Übersicht
+    </a>
+    <a href="{{ url_for('admin_users') }}" class="btn" style="background: var(--bg-secondary);">
+        👥 User-Verwaltung
+    </a>
+    <a href="{{ url_for('admin_change_subscription', user_id=user.id) }}" class="btn" style="background: var(--gold-classic); color: white;">
+        ⭐ Subscription ändern
+    </a>
+</div>
+
+<style>
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.btn.small {
+    padding: 6px 14px;
+    font-size: 0.8125rem;
+}
+
+.btn.active {
+    background: linear-gradient(135deg, var(--gold-classic), var(--gold-dark));
+    color: white;
+}
+
+.card {
+    background: var(--bg-primary);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+    font-size: 1.25rem;
+}
+
+.mb-4 {
+    margin-bottom: 20px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    div[style*="grid-template-columns: 1fr 1fr"] {
+        grid-template-columns: 1fr !important;
+    }
+    
+    div[style*="grid-template-columns: repeat(4, 1fr)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        padding: 15px;
+    }
+    
+    div[style*="grid-template-columns: auto 1fr auto"] {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+    }
+    
+    div[style*="grid-template-columns: repeat(2, 1fr)"] {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+
+{% endblock %}
+

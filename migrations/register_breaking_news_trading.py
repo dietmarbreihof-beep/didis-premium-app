@@ -1,11 +1,11 @@
 """
-Migrations-Script: How to find DEP Modul registrieren
+Migrations-Script: Breaking News Trading Modul registrieren
 
-Dieses Script registriert das "How to find DEP - Deep Episodic Pivots" Modul in der Datenbank.
-Basierend auf StockBee Guide: Deep Episodic Pivots - Die Kunst der verzögerten Reaktionen finden.
+Dieses Script registriert das "Breaking News Trading" Modul in der Datenbank.
+Basierend auf Lance Breitstein's 3-teiliger News-Trading-Strategie.
 
 Verwendung:
-    python migrations/register_how_to_find_dep.py
+    python migrations/register_breaking_news_trading.py
 """
 
 import sys
@@ -16,12 +16,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app import app, db, LearningModule, ModuleCategory, ModuleSubcategory
 
-def register_how_to_find_dep_module():
-    """Registriert das How to find DEP Modul in der Datenbank"""
+def register_breaking_news_trading_module():
+    """Registriert das Breaking News Trading Modul in der Datenbank"""
     
     with app.app_context():
         try:
-            print("🚀 Starte How to find DEP Modul-Registrierung...")
+            print("🚀 Starte Breaking News Trading Modul-Registrierung...")
             
             # 1. Finde oder erstelle Hauptkategorie "Trading-Setups"
             main_category = ModuleCategory.query.filter_by(
@@ -43,21 +43,21 @@ def register_how_to_find_dep_module():
             else:
                 print(f"✅ Hauptkategorie gefunden (ID: {main_category.id})")
             
-            # 2. Finde oder erstelle Unterkategorie "Momentum Trading"
+            # 2. Finde oder erstelle Unterkategorie "News Trading"
             subcategory = ModuleSubcategory.query.filter_by(
                 category_id=main_category.id,
-                name="Momentum Trading"
+                name="News Trading"
             ).first()
             
             if not subcategory:
-                print("📂 Erstelle Unterkategorie 'Momentum Trading'...")
+                print("📂 Erstelle Unterkategorie 'News Trading'...")
                 subcategory = ModuleSubcategory(
                     category_id=main_category.id,
-                    name="Momentum Trading",
-                    slug="momentum-trading",
-                    description="Momentum-basierte Trading-Strategien und Setups",
-                    icon="⚡",
-                    sort_order=1
+                    name="News Trading",
+                    slug="news-trading",
+                    description="Strategien zum Handeln von Breaking News und Katalysatoren",
+                    icon="📰",
+                    sort_order=2
                 )
                 db.session.add(subcategory)
                 db.session.flush()
@@ -67,47 +67,47 @@ def register_how_to_find_dep_module():
             
             # 3. Prüfe ob Modul bereits existiert
             existing_module = LearningModule.query.filter_by(
-                slug='how-to-find-dep'
+                slug='breaking-news-trading'
             ).first()
             
             if existing_module:
-                print("⚠️ Modul 'how-to-find-dep' existiert bereits!")
+                print("⚠️ Modul 'breaking-news-trading' existiert bereits!")
                 print("   Aktualisiere bestehenden Eintrag...")
                 
                 # Update existing
                 existing_module.category_id = main_category.id
                 existing_module.subcategory_id = subcategory.id
-                existing_module.title = "How to find DEP - Deep Episodic Pivots"
-                existing_module.description = "Lerne verzögerte Reaktionen zu finden: Der 'Delayed Reaction 9 Million' Scan, Setup-Typen, Timing-Regeln und die Kunst der Priorisierung. StockBee Guide für katalysator-basiertes Trading."
-                existing_module.icon = "🔍"
+                existing_module.title = "Breaking News Trading - Die Kunst der News-Analyse"
+                existing_module.description = "Lerne News-Quellen zu nutzen, Filter aufzubauen und Headlines zu analysieren. Lance Breitstein's 3-teilige Strategie für profitables News-Trading."
+                existing_module.icon = "📰"
                 existing_module.content_type = "html"
-                existing_module.template_file = "how-to-find-dep.html"
+                existing_module.template_file = "breaking-news-trading.html"
                 existing_module.is_published = True
                 existing_module.is_lead_magnet = False
-                existing_module.estimated_duration = 30
+                existing_module.estimated_duration = 45
                 existing_module.difficulty_level = "intermediate"
-                existing_module.sort_order = 20
+                existing_module.sort_order = 15
                 
                 print("✅ Modul aktualisiert")
                 
             else:
-                print("📝 Erstelle neues Modul 'How to find DEP'...")
+                print("📝 Erstelle neues Modul 'Breaking News Trading'...")
                 
                 # Create new module
                 new_module = LearningModule(
                     category_id=main_category.id,
                     subcategory_id=subcategory.id,
-                    title="How to find DEP - Deep Episodic Pivots",
-                    slug="how-to-find-dep",
-                    description="Lerne verzögerte Reaktionen zu finden: Der 'Delayed Reaction 9 Million' Scan, Setup-Typen, Timing-Regeln und die Kunst der Priorisierung. StockBee Guide für katalysator-basiertes Trading.",
-                    icon="🔍",
+                    title="Breaking News Trading - Die Kunst der News-Analyse",
+                    slug="breaking-news-trading",
+                    description="Lerne News-Quellen zu nutzen, Filter aufzubauen und Headlines zu analysieren. Lance Breitstein's 3-teilige Strategie für profitables News-Trading.",
+                    icon="📰",
                     content_type="html",
-                    template_file="how-to-find-dep.html",
+                    template_file="breaking-news-trading.html",
                     is_published=True,
                     is_lead_magnet=False,  # Premium Modul
-                    estimated_duration=30,  # 30 Minuten
+                    estimated_duration=45,  # 45 Minuten
                     difficulty_level="intermediate",  # Fortgeschritten
-                    sort_order=20
+                    sort_order=15
                 )
                 
                 db.session.add(new_module)
@@ -117,17 +117,17 @@ def register_how_to_find_dep_module():
             db.session.commit()
             
             print("\n" + "="*60)
-            print("✅ How to find DEP Modul erfolgreich registriert!")
+            print("✅ Breaking News Trading Modul erfolgreich registriert!")
             print("="*60)
             print(f"\n📊 Details:")
             print(f"   Hauptkategorie: {main_category.name}")
             print(f"   Unterkategorie: {subcategory.name}")
-            print(f"   Modul-Slug: how-to-find-dep")
-            print(f"   Template: templates/how-to-find-dep.html")
-            print(f"   Status: Premium (Premium/Elite/Elite Pro)")
+            print(f"   Modul-Slug: breaking-news-trading")
+            print(f"   Template: templates/breaking-news-trading.html")
+            print(f"   Status: Premium (Elite/Elite Pro)")
             print(f"   Schwierigkeit: Fortgeschritten")
-            print(f"   Dauer: 30 Minuten")
-            print(f"\n🌐 URL: /how-to-find-dep")
+            print(f"   Dauer: 45 Minuten")
+            print(f"\n🌐 URL: /module/breaking-news-trading")
             print(f"📱 Admin: /admin/modules")
             print("\n✅ Bereit für Deployment!")
             
@@ -143,14 +143,16 @@ def register_how_to_find_dep_module():
 
 if __name__ == "__main__":
     print("\n" + "="*60)
-    print("🔍 How to find DEP Modul Migration")
+    print("📰 Breaking News Trading Modul Migration")
     print("="*60 + "\n")
     
-    success = register_how_to_find_dep_module()
+    success = register_breaking_news_trading_module()
     
     if success:
         print("\n✅ Migration erfolgreich abgeschlossen!")
     else:
         print("\n❌ Migration fehlgeschlagen!")
         sys.exit(1)
+
+
 

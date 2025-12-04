@@ -155,9 +155,9 @@
                                         {% if module.is_published %}👁️{% else %}🔒{% endif %}
                                     </button>
                                     {% if module.slug %}
-                                    <a href="{{ url_for('module_view', slug=module.slug) }}" class="action-btn" title="Anzeigen: {{ module.slug }}">👁️</a>
+                                    <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau: {{ module.slug }}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">👁️</a>
                                     {% else %}
-                                    <span class="action-btn disabled" title="Kein Slug vorhanden">❌</span>
+                                    <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau (ohne Slug)" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">👁️</a>
                                     {% endif %}
                                     <button class="action-btn danger" onclick="deleteModule({{ module.id }}, '{{ module.title }}')" title="Modul löschen">🗑️</button>
                                     <button class="action-btn" onclick="changeModuleSortOrder({{ module.id }}, {{ module.sort_order }})" title="Reihenfolge ändern">🔢</button>
@@ -211,9 +211,9 @@
                                 {% if module.is_published %}👁️{% else %}🔒{% endif %}
                             </button>
                             {% if module.slug %}
-                            <a href="{{ url_for('module_view', slug=module.slug) }}" class="action-btn" title="Anzeigen: {{ module.slug }}">👁️</a>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau: {{ module.slug }}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">👁️</a>
                             {% else %}
-                            <span class="action-btn disabled" title="Kein Slug vorhanden">❌</span>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau (ohne Slug)" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">👁️</a>
                             {% endif %}
                             <button class="action-btn danger" onclick="deleteModule({{ module.id }}, '{{ module.title }}')" title="Modul löschen">🗑️</button>
                             <button class="action-btn" onclick="changeModuleSortOrder({{ module.id }}, {{ module.sort_order }})" title="Reihenfolge ändern">🔢</button>
@@ -273,9 +273,9 @@
                                 {% if module.is_published %}👁️{% else %}🔒{% endif %}
                             </button>
                             {% if module.slug %}
-                            <a href="{{ url_for('module_view', slug=module.slug) }}" class="action-btn" title="Anzeigen: {{ module.slug }}">👁️</a>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau: {{ module.slug }}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">👁️</a>
                             {% else %}
-                            <span class="action-btn disabled" title="Kein Slug vorhanden">❌</span>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn" title="Vorschau (ohne Slug)" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">👁️</a>
                             {% endif %}
                             <button class="action-btn danger" onclick="deleteModule({{ module.id }}, '{{ module.title }}')" title="Modul löschen">🗑️</button>
                             <button class="action-btn" onclick="changeModuleSortOrder({{ module.id }}, {{ module.sort_order }})" title="Reihenfolge ändern">🔢</button>
@@ -393,9 +393,9 @@
                             
                             <!-- View -->
                             {% if module.slug %}
-                            <a href="{{ url_for('module_view', slug=module.slug) }}" class="action-btn view" title="Anzeigen: {{ module.slug }}">👁️</a>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn view" title="Vorschau: {{ module.slug }}" style="background: linear-gradient(135deg, #3b82f6, #1e40af); color: white;">👁️</a>
                             {% else %}
-                            <span class="action-btn view disabled" title="Kein Slug vorhanden">❌</span>
+                            <a href="{{ url_for('admin_module_preview', module_id=module.id) }}" class="action-btn view" title="Vorschau (ohne Slug)" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white;">👁️</a>
                             {% endif %}
                             
                             <!-- Delete -->
