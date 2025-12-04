@@ -2136,6 +2136,68 @@ def breaking_news_trading():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/how-to-find-dep')
+def how_to_find_dep():
+    """How to find DEP - Deep Episodic Pivots (StockBee Guide)"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='how-to-find-dep').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='how-to-find-dep'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('how-to-find-dep.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/trading-strategie-typen')
 def trading_strategie_typen():
     """Trading Strategie Typen - Price Expansion vs Price Reversion (Lance Breitstein)"""
@@ -6946,6 +7008,247 @@ def admin_delete_user(user_id):
 
     return redirect(url_for('admin_users'))
 
+
+# === USER ACTIVITY STATISTICS ===
+
+@app.route('/admin/user-activity')
+@admin_required
+def admin_user_activity():
+    """
+    User-Aktivitäts-Statistik Dashboard
+    
+    Zeigt an:
+    - Welcher User welches Modul angeschaut hat
+    - Wie oft Module angeschaut wurden
+    - Letzte Anmeldung der User
+    - Zeitliche Übersicht der Aktivität
+    """
+    from sqlalchemy import func, distinct, desc
+    from datetime import datetime, timedelta
+    
+    try:
+        # Zeitraum-Filter
+        days = int(request.args.get('days', 30))
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        
+        # === USER-ÜBERSICHT MIT AKTIVITÄTS-STATISTIKEN ===
+        users = User.query.filter(User.username.notin_(['admin', 'didi'])).order_by(User.last_login.desc().nullslast()).all()
+        
+        user_stats = []
+        for user in users:
+            # Seitenaufrufe des Users
+            page_views = VisitorAnalytics.query.filter(
+                VisitorAnalytics.user_id == user.id,
+                VisitorAnalytics.visited_at >= cutoff_date
+            ).count()
+            
+            # Module angeschaut (unique)
+            module_pages = VisitorAnalytics.query.filter(
+                VisitorAnalytics.user_id == user.id,
+                VisitorAnalytics.visited_at >= cutoff_date,
+                VisitorAnalytics.page_url.like('%/module/%')
+            ).count()
+            
+            # Letzter Besuch
+            last_visit = VisitorAnalytics.query.filter(
+                VisitorAnalytics.user_id == user.id
+            ).order_by(VisitorAnalytics.visited_at.desc()).first()
+            
+            # Fortschritt-Einträge
+            progress_count = ModuleProgress.query.filter(
+                ModuleProgress.user_id == str(user.id)
+            ).count()
+            
+            user_stats.append({
+                'user': user,
+                'page_views': page_views,
+                'module_views': module_pages,
+                'last_visit': last_visit.visited_at if last_visit else None,
+                'progress_count': progress_count
+            })
+        
+        # Sortieren nach Aktivität (absteigend)
+        user_stats.sort(key=lambda x: x['page_views'], reverse=True)
+        
+        # === TOP MODULE (am häufigsten angeschaut) ===
+        top_modules = db.session.query(
+            VisitorAnalytics.page_url,
+            func.count(VisitorAnalytics.id).label('views'),
+            func.count(distinct(VisitorAnalytics.user_id)).label('unique_users')
+        ).filter(
+            VisitorAnalytics.visited_at >= cutoff_date,
+            VisitorAnalytics.page_url.like('%/module/%'),
+            VisitorAnalytics.user_id.isnot(None)
+        ).group_by(
+            VisitorAnalytics.page_url
+        ).order_by(
+            func.count(VisitorAnalytics.id).desc()
+        ).limit(15).all()
+        
+        # Modul-Namen extrahieren
+        top_modules_with_names = []
+        for module_url, views, unique_users in top_modules:
+            # Versuche Modul-Slug aus URL zu extrahieren
+            slug = module_url.split('/module/')[-1].split('?')[0].strip('/')
+            module = LearningModule.query.filter_by(slug=slug).first()
+            module_name = module.title if module else slug
+            
+            top_modules_with_names.append({
+                'url': module_url,
+                'name': module_name,
+                'views': views,
+                'unique_users': unique_users
+            })
+        
+        # === GESAMT-STATISTIKEN ===
+        total_page_views = VisitorAnalytics.query.filter(
+            VisitorAnalytics.visited_at >= cutoff_date,
+            VisitorAnalytics.user_id.isnot(None)
+        ).count()
+        
+        active_users_count = db.session.query(
+            func.count(distinct(VisitorAnalytics.user_id))
+        ).filter(
+            VisitorAnalytics.visited_at >= cutoff_date,
+            VisitorAnalytics.user_id.isnot(None)
+        ).scalar() or 0
+        
+        # Tägliche Aktivität für Chart
+        daily_activity = db.session.query(
+            func.date(VisitorAnalytics.visited_at).label('date'),
+            func.count(VisitorAnalytics.id).label('views'),
+            func.count(distinct(VisitorAnalytics.user_id)).label('users')
+        ).filter(
+            VisitorAnalytics.visited_at >= cutoff_date,
+            VisitorAnalytics.user_id.isnot(None)
+        ).group_by(
+            func.date(VisitorAnalytics.visited_at)
+        ).order_by(
+            func.date(VisitorAnalytics.visited_at)
+        ).all()
+        
+        return render_template('admin/user_activity.html',
+                             user_stats=user_stats,
+                             top_modules=top_modules_with_names,
+                             total_page_views=total_page_views,
+                             active_users_count=active_users_count,
+                             daily_activity=daily_activity,
+                             days=days,
+                             cutoff_date=cutoff_date)
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        flash(f'Fehler beim Laden der Statistiken: {str(e)}', 'error')
+        return redirect(url_for('admin_users'))
+
+
+@app.route('/admin/user-activity/<int:user_id>')
+@admin_required
+def admin_user_activity_detail(user_id):
+    """
+    Detaillierte Aktivitäts-Ansicht für einen einzelnen User
+    
+    Zeigt:
+    - Alle besuchten Seiten
+    - Modul-Fortschritte
+    - Zeitliche Aktivitäts-Übersicht
+    """
+    from sqlalchemy import func, desc
+    from datetime import datetime, timedelta
+    
+    try:
+        user = User.query.get_or_404(user_id)
+        days = int(request.args.get('days', 90))
+        cutoff_date = datetime.utcnow() - timedelta(days=days)
+        
+        # Alle Seitenbesuche des Users
+        all_visits = VisitorAnalytics.query.filter(
+            VisitorAnalytics.user_id == user.id,
+            VisitorAnalytics.visited_at >= cutoff_date
+        ).order_by(VisitorAnalytics.visited_at.desc()).limit(200).all()
+        
+        # Module-Besuche gruppiert
+        module_visits = db.session.query(
+            VisitorAnalytics.page_url,
+            func.count(VisitorAnalytics.id).label('views'),
+            func.max(VisitorAnalytics.visited_at).label('last_visit'),
+            func.min(VisitorAnalytics.visited_at).label('first_visit')
+        ).filter(
+            VisitorAnalytics.user_id == user.id,
+            VisitorAnalytics.visited_at >= cutoff_date,
+            VisitorAnalytics.page_url.like('%/module/%')
+        ).group_by(
+            VisitorAnalytics.page_url
+        ).order_by(
+            func.count(VisitorAnalytics.id).desc()
+        ).all()
+        
+        # Modul-Namen hinzufügen
+        module_visits_with_names = []
+        for url, views, last_visit, first_visit in module_visits:
+            slug = url.split('/module/')[-1].split('?')[0].strip('/')
+            module = LearningModule.query.filter_by(slug=slug).first()
+            module_visits_with_names.append({
+                'url': url,
+                'name': module.title if module else slug,
+                'views': views,
+                'last_visit': last_visit,
+                'first_visit': first_visit
+            })
+        
+        # Modul-Fortschritte
+        progress_entries = ModuleProgress.query.filter(
+            ModuleProgress.user_id == str(user.id)
+        ).order_by(ModuleProgress.last_accessed.desc()).all()
+        
+        # Fortschritte mit Modul-Namen
+        progress_with_names = []
+        for progress in progress_entries:
+            module = LearningModule.query.get(progress.module_id)
+            progress_with_names.append({
+                'progress': progress,
+                'module_name': module.title if module else f'Modul #{progress.module_id}'
+            })
+        
+        # Aktivität pro Tag
+        daily_activity = db.session.query(
+            func.date(VisitorAnalytics.visited_at).label('date'),
+            func.count(VisitorAnalytics.id).label('views')
+        ).filter(
+            VisitorAnalytics.user_id == user.id,
+            VisitorAnalytics.visited_at >= cutoff_date
+        ).group_by(
+            func.date(VisitorAnalytics.visited_at)
+        ).order_by(
+            func.date(VisitorAnalytics.visited_at).desc()
+        ).limit(30).all()
+        
+        # Gesamt-Statistiken
+        total_visits = VisitorAnalytics.query.filter(
+            VisitorAnalytics.user_id == user.id
+        ).count()
+        
+        total_module_visits = VisitorAnalytics.query.filter(
+            VisitorAnalytics.user_id == user.id,
+            VisitorAnalytics.page_url.like('%/module/%')
+        ).count()
+        
+        return render_template('admin/user_activity_detail.html',
+                             user=user,
+                             all_visits=all_visits,
+                             module_visits=module_visits_with_names,
+                             progress_entries=progress_with_names,
+                             daily_activity=daily_activity,
+                             total_visits=total_visits,
+                             total_module_visits=total_module_visits,
+                             days=days)
+        
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        flash(f'Fehler beim Laden der User-Details: {str(e)}', 'error')
+        return redirect(url_for('admin_user_activity'))
 
 
 if __name__ == '__main__':
