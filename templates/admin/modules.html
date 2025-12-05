@@ -124,7 +124,7 @@
                                 <div class="drag-handle" title="Ziehen zum Sortieren" style="display: none;">⋮⋮</div>
                                 <span class="module-icon">{{ module.icon }}</span>
                                 <div class="module-info">
-                                    <span class="module-title">{{ module.title }}</span>
+                                    <span class="module-title" ondblclick="editModuleTitleInline({{ module.id }}, '{{ module.title|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Bearbeiten">{{ module.title }}</span>
                                     <div class="module-badges">
                                         {% if module.is_lead_magnet %}
                                         <span class="badge free">🆓 Kostenlos</span>
@@ -180,7 +180,7 @@
                         <div class="drag-handle" title="Ziehen zum Sortieren">⋮⋮</div>
                         <span class="module-icon">{{ module.icon }}</span>
                         <div class="module-info">
-                            <span class="module-title">{{ module.title }}</span>
+                            <span class="module-title" ondblclick="editModuleTitleInline({{ module.id }}, '{{ module.title|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Bearbeiten">{{ module.title }}</span>
                             <div class="module-badges">
                                 {% if module.is_lead_magnet %}
                                 <span class="badge free">🆓 Kostenlos</span>
@@ -242,7 +242,7 @@
                         <div class="drag-handle" title="Ziehen zum Sortieren">⋮⋮</div>
                         <span class="module-icon">{{ module.icon }}</span>
                         <div class="module-info">
-                            <span class="module-title">{{ module.title }}</span>
+                            <span class="module-title" ondblclick="editModuleTitleInline({{ module.id }}, '{{ module.title|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Bearbeiten">{{ module.title }}</span>
                             <div class="module-badges">
                                 {% if module.is_lead_magnet %}
                                 <span class="badge free">🆓 Kostenlos</span>
@@ -348,7 +348,7 @@
                         <div class="module-info">
                             <span class="module-icon">{{ module.icon }}</span>
                             <div class="module-details">
-                                <h4 class="module-title" onclick="editModuleInline({{ module.id }})">{{ module.title }}</h4>
+                                <h4 class="module-title" onclick="editModuleInline({{ module.id }})" ondblclick="editModuleTitleInline({{ module.id }}, '{{ module.title|replace("'", "\\'") }}'); event.stopPropagation();" title="Doppelklick zum Titel bearbeiten">{{ module.title }}</h4>
                                 <p class="module-description">{{ module.description or 'Keine Beschreibung' }}</p>
                                 <div class="module-meta">
                                     {% if module.category %}
@@ -898,6 +898,14 @@
     font-weight: 600;
     color: var(--primary-dark);
     margin: 0;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.module-title:hover {
+    background-color: #fef3c7;
 }
 
 .module-badges {
@@ -1166,10 +1174,14 @@
     font-weight: 600;
     color: var(--primary-dark);
     cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
 }
 
 .module-title:hover {
     color: var(--primary-medium);
+    background-color: #fef3c7;
 }
 
 .module-description {
@@ -2109,6 +2121,74 @@ function editSubcategoryInline(subcategoryId, currentName) {
     
     subcategoryElement.textContent = '';
     subcategoryElement.appendChild(input);
+    input.focus();
+    input.select();
+}
+
+// Inline Edit Module Title
+function editModuleTitleInline(moduleId, currentTitle) {
+    const moduleElement = document.querySelector(`[data-module-id="${moduleId}"] .module-title`);
+    if (!moduleElement) return;
+    
+    const originalText = moduleElement.textContent.trim();
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = originalText;
+    input.className = 'inline-edit-input';
+    input.style.cssText = 'border: 2px solid #daa520; border-radius: 4px; padding: 4px 8px; font-size: 14px; font-weight: 600; width: 100%; max-width: 350px; background: white;';
+    
+    const saveEdit = () => {
+        const newTitle = input.value.trim();
+        if (newTitle && newTitle !== originalText) {
+            // Update via API
+            fetch('/admin/update-module-title', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    module_id: moduleId,
+                    title: newTitle
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    moduleElement.textContent = newTitle;
+                    showNotification('success', 'Modultitel erfolgreich aktualisiert.');
+                } else {
+                    alert('Fehler beim Speichern: ' + (data.error || 'Unbekannter Fehler'));
+                    moduleElement.textContent = originalText;
+                }
+            })
+            .catch(error => {
+                alert('Fehler beim Speichern: ' + error.message);
+                moduleElement.textContent = originalText;
+            });
+        } else {
+            moduleElement.textContent = originalText;
+        }
+        input.remove();
+    };
+    
+    const cancelEdit = () => {
+        moduleElement.textContent = originalText;
+        input.remove();
+    };
+    
+    input.addEventListener('blur', saveEdit);
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            input.blur();
+        } else if (e.key === 'Escape') {
+            e.preventDefault();
+            cancelEdit();
+        }
+    });
+    
+    moduleElement.textContent = '';
+    moduleElement.appendChild(input);
     input.focus();
     input.select();
 }

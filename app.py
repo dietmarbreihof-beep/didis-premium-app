@@ -6045,6 +6045,65 @@ def admin_change_module_subscription():
         app.logger.error(f"Error changing module subscription: {e}")
         return jsonify({'success': False, 'error': str(e)})
 
+@app.route('/admin/update-module-title', methods=['POST'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
+def admin_update_module_title():
+    """Modultitel aktualisieren"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'}), 401
+    
+    try:
+        data = request.json
+        module_id = data.get('module_id')
+        new_title = data.get('title', '').strip()
+        
+        if not new_title:
+            return jsonify({'success': False, 'error': 'Titel darf nicht leer sein'})
+        
+        module = LearningModule.query.get(module_id)
+        if not module:
+            return jsonify({'success': False, 'error': 'Modul nicht gefunden'})
+        
+        old_title = module.title
+        module.title = new_title
+        
+        db.session.commit()
+        
+        app.logger.info(f"Module title changed from '{old_title}' to '{new_title}' by admin")
+        
+        return jsonify({'success': True, 'message': f'Titel auf "{new_title}" geändert', 'new_title': new_title})
+        
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error updating module title: {e}")
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/get-module/<int:module_id>')
+def admin_get_module(module_id):
+    """Modul-Details für Bearbeitung abrufen"""
+    if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
+        return jsonify({'success': False, 'error': 'Admin-Zugriff erforderlich'}), 401
+    
+    module = LearningModule.query.get(module_id)
+    if not module:
+        return jsonify({'success': False, 'error': 'Modul nicht gefunden'})
+    
+    return jsonify({
+        'success': True,
+        'module': {
+            'id': module.id,
+            'title': module.title,
+            'slug': module.slug,
+            'icon': module.icon,
+            'description': module.description,
+            'category_id': module.category_id,
+            'subcategory_id': module.subcategory_id,
+            'sort_order': module.sort_order,
+            'is_published': module.is_published,
+            'is_lead_magnet': module.is_lead_magnet
+        }
+    })
+
 @app.route('/admin/move-module', methods=['POST'])
 def admin_move_module():
     """Modul in andere Kategorie/Unterkategorie verschieben"""
