@@ -2325,6 +2325,68 @@ def trading_psychologie_hormone():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/makrobasierte-marktampel')
+def makrobasierte_marktampel():
+    """Makrobasierte Marktampel - Portfolio-Allokation basierend auf Marktregimen"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='makrobasierte-marktampel').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='makrobasierte-marktampel'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('marktampel_allokation_v2.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/sugar-babies')
 def sugar_babies():
     """Sugar Babies - Die 50%+ Move Strategie"""
