@@ -2074,6 +2074,68 @@ def einfluss_geld_beziehung():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/wichtigste-variable-trading')
+def wichtigste_variable_trading():
+    """Die wichtigste Variable im Trading - Breaking News (Lance Breitstein)"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='wichtigste-variable-trading').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='wichtigste-variable-trading'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('wichtigste-variable-trading.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/breaking-news-trading')
 def breaking_news_trading():
     """Breaking News Trading - Die Kunst der News-Analyse (Lance Breitstein)"""
@@ -2197,6 +2259,68 @@ def trading_strategie_typen():
     prev_module, next_module = get_module_navigation(module) if module else (None, None)
     
     return render_template('trading-strategie-typen.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
+@app.route('/trading-psychologie-hormone')
+def trading_psychologie_hormone():
+    """Trading Psychologie: Hormone & Performance - Wie Hormone deine Trading-Entscheidungen beeinflussen"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='trading-psychologie-hormone').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='trading-psychologie-hormone'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('trading-psychologie-hormone.html', 
                          module=module, 
                          prev_module=prev_module, 
                          next_module=next_module)

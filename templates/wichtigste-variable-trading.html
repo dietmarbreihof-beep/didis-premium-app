@@ -1,0 +1,1079 @@
+{% extends "base.html" %}
+
+{% block title %}Die wichtigste Variable im Trading - Breaking News{% endblock %}
+
+{% block content %}
+<div class="wichtigste-variable-wrapper">
+<style>
+    .wichtigste-variable-wrapper {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: #f7f7f7;
+        min-height: 100vh;
+        padding-bottom: 60px;
+    }
+
+    .wichtigste-variable-wrapper * {
+        box-sizing: border-box;
+    }
+
+    /* Hero Section */
+    .hero-section {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #b8860b 100%);
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.08'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.5;
+    }
+
+    .hero-section h1 {
+        font-size: 3em;
+        margin: 0 0 20px 0;
+        font-weight: 800;
+        position: relative;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero-section .subtitle {
+        font-size: 1.4em;
+        margin-bottom: 30px;
+        opacity: 0.95;
+        position: relative;
+        line-height: 1.6;
+    }
+
+    .hero-section .author-badge {
+        display: inline-block;
+        background: rgba(218, 165, 32, 0.3);
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-size: 0.95em;
+        margin-top: 15px;
+        border: 1px solid rgba(218, 165, 32, 0.5);
+        position: relative;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        max-width: 1000px;
+        margin: 30px auto 0;
+        position: relative;
+    }
+
+    .stat-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-number {
+        font-size: 2.5em;
+        font-weight: 800;
+        color: #f4e97b;
+        margin: 0;
+    }
+
+    .stat-label {
+        font-size: 0.95em;
+        margin-top: 5px;
+        opacity: 0.9;
+    }
+
+    /* Progress Tracker */
+    .progress-tracker {
+        background: white;
+        padding: 25px 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        max-width: 1200px;
+        margin: -30px auto 40px;
+        position: relative;
+        z-index: 10;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .progress-info {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .progress-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #daa520, #b8860b);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    .progress-text h3 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.1em;
+    }
+
+    .progress-text p {
+        margin: 5px 0 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    .progress-bar-container {
+        flex: 1;
+        min-width: 200px;
+        max-width: 400px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 12px;
+        background: #e5e5e5;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #daa520, #b8860b);
+        border-radius: 6px;
+        transition: width 0.5s ease;
+        width: 0%;
+    }
+
+    /* Content Container */
+    .content-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    /* Section Cards */
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        border-left: 4px solid #daa520;
+        transition: all 0.3s ease;
+    }
+
+    .section-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .section-card.locked {
+        opacity: 0.6;
+        pointer-events: none;
+        position: relative;
+    }
+
+    .section-card.locked::after {
+        content: '🔒 Vorherigen Abschnitt abschließen';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(0, 0, 0, 0.85);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        margin-bottom: 0;
+        padding-bottom: 20px;
+    }
+
+    .section-header-left {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
+    }
+
+    .section-number {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        color: #daa520;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.3em;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+
+    .section-number.completed {
+        background: linear-gradient(135deg, #38a169, #2f855a);
+        color: white;
+    }
+
+    .section-title h2 {
+        margin: 0;
+        color: #1a1a1a;
+        font-size: 1.5em;
+        font-weight: 700;
+    }
+
+    .section-title p {
+        margin: 5px 0 0;
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    .section-toggle {
+        font-size: 1.5em;
+        color: #daa520;
+        transition: transform 0.3s ease;
+        cursor: pointer;
+    }
+
+    .section-toggle.expanded {
+        transform: rotate(90deg);
+    }
+
+    .section-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease, padding 0.3s ease;
+        padding: 0;
+    }
+
+    .section-content.expanded {
+        max-height: 5000px;
+        padding-top: 25px;
+    }
+
+    /* Typography */
+    .section-content p {
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 20px;
+        font-size: 1.05em;
+    }
+
+    .section-content ul, .section-content ol {
+        line-height: 1.8;
+        color: #333;
+        margin-bottom: 20px;
+        padding-left: 25px;
+    }
+
+    .section-content li {
+        margin-bottom: 10px;
+    }
+
+    .section-content strong {
+        color: #1a1a1a;
+        font-weight: 700;
+    }
+
+    /* Highlight Boxes */
+    .highlight-box {
+        background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(184, 134, 11, 0.1));
+        border-left: 4px solid #daa520;
+        padding: 20px 25px;
+        border-radius: 0 12px 12px 0;
+        margin: 25px 0;
+    }
+
+    .highlight-box h4 {
+        margin: 0 0 10px 0;
+        color: #b8860b;
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+
+    .highlight-box p, .highlight-box ul {
+        margin: 0;
+        color: #333;
+        line-height: 1.7;
+    }
+
+    .highlight-box ul {
+        padding-left: 20px;
+        margin-top: 10px;
+    }
+
+    /* Warning Box */
+    .warning-box {
+        background: linear-gradient(135deg, rgba(214, 158, 46, 0.1), rgba(184, 134, 11, 0.1));
+        border-left: 4px solid #d69e2e;
+        padding: 20px 25px;
+        border-radius: 0 12px 12px 0;
+        margin: 25px 0;
+    }
+
+    .warning-box h4 {
+        margin: 0 0 10px 0;
+        color: #d69e2e;
+        font-size: 1.1em;
+        font-weight: 700;
+    }
+
+    .warning-box p {
+        margin: 0;
+        color: #333;
+        line-height: 1.7;
+    }
+
+    /* Quote Box */
+    .quote-box {
+        background: #f7f7f7;
+        border-left: 4px solid #1a1a1a;
+        padding: 20px 25px;
+        margin: 25px 0;
+        border-radius: 0 12px 12px 0;
+        font-style: italic;
+        color: #555;
+        line-height: 1.7;
+    }
+
+    .quote-author {
+        margin-top: 10px;
+        font-style: normal;
+        font-weight: 600;
+        color: #1a1a1a;
+        text-align: right;
+    }
+
+    /* Image Container */
+    .image-container {
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .image-container img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-caption {
+        margin-top: 10px;
+        color: #666;
+        font-size: 0.9em;
+        font-style: italic;
+    }
+
+    /* Quiz Container */
+    .quiz-container {
+        background: #f7f7f7;
+        border-radius: 12px;
+        padding: 25px;
+        margin: 25px 0;
+        border: 2px solid #daa520;
+    }
+
+    .quiz-question {
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 15px;
+        font-size: 1.1em;
+    }
+
+    .quiz-options {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+    }
+
+    .quiz-option {
+        background: white;
+        padding: 15px 20px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+
+    .quiz-option:hover {
+        border-color: #daa520;
+        transform: translateX(5px);
+    }
+
+    .quiz-option.selected {
+        background: linear-gradient(135deg, rgba(218, 165, 32, 0.1), rgba(184, 134, 11, 0.1));
+        border-color: #daa520;
+    }
+
+    .quiz-option.correct {
+        background: linear-gradient(135deg, rgba(56, 161, 105, 0.2), rgba(47, 133, 90, 0.2));
+        border-color: #38a169;
+    }
+
+    .quiz-option.wrong {
+        background: linear-gradient(135deg, rgba(229, 62, 62, 0.1), rgba(197, 48, 48, 0.1));
+        border-color: #e53e3e;
+    }
+
+    .quiz-feedback {
+        margin-top: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .quiz-feedback.show {
+        display: block;
+    }
+
+    .quiz-feedback.correct {
+        background: rgba(56, 161, 105, 0.1);
+        color: #2f855a;
+        border-left: 4px solid #38a169;
+    }
+
+    .quiz-feedback.wrong {
+        background: rgba(229, 62, 62, 0.1);
+        color: #c53030;
+        border-left: 4px solid #e53e3e;
+    }
+
+    /* Key Takeaways */
+    .key-takeaways {
+        background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+        color: white;
+        padding: 40px;
+        border-radius: 12px;
+        margin: 40px 0;
+    }
+
+    .key-takeaways h3 {
+        margin: 0 0 25px 0;
+        color: #f4e97b;
+        font-size: 1.8em;
+    }
+
+    .key-takeaways ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .key-takeaways li {
+        padding: 15px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        line-height: 1.8;
+        font-size: 1.05em;
+    }
+
+    .key-takeaways li:last-child {
+        border-bottom: none;
+    }
+
+    .key-takeaways li::before {
+        content: '✓';
+        color: #daa520;
+        font-weight: 700;
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-section h1 {
+            font-size: 2em;
+        }
+
+        .hero-section .subtitle {
+            font-size: 1.1em;
+        }
+
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-card {
+            padding: 25px;
+        }
+
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .section-header-left {
+            width: 100%;
+        }
+
+        .progress-tracker {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1>📰 Die wichtigste Variable im Trading</h1>
+    <p class="subtitle">Breaking News als Fundament für erfolgreiche Trading-Strategien</p>
+    <div class="author-badge">🎓 Basierend auf Lance Breitstein's Trading-Philosophie</div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">#1</div>
+            <div class="stat-label">Wichtigste Variable</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">2</div>
+            <div class="stat-label">Strategie-Typen</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Expected Value</div>
+        </div>
+    </div>
+</div>
+
+<!-- Progress Tracker -->
+<div class="progress-tracker">
+    <div class="progress-info">
+        <div class="progress-circle" id="progressCircle">0%</div>
+        <div class="progress-text">
+            <h3>Dein Fortschritt</h3>
+            <p id="progressText">Abschnitt 0 von 8</p>
+        </div>
+    </div>
+    <div class="progress-bar-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Content Container -->
+<div class="content-container">
+    <!-- Section 1: Einführung -->
+    <div class="section-card" id="section1">
+        <div class="section-header" onclick="toggleSection(1)">
+            <div class="section-header-left">
+                <div class="section-number" id="num1">1️⃣</div>
+                <div class="section-title">
+                    <h2>Die zwei Trading-Strategien</h2>
+                    <p>Price Expansion vs. Price Reversion</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle1">▶️</span>
+        </div>
+        <div class="section-content" id="content1">
+            <p>Im Trading gibt es zwei grundlegende Strategie-Typen, die sich in ihrem Wesen unterscheiden:</p>
+            
+            <div class="highlight-box">
+                <h4>1. Price Expansion (Preisausweitung)</h4>
+                <p>Du versuchst, <strong>Preisausweitungen</strong> zu erfassen - wie bei Breaking News oder Breakouts. Hier profitiert du von starken Trends und Momentum.</p>
+            </div>
+
+            <div class="highlight-box">
+                <h4>2. Price Reversion (Preis-Rückkehr)</h4>
+                <p>Du suchst nach <strong>Rücksetzern</strong>, bei denen Aktien zu vorherigen Preisbereichen zurückkehren. Hier profitierst du von Mean Reversion.</p>
+            </div>
+
+            <p>Warum ist diese Unterscheidung so wichtig? Sie bestimmt, welche Trades du wann machst - und ob du erfolgreich bist oder nicht.</p>
+
+            <div class="warning-box">
+                <h4>⚠️ Wichtig zu verstehen:</h4>
+                <p>Viele Trader wenden ihre Strategien blind an, ohne zu verstehen, wann welche Strategie funktioniert. Das führt zu unnötigen Verlusten.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Die wichtigste Variable -->
+    <div class="section-card locked" id="section2">
+        <div class="section-header" onclick="toggleSection(2)">
+            <div class="section-header-left">
+                <div class="section-number" id="num2">2️⃣</div>
+                <div class="section-title">
+                    <h2>Breaking News: Die wichtigste Variable</h2>
+                    <p>Warum fundamentale Neuigkeiten alles ändern</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle2">▶️</span>
+        </div>
+        <div class="section-content" id="content2">
+            <p>Denke einmal nach: <strong>Wie sehr ändert sich der fundamentale Wert einer Aktie wirklich von Tag zu Tag?</strong></p>
+            
+            <p>Apple, Bank of America oder eine Treasury-Anleihe - deren innerer Wert ändert sich nicht dramatisch von Minute zu Minute. Das ist der Grund, warum viel Price Action einfach nur <strong>Noise</strong> ist - zufällige Schwankungen ohne echten Grund.</p>
+
+            <div class="quote-box">
+                "Im kurzfristigen Zeitraum ist der Markt eine Abstimmungsmaschine."
+                <div class="quote-author">— Benjamin Graham</div>
+            </div>
+
+            <p>Marktpreise sind der <strong>dollar-gewichtete Durchschnitt</strong> der Preise, zu denen Käufer und Verkäufer handeln. Preise oszillieren um ein grobes Gleichgewicht.</p>
+
+            <div class="highlight-box">
+                <h4>🎯 Die Kern-Erkenntnis:</h4>
+                <ul>
+                    <li><strong>Ohne News:</strong> Große, scharfe Preisbewegungen tendieren dazu, <strong>mean revert</strong> - sie kehren zum Durchschnitt zurück</li>
+                    <li><strong>Mit Breaking News:</strong> Preise können fundamental neu bewertet werden und <strong>trenden</strong> in eine Richtung</li>
+                </ul>
+            </div>
+
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='screenshots/Kullamägi.png') }}" alt="Christian Kualamagi - Episodic Pivots">
+                <p class="image-caption">Christian Kualamagi basiert seine Continuation-Strategien auf "Episodic Pivots" - wenn eine Aktie mit frischen News aus einer Range ausbricht.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 3: News vs. Keine News -->
+    <div class="section-card locked" id="section3">
+        <div class="section-header" onclick="toggleSection(3)">
+            <div class="section-header-left">
+                <div class="section-number" id="num3">3️⃣</div>
+                <div class="section-title">
+                    <h2>Mit News = Trend | Ohne News = Mean Reversion</h2>
+                    <p>Die goldene Regel für Trading-Entscheidungen</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle3">▶️</span>
+        </div>
+        <div class="section-content" id="content3">
+            <p>Hier ist die <strong>wichtigste Regel</strong> im Trading:</p>
+
+            <div class="highlight-box">
+                <h4>📈 Bewegungen MIT Breaking News:</h4>
+                <ul>
+                    <li>Trenden <strong>weitaus wahrscheinlicher</strong> als Mean Reversion</li>
+                    <li>Führen zu <strong>fundamentaler Neubewertung</strong> des Wertpapiers</li>
+                    <li>Beispiele: Buyout-Angebot, Earnings-Release, Stock Offering</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Bewegungen OHNE Breaking News:</h4>
+                <ul>
+                    <li>Mean Revert <strong>weitaus wahrscheinlicher</strong> als Trend</li>
+                    <li>Basieren oft nur auf <strong>Emotionen und Positionierung</strong></li>
+                    <li>Beispiele: Panik-Verkäufe ohne Grund, Euphorie ohne News</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #1a1a1a; margin-top: 30px;">Praktisches Beispiel:</h3>
+            <p>Stell dir vor, eine Aktie handelt monatelang bei <strong>$15</strong> und schießt plötzlich auf <strong>$18</strong> hoch:</p>
+            
+            <div class="highlight-box">
+                <p><strong>❌ OHNE News:</strong> Diese Aktie wird wahrscheinlich zurück zu $15 fallen (Mean Reversion).</p>
+                <p><strong>✅ MIT News (z.B. Buyout-Angebot für $20):</strong> Die Aktie wird wahrscheinlich weiter zu $20 steigen (Trend).</p>
+            </div>
+
+            <p>Das ist der Unterschied zwischen einem <strong>falschen Signal</strong> und einem <strong>echten Trend</strong>.</p>
+        </div>
+    </div>
+
+    <!-- Section 4: Expected Value -->
+    <div class="section-card locked" id="section4">
+        <div class="section-header" onclick="toggleSection(4)">
+            <div class="section-header-left">
+                <div class="section-number" id="num4">4️⃣</div>
+                <div class="section-title">
+                    <h2>Expected Value: Die besten Trades</h2>
+                    <p>Wo du den höchsten erwarteten Wert findest</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle4">▶️</span>
+        </div>
+        <div class="section-content" id="content4">
+            <p>Basierend auf diesem Framework findest du die <strong>besten Expected Value Trades</strong>:</p>
+
+            <div class="highlight-box">
+                <h4>✅ Höchster Expected Value (Trend-Trades):</h4>
+                <ul>
+                    <li><strong>Früh bei Breaking News sein:</strong> Buyout-Angebote, Earnings-Releases, Stock Offerings</li>
+                    <li><strong>Continuation-Trades:</strong> Nach News auf Pullbacks einkaufen</li>
+                    <li><strong>Episodic Pivots:</strong> Ausbrüche aus Ranges mit enormem Volume</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>❌ Niedrigster Expected Value (zu vermeiden):</h4>
+                <ul>
+                    <li><strong>Against News-Trends gehen:</strong> Short während Panik oder Long während Euphorie</li>
+                    <li><strong>Mean Reversion MIT News versuchen:</strong> Fading von Trends die durch fundamentale Änderungen getrieben werden</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>✅ Bester Expected Value (Mean Reversion):</h4>
+                <ul>
+                    <li><strong>Scharfe Bewegungen OHNE fundamentale Änderung:</strong> Nur Emotionen und Positionierung</li>
+                    <li><strong>Kapitulation ohne News:</strong> Panik-Verkäufe die zu übertriebenen Preisen führen</li>
+                </ul>
+            </div>
+
+            <p><strong>Die goldene Regel:</strong> Wenn du weißt, dass es News gibt, ändert sich komplett, wie du die Aktie tradest. Du würdest <strong>nie</strong> Mean Reversion versuchen, wenn frische News da sind - stattdessen suchst du nach Continuation-Trades.</p>
+        </div>
+    </div>
+
+    <!-- Section 5: Das Problem vieler Trader -->
+    <div class="section-card locked" id="section5">
+        <div class="section-header" onclick="toggleSection(5)">
+            <div class="section-header-left">
+                <div class="section-number" id="num5">5️⃣</div>
+                <div class="section-title">
+                    <h2>Das Problem: Trading ohne News-Bewusstsein</h2>
+                    <p>Warum viele Trader blind tradet</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle5">▶️</span>
+        </div>
+        <div class="section-content" id="content5">
+            <p>Schockierenderweise findet man, dass viele Trader im Retail-Bereich <strong>komplett blind</strong> gegenüber News tradet.</p>
+
+            <div class="warning-box">
+                <h4>⚠️ Die Folgen:</h4>
+                <ul>
+                    <li><strong>Falsche Strategie-Anwendung:</strong> Mean Reversion bei News-basierten Moves</li>
+                    <li><strong>Verzerrte Backtesting-Daten:</strong> Strategien scheinen nicht zu funktionieren, obwohl sie mit News-Filter perfekt wären</li>
+                    <li><strong>Niedrigere Win-Rate:</strong> Breakout-Strategien würden viel besser funktionieren, wenn nur News-basierte Setups genutzt würden</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #1a1a1a; margin-top: 30px;">Beispiel aus der Praxis:</h3>
+            <p>Stell dir vor, du backtestest eine Mean Reversion-Strategie auf 5 Ticker:</p>
+
+            <div class="highlight-box">
+                <p><strong>Problem:</strong> Du weißt nicht, dass einer der Ticker frische News hat. Du wirst ausgestoppt und denkst fälschlicherweise, die Strategie funktioniert nicht.</p>
+                <p><strong>Realität:</strong> Die Strategie funktioniert perfekt - aber nur für Aktien <strong>ohne</strong> frische News!</p>
+            </div>
+
+            <p>Auf der anderen Seite erkennen viele Trader nicht, wie sehr sich ihre <strong>Win-Rate bei Breakouts erhöhen</strong> würde, wenn sie ihre Strategie nur auf Aktien mit frischen News anwenden würden.</p>
+
+            <div class="highlight-box">
+                <h4>🎯 Die Lösung:</h4>
+                <p>Es ist <strong>essenziell</strong>, dass du dieses Framework verstehst und bewusst erkennst, wann News vorhanden sind und wann nicht. Das wird deine Sicht auf den Markt, deine Backtesting-Daten und deine Analyse fundamental verbessern.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 6: Strategische Anwendung -->
+    <div class="section-card locked" id="section6">
+        <div class="section-header" onclick="toggleSection(6)">
+            <div class="section-header-left">
+                <div class="section-number" id="num6">6️⃣</div>
+                <div class="section-title">
+                    <h2>Strategische Anwendung</h2>
+                    <p>Wie du dieses Wissen im Trading anwendest</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle6">▶️</span>
+        </div>
+        <div class="section-content" id="content6">
+            <p>Jetzt, wo du verstehst, dass <strong>Breaking News die wichtigste Variable</strong> ist, musst du sicherstellen, dass du informiert bleibst:</p>
+
+            <div class="highlight-box">
+                <h4>✅ Trading MIT Breaking News:</h4>
+                <ul>
+                    <li><strong>Continuation-Strategien:</strong> Pullbacks nach News kaufen</li>
+                    <li><strong>Breakout-Strategien:</strong> Ausbrüche aus Ranges mit enormem Volume</li>
+                    <li><strong>Episodic Pivots:</strong> Wie Christian Kualamagi - Range-Ausbrüche mit News</li>
+                    <li><strong>Vermeide Mean Reversion:</strong> Nie gegen News-Trends gehen</li>
+                </ul>
+            </div>
+
+            <div class="warning-box">
+                <h4>⚠️ Trading OHNE Breaking News:</h4>
+                <ul>
+                    <li><strong>Mean Reversion-Strategien:</strong> Nutze scharfe Bewegungen ohne fundamentale Änderung</li>
+                    <li><strong>Kapitulation-Trades:</strong> Panik-Verkäufe die zu übertriebenen Preisen führen</li>
+                    <li><strong>Emotions-basierte Moves:</strong> Unwinding von Positionierung ohne News-Grund</li>
+                </ul>
+            </div>
+
+            <h3 style="color: #1a1a1a; margin-top: 30px;">Die Checkliste vor jedem Trade:</h3>
+            <div class="highlight-box">
+                <ol>
+                    <li><strong>Gibt es Breaking News?</strong> → Wenn JA: Continuation-Strategie. Wenn NEIN: Mean Reversion möglich.</li>
+                    <li><strong>Ist die Bewegung fundamental begründet?</strong> → Buyout, Earnings, Offering? → Trend wahrscheinlich.</li>
+                    <li><strong>Basierst du auf Emotionen?</strong> → Nur Panik/Euphorie ohne News? → Mean Reversion wahrscheinlich.</li>
+                </ol>
+            </div>
+
+            <div class="quote-box">
+                "Wenn Breaking News eine der wichtigsten Variablen ist, die bestimmt, ob ein Wertpapier trendet oder nicht, dann solltest du verdammt gut informiert sein, ob News vorhanden sind oder nicht."
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 7: Quiz -->
+    <div class="section-card locked" id="section7">
+        <div class="section-header" onclick="toggleSection(7)">
+            <div class="section-header-left">
+                <div class="section-number" id="num7">7️⃣</div>
+                <div class="section-title">
+                    <h2>Wissenstest</h2>
+                    <p>Teste dein Verständnis</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle7">▶️</span>
+        </div>
+        <div class="section-content" id="content7">
+            <div class="quiz-container">
+                <div class="quiz-question">Frage 1: Eine Aktie steigt von $15 auf $18 OHNE Breaking News. Was ist am wahrscheinlichsten?</div>
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="selectQuizOption(this, 1, 1)">A) Sie wird weiter zu $20 steigen (Trend)</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 1, 2)">B) Sie wird zurück zu $15 fallen (Mean Reversion)</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 1, 3)">C) Sie bleibt bei $18 (keine Bewegung)</li>
+                </ul>
+                <div class="quiz-feedback" id="feedback1"></div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">Frage 2: Eine Aktie bekommt ein Buyout-Angebot für $20 und steigt von $15 auf $18. Was ist am wahrscheinlichsten?</div>
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="selectQuizOption(this, 2, 1)">A) Sie wird zurück zu $15 fallen (Mean Reversion)</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 2, 2)">B) Sie wird weiter zu $20 steigen (Trend)</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 2, 3)">C) Sie bleibt bei $18</li>
+                </ul>
+                <div class="quiz-feedback" id="feedback2"></div>
+            </div>
+
+            <div class="quiz-container">
+                <div class="quiz-question">Frage 3: Welche Strategie solltest du NICHT anwenden, wenn es Breaking News gibt?</div>
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="selectQuizOption(this, 3, 1)">A) Continuation-Strategien</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 3, 2)">B) Mean Reversion-Strategien</li>
+                    <li class="quiz-option" onclick="selectQuizOption(this, 3, 3)">C) Breakout-Strategien</li>
+                </ul>
+                <div class="quiz-feedback" id="feedback3"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 8: Key Takeaways -->
+    <div class="section-card locked" id="section8">
+        <div class="section-header" onclick="toggleSection(8)">
+            <div class="section-header-left">
+                <div class="section-number" id="num8">8️⃣</div>
+                <div class="section-title">
+                    <h2>Key Takeaways</h2>
+                    <p>Die wichtigsten Erkenntnisse auf einen Blick</p>
+                </div>
+            </div>
+            <span class="section-toggle" id="toggle8">▶️</span>
+        </div>
+        <div class="section-content" id="content8">
+            <div class="key-takeaways">
+                <h3>🎯 Die wichtigsten Erkenntnisse</h3>
+                <ul>
+                    <li><strong>Breaking News ist die wichtigste Variable</strong> im Trading - sie bestimmt, ob ein Wertpapier trendet oder mean revertet.</li>
+                    <li><strong>MIT Breaking News:</strong> Bewegungen trenden weitaus wahrscheinlicher → Nutze Continuation-Strategien.</li>
+                    <li><strong>OHNE Breaking News:</strong> Bewegungen mean revertieren weitaus wahrscheinlicher → Nutze Mean Reversion-Strategien.</li>
+                    <li><strong>Die besten Expected Value Trades:</strong> Früh bei Breaking News sein (Buyout, Earnings, Offerings) oder Mean Reversion bei Emotions-basierten Moves ohne News.</li>
+                    <li><strong>Vermeide:</strong> Mean Reversion MIT News oder Continuation OHNE News - das führt zu niedrigem Expected Value.</li>
+                    <li><strong>Viele Trader sind blind:</strong> Sie tradet ohne News-Bewusstsein, was zu falschen Strategie-Anwendungen und verzerrten Backtesting-Daten führt.</li>
+                    <li><strong>Die Lösung:</strong> Bewusst sein, wann News vorhanden sind und deine Strategie entsprechend anpassen - das wird deine Performance fundamental verbessern.</li>
+                    <li><strong>Episodic Pivots:</strong> Wie Christian Kualamagi - Range-Ausbrüche mit enormem Volume und Breaking News bieten die besten Continuation-Chancen.</li>
+                </ul>
+            </div>
+
+            <div class="highlight-box">
+                <h4>🚀 Nächste Schritte:</h4>
+                <p>Du fragst dich wahrscheinlich:</p>
+                <ul>
+                    <li>Wie identifiziere ich, welche News-Headlines signifikant sind?</li>
+                    <li>Welche News-Quellen sind die besten für Retail-Trader?</li>
+                    <li>Wie integriere ich News-Filter in meine Strategien?</li>
+                </ul>
+                <p>All diese Fragen werden in weiteren Modulen behandelt. Für jetzt: Verstehe, dass <strong>Breaking News die wichtigste Variable</strong> ist und passe deine Strategien entsprechend an.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let currentSection = 0;
+const totalSections = 8;
+
+// Load progress from localStorage
+function loadProgress() {
+    const saved = localStorage.getItem('wichtigsteVariableProgress');
+    if (saved) {
+        currentSection = parseInt(saved);
+        for (let i = 1; i <= currentSection && i <= totalSections; i++) {
+            openSection(i);
+        }
+    } else {
+        // Open first section by default
+        openSection(1);
+    }
+    updateProgress();
+}
+
+// Save progress to localStorage
+function saveProgress() {
+    localStorage.setItem('wichtigsteVariableProgress', currentSection.toString());
+}
+
+function toggleSection(sectionNumber) {
+    const section = document.getElementById(`section${sectionNumber}`);
+    const isLocked = section.classList.contains('locked');
+    
+    if (isLocked && sectionNumber > currentSection + 1) {
+        return; // Don't open locked sections
+    }
+    
+    const content = document.getElementById(`content${sectionNumber}`);
+    const toggle = document.getElementById(`toggle${sectionNumber}`);
+    const number = document.getElementById(`num${sectionNumber}`);
+    
+    if (content.classList.contains('expanded')) {
+        // Don't allow closing sections (progressive disclosure)
+        return;
+    } else {
+        // Unlock this section
+        section.classList.remove('locked');
+        
+        // Expand current section
+        content.classList.add('expanded');
+        toggle.classList.add('expanded');
+        toggle.textContent = '🔽';
+        
+        // Mark as completed
+        number.classList.add('completed');
+        number.textContent = '✓';
+        
+        // Update progress
+        currentSection = Math.max(currentSection, sectionNumber);
+        saveProgress();
+        updateProgress();
+        
+        // Unlock next section
+        if (sectionNumber < totalSections) {
+            const nextSection = document.getElementById(`section${sectionNumber + 1}`);
+            nextSection.classList.remove('locked');
+        }
+    }
+}
+
+function openSection(sectionNumber) {
+    const section = document.getElementById(`section${sectionNumber}`);
+    const content = document.getElementById(`content${sectionNumber}`);
+    const toggle = document.getElementById(`toggle${sectionNumber}`);
+    const number = document.getElementById(`num${sectionNumber}`);
+    
+    section.classList.remove('locked');
+    content.classList.add('expanded');
+    toggle.classList.add('expanded');
+    toggle.textContent = '🔽';
+    number.classList.add('completed');
+    number.textContent = '✓';
+    
+    if (sectionNumber < totalSections) {
+        const nextSection = document.getElementById(`section${sectionNumber + 1}`);
+        nextSection.classList.remove('locked');
+    }
+}
+
+function updateProgress() {
+    const progress = (currentSection / totalSections) * 100;
+    document.getElementById('progressFill').style.width = progress + '%';
+    document.getElementById('progressCircle').textContent = Math.round(progress) + '%';
+    document.getElementById('progressText').textContent = `Abschnitt ${currentSection} von ${totalSections}`;
+}
+
+// Quiz functions
+const quizAnswers = {
+    1: 2, // B) Mean Reversion
+    2: 2, // B) Trend to $20
+    3: 2  // B) Mean Reversion
+};
+
+function selectQuizOption(element, questionNum, optionNum) {
+    const feedback = document.getElementById(`feedback${questionNum}`);
+    const options = element.parentElement.querySelectorAll('.quiz-option');
+    
+    // Remove previous selections
+    options.forEach(opt => {
+        opt.classList.remove('selected', 'correct', 'wrong');
+    });
+    
+    // Mark selected
+    element.classList.add('selected');
+    
+    // Check answer
+    if (optionNum === quizAnswers[questionNum]) {
+        element.classList.add('correct');
+        feedback.className = 'quiz-feedback show correct';
+        feedback.innerHTML = '🎉 <strong>Richtig!</strong> ' + getFeedbackText(questionNum, true);
+    } else {
+        element.classList.add('wrong');
+        feedback.className = 'quiz-feedback show wrong';
+        feedback.innerHTML = '❌ <strong>Falsch.</strong> ' + getFeedbackText(questionNum, false);
+    }
+}
+
+function getFeedbackText(questionNum, isCorrect) {
+    const feedbacks = {
+        1: {
+            correct: 'Ohne Breaking News tendieren Preise zur Mean Reversion - sie kehren zum Durchschnitt zurück.',
+            wrong: 'Ohne Breaking News ist ein Trend unwahrscheinlich. Die Aktie wird wahrscheinlich zurück zu $15 fallen.'
+        },
+        2: {
+            correct: 'Mit Breaking News (Buyout-Angebot) ist ein Trend zu $20 wahrscheinlich - fundamentale Neubewertung.',
+            wrong: 'Mit Breaking News wie einem Buyout-Angebot wird die Aktie wahrscheinlich weiter zu $20 steigen.'
+        },
+        3: {
+            correct: 'Mean Reversion funktioniert nicht bei Breaking News - nutze Continuation-Strategien statt.',
+            wrong: 'Bei Breaking News solltest du Mean Reversion vermeiden und Continuation-Strategien nutzen.'
+        }
+    };
+    return feedbacks[questionNum][isCorrect ? 'correct' : 'wrong'];
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadProgress();
+});
+</script>
+
+<!-- Navigation -->
+{% include '_navigation.html' %}
+
+</div>
+{% endblock %}
+
