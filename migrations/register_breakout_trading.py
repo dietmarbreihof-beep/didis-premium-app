@@ -48,8 +48,7 @@ def register_breakout_trading():
                 description='Alles über Breakout-Strategien und Entry-Techniken',
                 icon='🚀',
                 category_id=category.id,
-                sort_order=1,
-                is_published=True
+                sort_order=1
             )
             db.session.add(subcategory)
             db.session.commit()
@@ -62,13 +61,13 @@ def register_breakout_trading():
             description='Lerne die präzise Definition von Breakouts, die drei Arten und warum der erste Tag der einzig valide Einstiegstag ist.',
             template_file='breakout-trading.html',
             icon='🚀',
-            difficulty='Fortgeschritten',
-            duration_minutes=60,
+            estimated_duration=60,
+            category_id=category.id,
             subcategory_id=subcategory.id,
             sort_order=1,
             is_published=True,
-            is_premium=True,
-            required_subscription='premium'
+            is_lead_magnet=False,
+            required_subscription_levels=['premium', 'elite', 'elite_pro', 'masterclass']
         )
         
         db.session.add(module)
@@ -79,7 +78,7 @@ def register_breakout_trading():
         print(f"   Slug: {module.slug}")
         print(f"   Kategorie: {category.name}")
         print(f"   Unterkategorie: {subcategory.name}")
-        print(f"   Subscription: {module.required_subscription}")
+        print(f"   Subscription-Levels: {module.required_subscription_levels}")
         print(f"   Route: /breakout-trading")
         
         return module
