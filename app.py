@@ -485,11 +485,8 @@ class User(db.Model):
 
     def can_access_module(self, module):
         """Check if user can access a specific module based on subscription"""
-        if module.is_lead_magnet:
-            return True
-        if not module.required_subscription_levels:
-            return True
-        return self.subscription_type.value in module.required_subscription_levels
+        # Verwende die user_has_access() Methode des Moduls für konsistente Logik
+        return module.user_has_access(self.subscription_type.value, self.id)
     
     def get_subscription_start_date(self, subscription_level):
         """Gibt das Start-Datum für ein bestimmtes Subscription-Level zurück"""
@@ -756,6 +753,9 @@ class LearningModule(db.Model):
         Hierarchie (höher = mehr Zugriff):
         elite_pro > elite > premium > basic > free
         
+        Spezialregel: Elite Pro hat Zugriff auf ALLE Module (auch free/premium/elite).
+        Andere Subscription-Stufen haben KEINEN Zugriff auf Elite Pro Module.
+        
         Args:
             user_subscription: Subscription-Level des Users ("free", "premium", etc.)
             user_id: Optional - User-ID für Prüfung der täglichen Freischaltung
@@ -775,6 +775,14 @@ class LearningModule(db.Model):
         # User-Level-Rang ermitteln
         user_level = user_subscription.lower() if user_subscription else 'free'
         user_rank = level_hierarchy.index(user_level) if user_level in level_hierarchy else 0
+        
+        # SPEZIALREGEL: Elite Pro hat Zugriff auf ALLE Module
+        if user_level == 'elite_pro':
+            return True
+        
+        # Prüfe ob Modul Elite Pro erfordert - dann haben andere Subscription-Stufen keinen Zugriff
+        if 'elite_pro' in [level.lower() for level in required_levels]:
+            return False
         
         # Minimales erforderliches Level ermitteln
         min_required_rank = 999
@@ -2008,6 +2016,68 @@ def expected_value():
     prev_module, next_module = get_module_navigation(module) if module else (None, None)
     
     return render_template('expected_value.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
+@app.route('/breakout-trading')
+def breakout_trading():
+    """Breakout Trading Meistern - Didis Masterclass"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='breakout-trading').first()
+    except:
+        pass
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro', 'masterclass']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='breakout-trading'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in') and module:
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            progress = ModuleProgress.query.filter_by(
+                user_id=str(user_id), 
+                module_id=module.id
+            ).first()
+            
+            if not progress:
+                progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                db.session.add(progress)
+                db.session.commit()
+            else:
+                progress.last_accessed = datetime.utcnow()
+                db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if module:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if module else (None, None)
+    
+    return render_template('breakout-trading.html', 
                          module=module, 
                          prev_module=prev_module, 
                          next_module=next_module)
@@ -3945,6 +4015,8 @@ def add_module():
                 required_levels.append('premium')
             if 'req_elite' in request.form:
                 required_levels.append('elite')
+            if 'req_elite_pro' in request.form:
+                required_levels.append('elite_pro')
         
         if not category_id or not title or not description:
             flash('Kategorie, Titel und Beschreibung sind erforderlich.', 'error')
@@ -6205,7 +6277,7 @@ def admin_change_module_subscription():
             return jsonify({'success': False, 'error': 'Modul nicht gefunden'})
         
         # Subscription-Level setzen
-        # Hierarchie: elite > premium > free
+        # Hierarchie: elite_pro > elite > premium > free
         if subscription_level == 'free':
             module.is_lead_magnet = True
             module.required_subscription_levels = []
@@ -6215,6 +6287,9 @@ def admin_change_module_subscription():
         elif subscription_level == 'elite':
             module.is_lead_magnet = False
             module.required_subscription_levels = ['elite']
+        elif subscription_level == 'elite_pro':
+            module.is_lead_magnet = False
+            module.required_subscription_levels = ['elite_pro']
         else:
             # Fallback: Premium als Standard
             module.is_lead_magnet = False

@@ -1,7 +1,27 @@
 # 🚀 Cursor Shortcuts für Didis Premium Trading Academy
 
-## 📋 Verwendung
-Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in den Cursor Chat ein.
+## 📋 Was sind Cursor Shortcuts?
+
+**Cursor Shortcuts** sind vorgefertigte Prompt-Templates, die du einfach in den Cursor Chat kopierst, um häufige Aufgaben schnell zu erledigen. Sie folgen alle Best Practices und Projekt-Standards.
+
+### 🎯 **Verwendung:**
+1. Kopiere den Shortcut-Text (nach dem `→`) aus diesem Dokument
+2. Füge ihn in den Cursor Chat ein
+3. Passe optional die Parameter an (z.B. Modul-Name, Datei-Pfad)
+4. Cursor führt die Aufgabe automatisch aus
+
+### 💡 **Vorteile:**
+- ✅ Schneller als manuelles Tippen
+- ✅ Folgt automatisch allen Projekt-Standards
+- ✅ Konsistente Ergebnisse
+- ✅ Weniger Fehler durch vorgefertigte Patterns
+
+### 📖 **Beispiele:**
+- `@new-module-page` → Erstellt sofort eine vollständige Modul-Seite mit Design-System
+- `@register-module` → Registriert ein Modul in der Datenbank
+- `@fix-du-anrede` → Korrigiert alle "Sie"-Anreden zu "Du"
+
+---
 
 ---
 
@@ -24,7 +44,7 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ## 📄 HTML-SEITEN
 
 ### @new-module-page
-→ Erstelle eine neue HTML-Modul-Seite basierend auf dem Design-System: 1) extends "base.html", 2) Wrapper-Div mit Klasse für CSS-Scoping, 3) Hero-Header mit Primär-Verlauf, 4) **ACCORDION-PATTERN PFLICHT** - Content-Cards als aufklappbare Sections (5-8 Sections), 5) Progress Tracker mit Fortschrittsbalken, 6) Responsive Grid-Layout, 7) Navigation-Include am Ende, 8) JavaScript toggleSection() Funktion für Accordion, 9) "Du"-Anrede durchgängig. **WICHTIG:** Jedes Modul MUSS Accordion-Struktur haben!
+→ Erstelle eine neue HTML-Modul-Seite basierend auf dem Design-System: 1) extends "base.html", 2) Wrapper-Div mit Klasse für CSS-Scoping, 3) Hero-Header mit Primär-Verlauf, 4) Content-Cards mit Gold-Akzenten, 5) Responsive Grid-Layout, 6) Navigation-Include am Ende, 7) JavaScript für Interaktivität, 8) "Du"-Anrede durchgängig
 
 ### @fix-du-anrede
 → Korrigiere ALLE "Sie/Ihr/Ihnen/Ihrem" zu "du/dein/dir/deinem" in dieser Datei. Verwende konsequent die persönliche "Du"-Anrede gemäß Cursor Rules. Prüfe auch Platzhalter-Texte und Beschreibungen.
@@ -62,13 +82,8 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 
 ## 📚 LERNMODULE
 
-### @accordion-pattern
-→ Implementiere Accordion-Pattern für Module: 1) Section-Cards mit .section-header und .section-content, 2) toggleSection() JavaScript-Funktion, 3) CSS transitions für smooth expand/collapse, 4) Progress Tracker aktualisiert bei Section-Öffnung, 5) Toggle-Icons (▶️ geschlossen, 🔽 geöffnet), 6) Erste Section automatisch geöffnet, 7) Nummerierung mit Emojis (1️⃣, 2️⃣), 8) Standard-Klassennamen (.section-card, .section-header, .section-content, .section-toggle). **PFLICHT:** Alle Module müssen Accordion-Struktur haben!
-
 ### @progressive-disclosure
-→ Erstelle Progressive-Disclosure-Modul mit **ACCORDION-PATTERN**: 1) Accordion-Struktur mit 5-8 aufklappbaren Sections, 2) toggleSection() JavaScript-Funktion, 3) Progress Tracker zeigt Fortschritt, 4) Erste Section automatisch geöffnet, 5) Smooth CSS transitions (max-height), 6) Section-Header mit Nummerierung (1️⃣, 2️⃣), 7) Toggle-Icons (▶️/🔽), 8) Quiz optional als Accordion-Section, 9) Key Takeaways am Ende (kein Accordion), 10) Navigation am Ende (kein Accordion). **WICHTIG:** Accordion ist Standard für alle Module!
-
-### @quiz-system
+→ Erstelle Progressive-Disclosure-Modul: 1) Session-State für current_step, 2) Jeder Schritt nur sichtbar wenn current_step >= X, 3) Next-Button nur bei current_step == X, 4) Bereits abgeschlossene Schritte bleiben sichtbar, 5) Quiz nach jedem Schritt, 6) Key Takeaways am Ende
 → Füge Quiz hinzu: 1) st.expander für kompakte Darstellung, 2) st.radio für Multiple-Choice, 3) Eindeutige keys (quiz_X_Y), 4) Score-Berechnung, 5) Instant-Feedback mit st.success/warning, 6) Motivierende Emojis (🎉/👍/📖)
 
 ### @interactive-charts
@@ -229,7 +244,7 @@ Kopiere einfach den gewünschten Shortcut-Text (nach dem `→`) und füge ihn in
 ## 🔍 QUICK REFERENCE
 
 **Design:** @design-system, @premium-card, @gold-button  
-**HTML:** @new-module-page, @accordion-pattern, @fix-du-anrede, @add-navigation  
+**HTML:** @new-module-page, @fix-du-anrede, @add-navigation  
 **Trading:** @avwap-implementation, @ev-calculator, @volume-analysis  
 **Git:** @git-push-railway, @commit-message  
 **Debug:** @fix-page-display, @debug-css, @accessibility-check  
@@ -367,43 +382,27 @@ Features: Interactive Charts, Quiz, Key Takeaways
   • Market Wizards: Qullamaggie & Lance Breitstein
 ```
 
-**Beispiel 1i: Breaking News Trading (NEU - Dezember 2025)**
+**Beispiel 1i: Breakout Trading Meistern (NEU - Dezember 2025)**
 ```
-@new-module-page Breaking News Trading
-- HTML-Seite: templates/breaking-news-trading.html ✅
-- Quelle: 2. Lance Breitstein/News/Breaking News 3 Parts.txt ✅
-- Kategorie: Trading-Setups → News Trading ✅
-- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
-- Features: Progressive Disclosure (3 Teile), Quiz-System (3 Fragen), News-Quellen-Übersicht, Filter-Checkliste, Tägliches Protokoll, Key Takeaways
+@new-module-page Breakout Trading Meistern
+- HTML-Seite: templates/breakout-trading.html ✅
+- Quelle: StockBee Guides/Breakout/How_to_Trade_Breakouts_part1and2.txt ✅
+- Bild: Buch_Toby_Crabel.jpg (Opening Range Breakout Referenz) ✅
+- Kategorie: Trading-Setups → Breakout Trading ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro/Masterclass) ✅
+- Features: Progressive Disclosure (8 Sections), Quiz-System (5 Fragen), Breakout-Typen-Grid, Mythen-Buster, Book Reference, Key Takeaways
 - Schwierigkeit: Fortgeschritten ⭐⭐
-- Dauer: 45 Minuten
-- Route: /breaking-news-trading ✅
+- Dauer: 60 Minuten
+- Route: /breakout-trading ✅
 - Kernthemen:
-  • Teil 1: News-Quellen & Zugang (Bloomberg, Reuters, NewsEdge, Squawks, CNBC, Twitter)
-  • Teil 2: Filter-Systeme aufbauen (Backtesting + Forward Testing)
-  • Teil 3: Headlines analysieren (2 Kernfragen: Material? Frisch?)
-  • Konsistente Kategorien: M&A, Index-Changes, Offerings
-  • Tägliches News-Protokoll führen
-```
-
-**Beispiel 1j: Trading Strategie Typen (NEU - Dezember 2025)**
-```
-@new-module-page Trading Strategie Typen
-- HTML-Seite: templates/trading-strategie-typen.html ✅
-- Quelle: 2. Lance Breitstein/Trading Konzepte/Typen Trading Strategy.txt ✅
-- Kategorie: Trading-Psychologie → Strategie-Framework ✅
-- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
-- Features: Progressive Disclosure (7 Sections), Quiz-System (3 Fragen), Interaktive Strategie-Cards, Vergleichstabelle, Markt-Umfeld-Analyse, Reflexions-Box, Key Takeaways
-- Schwierigkeit: Anfänger ⭐
-- Dauer: 30 Minuten
-- Route: /trading-strategie-typen ✅
-- Kernthemen:
-  • Die zwei fundamentalen Trading-Typen: Price Expansion vs Price Reversion
-  • Price Expansion: Breakouts, Breakdowns, Breaking News, Overnight Momentum
-  • Price Reversion: Kapitulation, Counter-Trend, Mean Reversion
-  • Marktumgebungen: Bull/Bear Märkte → Expansion; Paniken → Reversion
-  • Warum du BEIDE Typen beherrschen solltest
-  • Diversifiziere dein Playbook für jedes Marktumfeld
+  • Definition: Breakout = prozentuale Bewegung größer als letzte 2-5 Tage
+  • 3 Breakout-Arten: Continuation (8-20%), Bottom Bounce (20-25%), Consolidation (40-100%)
+  • Entry: NUR Tag 1 ist valide! (härteste Lektion)
+  • Stop-Loss: Low of Day oder halbe Tagesrange
+  • Mythen: Volumen nicht nötig, Widerstand nicht nötig
+  • Haltedauer: 2-40 Tage (selbst bei 500% Moves)
+  • Opening Range Breakout Technik (Toby Crabel Buch)
+  • Realistische Profit-Erwartungen nach Aktienpreis
 ```
 
 **Beispiel 2: Seite reparieren**
@@ -429,9 +428,8 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 ---
 
-**Zuletzt aktualisiert:** 3. Dezember 2025  
+**Zuletzt aktualisiert:** 29. November 2025  
 **Projekt:** Didis Premium Trading Academy  
-**Version:** 1.1  
-**Wichtig:** Alle Module verwenden jetzt Accordion-Pattern als Standard!
+**Version:** 1.0
 
 
