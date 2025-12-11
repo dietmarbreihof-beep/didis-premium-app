@@ -108,10 +108,11 @@
                                 <span style="background: 
                                     {% if level == 'premium' %}var(--gold-dark)
                                     {% elif level == 'elite' %}#6f42c1
+                                    {% elif level == 'elite_pro' %}#d4af37
                                     {% else %}#666
                                     {% endif %}; 
                                     color: white; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; margin: 2px;">
-                                    {{ level|upper }}
+                                    {% if level == 'elite_pro' %}👑 ELITE PRO{% else %}{{ level|upper }}{% endif %}
                                 </span>
                             {% endfor %}
                         {% else %}

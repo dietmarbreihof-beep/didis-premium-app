@@ -500,12 +500,31 @@
         border-bottom: none;
     }
 
-    .key-takeaways li::before {
-        content: '✓';
-        color: #daa520;
+    .key-takeaway-item {
+        background: rgba(255, 255, 255, 0.1);
+        border-left: 4px solid #daa520;
+        padding: 20px 25px;
+        border-radius: 0 12px 12px 0;
+        transition: all 0.3s ease;
+    }
+
+    .key-takeaway-item:hover {
+        background: rgba(255, 255, 255, 0.15);
+        transform: translateX(5px);
+    }
+
+    .key-takeaway-item h4 {
+        margin: 0 0 10px 0;
+        color: #f4e97b;
+        font-size: 1.1em;
         font-weight: 700;
-        margin-right: 10px;
-        font-size: 1.2em;
+    }
+
+    .key-takeaway-item p {
+        margin: 0;
+        line-height: 1.7;
+        color: rgba(255, 255, 255, 0.95);
+        font-size: 1em;
     }
 
     /* Responsive */
@@ -899,16 +918,48 @@
         <div class="section-content" id="content8">
             <div class="key-takeaways">
                 <h3>🎯 Die wichtigsten Erkenntnisse</h3>
-                <ul>
-                    <li><strong>Breaking News ist die wichtigste Variable</strong> im Trading - sie bestimmt, ob ein Wertpapier trendet oder mean revertet.</li>
-                    <li><strong>MIT Breaking News:</strong> Bewegungen trenden weitaus wahrscheinlicher → Nutze Continuation-Strategien.</li>
-                    <li><strong>OHNE Breaking News:</strong> Bewegungen mean revertieren weitaus wahrscheinlicher → Nutze Mean Reversion-Strategien.</li>
-                    <li><strong>Die besten Expected Value Trades:</strong> Früh bei Breaking News sein (Buyout, Earnings, Offerings) oder Mean Reversion bei Emotions-basierten Moves ohne News.</li>
-                    <li><strong>Vermeide:</strong> Mean Reversion MIT News oder Continuation OHNE News - das führt zu niedrigem Expected Value.</li>
-                    <li><strong>Viele Trader sind blind:</strong> Sie tradet ohne News-Bewusstsein, was zu falschen Strategie-Anwendungen und verzerrten Backtesting-Daten führt.</li>
-                    <li><strong>Die Lösung:</strong> Bewusst sein, wann News vorhanden sind und deine Strategie entsprechend anpassen - das wird deine Performance fundamental verbessern.</li>
-                    <li><strong>Episodic Pivots:</strong> Wie Christian Kualamagi - Range-Ausbrüche mit enormem Volume und Breaking News bieten die besten Continuation-Chancen.</li>
-                </ul>
+                
+                <div style="display: grid; gap: 20px; margin-top: 30px;">
+                    <div class="key-takeaway-item">
+                        <h4>📰 #1: Breaking News ist die wichtigste Variable</h4>
+                        <p>Breaking News bestimmt, ob ein Wertpapier <strong>trendet oder mean revertet</strong>. Diese Variable ist entscheidender als technische Indikatoren oder Chart-Patterns.</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>📈 #2: MIT Breaking News → Trend wahrscheinlich</h4>
+                        <p>Bewegungen <strong>mit Breaking News trenden weitaus wahrscheinlicher</strong> als sie mean revertieren. Nutze hier <strong>Continuation-Strategien</strong> - nie Mean Reversion!</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>⚠️ #3: OHNE Breaking News → Mean Reversion wahrscheinlich</h4>
+                        <p>Bewegungen <strong>ohne Breaking News mean revertieren weitaus wahrscheinlicher</strong> als sie trenden. Nutze hier <strong>Mean Reversion-Strategien</strong> für den besten Expected Value.</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>💰 #4: Die besten Expected Value Trades</h4>
+                        <p>Entweder <strong>früh bei Breaking News sein</strong> (Buyout-Angebote, Earnings-Releases, Stock Offerings) ODER <strong>Mean Reversion bei Emotions-basierten Moves ohne News</strong> nutzen.</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>❌ #5: Das solltest du vermeiden</h4>
+                        <p><strong>Mean Reversion MIT News</strong> oder <strong>Continuation OHNE News</strong> führen zu niedrigem Expected Value. Diese Kombinationen funktionieren nicht!</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>👁️ #6: Viele Trader sind blind</h4>
+                        <p>Viele Trader tradet <strong>ohne News-Bewusstsein</strong>, was zu falschen Strategie-Anwendungen, verzerrten Backtesting-Daten und unnötigen Verlusten führt.</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>✅ #7: Die Lösung</h4>
+                        <p><strong>Bewusst sein, wann News vorhanden sind</strong> und deine Strategie entsprechend anpassen. Das wird deine Performance fundamental verbessern.</p>
+                    </div>
+                    
+                    <div class="key-takeaway-item">
+                        <h4>🎯 #8: Episodic Pivots (Kualamagi)</h4>
+                        <p>Range-Ausbrüche mit <strong>enormem Volume und Breaking News</strong> bieten die besten Continuation-Chancen - wie Christian Kualamagi es erfolgreich nutzt.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="highlight-box">

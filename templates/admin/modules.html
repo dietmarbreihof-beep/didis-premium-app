@@ -144,8 +144,9 @@
                                 <div class="module-actions">
                                     <select onchange="changeModuleSubscription({{ module.id }}, this.value)" class="subscription-select">
                                         <option value="free" {% if module.is_lead_magnet %}selected{% endif %}>🆓 Kostenlos</option>
-                                        <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) and 'elite' not in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
-                                        <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
+                                        <option value="premium" {% if 'premium' in (module.required_subscription_levels or []) and 'elite' not in (module.required_subscription_levels or []) and 'elite_pro' not in (module.required_subscription_levels or []) %}selected{% endif %}>💰 Premium</option>
+                                        <option value="elite" {% if 'elite' in (module.required_subscription_levels or []) and 'elite_pro' not in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite</option>
+                                        <option value="elite_pro" {% if 'elite_pro' in (module.required_subscription_levels or []) %}selected{% endif %}>👑 Elite Pro</option>
                                     </select>
                                     <button class="action-btn" onclick="moveModule({{ module.id }})" title="Modul verschieben">📁</button>
                                     {% if module.category and module.category.slug == 'neue-module' %}
@@ -603,6 +604,10 @@
                     <label class="checkbox-label">
                         <input type="checkbox" name="req_elite" checked>
                         👑 Elite
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="req_elite_pro">
+                        👑 Elite Pro
                     </label>
                 </div>
             </div>
