@@ -1631,6 +1631,11 @@
         function toggleSection(sectionNumber) {
             const content = document.getElementById(`content${sectionNumber}`);
             const toggle = document.getElementById(`toggle${sectionNumber}`);
+            const sectionCard = content.parentElement;
+            
+            // Speichere Position des Section-Headers relativ zum Viewport
+            const headerRect = sectionCard.getBoundingClientRect();
+            const headerTopBefore = headerRect.top;
 
             if (content.classList.contains('expanded')) {
                 content.classList.remove('expanded');
@@ -1656,6 +1661,15 @@
                 currentSection = Math.max(currentSection, sectionNumber);
                 updateProgress();
             }
+            
+            // Korrigiere Scroll-Position, damit Section-Header an gleicher Stelle bleibt
+            requestAnimationFrame(() => {
+                const headerTopAfter = sectionCard.getBoundingClientRect().top;
+                const scrollDiff = headerTopAfter - headerTopBefore;
+                if (Math.abs(scrollDiff) > 5) {
+                    window.scrollBy(0, scrollDiff);
+                }
+            });
         }
 
         function updateProgress() {
