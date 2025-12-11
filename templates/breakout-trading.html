@@ -1099,14 +1099,132 @@
                     aber auch desto höher das Risiko eines Fehlausbruchs.
                 </div>
 
+                <!-- ORB Visual Diagram -->
+                <div class="visual-diagram" style="margin: 30px 0;">
+                    <div class="diagram-title">📊 Opening Range Breakout – Visuell erklärt</div>
+                    <svg viewBox="0 0 800 400" style="max-width: 100%; height: auto; font-family: Inter, sans-serif;">
+                        <!-- Background Grid -->
+                        <defs>
+                            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#f0f0f0" stroke-width="1"/>
+                            </pattern>
+                            <!-- Gradient für Long-Zone -->
+                            <linearGradient id="longGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                                <stop offset="0%" style="stop-color:#38a169;stop-opacity:0.1" />
+                                <stop offset="100%" style="stop-color:#38a169;stop-opacity:0.3" />
+                            </linearGradient>
+                            <!-- Gradient für Short-Zone -->
+                            <linearGradient id="shortGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#e53e3e;stop-opacity:0.1" />
+                                <stop offset="100%" style="stop-color:#e53e3e;stop-opacity:0.3" />
+                            </linearGradient>
+                        </defs>
+                        <rect width="800" height="400" fill="url(#grid)"/>
+                        
+                        <!-- Zeit-Achse -->
+                        <line x1="50" y1="360" x2="750" y2="360" stroke="#1a1a1a" stroke-width="2"/>
+                        <text x="400" y="395" text-anchor="middle" fill="#666" font-size="14">Zeit →</text>
+                        
+                        <!-- Zeit-Markierungen -->
+                        <line x1="100" y1="360" x2="100" y2="370" stroke="#1a1a1a" stroke-width="2"/>
+                        <text x="100" y="385" text-anchor="middle" fill="#666" font-size="12">9:30</text>
+                        <text x="100" y="345" text-anchor="middle" fill="#b8860b" font-size="11" font-weight="600">Open</text>
+                        
+                        <line x1="250" y1="360" x2="250" y2="370" stroke="#1a1a1a" stroke-width="2"/>
+                        <text x="250" y="385" text-anchor="middle" fill="#666" font-size="12">9:45-10:00</text>
+                        <text x="250" y="345" text-anchor="middle" fill="#b8860b" font-size="11" font-weight="600">ORB Ende</text>
+                        
+                        <line x1="550" y1="360" x2="550" y2="370" stroke="#1a1a1a" stroke-width="2"/>
+                        <text x="550" y="385" text-anchor="middle" fill="#666" font-size="12">11:00+</text>
+                        
+                        <!-- Opening Range Zone (grauer Bereich) -->
+                        <rect x="100" y="140" width="150" height="100" fill="#daa520" opacity="0.15" stroke="#daa520" stroke-width="2" stroke-dasharray="5,5"/>
+                        <text x="175" y="125" text-anchor="middle" fill="#b8860b" font-size="13" font-weight="700">OPENING RANGE</text>
+                        <text x="175" y="260" text-anchor="middle" fill="#b8860b" font-size="11">(15-30 Min)</text>
+                        
+                        <!-- Long Breakout Zone -->
+                        <rect x="250" y="40" width="500" height="100" fill="url(#longGradient)"/>
+                        <text x="500" y="75" text-anchor="middle" fill="#38a169" font-size="14" font-weight="700">📈 LONG ZONE</text>
+                        <text x="500" y="95" text-anchor="middle" fill="#276749" font-size="11">Ausbruch über Range-Hoch</text>
+                        
+                        <!-- Short Breakout Zone -->
+                        <rect x="250" y="240" width="500" height="100" fill="url(#shortGradient)"/>
+                        <text x="500" y="290" text-anchor="middle" fill="#e53e3e" font-size="14" font-weight="700">📉 SHORT ZONE</text>
+                        <text x="500" y="310" text-anchor="middle" fill="#c53030" font-size="11">Bruch unter Range-Tief</text>
+                        
+                        <!-- Range Hoch Linie -->
+                        <line x1="100" y1="140" x2="750" y2="140" stroke="#38a169" stroke-width="3"/>
+                        <rect x="55" y="128" width="40" height="24" fill="#38a169" rx="4"/>
+                        <text x="75" y="145" text-anchor="middle" fill="white" font-size="11" font-weight="700">HIGH</text>
+                        
+                        <!-- Range Tief Linie -->
+                        <line x1="100" y1="240" x2="750" y2="240" stroke="#e53e3e" stroke-width="3"/>
+                        <rect x="55" y="228" width="40" height="24" fill="#e53e3e" rx="4"/>
+                        <text x="75" y="245" text-anchor="middle" fill="white" font-size="11" font-weight="700">LOW</text>
+                        
+                        <!-- Mitte der Range (Stop-Loss Option) -->
+                        <line x1="100" y1="190" x2="750" y2="190" stroke="#d69e2e" stroke-width="2" stroke-dasharray="8,4"/>
+                        <rect x="680" y="178" width="65" height="24" fill="#d69e2e" rx="4"/>
+                        <text x="712" y="195" text-anchor="middle" fill="white" font-size="10" font-weight="600">MITTE</text>
+                        
+                        <!-- Kerzen in Opening Range -->
+                        <!-- Kerze 1 -->
+                        <line x1="120" y1="155" x2="120" y2="225" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="114" y="170" width="12" height="35" fill="#38a169"/>
+                        <!-- Kerze 2 -->
+                        <line x1="145" y1="145" x2="145" y2="210" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="139" y="160" width="12" height="30" fill="#e53e3e"/>
+                        <!-- Kerze 3 -->
+                        <line x1="170" y1="150" x2="170" y2="230" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="164" y="165" width="12" height="45" fill="#38a169"/>
+                        <!-- Kerze 4 -->
+                        <line x1="195" y1="155" x2="195" y2="220" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="189" y="175" width="12" height="25" fill="#e53e3e"/>
+                        <!-- Kerze 5 -->
+                        <line x1="220" y1="148" x2="220" y2="215" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="214" y="160" width="12" height="35" fill="#38a169"/>
+                        
+                        <!-- Long Breakout Kerze -->
+                        <line x1="300" y1="100" x2="300" y2="165" stroke="#1a1a1a" stroke-width="1"/>
+                        <rect x="292" y="110" width="16" height="45" fill="#38a169" stroke="#276749" stroke-width="2"/>
+                        
+                        <!-- Long Entry Pfeil -->
+                        <path d="M 330 130 L 370 130 L 360 120 M 370 130 L 360 140" stroke="#38a169" stroke-width="3" fill="none"/>
+                        <text x="420" y="135" fill="#38a169" font-size="13" font-weight="700">LONG ENTRY</text>
+                        
+                        <!-- Short Breakout Kerze (alternative Darstellung) -->
+                        <line x1="300" y1="215" x2="300" y2="290" stroke="#1a1a1a" stroke-width="1" opacity="0.4"/>
+                        <rect x="292" y="245" width="16" height="40" fill="#e53e3e" stroke="#c53030" stroke-width="2" opacity="0.4"/>
+                        
+                        <!-- Short Entry Pfeil -->
+                        <path d="M 330 270 L 370 270 L 360 260 M 370 270 L 360 280" stroke="#e53e3e" stroke-width="3" fill="none" opacity="0.5"/>
+                        <text x="420" y="275" fill="#e53e3e" font-size="13" font-weight="700" opacity="0.6">SHORT ENTRY</text>
+                        
+                        <!-- Stop-Loss Annotations -->
+                        <rect x="560" y="145" width="130" height="40" fill="white" stroke="#d69e2e" stroke-width="2" rx="6"/>
+                        <text x="625" y="162" text-anchor="middle" fill="#1a1a1a" font-size="10" font-weight="600">🛑 STOP-LOSS</text>
+                        <text x="625" y="178" text-anchor="middle" fill="#666" font-size="9">Range-Tief oder Mitte</text>
+                        
+                        <!-- Legende -->
+                        <rect x="560" y="20" width="180" height="90" fill="white" stroke="#e5e5e5" stroke-width="2" rx="8"/>
+                        <text x="650" y="40" text-anchor="middle" fill="#1a1a1a" font-size="12" font-weight="700">LEGENDE</text>
+                        <line x1="575" y1="55" x2="605" y2="55" stroke="#38a169" stroke-width="3"/>
+                        <text x="615" y="60" fill="#666" font-size="11">Range-Hoch</text>
+                        <line x1="575" y1="75" x2="605" y2="75" stroke="#e53e3e" stroke-width="3"/>
+                        <text x="615" y="80" fill="#666" font-size="11">Range-Tief</text>
+                        <line x1="575" y1="95" x2="605" y2="95" stroke="#d69e2e" stroke-width="2" stroke-dasharray="5,3"/>
+                        <text x="615" y="100" fill="#666" font-size="11">Mitte (Stop)</text>
+                    </svg>
+                </div>
+
                 <div class="highlight-box">
                     <strong>💡 Praktische Anwendung:</strong><br><br>
                     <ol style="margin: 10px 0 0 0; padding-left: 20px;">
-                        <li>Wähle deine Opening Range: 5 Min (aggressiv), 15 Min (Standard) oder 30 Min (konservativ)</li>
-                        <li>Markiere das Hoch und Tief dieser Range</li>
-                        <li>Ein Ausbruch über das Hoch = potentieller Long-Entry</li>
-                        <li>Ein Unterschreiten des Tiefs = potentieller Short-Entry</li>
-                        <li>Stop-Loss: Gegenüberliegende Seite der Range oder Mitte der Range</li>
+                        <li><strong>Wähle deine Opening Range:</strong> 5 Min (aggressiv), 15 Min (Standard) oder 30 Min (konservativ)</li>
+                        <li><strong>Markiere das Hoch und Tief</strong> dieser Range im Chart</li>
+                        <li><strong>Long-Entry:</strong> Ausbruch über das Range-Hoch → Kaufen</li>
+                        <li><strong>Short-Entry:</strong> Bruch unter das Range-Tief → Shorten</li>
+                        <li><strong>Stop-Loss:</strong> Gegenüberliegende Seite der Range oder Mitte der Range</li>
                     </ol>
                 </div>
             </div>
