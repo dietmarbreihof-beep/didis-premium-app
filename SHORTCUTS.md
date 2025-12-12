@@ -405,6 +405,29 @@ Features: Interactive Charts, Quiz, Key Takeaways
   • Realistische Profit-Erwartungen nach Aktienpreis
 ```
 
+**Beispiel 1j: Stop-Loss wie die Profis (NEU - Dezember 2025)**
+```
+@new-module-page Stop-Loss Strategien
+- HTML-Seite: templates/stop-loss-strategien.html ✅
+- Quelle: 2. Lance Breitstein/Stop Loss/stop_Loss.txt ✅
+- SVG-Grafiken (5): stop_loss_breakout.svg, stop_loss_trend.svg, stop_loss_moving_average.svg, stop_loss_trendline.svg, stop_loss_trailing.svg ✅
+- Kategorie: Risikomanagement → Stop-Loss Strategien ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro/Masterclass) ✅
+- Features: Progressive Disclosure (9 Sections), Quiz-System (3 Fragen), 5 Kerzen-Chart-Visualisierungen, Quote-Boxen, Key Takeaways
+- Schwierigkeit: Fortgeschritten ⭐⭐
+- Dauer: 45 Minuten
+- Route: /stop-loss-strategien ✅
+- Kernthemen:
+  • Was ist ein Stop-Loss (3 Hauptfunktionen)
+  • Die 3 größten Fehler (Emotions-Stops, Willkürliche Platzierung, Marktkontext ignorieren)
+  • Strategie 1: Breakout Stop-Loss (unter Widerstandslevel)
+  • Strategie 2: Trend Stop-Loss (Higher Lows)
+  • Strategie 3: Moving Average Stop (20 MA Surfing)
+  • Strategie 4: Trendlinie Stop (3-Touch-Regel)
+  • Strategie 5: Trailing Stop (Prior Bar Lows)
+  • Die 5 Profi-Schritte für Stop-Platzierung
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
@@ -428,7 +451,7 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 ---
 
-**Zuletzt aktualisiert:** 29. November 2025  
+**Zuletzt aktualisiert:** 12. Dezember 2025  
 **Projekt:** Didis Premium Trading Academy  
 **Version:** 1.0
 

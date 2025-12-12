@@ -1,0 +1,1100 @@
+{% extends "base.html" %}
+{% block title %}Stop-Loss wie die Profis - Didis Premium Trading Academy{% endblock %}
+
+{% block content %}
+<div class="stop-loss-wrapper">
+    <style>
+        .stop-loss-wrapper {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f7f7f7;
+            min-height: 100vh;
+            padding-bottom: 60px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #b8860b 100%);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23daa520' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(218, 165, 32, 0.2);
+            border: 1px solid #daa520;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            max-width: 800px;
+            margin: 30px auto 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #f4e97b;
+        }
+
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin: -30px auto 30px;
+            max-width: 900px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-title {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .progress-percent {
+            font-weight: 700;
+            color: #b8860b;
+            font-size: 1.2em;
+        }
+
+        .progress-bar-container {
+            background: #e5e5e5;
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #b8860b, #daa520, #f4e97b);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #daa520;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 25px 30px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-toggle {
+            font-size: 1.5em;
+            color: #b8860b;
+            transition: transform 0.3s ease;
+        }
+
+        .section-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 30px;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            padding: 30px;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .chart-container img,
+        .chart-container object {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .chart-title {
+            color: #f4e97b;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* Highlight Boxes */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(244, 233, 123, 0.1) 100%);
+            border-left: 4px solid #daa520;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: #b8860b;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .highlight-box p {
+            color: #333;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(229, 62, 62, 0.05) 100%);
+            border-left: 4px solid #e53e3e;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .warning-box h4 {
+            color: #e53e3e;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        .warning-box ul {
+            color: #333;
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .warning-box li {
+            margin-bottom: 8px;
+        }
+
+        /* Success Box */
+        .success-box {
+            background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(56, 161, 105, 0.05) 100%);
+            border-left: 4px solid #38a169;
+            padding: 20px 25px;
+            border-radius: 0 12px 12px 0;
+            margin: 20px 0;
+        }
+
+        .success-box h4 {
+            color: #38a169;
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+        }
+
+        /* Quote Box */
+        .quote-box {
+            background: #2d2d2d;
+            color: white;
+            padding: 25px 30px;
+            border-radius: 12px;
+            margin: 25px 0;
+            position: relative;
+        }
+
+        .quote-box::before {
+            content: '"';
+            font-size: 4em;
+            color: #daa520;
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            opacity: 0.5;
+        }
+
+        .quote-box p {
+            margin: 0;
+            font-style: italic;
+            line-height: 1.7;
+            padding-left: 30px;
+        }
+
+        .quote-author {
+            margin-top: 15px;
+            padding-left: 30px;
+            color: #daa520;
+            font-weight: 600;
+        }
+
+        /* Mistake Cards */
+        .mistakes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        .mistake-card {
+            background: #fff5f5;
+            border: 1px solid #fed7d7;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .mistake-card h4 {
+            color: #e53e3e;
+            margin: 0 0 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mistake-card p {
+            color: #666;
+            margin: 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* Strategy Steps */
+        .steps-container {
+            margin: 25px 0;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #b8860b, #daa520);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.3em;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step-content h4 {
+            margin: 0 0 8px 0;
+            color: #1a1a1a;
+            font-size: 1.1em;
+        }
+
+        .step-content p {
+            margin: 0;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 35px;
+            margin: 40px 0;
+        }
+
+        .key-takeaways h3 {
+            color: #f4e97b;
+            margin: 0 0 25px 0;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .takeaway-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .takeaway-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 18px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #daa520;
+        }
+
+        .takeaway-list li::before {
+            content: '✓';
+            color: #38a169;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .quiz-question {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 15px 20px;
+            background: white;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fffbeb;
+        }
+
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #f0fff4;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #fff5f5;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2em;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1em;
+            }
+
+            .section-header h2 {
+                font-size: 1.1em;
+            }
+
+            .section-content.expanded {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .step-item {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+        }
+    </style>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="hero-content">
+            <div class="hero-badge">🛡️ Risikomanagement</div>
+            <h1 class="hero-title">Stop-Loss wie die Profis</h1>
+            <p class="hero-subtitle">
+                Lerne, wie professionelle Trader ihre Stops setzen – basierend auf Logik, Daten und Strategie, 
+                nicht auf Emotionen oder willkürlichen Zahlen.
+            </p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Stop-Loss Strategien</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Kerzen-Charts</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">45</div>
+                    <div class="stat-label">Minuten Lernzeit</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">∞</div>
+                    <div class="stat-label">Karriere-Langlebigkeit</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Tracker -->
+    <div class="container">
+        <div class="progress-tracker">
+            <div class="progress-header">
+                <span class="progress-title">📊 Dein Lernfortschritt</span>
+                <span class="progress-percent" id="progressPercent">0%</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content Sections -->
+    <div class="container">
+        
+        <!-- Section 1: Was ist ein Stop-Loss -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(1)">
+                <h2>1️⃣ Was ist ein Stop-Loss?</h2>
+                <span class="section-toggle" id="toggle1">▶️</span>
+            </div>
+            <div class="section-content" id="content1">
+                <p style="font-size: 1.1em; line-height: 1.8; color: #333;">
+                    Ein <strong>Stop-Loss</strong> ist ein vorab definierter Exit, der dazu dient:
+                </p>
+                
+                <div class="highlight-box">
+                    <h4>🎯 Die drei Hauptfunktionen eines Stop-Loss</h4>
+                    <ul style="margin: 15px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li><strong>Kapital schützen:</strong> Deine Kaufkraft für zukünftige Trades bewahren</li>
+                        <li><strong>Psychologie schützen:</strong> Emotionale Entscheidungen minimieren</li>
+                        <li><strong>Langlebigkeit sichern:</strong> Über tausende Trades konstanten Expected Value liefern</li>
+                    </ul>
+                </div>
+
+                <div class="quote-box">
+                    <p>
+                        "Die meisten Trader verstehen Stop-Losses komplett falsch. Sie denken, ein Stop geht darum, 
+                        Schmerz zu vermeiden, oder dem Markt 'Raum zu geben', oder dass der Markt magisch ihre 
+                        willkürliche Linie im Sand respektiert. So funktionieren Märkte nicht."
+                    </p>
+                    <div class="quote-author">— Lance Breitstein, $100M+ verifizierte Gewinne</div>
+                </div>
+
+                <p style="color: #666; margin-top: 20px;">
+                    <strong>Wichtige Erkenntnis:</strong> Märkte kümmern sich nicht um deine Emotionen oder 
+                    willkürlichen Stop-Platzierungen. Profis platzieren Stops dort, wo der <em>Expected Value negativ wird</em>.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 2: Die 3 größten Fehler -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(2)">
+                <h2>2️⃣ Die 3 größten Stop-Loss Fehler</h2>
+                <span class="section-toggle" id="toggle2">▶️</span>
+            </div>
+            <div class="section-content" id="content2">
+                
+                <div class="mistakes-grid">
+                    <div class="mistake-card">
+                        <h4>❌ Fehler 1: Emotions-Stops</h4>
+                        <p>
+                            Der Preis nähert sich deinem Stop → Du weitest ihn → Er kommt näher → Du weitest wieder → 
+                            Schließlich entfernst du den Stop komplett und wirst zum "Hodler" gegen deinen Willen.
+                            <br><br>
+                            <strong>Resultat:</strong> Monster-Verluste, die Wochen konstanter Gewinne auslöschen.
+                        </p>
+                    </div>
+                    
+                    <div class="mistake-card">
+                        <h4>❌ Fehler 2: Willkürliche Platzierung</h4>
+                        <p>
+                            "Ich stoppe immer bei -2%" oder "Ich gebe bis $10" – nur weil es sich sauber anfühlt 
+                            oder diszipliniert klingt.
+                            <br><br>
+                            <strong>Realität:</strong> Der Markt interessiert sich nicht für deine runden Zahlen.
+                        </p>
+                    </div>
+                    
+                    <div class="mistake-card">
+                        <h4>❌ Fehler 3: Marktkontext ignorieren</h4>
+                        <p>
+                            Der gleiche Stop bei verschiedenen Aktien und Mustern macht keinen Sinn. 
+                            Volatile Märkte brauchen weitere Stops, engere Muster erlauben enge Stops.
+                            <br><br>
+                            <strong>Lösung:</strong> Stop immer an Volatilität und Pattern anpassen.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="warning-box">
+                    <h4>🚨 Der "Manipulation"-Mythos</h4>
+                    <ul>
+                        <li>Viele Trader glauben, der Markt "jagt" ihre Stops</li>
+                        <li>Lance hat <em>nie</em> einen professionellen Trader so reden hören</li>
+                        <li>Wenn Märkte wirklich vorhersagbar Stops jagen würden – könntest du dich nicht auf dieselbe Seite stellen?</li>
+                        <li><strong>Die Wahrheit:</strong> Willkürliche Levels + Randomness = Illusion von Manipulation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Breakout Stop-Loss -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(3)">
+                <h2>3️⃣ Strategie: Breakout Stop-Loss</h2>
+                <span class="section-toggle" id="toggle3">▶️</span>
+            </div>
+            <div class="section-content" id="content3">
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Prinzip</h4>
+                    <p>
+                        Bei einem Breakout über einen Widerstand: Der Stop gehört <strong>unter</strong> das 
+                        Widerstandslevel. Wenn der Preis zurück unter den Widerstand fällt, ist deine These ungültig.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Breakout Stop-Loss Visualisierung</div>
+                    <object type="image/svg+xml" data="{{ url_for('static', filename='screenshots/stop_loss_breakout.svg') }}" style="width: 100%; max-width: 600px;">
+                        Dein Browser unterstützt keine SVG-Grafiken
+                    </object>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So wendest du es an</h4>
+                    <ol style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Identifiziere klares Widerstandslevel (mehrfach getestet)</li>
+                        <li>Warte auf Breakout mit Volumen (Bestätigung)</li>
+                        <li>Entry auf dem Breakout</li>
+                        <li>Stop direkt unter dem ehemaligen Widerstand</li>
+                        <li>Thesis: "Solange über Widerstand = bullish"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Trend Stop-Loss -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(4)">
+                <h2>4️⃣ Strategie: Trend Stop-Loss (Higher Lows)</h2>
+                <span class="section-toggle" id="toggle4">▶️</span>
+            </div>
+            <div class="section-content" id="content4">
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Prinzip</h4>
+                    <p>
+                        Ein Aufwärtstrend ist definiert durch <strong>höhere Hochs</strong> und <strong>höhere Tiefs</strong>. 
+                        Der Stop gehört unter das letzte Higher Low – bricht der Preis darunter, ist der Trend beendet.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Trend Stop-Loss: Higher Lows</div>
+                    <object type="image/svg+xml" data="{{ url_for('static', filename='screenshots/stop_loss_trend.svg') }}" style="width: 100%; max-width: 600px;">
+                        Dein Browser unterstützt keine SVG-Grafiken
+                    </object>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So wendest du es an</h4>
+                    <ol style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Identifiziere den Aufwärtstrend (mindestens 2 Higher Lows)</li>
+                        <li>Markiere das letzte signifikante Higher Low</li>
+                        <li>Setze Stop knapp unter diesem Level</li>
+                        <li>Bei neuem Higher Low: Stop nachziehen</li>
+                        <li>Thesis: "Trend intakt = Position halten"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Moving Average Stop -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(5)">
+                <h2>5️⃣ Strategie: Moving Average Stop</h2>
+                <span class="section-toggle" id="toggle5">▶️</span>
+            </div>
+            <div class="section-content" id="content5">
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Prinzip</h4>
+                    <p>
+                        Wenn eine Aktie einen Moving Average "surft" (regelmäßig darauf bounced), 
+                        ist ein Close <strong>unter</strong> dem MA das Exit-Signal. Der Trend ist dann gebrochen.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 MA Surfing: Stop bei Close unter 20 MA</div>
+                    <object type="image/svg+xml" data="{{ url_for('static', filename='screenshots/stop_loss_moving_average.svg') }}" style="width: 100%; max-width: 600px;">
+                        Dein Browser unterstützt keine SVG-Grafiken
+                    </object>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So wendest du es an</h4>
+                    <ol style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Identifiziere Aktien die am 20 MA "surfen"</li>
+                        <li>Entry bei Bounce vom MA (Touch & Go)</li>
+                        <li>Stop: Tagesschlusskurs unter dem 20 MA</li>
+                        <li>Wichtig: <strong>Close</strong> unter MA, nicht nur Intraday-Touch!</li>
+                        <li>Thesis: "Über MA = Trend intakt = Position halten"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: Trendline Stop -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(6)">
+                <h2>6️⃣ Strategie: Trendlinie Stop</h2>
+                <span class="section-toggle" id="toggle6">▶️</span>
+            </div>
+            <div class="section-content" id="content6">
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Prinzip</h4>
+                    <p>
+                        Eine gültige Trendlinie hat <strong>mindestens 3 Berührungspunkte</strong>. 
+                        Wenn der Preis die Trendlinie durchbricht, ist der Trend beendet → Exit.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Trendlinie Stop: 3 Touches = gültig, Break = Exit</div>
+                    <object type="image/svg+xml" data="{{ url_for('static', filename='screenshots/stop_loss_trendline.svg') }}" style="width: 100%; max-width: 600px;">
+                        Dein Browser unterstützt keine SVG-Grafiken
+                    </object>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So wendest du es an</h4>
+                    <ol style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Zeichne Trendlinie durch mindestens 2 Tiefpunkte</li>
+                        <li>Warte auf 3. Touch als Bestätigung</li>
+                        <li>Entry bei Bounce von Trendlinie</li>
+                        <li>Stop: Close unter der Trendlinie</li>
+                        <li>Thesis: "Trendlinie hält = Aufwärtstrend intakt"</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Trailing Stop -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(7)">
+                <h2>7️⃣ Strategie: Trailing Stop (Prior Bar Lows)</h2>
+                <span class="section-toggle" id="toggle7">▶️</span>
+            </div>
+            <div class="section-content" id="content7">
+                
+                <div class="highlight-box">
+                    <h4>📊 Das Prinzip</h4>
+                    <p>
+                        Der Trailing Stop wird nach <strong>jeder neuen Kerze</strong> auf das Low der vorherigen Kerze 
+                        nachgezogen. So werden Gewinne gesichert während du im Trade bleibst.
+                    </p>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Trailing Stop: Prior Bar Lows nachziehen</div>
+                    <object type="image/svg+xml" data="{{ url_for('static', filename='screenshots/stop_loss_trailing.svg') }}" style="width: 100%; max-width: 600px;">
+                        Dein Browser unterstützt keine SVG-Grafiken
+                    </object>
+                </div>
+
+                <div class="success-box">
+                    <h4>✅ So wendest du es an</h4>
+                    <ol style="margin: 10px 0 0 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Entry mit initialem Stop (z.B. unter Entry-Bar-Low)</li>
+                        <li>Nach jeder neuen Kerze: Stop auf Low der vorherigen Kerze</li>
+                        <li>Stop wird NUR nach oben angepasst, NIE nach unten</li>
+                        <li>Gewinne werden automatisch gesichert</li>
+                        <li>Exit wenn Preis unter Prior Bar Low fällt</li>
+                    </ol>
+                </div>
+
+                <div class="warning-box">
+                    <h4>⚠️ Timeframe beachten!</h4>
+                    <ul>
+                        <li><strong>Intraday-Setup</strong> → Intraday-Stop</li>
+                        <li><strong>Daily-Setup</strong> → Daily-Stop</li>
+                        <li>Mische nicht die Timeframes!</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Die 5 Profi-Schritte -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(8)">
+                <h2>8️⃣ Die 5 Profi-Schritte für Stops</h2>
+                <span class="section-toggle" id="toggle8">▶️</span>
+            </div>
+            <div class="section-content" id="content8">
+                
+                <div class="steps-container">
+                    <div class="step-item">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Macht der Stop strategisch Sinn?</h4>
+                            <p>
+                                Dein Stop sollte dort sein, wo der <strong>Expected Value negativ wird</strong> – 
+                                also dort wo deine These ungültig wird.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Passt der Stop zum Timeframe?</h4>
+                            <p>
+                                Intraday-Setup = Intraday-Stop. Daily-Setup = Daily-Stop. 
+                                Der Stop muss zum Einstiegs-Zeitrahmen passen.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Ist der Stop durch Daten gestützt?</h4>
+                            <p>
+                                Profis raten nicht – sie studieren <strong>tausende Samples</strong> und 
+                                identifizieren die Stop-Platzierung die Expected Value maximiert. Backtesting ist Pflicht!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">4</div>
+                        <div class="step-content">
+                            <h4>Marktkontext berücksichtigt?</h4>
+                            <p>
+                                Volatile Märkte = weitere Stops (bei gleicher Positionsgröße). 
+                                Engere Muster = engere Stops erlaubt. Passe dich an!
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <div class="step-number">5</div>
+                        <div class="step-content">
+                            <h4>Disziplin bei der Ausführung!</h4>
+                            <p>
+                                Der beste Stop ist wertlos wenn du ihn nicht nimmst. 
+                                Profis behandeln Stops als <strong>nicht verhandelbar</strong>. 
+                                Verwende Hard-Stops, automatisiere sie, nutze Tageslimits.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quote-box">
+                    <p>
+                        "Wenn du das richtig machst – wenn deine Stops durch Logik und Daten gestützt sind – 
+                        gehörst du sofort zu den oberen paar Prozent der Trader, die tatsächlich ein 
+                        wiederholbares System haben."
+                    </p>
+                    <div class="quote-author">— Lance Breitstein</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(9)">
+                <h2>9️⃣ Quiz: Teste dein Wissen</h2>
+                <span class="section-toggle" id="toggle9">▶️</span>
+            </div>
+            <div class="section-content" id="content9">
+                
+                <div class="quiz-container">
+                    <div class="quiz-question">Frage 1: Wo sollte ein Stop-Loss platziert werden?</div>
+                    <div class="quiz-options" id="quiz1">
+                        <div class="quiz-option" onclick="checkAnswer(1, this, false)">
+                            A) Bei -2% vom Einstiegspreis
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(1, this, false)">
+                            B) Bei einer runden Zahl (z.B. $10, $50)
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(1, this, true)">
+                            C) Dort wo der Expected Value negativ wird / die These ungültig ist
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(1, this, false)">
+                            D) Dort wo es sich emotional komfortabel anfühlt
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback1"></div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">Frage 2: Was ist der Hauptgrund warum Anfänger glauben, Märkte "jagen ihre Stops"?</div>
+                    <div class="quiz-options" id="quiz2">
+                        <div class="quiz-option" onclick="checkAnswer(2, this, false)">
+                            A) Weil Märkte tatsächlich manipuliert sind
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(2, this, true)">
+                            B) Willkürliche Stop-Platzierung + Randomness erzeugt diese Illusion
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(2, this, false)">
+                            C) Weil Market Maker die Stops sehen können
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(2, this, false)">
+                            D) Weil die Stops zu eng sind
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback2"></div>
+                </div>
+
+                <div class="quiz-container">
+                    <div class="quiz-question">Frage 3: Was bedeutet "Trailing Stop mit Prior Bar Lows"?</div>
+                    <div class="quiz-options" id="quiz3">
+                        <div class="quiz-option" onclick="checkAnswer(3, this, false)">
+                            A) Stop wird automatisch alle 5 Minuten nachgezogen
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(3, this, true)">
+                            B) Stop wird nach jeder Kerze auf das Low der vorherigen Kerze gesetzt
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(3, this, false)">
+                            C) Stop bleibt immer am Einstiegslevel
+                        </div>
+                        <div class="quiz-option" onclick="checkAnswer(3, this, false)">
+                            D) Stop wird nur bei Gewinn angepasst
+                        </div>
+                    </div>
+                    <div class="quiz-feedback" id="feedback3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways">
+            <h3>🏆 Key Takeaways</h3>
+            <ul class="takeaway-list">
+                <li>Stop-Losses schützen Kapital, Psychologie und Trading-Karriere-Langlebigkeit</li>
+                <li>Platziere Stops dort wo der Expected Value negativ wird – nicht bei willkürlichen Prozenten</li>
+                <li>5 erprobte Strategien: Breakout, Higher Lows, MA-Surfing, Trendlinie, Trailing</li>
+                <li>Der Stop muss zum Timeframe passen: Intraday-Setup = Intraday-Stop</li>
+                <li>Profis testen ihre Stops mit Daten – sie raten nicht!</li>
+                <li>Der beste Stop ist wertlos wenn du ihn nicht nimmst – Disziplin ist alles</li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- Navigation -->
+    {% include '_navigation.html' %}
+
+    <script>
+        let currentSection = 0;
+        const totalSections = 9;
+
+        function toggleSection(sectionNumber) {
+            const content = document.getElementById(`content${sectionNumber}`);
+            const toggle = document.getElementById(`toggle${sectionNumber}`);
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                toggle.classList.remove('expanded');
+                toggle.textContent = '▶️';
+            } else {
+                // Expand this section
+                content.classList.add('expanded');
+                toggle.classList.add('expanded');
+                toggle.textContent = '🔽';
+                
+                // Update progress
+                currentSection = Math.max(currentSection, sectionNumber);
+                updateProgress();
+                
+                // Scroll to section
+                setTimeout(() => {
+                    content.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentSection / totalSections) * 100);
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+            
+            // Save progress
+            localStorage.setItem('stopLossProgress', currentSection);
+        }
+
+        function checkAnswer(questionNum, element, isCorrect) {
+            const options = element.parentElement.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            
+            // Reset all options
+            options.forEach(opt => {
+                opt.classList.remove('correct', 'incorrect');
+                opt.style.pointerEvents = 'none';
+            });
+            
+            // Mark selected
+            if (isCorrect) {
+                element.classList.add('correct');
+                feedback.innerHTML = '✅ <strong>Richtig!</strong> Genau so denken Profis über Stop-Losses.';
+                feedback.style.background = '#f0fff4';
+                feedback.style.color = '#38a169';
+            } else {
+                element.classList.add('incorrect');
+                // Find and highlight correct answer
+                options.forEach(opt => {
+                    if (opt.onclick.toString().includes('true')) {
+                        opt.classList.add('correct');
+                    }
+                });
+                feedback.innerHTML = '❌ <strong>Nicht ganz.</strong> Schau dir die grün markierte Antwort an.';
+                feedback.style.background = '#fff5f5';
+                feedback.style.color = '#e53e3e';
+            }
+            
+            feedback.classList.add('show');
+        }
+
+        // Load saved progress on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedProgress = localStorage.getItem('stopLossProgress');
+            if (savedProgress) {
+                currentSection = parseInt(savedProgress);
+                updateProgress();
+            }
+            
+            // Auto-expand first section
+            toggleSection(1);
+        });
+    </script>
+</div>
+{% endblock %}
+
+
