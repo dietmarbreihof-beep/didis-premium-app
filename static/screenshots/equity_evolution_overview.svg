@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" width="900" height="280">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#b8860b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#daa520;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="280" fill="#f7f7f7" rx="12"/>
+  
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" font-family="Inter, sans-serif" font-size="20" font-weight="700" fill="#1a1a1a">Die Evolution eines profitablen Traders</text>
+  
+  <!-- Stage 1 Box -->
+  <rect x="20" y="50" width="200" height="220" fill="#ffffff" rx="8" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="20" y="50" width="70" height="24" fill="#1a1a1a" rx="4"/>
+  <text x="55" y="67" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Stage 1</text>
+  <text x="120" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#666666">Unprofitable Trader</text>
+  
+  <!-- Stage 1 Chart -->
+  <g transform="translate(35, 100)">
+    <rect width="170" height="90" fill="#fafafa" rx="4"/>
+    <path d="M 10 25 L 25 30 L 40 20 L 55 40 L 70 33 L 85 53 L 100 43 L 115 65 L 130 55 L 145 75 L 160 68" 
+          fill="none" stroke="#2d2d2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <text x="120" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a">Charakteristik:</text>
+  <text x="120" y="225" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Kleine Gewinne, große Verluste</text>
+  <text x="120" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Negativ trendende Equity</text>
+  <text x="120" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#e53e3e">" Schlechtes Risikomanagement</text>
+  
+  <!-- Arrow 1 -->
+  <polygon points="230,160 245,150 245,155 260,155 260,165 245,165 245,170" fill="#daa520"/>
+  
+  <!-- Stage 2 Box -->
+  <rect x="240" y="50" width="200" height="220" fill="#ffffff" rx="8" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="240" y="50" width="70" height="24" fill="#1a1a1a" rx="4"/>
+  <text x="275" y="67" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Stage 2</text>
+  <text x="340" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#666666">Boom-and-Bust Trader</text>
+  
+  <!-- Stage 2 Chart -->
+  <g transform="translate(255, 100)">
+    <rect width="170" height="90" fill="#fafafa" rx="4"/>
+    <path d="M 10 55 L 25 35 L 40 20 L 55 45 L 70 25 L 85 55 L 100 35 L 115 20 L 130 50 L 145 30 L 160 50" 
+          fill="none" stroke="#2d2d2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <text x="340" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a">Charakteristik:</text>
+  <text x="340" y="225" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Gewinne H Verluste</text>
+  <text x="340" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Seitwärts trendende Equity</text>
+  <text x="340" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#d69e2e">" Zu früh Gewinne mitnehmen</text>
+  
+  <!-- Arrow 2 -->
+  <polygon points="450,160 465,150 465,155 480,155 480,165 465,165 465,170" fill="#daa520"/>
+  
+  <!-- Stage 3 Box -->
+  <rect x="460" y="50" width="200" height="220" fill="#ffffff" rx="8" stroke="#e5e5e5" stroke-width="1"/>
+  <rect x="460" y="50" width="70" height="24" fill="#1a1a1a" rx="4"/>
+  <text x="495" y="67" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Stage 3</text>
+  <text x="560" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#666666">Profitabler Trader</text>
+  
+  <!-- Stage 3 Chart -->
+  <g transform="translate(475, 100)">
+    <rect width="170" height="90" fill="#fafafa" rx="4"/>
+    <path d="M 10 70 L 25 55 L 40 45 L 55 52 L 70 38 L 85 45 L 100 32 L 115 38 L 130 25 L 145 30 L 160 18" 
+          fill="none" stroke="#2d2d2d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <text x="560" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a">Charakteristik:</text>
+  <text x="560" y="225" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Größere Gewinne, kleinere Verluste</text>
+  <text x="560" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Aufwärts trendende Equity</text>
+  <text x="560" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#38a169">" Gutes Risikomanagement</text>
+  
+  <!-- Arrow 3 -->
+  <polygon points="670,160 685,150 685,155 700,155 700,165 685,165 685,170" fill="#daa520"/>
+  
+  <!-- Stage 4 Box -->
+  <rect x="680" y="50" width="200" height="220" fill="#ffffff" rx="8" stroke="#daa520" stroke-width="2"/>
+  <rect x="680" y="50" width="70" height="24" fill="url(#goldGradient)" rx="4"/>
+  <text x="715" y="67" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="600" fill="#ffffff">Stage 4</text>
+  <text x="780" y="95" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" fill="#666666">Performance Phase</text>
+  
+  <!-- Stage 4 Chart -->
+  <g transform="translate(695, 100)">
+    <rect width="170" height="90" fill="#fafafa" rx="4"/>
+    <path d="M 10 75 L 25 65 L 40 55 L 55 58 L 70 45 L 85 42 L 100 30 L 115 28 L 130 18 L 145 25 L 160 12" 
+          fill="none" stroke="#b8860b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <text x="780" y="210" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="600" fill="#1a1a1a">Charakteristik:</text>
+  <text x="780" y="225" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Meisterschaft eines Systems</text>
+  <text x="780" y="240" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#666666">" Tägliche Routinen</text>
+  <text x="780" y="255" text-anchor="middle" font-family="Inter, sans-serif" font-size="9" fill="#b8860b">" Selbstvertrauen & Geduld</text>
+</svg>

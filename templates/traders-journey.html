@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deine Trader-Reise - Die 4 Stufen zum Erfolg | Didis Trading Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+            color: #1a1a1a;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #b8860b 100%);
+            color: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" stroke="%23daa520" stroke-width="0.5" fill="none" opacity="0.1"/></svg>');
+            background-size: 200px;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #ffffff 0%, #f4e97b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .hero .quote {
+            font-style: italic;
+            font-size: 1.1em;
+            opacity: 0.85;
+            margin-bottom: 10px;
+            border-left: 3px solid #daa520;
+            padding-left: 20px;
+            max-width: 700px;
+            margin: 0 auto 10px;
+            text-align: left;
+        }
+
+        .hero .quote-author {
+            font-size: 0.95em;
+            color: #daa520;
+            font-weight: 600;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(218, 165, 32, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            border-color: #daa520;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            color: #daa520;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* Progress Tracker */
+        .progress-tracker {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .progress-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#daa520 0deg, #e5e5e5 0deg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .progress-circle::before {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .progress-text {
+            position: relative;
+            z-index: 1;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .progress-info {
+            flex: 1;
+        }
+
+        .progress-info h3 {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e5e5;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b 0%, #daa520 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Overview Section */
+        .overview-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+            border-left: 4px solid #daa520;
+        }
+
+        .overview-card h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+        }
+
+        .overview-image {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        /* Section Cards */
+        .section-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #daa520;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section-card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #fafafa 0%, #ffffff 100%);
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
+        }
+
+        .section-header.expanded {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .section-header h2 {
+            font-size: 1.3em;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-toggle {
+            font-size: 1.5em;
+            color: #b8860b;
+            transition: transform 0.3s ease;
+        }
+
+        .section-toggle.expanded {
+            transform: rotate(90deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 30px;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            padding: 30px;
+        }
+
+        /* Stage Cards */
+        .stage-card {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 30px;
+            align-items: start;
+            margin-bottom: 30px;
+        }
+
+        .stage-chart {
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e5e5;
+            text-align: center;
+        }
+
+        .stage-chart img {
+            width: 100%;
+            height: auto;
+        }
+
+        .stage-chart-title {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .stage-info h3 {
+            font-size: 1.5em;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-danger { background: #fee2e2; color: #dc2626; }
+        .badge-warning { background: #fef3c7; color: #d97706; }
+        .badge-success { background: #d1fae5; color: #059669; }
+        .badge-gold { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); color: #b8860b; }
+
+        /* Characteristics & Reasons */
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-box {
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .info-box.characteristics {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-box.reasons {
+            background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+            border: 1px solid #fde68a;
+        }
+
+        .info-box h4 {
+            font-size: 1em;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .info-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-box li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 0.95em;
+            color: #4a5568;
+        }
+
+        .info-box li::before {
+            content: '•';
+            position: absolute;
+            left: 8px;
+            color: #daa520;
+            font-weight: bold;
+        }
+
+        /* Progress Box */
+        .progress-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            border: 1px solid #6ee7b7;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .progress-box h4 {
+            font-size: 1.1em;
+            color: #047857;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-box ol {
+            padding-left: 25px;
+            color: #065f46;
+        }
+
+        .progress-box li {
+            padding: 8px 0;
+            font-size: 0.95em;
+        }
+
+        /* Key Takeaways */
+        .key-takeaways {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        .key-takeaways h2 {
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .takeaway-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .takeaway-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 3px solid #daa520;
+        }
+
+        .takeaway-item h4 {
+            color: #daa520;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .takeaway-item p {
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        /* Quiz Section */
+        .quiz-container {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .quiz-container h3 {
+            color: #92400e;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .quiz-question {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-question p {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 12px 20px;
+            border: 2px solid #e5e5e5;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .quiz-option:hover {
+            border-color: #daa520;
+            background: #fffbeb;
+        }
+
+        .quiz-option.correct {
+            border-color: #38a169;
+            background: #d1fae5;
+        }
+
+        .quiz-option.incorrect {
+            border-color: #e53e3e;
+            background: #fee2e2;
+        }
+
+        .quiz-feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .quiz-feedback.show {
+            display: block;
+        }
+
+        .quiz-feedback.correct {
+            background: #d1fae5;
+            color: #047857;
+        }
+
+        .quiz-feedback.incorrect {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* Self Assessment */
+        .assessment-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .assessment-card h3 {
+            color: #1d4ed8;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .assessment-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .assessment-q {
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .assessment-q input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #daa520;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .stage-card {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .takeaway-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .overview-image {
+                overflow-x: auto;
+            }
+        }
+
+        /* Mindset Box */
+        .mindset-box {
+            background: linear-gradient(135deg, #fdf4ff 0%, #f3e8ff 100%);
+            border: 1px solid #d8b4fe;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+
+        .mindset-box h4 {
+            color: #7c3aed;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .mindset-box p {
+            color: #5b21b6;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <h1>🚀 Deine Trader-Reise</h1>
+                <p class="subtitle">Die 4 Stufen zum profitablen Trading</p>
+                
+                <div class="quote">
+                    "Das Geheimnis des Erfolgs aus Trading-Perspektive ist ein unermüdlicher und unstillbarer Durst nach Informationen und Wissen."
+                </div>
+                <p class="quote-author">— Paul Tudor Jones, Market Wizard</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number">4</div>
+                        <div class="stat-label">Entwicklungsstufen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">2+</div>
+                        <div class="stat-label">Jahre typische Lernzeit</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">90%</div>
+                        <div class="stat-label">scheitern in Stage 1-2</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">∞</div>
+                        <div class="stat-label">Potenzial mit Disziplin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Tracker -->
+        <div class="progress-tracker">
+            <div class="progress-circle" id="progressCircle">
+                <span class="progress-text" id="progressText">0%</span>
+            </div>
+            <div class="progress-info">
+                <h3>Dein Lernfortschritt</h3>
+                <p>Schließe alle Abschnitte ab, um das Modul zu beenden</p>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" id="progressBar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Overview Section -->
+        <div class="overview-card">
+            <h2>📊 Die Evolution eines profitablen Traders</h2>
+            <p>Jeder Trader durchläuft auf seiner Reise vier unterschiedliche Phasen. Diese Kategorien haben wir durch unsere Arbeit mit Tausenden von Tradern entwickelt. Deine Equity-Kurve zeigt dir die Wahrheit über dein Trading – und jede Phase hat ein charakteristisches Aussehen.</p>
+            
+            <img src="{{ url_for('static', filename='screenshots/equity_evolution_overview.svg') }}" alt="Die 4 Stufen der Trader-Evolution" class="overview-image">
+            
+            <p style="margin-top: 20px; font-style: italic; color: #666;">Sei bei der Selbsteinschätzung brutal ehrlich mit dir selbst. Wo stehst du wirklich auf deinem Weg?</p>
+        </div>
+
+        <!-- Section 1: Stage 1 -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(1)">
+                <h2>1️⃣ Stage 1: Die Unprofitable Phase</h2>
+                <span class="section-toggle" id="toggle1">▶️</span>
+            </div>
+            <div class="section-content" id="content1">
+                <div class="stage-card">
+                    <div class="stage-chart">
+                        <div class="stage-chart-title">Typische Equity-Kurve</div>
+                        <img src="{{ url_for('static', filename='screenshots/equity_stage1.svg') }}" alt="Stage 1 Equity Kurve">
+                    </div>
+                    <div class="stage-info">
+                        <h3>
+                            <span class="stage-badge badge-danger">Anfänger</span>
+                            Unprofitable Phase
+                        </h3>
+                        <p>Jeder Trader, egal wie erfahren er heute ist, hat in Stage 1 begonnen. Diese Phase ist gekennzeichnet durch eine volatile, abwärts trendende Equity-Kurve. Trader in Stage 1 handeln zufällig ohne System und reagieren auf Tipps und Impulse.</p>
+                        
+                        <div class="info-grid">
+                            <div class="info-box characteristics">
+                                <h4>📋 Charakteristiken</h4>
+                                <ul>
+                                    <li>Kleine Gewinne, große Verluste</li>
+                                    <li>Negativ trendende Equity</li>
+                                    <li>Zufällige Entries und Exits</li>
+                                    <li>Handeln basiert auf Emotionen</li>
+                                </ul>
+                            </div>
+                            <div class="info-box reasons">
+                                <h4>⚠️ Gründe</h4>
+                                <ul>
+                                    <li>Schlechte Trade-Identifikation</li>
+                                    <li>Schlechtes Risikomanagement</li>
+                                    <li>Keine Profit-Taking-Strategie</li>
+                                    <li>Zu große Positionsgrößen</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="progress-box">
+                            <h4>🎯 Wie du zu Stage 2 aufsteigst</h4>
+                            <ol>
+                                <li><strong>Committe dich zum Lernen</strong> – Nimm Trading ernst</li>
+                                <li><strong>Schreibe deine ersten Trading-Regeln</strong></li>
+                                <li><strong>Baue ein konsistentes System</strong> für Stock-Selection und Entry-Setups</li>
+                                <li><strong>Implementiere Risikomanagement</strong> durch Stop-Losses</li>
+                                <li><strong>Adoptiere Verkaufsregeln</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mindset-box">
+                    <h4>🧠 Mindset in Stage 1</h4>
+                    <p>In dieser Phase gibt es so viel zu lernen und zu verbessern. Die Motivation ist hoch, und die Trader, die erfolgreich werden, stürzen sich kopfüber in die Arbeit. Das Tolle ist: Verbesserungen kommen schnell und können dich motiviert halten. Wenn du dich in dieser Phase erkennst, wisse: Du musst nur die Entscheidung treffen, Trading ernst zu nehmen, um voranzukommen.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Stage 2 -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(2)">
+                <h2>2️⃣ Stage 2: Die Boom-and-Bust Phase</h2>
+                <span class="section-toggle" id="toggle2">▶️</span>
+            </div>
+            <div class="section-content" id="content2">
+                <div class="stage-card">
+                    <div class="stage-chart">
+                        <div class="stage-chart-title">Typische Equity-Kurve</div>
+                        <img src="{{ url_for('static', filename='screenshots/equity_stage2.svg') }}" alt="Stage 2 Equity Kurve">
+                    </div>
+                    <div class="stage-info">
+                        <h3>
+                            <span class="stage-badge badge-warning">Fortgeschritten</span>
+                            Boom-and-Bust Phase
+                        </h3>
+                        <p>In dieser Phase haben Trader angefangen, das Trading ernster zu nehmen. Sie haben recherchiert und vielleicht ein paar Bücher über Strategien und Setups gelesen. Allerdings kämpfen sie damit, ein System konsistent umzusetzen, und haben oft kein richtiges Risikomanagement.</p>
+                        
+                        <div class="info-grid">
+                            <div class="info-box characteristics">
+                                <h4>📋 Charakteristiken</h4>
+                                <ul>
+                                    <li>Gewinne ≈ Verluste</li>
+                                    <li>Nicht-trendende (seitwärts) Equity</li>
+                                    <li>Equity-Kurve folgt dem Markt</li>
+                                    <li>Alle Gewinne werden zurückgegeben</li>
+                                </ul>
+                            </div>
+                            <div class="info-box reasons">
+                                <h4>⚠️ Gründe</h4>
+                                <ul>
+                                    <li>Bessere Trade-Identifikation</li>
+                                    <li>Immer noch schlechtes Risikomanagement</li>
+                                    <li>Gewinne zu früh mitnehmen</li>
+                                    <li>Overtrading</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="progress-box">
+                            <h4>🎯 Wie du zu Stage 3 aufsteigst</h4>
+                            <ol>
+                                <li><strong>Fokussiere dich auf EINEN Zeitrahmen</strong> und EINE Strategie</li>
+                                <li><strong>Studiere Gewinner-Aktien</strong> und Trader, die deine Strategie nutzen</li>
+                                <li><strong>Verfeinere deine Regeln</strong> für Entries, Stop-Losses, Position Sizing und Selling</li>
+                                <li><strong>Sammle mehr Trading-Erfahrung</strong> und Wissen</li>
+                            </ol>
+                        </div>
+
+                        <div class="mindset-box">
+                            <h4>🧠 Die größte Herausforderung</h4>
+                            <p>Das größte Problem von Stage 2 Tradern: Sie versuchen, auf zu viele Dinge gleichzeitig zu fokussieren. Sie kennen alle Ressourcen und Möglichkeiten und wollen alles meistern. Diese Phase kann ein Wendepunkt sein – selbst mit mehr Wissen und einem Starter-System kann es sich frustrierend anfühlen, als würdest du dich nicht verbessern. Aber wisse: Stage 3 ist nur ein paar Tweaks und Verfeinerungen entfernt!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Stage 3 -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(3)">
+                <h2>3️⃣ Stage 3: Die Consistency Phase</h2>
+                <span class="section-toggle" id="toggle3">▶️</span>
+            </div>
+            <div class="section-content" id="content3">
+                <div class="stage-card">
+                    <div class="stage-chart">
+                        <div class="stage-chart-title">Typische Equity-Kurve</div>
+                        <img src="{{ url_for('static', filename='screenshots/equity_stage3.svg') }}" alt="Stage 3 Equity Kurve">
+                    </div>
+                    <div class="stage-info">
+                        <h3>
+                            <span class="stage-badge badge-success">Profitabel</span>
+                            Consistency Phase
+                        </h3>
+                        <p>In dieser Phase haben Trader sich voll dem Lernen verschrieben und oft mehrere Trading-Bücher gelesen. Sie haben eine solide Strategie gefunden, die zu ihnen passt. Vielleicht haben sie auch Mentorship von einem erfahreneren Trader erhalten.</p>
+                        
+                        <div class="info-grid">
+                            <div class="info-box characteristics">
+                                <h4>📋 Charakteristiken</h4>
+                                <ul>
+                                    <li>Größere Gewinne, kleinere Verluste</li>
+                                    <li>Positiv trendende Equity</li>
+                                    <li>Höhere Hochs und höhere Tiefs</li>
+                                    <li>Versteht Marktzyklen</li>
+                                </ul>
+                            </div>
+                            <div class="info-box reasons">
+                                <h4>✅ Gründe für Erfolg</h4>
+                                <ul>
+                                    <li>Gute Trade-Identifikation</li>
+                                    <li>Gutes Risikomanagement</li>
+                                    <li>Lässt profitable Trades laufen</li>
+                                    <li>Schneidet Verlierer schnell ab</li>
+                                    <li>Weiß, wann man Cash sein sollte</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="progress-box">
+                            <h4>🎯 Wie du zu Stage 4 aufsteigst</h4>
+                            <ol>
+                                <li><strong>Meistere wenige Setups</strong> und lerne ihre Nuancen im Detail</li>
+                                <li><strong>Trade im Einklang</strong> mit mittelfristigen Marktzyklen</li>
+                                <li><strong>Verfeinere deine Regeln weiter</strong> für deinen eigenen Stil</li>
+                                <li><strong>Fokussiere auf tightere Entries</strong> für besseres Risk/Reward</li>
+                                <li><strong>Fokussiere auf die hochwertigsten Aktien</strong> jedes Zyklus</li>
+                            </ol>
+                        </div>
+
+                        <div class="mindset-box">
+                            <h4>🧠 Der Übergang von Stage 2 zu Stage 3</h4>
+                            <p>Der Übergang zu Stage 3 passiert typischerweise, wenn Trader den Lärm begrenzen und sich darauf fokussieren, EINE Strategie und sogar nur EIN Setup zu meistern. Richtiges Risikomanagement durch Position Sizing und wiederholbare Verkaufsregeln ist auch entscheidend. In Stage 3 fangen Trader an, die Früchte ihrer Arbeit zu sehen – das fühlt sich belohnend an und motiviert weiterzuarbeiten!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Stage 4 -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(4)">
+                <h2>4️⃣ Stage 4: Die Performance Phase</h2>
+                <span class="section-toggle" id="toggle4">▶️</span>
+            </div>
+            <div class="section-content" id="content4">
+                <div class="stage-card">
+                    <div class="stage-chart">
+                        <div class="stage-chart-title">Typische Equity-Kurve</div>
+                        <img src="{{ url_for('static', filename='screenshots/equity_stage4.svg') }}" alt="Stage 4 Equity Kurve">
+                    </div>
+                    <div class="stage-info">
+                        <h3>
+                            <span class="stage-badge badge-gold">Elite</span>
+                            Performance Phase
+                        </h3>
+                        <p>Stage 4 mag die letzte Stufe sein, aber das bedeutet keineswegs, dass das Lernen oder die harte Arbeit vorbei ist. Trader in dieser Phase haben die Meisterschaft ihres Trading-Systems erreicht, aber sie suchen kontinuierlich nach Wegen, ihre Edges und ihre Performance zu verbessern.</p>
+                        
+                        <div class="info-grid">
+                            <div class="info-box characteristics">
+                                <h4>📋 Charakteristiken</h4>
+                                <ul>
+                                    <li>Meisterschaft eines Systems</li>
+                                    <li>Sucht nach Wegen, Edges zu verbessern</li>
+                                    <li>Tägliche Routinen etabliert</li>
+                                    <li>Starkes Selbstvertrauen</li>
+                                </ul>
+                            </div>
+                            <div class="info-box reasons">
+                                <h4>🏆 Schlüsselelemente</h4>
+                                <ul>
+                                    <li>Steile Uptrends in der Equity-Kurve</li>
+                                    <li>Flache, begrenzte Drawdowns</li>
+                                    <li>Starke Performance in Opportunity-Phasen</li>
+                                    <li>Geduld und Selektivität</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="progress-box">
+                            <h4>🎯 Wie Stage 4 Trader weiterwachsen</h4>
+                            <ol>
+                                <li><strong>Vollständig wenige Setups meistern</strong> und ihre Nuancen definieren</li>
+                                <li><strong>Antizipieren und traden</strong> mit kurzfristigen Marktzyklen</li>
+                                <li><strong>Größe in die besten Opportunities</strong> zum richtigen Zeitpunkt</li>
+                                <li><strong>Drawdowns begrenzen</strong> wenn Zyklen enden</li>
+                            </ol>
+                        </div>
+
+                        <div class="mindset-box">
+                            <h4>🧠 Das Mindset eines Elite-Traders</h4>
+                            <p>Performance-Stage-Trader haben Routinen entwickelt, die sie auf die höchstwertigen Aktien für ihr System fokussieren und halten sie bewusst über die aktuellen Marktbedingungen. Sie wissen, wann sie Gas geben müssen und wann sie einen Schritt zurücktreten sollten. Sie haben Vertrauen in ihren Prozess und ihre Methode – und wissen, dass sie bei den richtigen Bedingungen den Markt deutlich outperformen können. Sie warten, beobachten, und schlagen zu, wenn die Zeit reif ist.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Determine Your Stage -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(5)">
+                <h2>5️⃣ Bestimme deine aktuelle Stufe</h2>
+                <span class="section-toggle" id="toggle5">▶️</span>
+            </div>
+            <div class="section-content" id="content5">
+                <p style="font-size: 1.1em; margin-bottom: 25px;">Denke über deine aktuelle Trading-Fähigkeit nach und schau dir deine Equity-Kurve über das letzte Jahr genau an. Es kann hilfreich sein, sie gegen einen Index zu plotten, um eine visuelle Darstellung zu haben, wie der Markt in verschiedenen Perioden performed hat.</p>
+
+                <div class="assessment-card">
+                    <h3>🔍 Selbsteinschätzung</h3>
+                    <div class="assessment-questions">
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q1">
+                            <label for="q1">Trendet deine Equity-Kurve nach oben?</label>
+                        </div>
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q2">
+                            <label for="q2">Hast du höhere Hochs und höhere Tiefs in deiner Kurve?</label>
+                        </div>
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q3">
+                            <label for="q3">Hast du ein klar definiertes Trading-System?</label>
+                        </div>
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q4">
+                            <label for="q4">Nutzt du konsequent Stop-Losses?</label>
+                        </div>
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q5">
+                            <label for="q5">Weißt du, wann du Cash sein solltest?</label>
+                        </div>
+                        <div class="assessment-q">
+                            <input type="checkbox" id="q6">
+                            <label for="q6">Hast du tägliche Trading-Routinen etabliert?</label>
+                        </div>
+                    </div>
+                    <p style="margin-top: 20px; color: #1d4ed8; font-size: 0.95em;"><strong>Interpretation:</strong> 0-1 Häkchen = Stage 1 | 2-3 Häkchen = Stage 2 | 4-5 Häkchen = Stage 3 | 6 Häkchen = Stage 4</p>
+                </div>
+
+                <div class="mindset-box" style="margin-top: 25px;">
+                    <h4>💡 Wichtige Erkenntnis</h4>
+                    <p>Es kann schwer sein, die Wahrheit über deine Performance zu sehen, aber denke daran: Egal wo du gerade bist – mit ein paar Tweaks und mehr Erfahrung wirst du schnell zur nächsten Stufe aufsteigen. Wahrscheinlich bist du gerade irgendwo zwischen Stage 1+ und Stage 3+. Dies ist eine aufregende Zeit für einen Trader, denn du verpflichtest dich, diese sehr schwierige Kunst und Fähigkeit zu meistern. Kudos, dass du die Arbeit investierst!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 6: The Mindset -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(6)">
+                <h2>6️⃣ Das Mindset eines Gewinners</h2>
+                <span class="section-toggle" id="toggle6">▶️</span>
+            </div>
+            <div class="section-content" id="content6">
+                <p style="font-size: 1.1em; margin-bottom: 25px;">Sobald du deine Stufe bestimmt hast, liegt es an dir, deine Stärken und Schwächen zu identifizieren und hart daran zu arbeiten, voranzukommen. Das Beste am Trading ist: <strong>Dein Potenzial ist unbegrenzt.</strong></p>
+
+                <div class="info-grid" style="margin-bottom: 30px;">
+                    <div class="info-box" style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border: 1px solid #6ee7b7;">
+                        <h4 style="color: #047857;">🎯 Die Fundamente bauen</h4>
+                        <ul>
+                            <li>Price Action studieren</li>
+                            <li>Leader-Aktien studieren</li>
+                            <li>Dich selbst studieren</li>
+                            <li>Dann dein System aufbauen</li>
+                        </ul>
+                    </div>
+                    <div class="info-box" style="background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); border: 1px solid #60a5fa;">
+                        <h4 style="color: #1d4ed8;">⏰ Zeitrahmen erwarten</h4>
+                        <ul>
+                            <li>2 volle Bull-to-Bear-Zyklen bis Stage 3</li>
+                            <li>Echte Trading-Erfahrung ist unersetzbar</li>
+                            <li>Aus Fehlern lernen</li>
+                            <li>Approach trading like a student</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mindset-box">
+                    <h4>🧠 Der Weg von Stage 3 zu Stage 4</h4>
+                    <p>Der Fortschritt von Stage 3 zu Stage 4 dreht sich um inkrementelle Verbesserungen und die Meisterschaft deiner selbst außerhalb des Tradings. Es wird Zeit brauchen – aber wenn du dich weigerst aufzugeben, dann gibt es keinen Zweifel, dass du die Performance-Phase erreichen kannst und konsequent einen schnellen Trend höherer Tiefs in deiner Equity-Kurve sehen wirst.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Quiz -->
+        <div class="section-card">
+            <div class="section-header" onclick="toggleSection(7)">
+                <h2>7️⃣ Quiz: Teste dein Wissen</h2>
+                <span class="section-toggle" id="toggle7">▶️</span>
+            </div>
+            <div class="section-content" id="content7">
+                <div class="quiz-container">
+                    <h3>📝 Überprüfe dein Verständnis</h3>
+                    
+                    <div class="quiz-question" id="quiz1">
+                        <p>1. Was ist das Hauptmerkmal der Equity-Kurve in Stage 2?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="checkAnswer(1, 'a', false)">a) Stark aufwärts trendend</div>
+                            <div class="quiz-option" onclick="checkAnswer(1, 'b', true)">b) Seitwärts / Nicht-trendend</div>
+                            <div class="quiz-option" onclick="checkAnswer(1, 'c', false)">c) Stark abwärts trendend</div>
+                        </div>
+                        <div class="quiz-feedback" id="feedback1"></div>
+                    </div>
+
+                    <div class="quiz-question" id="quiz2">
+                        <p>2. Was ist der häufigste Fehler von Stage 2 Tradern?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="checkAnswer(2, 'a', false)">a) Zu wenig traden</div>
+                            <div class="quiz-option" onclick="checkAnswer(2, 'b', false)">b) Nur eine Strategie nutzen</div>
+                            <div class="quiz-option" onclick="checkAnswer(2, 'c', true)">c) Auf zu viele Dinge gleichzeitig fokussieren</div>
+                        </div>
+                        <div class="quiz-feedback" id="feedback2"></div>
+                    </div>
+
+                    <div class="quiz-question" id="quiz3">
+                        <p>3. Was unterscheidet Stage 4 von Stage 3?</p>
+                        <div class="quiz-options">
+                            <div class="quiz-option" onclick="checkAnswer(3, 'a', true)">a) Steilere Uptrends und flachere Drawdowns</div>
+                            <div class="quiz-option" onclick="checkAnswer(3, 'b', false)">b) Mehr verschiedene Strategien</div>
+                            <div class="quiz-option" onclick="checkAnswer(3, 'c', false)">c) Höheres Handelsvolumen</div>
+                        </div>
+                        <div class="quiz-feedback" id="feedback3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaways -->
+        <div class="key-takeaways">
+            <h2>🎯 Key Takeaways</h2>
+            <div class="takeaway-grid">
+                <div class="takeaway-item">
+                    <h4>Stage 1 → Stage 2</h4>
+                    <p>Committe dich zum Lernen, schreibe erste Regeln, implementiere Risikomanagement</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>Stage 2 → Stage 3</h4>
+                    <p>Fokussiere auf EINE Strategie, verfeinere Regeln, sammle Erfahrung</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>Stage 3 → Stage 4</h4>
+                    <p>Meistere wenige Setups, trade mit Marktzyklen, tightere Entries</p>
+                </div>
+                <div class="takeaway-item">
+                    <h4>Dein Potenzial</h4>
+                    <p>Mit Disziplin und Ausdauer ist dein Potenzial unbegrenzt – gib niemals auf!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        {% include '_navigation.html' %}
+    </div>
+
+    <script>
+        let currentSection = 0;
+        const totalSections = 7;
+
+        function toggleSection(sectionNumber) {
+            const content = document.getElementById(`content${sectionNumber}`);
+            const toggle = document.getElementById(`toggle${sectionNumber}`);
+            const header = content.previousElementSibling;
+
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                toggle.classList.remove('expanded');
+                header.classList.remove('expanded');
+                toggle.textContent = '▶️';
+            } else {
+                // Optional: Collapse other sections
+                for (let i = 1; i <= totalSections; i++) {
+                    const otherContent = document.getElementById(`content${i}`);
+                    const otherToggle = document.getElementById(`toggle${i}`);
+                    const otherHeader = otherContent ? otherContent.previousElementSibling : null;
+                    if (otherContent && otherToggle && i !== sectionNumber) {
+                        otherContent.classList.remove('expanded');
+                        otherToggle.classList.remove('expanded');
+                        if (otherHeader) otherHeader.classList.remove('expanded');
+                        otherToggle.textContent = '▶️';
+                    }
+                }
+
+                content.classList.add('expanded');
+                toggle.classList.add('expanded');
+                header.classList.add('expanded');
+                toggle.textContent = '🔽';
+
+                currentSection = Math.max(currentSection, sectionNumber);
+                updateProgress();
+            }
+        }
+
+        function updateProgress() {
+            const progress = Math.round((currentSection / totalSections) * 100);
+            document.getElementById('progressText').textContent = progress + '%';
+            document.getElementById('progressBar').style.width = progress + '%';
+            document.getElementById('progressCircle').style.background = 
+                `conic-gradient(#daa520 ${progress * 3.6}deg, #e5e5e5 ${progress * 3.6}deg)`;
+        }
+
+        function checkAnswer(questionNum, answer, isCorrect) {
+            const feedback = document.getElementById(`feedback${questionNum}`);
+            const options = document.querySelectorAll(`#quiz${questionNum} .quiz-option`);
+            
+            options.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                opt.classList.remove('correct', 'incorrect');
+            });
+
+            const selectedOption = event.target;
+            
+            if (isCorrect) {
+                selectedOption.classList.add('correct');
+                feedback.textContent = '✅ Richtig! Gut gemacht!';
+                feedback.className = 'quiz-feedback show correct';
+            } else {
+                selectedOption.classList.add('incorrect');
+                feedback.textContent = '❌ Nicht ganz. Lies den Abschnitt nochmal durch!';
+                feedback.className = 'quiz-feedback show incorrect';
+            }
+        }
+
+        // Auto-open first section on load
+        document.addEventListener('DOMContentLoaded', function() {
+            toggleSection(1);
+        });
+    </script>
+</body>
+</html>
