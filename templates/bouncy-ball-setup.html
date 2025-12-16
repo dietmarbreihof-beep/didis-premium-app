@@ -803,12 +803,13 @@
                     <!-- SMCI Chart 1 -->
                     <div class="chart-card">
                         <h4>Phase 1: Der stetige Abverkauf ($1.025 → $865)</h4>
-                        <img src="{{ url_for('static', filename='screenshots/SMCI_Phase1_Abverkauf.jpg') }}" 
+                        <img src="{{ url_for('static', filename='screenshots/SMCI_Beispiel2_1.png') }}" 
                              alt="SMCI Intraday Chart - Initialer Abverkauf" 
-                             class="chart-image"
+                             class="chart-image clickable"
+                             onclick="openLightbox(this.src)"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
-                            📊 Bild wird geladen: SMCI_Phase1_Abverkauf.jpg
+                            📊 Bild wird geladen: SMCI_Beispiel2_1.png
                         </div>
                         <p style="margin-top: 15px; line-height: 1.7;">
                             Die gelbe Linie markiert die <strong>stetige Abwärtsbewegung</strong> nach dem Bruch des 
@@ -820,12 +821,13 @@
                     <!-- SMCI Chart 2 -->
                     <div class="chart-card">
                         <h4>Phase 2: Konsolidierung im unteren Quartil</h4>
-                        <img src="{{ url_for('static', filename='screenshots/SMCI_Phase2_Konsolidierung.jpg') }}" 
+                        <img src="{{ url_for('static', filename='screenshots/SMCI_Beispiel2_2_Intraday.png') }}" 
                              alt="SMCI Konsolidierung bei $865 Support" 
-                             class="chart-image"
+                             class="chart-image clickable"
+                             onclick="openLightbox(this.src)"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                         <div style="display: none; padding: 20px; background: #fef3c7; border-radius: 8px; text-align: center;">
-                            📊 Bild wird geladen: SMCI_Phase2_Konsolidierung.jpg
+                            📊 Bild wird geladen: SMCI_Beispiel2_2_Intraday.png
                         </div>
                         <p style="margin-top: 15px; line-height: 1.7;">
                             Die Aktie bildet <strong>aufeinanderfolgende tiefere Hochs</strong> (Lower Highs) gegen die 
