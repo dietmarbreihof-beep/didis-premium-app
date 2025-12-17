@@ -769,6 +769,18 @@ class LearningModule(db.Model):
         if not required_levels:
             return True
         
+        # FIX: 'free' als Subscription-Level ist ein Datenbankfehler
+        # 'free' sollte NICHT als required_level verwendet werden - stattdessen is_lead_magnet=True
+        # Module mit nur ['free'] sollten als Premium behandelt werden (Datenmigration erforderlich)
+        required_levels_lower = [level.lower() for level in required_levels if level]
+        if 'free' in required_levels_lower:
+            # Entferne 'free' aus den Levels - es ist semantisch falsch
+            required_levels_lower = [l for l in required_levels_lower if l != 'free']
+            if not required_levels_lower:
+                # Wenn nur 'free' war, setze auf Premium (konservativ - erfordert Subscription)
+                required_levels_lower = ['premium']
+            required_levels = required_levels_lower
+        
         # Hierarchie der Subscription-Levels (Index = Rang, höher = besser)
         level_hierarchy = ['free', 'basic', 'premium', 'elite', 'elite_pro', 'masterclass']
         
@@ -1579,6 +1591,12 @@ def modules():
                 module_data['user_has_access'] = is_admin or module.user_has_access(user_subscription)
                 # Progress-Status hinzufügen
                 module_data['is_completed'] = user_progress.get(module.id, {}).get('completed', False)
+                # FIX: Korrigiere 'free' in required_subscription_levels für Frontend-Anzeige
+                if module_data.get('required_subscription_levels'):
+                    fixed_levels = [l for l in module_data['required_subscription_levels'] if l.lower() != 'free']
+                    if not fixed_levels and not module_data.get('is_lead_magnet'):
+                        fixed_levels = ['premium']  # Fallback für ungültige ['free'] Einträge
+                    module_data['required_subscription_levels'] = fixed_levels
                 cat_data['direct_modules'].append(module_data)
             
             # Auch für Module in Unterkategorien den Zugriff prüfen
@@ -1590,6 +1608,12 @@ def modules():
                         module_data['user_has_access'] = is_admin or module_obj.user_has_access(user_subscription)
                         # Progress-Status hinzufügen
                         module_data['is_completed'] = user_progress.get(module_data['id'], {}).get('completed', False)
+                        # FIX: Korrigiere 'free' in required_subscription_levels für Frontend-Anzeige
+                        if module_data.get('required_subscription_levels'):
+                            fixed_levels = [l for l in module_data['required_subscription_levels'] if l.lower() != 'free']
+                            if not fixed_levels and not module_data.get('is_lead_magnet'):
+                                fixed_levels = ['premium']  # Fallback für ungültige ['free'] Einträge
+                            module_data['required_subscription_levels'] = fixed_levels
             
             menu_structure.append(cat_data)
             
