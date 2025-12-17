@@ -938,16 +938,14 @@ def init_database_route():
         # Tabellen erstellen
         db.create_all()
         
-        # Demo-User erstellen
-        demo_users = [
-            ('admin', 'admin', 'Admin', 'User'),
-            ('didi', 'didi', 'Dietmar', 'Breihof'),
-            ('premium', 'premium', 'Premium', 'User'),
-            ('test', 'test', 'Test', 'User')
+        # Admin-User erstellen (sichere Passwörter für Production)
+        admin_users = [
+            ('admin', 'Groovy.08', 'Admin', 'User'),
+            ('didi', 'Groovy.08', 'Dietmar', 'Breihof')
         ]
         
         created = []
-        for username, password, first_name, last_name in demo_users:
+        for username, password, first_name, last_name in admin_users:
             existing = User.query.filter_by(username=username).first()
             if not existing:
                 user = User(
@@ -1218,16 +1216,15 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page) if next_page else redirect(url_for('home'))
         
-        # Fallback: Demo-User (bestehende Logik)
-        demo_users = {
-            'admin': {'password': 'admin', 'membership': 'elite', 'first_name': 'Admin'},
-            'didi': {'password': 'didi', 'membership': 'elite', 'first_name': 'Dietmar'},
-            'premium': {'password': 'premium', 'membership': 'premium', 'first_name': 'Premium User'},
-            'test': {'password': 'test', 'membership': 'premium', 'first_name': 'Test User'}
+        # Fallback: Admin-User nur für Notfälle (registrierte User nutzen DB-Login)
+        # SECURITY: Passwort für Production geändert - nicht mehr "admin"/"didi"
+        admin_users = {
+            'admin': {'password': 'Groovy.08', 'membership': 'elite', 'first_name': 'Admin'},
+            'didi': {'password': 'Groovy.08', 'membership': 'elite', 'first_name': 'Dietmar'}
         }
         
-        if email_or_username in demo_users and demo_users[email_or_username]['password'] == password:
-            user_data = demo_users[email_or_username]
+        if email_or_username in admin_users and admin_users[email_or_username]['password'] == password:
+            user_data = admin_users[email_or_username]
             
             # Session setzen
             session['logged_in'] = True
@@ -7695,10 +7692,9 @@ if __name__ == '__main__':
     print("[INFO] Öffne Browser: http://localhost:5000")
     print("[INFO] Features: Menüsystem, Lead-Magnete, Admin-Panel, Tägliche Modul-Freischaltung")
     print("[INFO] Login-Accounts:")
-    print("   - admin/admin (Elite Access + Admin)")
-    print("   - didi/didi (Elite Access + Admin)")
-    print("   - premium/premium (Premium Access)")
-    print("   - test/test (Premium Access)")
+    print("   - admin/Groovy.08 (Elite Access + Admin)")
+    print("   - didi/Groovy.08 (Elite Access + Admin)")
+    print("   - Registrierte User: Login ueber Datenbank")
     print("[INFO] Admin-Panel: http://localhost:5000/admin/modules")
     print("[INFO] Zum Beenden: Ctrl+C")
 
