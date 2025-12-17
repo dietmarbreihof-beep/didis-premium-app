@@ -6410,6 +6410,7 @@ def admin_get_subcategories(category_id):
     })
 
 @app.route('/admin/change-module-subscription', methods=['POST'])
+@csrf.exempt  # CSRF-Exemption für AJAX-Requests
 def admin_change_module_subscription():
     """Modul-Subscription-Level ändern"""
     if not session.get('logged_in') or session.get('user', {}).get('username') not in ['admin', 'didi']:
