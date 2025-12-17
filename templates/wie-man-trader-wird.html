@@ -1324,6 +1324,21 @@
     </div>
 </div>
 
+<!-- Nächstes Modul Navigation -->
+<div style="max-width: 1000px; margin: 40px auto; padding: 0 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px; background: linear-gradient(135deg, #b8860b, #daa520); border-radius: 12px; color: white;">
+        <a href="{{ url_for('modules') }}" style="background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            ⬅️ <span>Alle Module</span>
+        </a>
+        <div style="text-align: center; flex: 1; margin: 0 20px;">
+            <h4 style="margin: 0; font-size: 1.1em; opacity: 0.9;">Wie man Trader wird</h4>
+        </div>
+        <a href="{{ url_for('trading_archetypen') }}" style="background: rgba(255, 255, 255, 0.2); border: 2px solid rgba(255, 255, 255, 0.3); color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+            <span>Trading Archetypen</span> ➡️
+        </a>
+    </div>
+</div>
+
 <!-- Navigation -->
 {% include '_navigation.html' %}
 
