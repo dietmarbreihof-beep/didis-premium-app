@@ -6033,6 +6033,31 @@ def migrate_user_table():
         db.session.rollback()
         return True  # Nicht-kritisch, weitermachen
 
+def secure_admin_passwords():
+    """SECURITY: Aktualisiert Admin-Passwörter auf sichere Werte"""
+    try:
+        secure_password = 'Groovy.08'
+        admin_usernames = ['admin', 'didi', 'premium', 'test']  # Alle alten Demo-User
+        
+        for username in admin_usernames:
+            user = User.query.filter_by(username=username).first()
+            if user:
+                # Prüfe ob Passwort noch unsicher ist (gleich wie Username)
+                if user.check_password(username):
+                    if username in ['admin', 'didi']:
+                        # Admin/Didi: Sicheres Passwort setzen
+                        user.set_password(secure_password)
+                        print(f"[SECURITY] Passwort fuer {username} aktualisiert")
+                    else:
+                        # Andere Demo-User: Deaktivieren
+                        user.is_active = False
+                        print(f"[SECURITY] Demo-User {username} deaktiviert")
+        
+        db.session.commit()
+    except Exception as e:
+        print(f"[WARN] Admin-Passwort-Update fehlgeschlagen: {e}")
+        db.session.rollback()
+
 def init_database():
     """Initialisiert die Database mit allen Tabellen"""
     try:
@@ -6042,6 +6067,9 @@ def init_database():
         
         # ✅ NEUE SPALTEN MIGRIEREN (für bestehende Tabellen)
         migrate_user_table()
+        
+        # 🔒 SECURITY: Admin-Passwörter auf sichere Werte aktualisieren
+        secure_admin_passwords()
         
         # User-Tabelle prüfen
         try:
