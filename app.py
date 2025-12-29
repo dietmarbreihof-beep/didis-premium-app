@@ -3326,6 +3326,82 @@ def tirone_quadrant_lines():
                          prev_module=prev_module, 
                          next_module=next_module)
 
+@app.route('/s-kurven-lifecycle')
+def s_kurven_lifecycle():
+    """S-Kurven & Unternehmenslebenszyklus - Investment-Timing Masterclass"""
+    track_visitor()
+    
+    # Prüfe ob es ein entsprechendes Modul in der DB gibt
+    module = None
+    try:
+        module = LearningModule.query.filter_by(slug='s-kurven-lifecycle').first()
+    except:
+        pass
+    
+    # Falls kein Modul in DB, erstelle ein temporäres für Template-Kompatibilität
+    if not module:
+        from types import SimpleNamespace
+        module = SimpleNamespace(
+            title='S-Kurven & Unternehmenslebenszyklus',
+            description='Die Konvergenz von Wachstumstheorie und fundamentaler Bewertung meistern - Alex Sacerdote & Aswath Damodaran',
+            slug='s-kurven-lifecycle',
+            icon='📈',
+            estimated_duration=60,
+            difficulty_level='advanced',
+            view_count=0
+        )
+    
+    # Zugriff prüfen (Premium Content)
+    user_subscription = "free"
+    username = None
+    if session.get('logged_in'):
+        user_subscription = session.get('user', {}).get('membership', 'free')
+        username = session.get('user', {}).get('username')
+    
+    # Admin und Didi haben immer Zugriff auf alle Module
+    is_admin = username in ['admin', 'didi']
+    
+    # Prüfe Premium/Elite-Zugriff
+    if not is_admin and user_subscription not in ['premium', 'elite', 'elite_pro']:
+        flash('Für dieses Modul benötigst du ein Premium-Abonnement.', 'warning')
+        return redirect(url_for('upgrade_required', module_slug='s-kurven-lifecycle'))
+    
+    # Progress tracking (optional)
+    if session.get('logged_in'):
+        user_id = session.get('user_id', 'anonymous')
+        try:
+            if hasattr(module, 'id') and module.id:
+                progress = ModuleProgress.query.filter_by(
+                    user_id=str(user_id), 
+                    module_id=module.id
+                ).first()
+                
+                if not progress:
+                    progress = ModuleProgress(user_id=str(user_id), module_id=module.id)
+                    db.session.add(progress)
+                    db.session.commit()
+                else:
+                    progress.last_accessed = datetime.utcnow()
+                    db.session.commit()
+        except:
+            pass
+    
+    # View count erhöhen
+    if hasattr(module, 'id') and module.id:
+        try:
+            module.view_count += 1
+            db.session.commit()
+        except:
+            pass
+    
+    # Navigation-Daten ermitteln
+    prev_module, next_module = get_module_navigation(module) if hasattr(module, 'id') else (None, None)
+    
+    return render_template('s-kurven-lifecycle.html', 
+                         module=module, 
+                         prev_module=prev_module, 
+                         next_module=next_module)
+
 @app.route('/position-sizing-abcd-calculator')
 def position_sizing_abcd_calculator():
     """ABCD Trade-Grades Position Sizing Calculator"""

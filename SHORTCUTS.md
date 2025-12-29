@@ -185,7 +185,7 @@
 ### Neues Feature komplett implementieren:
 1. @new-module-page
 2. @register-module
-3. @add-navigation
+3.
 4. @git-push-railway
 
 ### Bestehende Seite fixen:
@@ -428,6 +428,51 @@ Features: Interactive Charts, Quiz, Key Takeaways
   • Die 5 Profi-Schritte für Stop-Platzierung
 ```
 
+**Beispiel 1k: Deine Trader-Reise (NEU - Dezember 2025)**
+```
+@new-module-page Deine Trader-Reise
+- HTML-Seite: templates/traders-journey.html ✅
+- Quelle: TraderLion - The Trader's Journey (Chapter 2) ✅
+- SVG-Grafiken (5): equity_stage1-4.svg + equity_evolution_overview.svg ✅
+- Kategorie: Trading-Psychologie → Trader-Entwicklung ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro/Masterclass) ✅
+- Features: Progressive Disclosure (7 Sections), Quiz-System (3 Fragen), SVG Equity-Kurven, Selbsteinschätzungs-Checklist, Key Takeaways
+- Schwierigkeit: Anfänger ⭐
+- Dauer: 45 Minuten
+- Route: /traders-journey ✅
+- Kernthemen:
+  • Stage 1: Unprofitable Phase (volatile, abwärts trendende Equity)
+  • Stage 2: Boom-and-Bust Phase (seitwärts, Gewinne ≈ Verluste)
+  • Stage 3: Consistency Phase (aufwärts, höhere Tiefs)
+  • Stage 4: Performance Phase (steile Uptrends, flache Drawdowns)
+  • Selbsteinschätzung: Wo stehst du auf deiner Reise?
+  • Mindset eines Gewinners (unbegrenztes Potenzial)
+  • Wie du von Stage zu Stage aufsteigst
+```
+
+**Beispiel 1l: S-Kurven & Unternehmenslebenszyklus (NEU - Dezember 2025)**
+```
+@new-module-page S-Kurven & Unternehmenslebenszyklus
+- HTML-Seite: templates/s-kurven-lifecycle.html ✅
+- Quelle: Alex Sacerdote (Whale Rock Capital) & Prof. Aswath Damodaran (NYU Stern) ✅
+- Integrierte SVG-Grafik: S-Kurve mit Phasen-Visualisierung ✅
+- Kategorie: Fundamentalanalyse → Bewertungsmodelle ✅
+- Premium Modul: Ja (Premium/Elite/Elite Pro) ✅
+- Features: Progressive Disclosure (8 Sections), Quiz-System (5 Fragen), Interaktive Checklisten, Expert-Cards, Lifecycle-Grid, Vergleichstabelle
+- Schwierigkeit: Fortgeschritten ⭐⭐
+- Dauer: 60 Minuten
+- Route: /s-kurven-lifecycle ✅
+- Kernthemen:
+  • S-Kurve der Technologie-Adoption (4 Phasen)
+  • Der Inflektionspunkt als "Sweet Spot" für Investoren
+  • Damodarans 6 Lebenszyklus-Phasen (Start-up bis Decline)
+  • Synthese: Zwei Modelle, ein optimaler Einstiegszeitpunkt
+  • Investment-Checkliste für den Sweet Spot
+  • Exit-Signale: Wann du verkaufen solltest
+  • Management-Paradoxon: Ausnahme vs. Regel (Bezos, Musk)
+- Quellen: Graham & Doddsville Interview, NYU Stern Papers
+```
+
 **Beispiel 2: Seite reparieren**
 ```
 @fix-page-display
@@ -451,8 +496,8 @@ Geänderte Dateien: SHORTCUTS.md (neu erstellt)
 
 ---
 
-**Zuletzt aktualisiert:** 12. Dezember 2025  
+**Zuletzt aktualisiert:** 29. Dezember 2025  
 **Projekt:** Didis Premium Trading Academy  
-**Version:** 1.0
+**Version:** 1.2
 
 
