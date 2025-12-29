@@ -300,22 +300,94 @@
         height: auto;
     }
 
-    /* Lifecycle Grid */
-    .lifecycle-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
+    /* Card Carousel */
+    .card-carousel {
+        position: relative;
         margin: 30px 0;
+        overflow: hidden;
     }
 
+    .carousel-container {
+        display: flex;
+        transition: transform 0.4s ease;
+    }
+
+    .carousel-slide {
+        min-width: 100%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .carousel-nav {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .carousel-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 2px solid #daa520;
+        background: white;
+        color: #daa520;
+        font-size: 1.5em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .carousel-btn:hover {
+        background: #daa520;
+        color: white;
+        transform: scale(1.1);
+    }
+
+    .carousel-btn:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .carousel-dots {
+        display: flex;
+        gap: 8px;
+    }
+
+    .carousel-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .carousel-dot.active {
+        background: #daa520;
+        transform: scale(1.2);
+    }
+
+    .carousel-counter {
+        font-size: 0.95em;
+        color: #666;
+        font-weight: 600;
+    }
+
+    /* Lifecycle Card (inside carousel) */
     .lifecycle-card {
         background: white;
         border-radius: 12px;
-        padding: 25px;
+        padding: 30px;
         border: 2px solid #e0e0e0;
         transition: all 0.3s ease;
         position: relative;
         overflow: hidden;
+        min-height: 200px;
     }
 
     .lifecycle-card::before {
@@ -334,15 +406,9 @@
     .lifecycle-card.mature-stable::before { background: #805ad5; }
     .lifecycle-card.decline::before { background: #718096; }
 
-    .lifecycle-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-        border-color: #daa520;
-    }
-
     .lifecycle-card h4 {
-        margin: 0 0 10px 0;
-        font-size: 1.2em;
+        margin: 0 0 15px 0;
+        font-size: 1.4em;
         color: #1a1a1a;
         display: flex;
         align-items: center;
@@ -350,21 +416,21 @@
     }
 
     .lifecycle-card .stage-emoji {
-        font-size: 1.4em;
+        font-size: 1.6em;
     }
 
     .lifecycle-card p {
-        margin: 0;
-        font-size: 0.95em;
-        color: #666;
-        line-height: 1.6;
+        margin: 0 0 10px 0;
+        font-size: 1.05em;
+        color: #444;
+        line-height: 1.7;
     }
 
     .lifecycle-card .action-badge {
         display: inline-block;
-        padding: 5px 12px;
+        padding: 8px 16px;
         border-radius: 20px;
-        font-size: 0.85em;
+        font-size: 0.95em;
         font-weight: 600;
         margin-top: 15px;
     }
@@ -737,8 +803,31 @@
             text-align: center;
         }
 
-        .lifecycle-grid {
-            grid-template-columns: 1fr;
+        .carousel-nav {
+            gap: 10px;
+        }
+
+        .carousel-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.2em;
+        }
+
+        .carousel-counter {
+            font-size: 0.85em;
+        }
+
+        .lifecycle-card {
+            padding: 20px;
+            min-height: 180px;
+        }
+
+        .lifecycle-card h4 {
+            font-size: 1.2em;
+        }
+
+        .expert-card {
+            padding: 20px;
         }
 
         .comparison-table {
@@ -748,10 +837,6 @@
         .comparison-table th,
         .comparison-table td {
             padding: 10px 12px;
-        }
-
-        .expert-grid {
-            grid-template-columns: 1fr;
         }
 
         .takeaway-grid {
@@ -827,25 +912,36 @@
         <div class="section-content" id="content1">
             <p>In der komplexen Welt der Kapitalmärkte suchst du nach verlässlichen Modellen, um die Entwicklung von Unternehmen zu prognostizieren und den optimalen Einstiegszeitpunkt zu finden. In meinen Jahrzehnten des intensiven Studiums der Märkte und der Methoden langfristig erfolgreicher Investoren habe ich zwei besonders einflussreiche Frameworks entdeckt, die ich dir hier vorstelle:</p>
             
-            <div class="expert-grid">
-                <div class="expert-card">
-                    <h4>Alex Sacerdote</h4>
-                    <p class="title">Gründer, Whale Rock Capital Management</p>
-                    <div class="focus">
-                        <strong>🎯 Fokus: S-Kurven-Investitionsphilosophie</strong>
-                        Identifiziert den optimalen Einstiegszeitpunkt in transformative Technologien durch Analyse von Adoptionsraten.
+            <div class="card-carousel" id="expertsCarousel">
+                <div class="carousel-container" id="expertsContainer">
+                    <div class="carousel-slide">
+                        <div class="expert-card">
+                            <h4>Alex Sacerdote</h4>
+                            <p class="title">Gründer, Whale Rock Capital Management</p>
+                            <div class="focus">
+                                <strong>🎯 Fokus: S-Kurven-Investitionsphilosophie</strong>
+                                Identifiziert den optimalen Einstiegszeitpunkt in transformative Technologien durch Analyse von Adoptionsraten.
+                            </div>
+                            <p>Als Praktiker und Hedgefonds-Manager hat Sacerdote einen Ansatz entwickelt, der explosives Wachstum vorhersagbar macht.</p>
+                        </div>
                     </div>
-                    <p>Als Praktiker und Hedgefonds-Manager hat Sacerdote einen Ansatz entwickelt, der explosives Wachstum vorhersagbar macht.</p>
+                    <div class="carousel-slide">
+                        <div class="expert-card">
+                            <h4>Prof. Aswath Damodaran</h4>
+                            <p class="title">NYU Stern School of Business</p>
+                            <div class="focus">
+                                <strong>🎯 Fokus: Corporate Lifecycle Theorie</strong>
+                                Bietet eine holistische, biologische Sichtweise auf die Alterungsprozesse von Unternehmen.
+                            </div>
+                            <p>Als "Dekan der Bewertung" liefert er eine wissenschaftliche Grundlage für fundamentale Analyse.</p>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="expert-card">
-                    <h4>Prof. Aswath Damodaran</h4>
-                    <p class="title">NYU Stern School of Business</p>
-                    <div class="focus">
-                        <strong>🎯 Fokus: Corporate Lifecycle Theorie</strong>
-                        Bietet eine holistische, biologische Sichtweise auf die Alterungsprozesse von Unternehmen.
-                    </div>
-                    <p>Als "Dekan der Bewertung" liefert er eine wissenschaftliche Grundlage für fundamentale Analyse.</p>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" onclick="moveCarousel('experts', -1)">◀</button>
+                    <div class="carousel-dots" id="expertsDots"></div>
+                    <span class="carousel-counter"><span id="expertsCurrent">1</span> / 2</span>
+                    <button class="carousel-btn" onclick="moveCarousel('experts', 1)">▶</button>
                 </div>
             </div>
 
@@ -925,29 +1021,42 @@
 
             <h3>Die vier Phasen der S-Kurve</h3>
             
-            <div class="lifecycle-grid">
-                <div class="lifecycle-card startup">
-                    <h4><span class="stage-emoji">🌱</span> Phase 1: Frühphase</h4>
-                    <p>Langsame Durchdringung, hohe Unsicherheit. Produkte sind teuer, komplex und es fehlt Infrastruktur. Nur Innovatoren und Early Adopters.</p>
-                    <span class="action-badge sell">⚠️ Hohes Risiko</span>
+            <div class="card-carousel" id="skurveCarousel">
+                <div class="carousel-container" id="skurveContainer">
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card startup">
+                            <h4><span class="stage-emoji">🌱</span> Phase 1: Frühphase</h4>
+                            <p>Langsame Durchdringung, hohe Unsicherheit. Produkte sind teuer, komplex und es fehlt Infrastruktur. Nur Innovatoren und Early Adopters.</p>
+                            <span class="action-badge sell">⚠️ Hohes Risiko</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card high-growth">
+                            <h4><span class="stage-emoji">🚀</span> Phase 2: Inflektionspunkt</h4>
+                            <p>Barrieren fallen ab! Von "Push" zu "Pull"-Markt. 3-5 Jahre explosives Volumenwachstum. <strong>Der optimale Einstiegszeitpunkt.</strong></p>
+                            <span class="action-badge buy">✅ KAUFEN</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card mature-growth">
+                            <h4><span class="stage-emoji">📈</span> Phase 3: Majority-Phase</h4>
+                            <p>Massenadoption, aber Wachstum verlangsamt sich. >50% Marktdurchdringung. Übergang von Umsatz zu Gewinn.</p>
+                            <span class="action-badge hold">⚡ Beobachten</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card decline">
+                            <h4><span class="stage-emoji">🏔️</span> Phase 4: Sättigung</h4>
+                            <p>Markt voll penetriert. Wachstum stoppt. Zeit für Exit oder neue S-Kurve. Risiko von Disruption (Verdrängung durch neue Technologie) steigt.</p>
+                            <span class="action-badge sell">🔴 EXIT</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="lifecycle-card high-growth">
-                    <h4><span class="stage-emoji">🚀</span> Phase 2: Inflektionspunkt</h4>
-                    <p>Barrieren fallen ab! Von "Push" zu "Pull"-Markt. 3-5 Jahre explosives Volumenwachstum. <strong>Der optimale Einstiegszeitpunkt.</strong></p>
-                    <span class="action-badge buy">✅ KAUFEN</span>
-                </div>
-                
-                <div class="lifecycle-card mature-growth">
-                    <h4><span class="stage-emoji">📈</span> Phase 3: Majority-Phase</h4>
-                    <p>Massenadoption, aber Wachstum verlangsamt sich. >50% Marktdurchdringung. Übergang von Umsatz zu Gewinn.</p>
-                    <span class="action-badge hold">⚡ Beobachten</span>
-                </div>
-                
-                <div class="lifecycle-card decline">
-                    <h4><span class="stage-emoji">🏔️</span> Phase 4: Sättigung</h4>
-                    <p>Markt voll penetriert. Wachstum stoppt. Zeit für Exit oder neue S-Kurve. Risiko von Disruption (Verdrängung durch neue Technologie) steigt.</p>
-                    <span class="action-badge sell">🔴 EXIT</span>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" onclick="moveCarousel('skurve', -1)">◀</button>
+                    <div class="carousel-dots" id="skurveDots"></div>
+                    <span class="carousel-counter"><span id="skurveCurrent">1</span> / 4</span>
+                    <button class="carousel-btn" onclick="moveCarousel('skurve', 1)">▶</button>
                 </div>
             </div>
 
@@ -1153,47 +1262,62 @@
         <div class="section-content" id="content4">
             <p>Professor Aswath Damodaran betrachtet Unternehmen wie lebende Organismen mit vorhersehbaren Alterungsprozessen. Jede Phase hat eigene Finanzkennzahlen und Investmentstrategien.</p>
 
-            <div class="lifecycle-grid">
-                <div class="lifecycle-card startup">
-                    <h4><span class="stage-emoji">💡</span> 1. Start-up Stage</h4>
-                    <p><strong>Charakteristik:</strong> Idee existiert, aber kein/wenig Umsatz. Hohe Sterblichkeitsrate.</p>
-                    <p><strong>Bewertung:</strong> Marktpotenzial, TAM (Total Addressable Market = gesamtes Marktvolumen), Team-Qualität</p>
-                    <span class="action-badge sell">VC-Investment</span>
+            <div class="card-carousel" id="lifecycleCarousel">
+                <div class="carousel-container" id="lifecycleContainer">
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card startup">
+                            <h4><span class="stage-emoji">💡</span> 1. Start-up Stage</h4>
+                            <p><strong>Charakteristik:</strong> Idee existiert, aber kein/wenig Umsatz. Hohe Sterblichkeitsrate.</p>
+                            <p><strong>Bewertung:</strong> Marktpotenzial, TAM (Total Addressable Market = gesamtes Marktvolumen), Team-Qualität</p>
+                            <span class="action-badge sell">VC-Investment</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card young-growth">
+                            <h4><span class="stage-emoji">🌿</span> 2. Young Growth</h4>
+                            <p><strong>Charakteristik:</strong> Umsatz wächst, aber Verluste. "Bar Mitzvah Moment" – Überleben fraglich.</p>
+                            <p><strong>Bewertung:</strong> EV/Umsatz, Burn Rate</p>
+                            <span class="action-badge hold">Vorsicht</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card high-growth">
+                            <h4><span class="stage-emoji">🚀</span> 3. High Growth</h4>
+                            <p><strong>Charakteristik:</strong> Skalierung! Margenerweiterung. Gewinne in Sicht. <strong>= Sacerdotes Inflektionspunkt!</strong></p>
+                            <p><strong>Bewertung:</strong> EV/EBITDA, PEG Ratio</p>
+                            <span class="action-badge buy">✅ SWEET SPOT</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card mature-growth">
+                            <h4><span class="stage-emoji">📊</span> 4. Mature Growth</h4>
+                            <p><strong>Charakteristik:</strong> Profitabel, stabile Margen. Einführung von Dividenden.</p>
+                            <p><strong>Bewertung:</strong> P/E Ratio, Dividend Yield</p>
+                            <span class="action-badge hold">Income-Investment</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card mature-stable">
+                            <h4><span class="stage-emoji">🏛️</span> 5. Mature Stable</h4>
+                            <p><strong>Charakteristik:</strong> Wachstum = BIP. Fokus auf Cashflow-Management, Rückkäufe.</p>
+                            <p><strong>Bewertung:</strong> Free Cash Flow Yield</p>
+                            <span class="action-badge hold">Value-Investment</span>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="lifecycle-card decline">
+                            <h4><span class="stage-emoji">📉</span> 6. Decline</h4>
+                            <p><strong>Charakteristik:</strong> Umsatz sinkt, Margen schrumpfen. Disruption oder Turnaround nötig.</p>
+                            <p><strong>Bewertung:</strong> Liquidationswert, Asset Play</p>
+                            <span class="action-badge sell">Meiden/Short</span>
+                        </div>
+                    </div>
                 </div>
-                
-                <div class="lifecycle-card young-growth">
-                    <h4><span class="stage-emoji">🌿</span> 2. Young Growth</h4>
-                    <p><strong>Charakteristik:</strong> Umsatz wächst, aber Verluste. "Bar Mitzvah Moment" – Überleben fraglich.</p>
-                    <p><strong>Bewertung:</strong> EV/Umsatz, Burn Rate</p>
-                    <span class="action-badge hold">Vorsicht</span>
-                </div>
-                
-                <div class="lifecycle-card high-growth">
-                    <h4><span class="stage-emoji">🚀</span> 3. High Growth</h4>
-                    <p><strong>Charakteristik:</strong> Skalierung! Margenerweiterung. Gewinne in Sicht. <strong>= Sacerdotes Inflektionspunkt!</strong></p>
-                    <p><strong>Bewertung:</strong> EV/EBITDA, PEG Ratio</p>
-                    <span class="action-badge buy">✅ SWEET SPOT</span>
-                </div>
-                
-                <div class="lifecycle-card mature-growth">
-                    <h4><span class="stage-emoji">📊</span> 4. Mature Growth</h4>
-                    <p><strong>Charakteristik:</strong> Profitabel, stabile Margen. Einführung von Dividenden.</p>
-                    <p><strong>Bewertung:</strong> P/E Ratio, Dividend Yield</p>
-                    <span class="action-badge hold">Income-Investment</span>
-                </div>
-                
-                <div class="lifecycle-card mature-stable">
-                    <h4><span class="stage-emoji">🏛️</span> 5. Mature Stable</h4>
-                    <p><strong>Charakteristik:</strong> Wachstum = BIP. Fokus auf Cashflow-Management, Rückkäufe.</p>
-                    <p><strong>Bewertung:</strong> Free Cash Flow Yield</p>
-                    <span class="action-badge hold">Value-Investment</span>
-                </div>
-                
-                <div class="lifecycle-card decline">
-                    <h4><span class="stage-emoji">📉</span> 6. Decline</h4>
-                    <p><strong>Charakteristik:</strong> Umsatz sinkt, Margen schrumpfen. Disruption oder Turnaround nötig.</p>
-                    <p><strong>Bewertung:</strong> Liquidationswert, Asset Play</p>
-                    <span class="action-badge sell">Meiden/Short</span>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" onclick="moveCarousel('lifecycle', -1)">◀</button>
+                    <div class="carousel-dots" id="lifecycleDots"></div>
+                    <span class="carousel-counter"><span id="lifecycleCurrent">1</span> / 6</span>
+                    <button class="carousel-btn" onclick="moveCarousel('lifecycle', 1)">▶</button>
                 </div>
             </div>
 
@@ -1261,21 +1385,32 @@
 
             <h3>Das Management-Paradoxon</h3>
             
-            <div class="expert-grid">
-                <div class="expert-card">
-                    <h4>Damodaran: Der Skeptiker</h4>
-                    <p>Statistisch schaffen die meisten Gründer den Übergang zum CEO eines Großkonzerns nicht. Governance-Wechsel sind <em>gesund und notwendig</em>.</p>
-                    <div class="warning-box" style="margin: 15px 0 0 0; padding: 12px;">
-                        "Die Regel: Gründer scheitern als Konzern-CEOs"
+            <div class="card-carousel" id="managementCarousel">
+                <div class="carousel-container" id="managementContainer">
+                    <div class="carousel-slide">
+                        <div class="expert-card">
+                            <h4>Damodaran: Der Skeptiker</h4>
+                            <p>Statistisch schaffen die meisten Gründer den Übergang zum CEO eines Großkonzerns nicht. Governance-Wechsel sind <em>gesund und notwendig</em>.</p>
+                            <div class="warning-box" style="margin: 15px 0 0 0; padding: 12px;">
+                                "Die Regel: Gründer scheitern als Konzern-CEOs"
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide">
+                        <div class="expert-card">
+                            <h4>Sacerdote: Der Optimist</h4>
+                            <p>Er sucht die statistische Anomalie – den "Founder-CEO", der visionär bleibt UND operativ exzellent ist (Bezos, Hastings, Musk).</p>
+                            <div class="success-box" style="margin: 15px 0 0 0; padding: 12px;">
+                                "Die Ausnahme: Founder erfinden neue S-Kurven"
+                            </div>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="expert-card">
-                    <h4>Sacerdote: Der Optimist</h4>
-                    <p>Er sucht die statistische Anomalie – den "Founder-CEO", der visionär bleibt UND operativ exzellent ist (Bezos, Hastings, Musk).</p>
-                    <div class="success-box" style="margin: 15px 0 0 0; padding: 12px;">
-                        "Die Ausnahme: Founder erfinden neue S-Kurven"
-                    </div>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" onclick="moveCarousel('management', -1)">◀</button>
+                    <div class="carousel-dots" id="managementDots"></div>
+                    <span class="carousel-counter"><span id="managementCurrent">1</span> / 2</span>
+                    <button class="carousel-btn" onclick="moveCarousel('management', 1)">▶</button>
                 </div>
             </div>
 
@@ -1536,6 +1671,117 @@
     const totalSections = 8;
     let completedSections = new Set();
 
+    // Carousel State
+    const carousels = {
+        experts: { current: 0, total: 2 },
+        skurve: { current: 0, total: 4 },
+        lifecycle: { current: 0, total: 6 },
+        management: { current: 0, total: 2 }
+    };
+
+    // Carousel Functions
+    function initCarousels() {
+        Object.keys(carousels).forEach(name => {
+            createDots(name);
+            updateCarousel(name);
+        });
+    }
+
+    function createDots(name) {
+        const dotsContainer = document.getElementById(`${name}Dots`);
+        if (!dotsContainer) return;
+        
+        dotsContainer.innerHTML = '';
+        for (let i = 0; i < carousels[name].total; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+            dot.onclick = () => goToSlide(name, i);
+            dotsContainer.appendChild(dot);
+        }
+    }
+
+    function moveCarousel(name, direction) {
+        const carousel = carousels[name];
+        carousel.current += direction;
+        
+        // Loop around
+        if (carousel.current >= carousel.total) carousel.current = 0;
+        if (carousel.current < 0) carousel.current = carousel.total - 1;
+        
+        updateCarousel(name);
+    }
+
+    function goToSlide(name, index) {
+        carousels[name].current = index;
+        updateCarousel(name);
+    }
+
+    function updateCarousel(name) {
+        const carousel = carousels[name];
+        const container = document.getElementById(`${name}Container`);
+        const counter = document.getElementById(`${name}Current`);
+        const dotsContainer = document.getElementById(`${name}Dots`);
+        
+        if (container) {
+            container.style.transform = `translateX(-${carousel.current * 100}%)`;
+        }
+        
+        if (counter) {
+            counter.textContent = carousel.current + 1;
+        }
+        
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === carousel.current);
+            });
+        }
+    }
+
+    // Touch/Swipe Support
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let currentTouchCarousel = null;
+
+    document.addEventListener('touchstart', e => {
+        const carousel = e.target.closest('.card-carousel');
+        if (carousel) {
+            currentTouchCarousel = carousel.id.replace('Carousel', '');
+            touchStartX = e.changedTouches[0].screenX;
+        }
+    });
+
+    document.addEventListener('touchend', e => {
+        if (currentTouchCarousel) {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+            currentTouchCarousel = null;
+        }
+    });
+
+    function handleSwipe() {
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) { // Minimum swipe distance
+            if (diff > 0) {
+                moveCarousel(currentTouchCarousel, 1); // Swipe left = next
+            } else {
+                moveCarousel(currentTouchCarousel, -1); // Swipe right = prev
+            }
+        }
+    }
+
+    // Keyboard Navigation
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+            // Find visible carousel
+            const visibleCarousel = document.querySelector('.card-carousel:not([style*="display: none"])');
+            if (visibleCarousel) {
+                const name = visibleCarousel.id.replace('Carousel', '');
+                moveCarousel(name, e.key === 'ArrowRight' ? 1 : -1);
+            }
+        }
+    });
+
     // S-Curve Calculator Functions
     function calculatePenetration() {
         const tam = parseFloat(document.getElementById('tamInput').value) || 1;
@@ -1584,6 +1830,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         toggleSection(1);
         loadProgress();
+        initCarousels();
         // Initialize S-Curve Calculator
         if (document.getElementById('penetrationSlider')) {
             updatePenetrationDisplay();
