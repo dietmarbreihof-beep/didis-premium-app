@@ -722,6 +722,123 @@
         transform: none;
     }
 
+    /* Case Study Cards */
+    .case-study-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        border: 2px solid #e0e0e0;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .case-study-card.success {
+        border-left: 4px solid #38a169;
+    }
+
+    .case-study-card.failure {
+        border-left: 4px solid #e53e3e;
+    }
+
+    .case-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .case-icon {
+        font-size: 2.5em;
+        line-height: 1;
+    }
+
+    .case-header h4 {
+        margin: 0;
+        font-size: 1.3em;
+        color: #1a1a1a;
+    }
+
+    .case-subtitle {
+        color: #666;
+        font-size: 0.95em;
+    }
+
+    .case-badge {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.85em;
+        font-weight: 600;
+        margin-left: auto;
+    }
+
+    .case-badge.success {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .case-badge.failure {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .case-context {
+        background: #f7f7f7;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        font-size: 0.95em;
+    }
+
+    .case-inflection {
+        background: linear-gradient(135deg, rgba(218, 165, 32, 0.1) 0%, rgba(184, 134, 11, 0.1) 100%);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 3px solid #daa520;
+        margin-bottom: 15px;
+    }
+
+    .case-inflection.warning {
+        background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(184, 30, 30, 0.1) 100%);
+        border-left-color: #e53e3e;
+    }
+
+    .case-analysis {
+        margin-bottom: 15px;
+    }
+
+    .case-analysis h5 {
+        margin: 0 0 10px 0;
+        color: #b8860b;
+        font-size: 1em;
+    }
+
+    .case-analysis ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .case-analysis li {
+        margin-bottom: 8px;
+        line-height: 1.5;
+    }
+
+    .case-result {
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 15px;
+    }
+
+    .case-result.success {
+        background: linear-gradient(135deg, rgba(56, 161, 105, 0.1) 0%, rgba(39, 113, 73, 0.1) 100%);
+        border-left: 3px solid #38a169;
+    }
+
+    .case-result.failure {
+        background: linear-gradient(135deg, rgba(229, 62, 62, 0.1) 0%, rgba(184, 30, 30, 0.1) 100%);
+        border-left: 3px solid #e53e3e;
+    }
+
     /* Expert Cards */
     .expert-grid {
         display: grid;
@@ -1248,18 +1365,188 @@
             </div>
 
             <button class="next-section-btn" onclick="completeSection(3)">
+                Weiter zu den Case Studies →
+            </button>
+        </div>
+    </div>
+
+    <!-- Section 4: Case Studies -->
+    <div class="section-card" id="section4">
+        <div class="section-header" onclick="toggleSection(4)">
+            <h2>4️⃣ Case Studies: Inflektionspunkt in der Praxis</h2>
+            <span class="section-toggle" id="toggle4">▶️</span>
+        </div>
+        <div class="section-content" id="content4">
+            <p>Diese historischen Beispiele zeigen dir, wie der <strong>Inflektionspunkt</strong> (der Übergang von Early Adopters zur Early Majority, oft bei ca. 10-15% Marktdurchdringung) in der Realität aussieht – und wie du echte S-Kurven von Hype-Blasen unterscheidest.</p>
+
+            <div class="card-carousel" id="casestudiesCarousel">
+                <div class="carousel-container" id="casestudiesContainer">
+                    <!-- Case Study 1: Netflix -->
+                    <div class="carousel-slide">
+                        <div class="case-study-card success">
+                            <div class="case-header">
+                                <span class="case-icon">🎬</span>
+                                <div>
+                                    <h4>Netflix (2010–2012)</h4>
+                                    <span class="case-subtitle">Der technologische "Enabler"</span>
+                                </div>
+                                <span class="case-badge success">✅ Erfolg</span>
+                            </div>
+                            
+                            <div class="case-context">
+                                <strong>Kontext:</strong> Netflix war profitabel mit dem DVD-Versand. Der Streaming-Dienst war anfangs nur ein kostenloses "Add-on".
+                            </div>
+                            
+                            <div class="case-inflection">
+                                <strong>🎯 Der Inflektionspunkt:</strong> Um 2010/2011 trafen zwei Faktoren zusammen: Die Breitband-Infrastruktur in den USA wurde schnell genug für HD-Streaming, und Netflix begann massiv in "Streaming-Only"-Lizenzen zu investieren.
+                            </div>
+                            
+                            <div class="case-analysis">
+                                <h5>📊 Whale Rock Analyse:</h5>
+                                <ul>
+                                    <li><strong>S-Kurve:</strong> Die Penetration von Streaming in US-Haushalten überschritt die 10%-Marke.</li>
+                                    <li><strong>Super-Leader:</strong> Netzwerkeffekte durch Daten (Empfehlungsalgorithmus) und Skalenvorteile (Content-Kosten pro Nutzer sanken).</li>
+                                    <li><strong>Margen-Treppe:</strong> Der Wechsel von physischem Versand (Portokosten = Variable Kosten) zu Streaming (Server/Lizenz = Fixkosten-Charakter bei Skalierung) zeigte massiven Operating Leverage.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="case-result success">
+                                <strong>📈 Ergebnis:</strong> Wer die Aktie kaufte, als Reed Hastings das Geschäft radikal umstellte (und kurzzeitig dafür bestraft wurde), erlebte einen der größten Kursanstiege der Geschichte.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Study 2: Apple iPhone -->
+                    <div class="carousel-slide">
+                        <div class="case-study-card success">
+                            <div class="case-header">
+                                <span class="case-icon">📱</span>
+                                <div>
+                                    <h4>Apple iPhone (2008–2010)</h4>
+                                    <span class="case-subtitle">Das Plattform-Ökosystem</span>
+                                </div>
+                                <span class="case-badge success">✅ Erfolg</span>
+                            </div>
+                            
+                            <div class="case-context">
+                                <strong>Kontext:</strong> Das iPhone startete 2007. Viele Analysten sahen es nur als teures Handy ohne Tastatur (vgl. BlackBerry).
+                            </div>
+                            
+                            <div class="case-inflection">
+                                <strong>🎯 Der Inflektionspunkt:</strong> Nicht der Launch des Geräts 2007 war der wahre Investment-Inflektionspunkt, sondern der <strong>Launch des App Stores (2008)</strong> und das iPhone 3G.
+                            </div>
+                            
+                            <div class="case-analysis">
+                                <h5>📊 Whale Rock Analyse:</h5>
+                                <ul>
+                                    <li><strong>S-Kurve:</strong> Smartphones wechselten von "Business-Tools" (BlackBerry/Palm) zu "Consumer-Produkten". Die Akzeptanzkurve schoss steil nach oben.</li>
+                                    <li><strong>Super-Leader (IP-Burg):</strong> Der App Store schuf extrem hohe Wechselkosten (Switching Costs). Wer 50 Apps gekauft hatte, wechselte nicht mehr zu Android.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="case-result success">
+                                <strong>📈 Ergebnis:</strong> Apple transformierte sich von einer Hardware-Company zu einer Plattform-Company mit wiederkehrenden Einnahmen (Services). Der "Sweet Spot" lag genau in der Phase, als Apps zum Alltag wurden.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Study 3: Tesla -->
+                    <div class="carousel-slide">
+                        <div class="case-study-card success">
+                            <div class="case-header">
+                                <span class="case-icon">🚗</span>
+                                <div>
+                                    <h4>Tesla (2019/2020)</h4>
+                                    <span class="case-subtitle">Die Produktions-Hölle überwinden</span>
+                                </div>
+                                <span class="case-badge success">✅ Erfolg</span>
+                            </div>
+                            
+                            <div class="case-context">
+                                <strong>Kontext:</strong> Tesla war lange ein Nischenanbieter für Luxusautos (Model S/X) und stand oft kurz vor der Pleite.
+                            </div>
+                            
+                            <div class="case-inflection">
+                                <strong>🎯 Der Inflektionspunkt:</strong> Das erfolgreiche Hochfahren der Massenproduktion des <strong>Model 3</strong> und der Nachweis der Profitabilität.
+                            </div>
+                            
+                            <div class="case-analysis">
+                                <h5>📊 Whale Rock Analyse:</h5>
+                                <ul>
+                                    <li><strong>S-Kurve:</strong> Elektroautos (EVs) bewegten sich global von &lt;2% Marktanteil in Richtung 5-10% (in Schlüsselmärkten). Die Technologie wurde "Mass Market Ready".</li>
+                                    <li><strong>Look-through Valuation:</strong> Bis 2019 sah Tesla optisch extrem teuer aus (kein Gewinn). Wer aber "hindurchblickte" auf die Produktionskapazität von 500k Autos und die Software-Margen, erkannte die Unterbewertung.</li>
+                                    <li><strong>Margen-Treppe:</strong> Mit steigendem Volumen sanken die Fixkosten pro Auto drastisch (Gigafactory-Effizienz).</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="case-result success">
+                                <strong>📈 Ergebnis:</strong> Die Aktie verzehnfachte sich, als der Markt realisierte, dass EVs nicht mehr aufzuhalten sind und Tesla der einzige skalierte Anbieter war.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Study 4: 3D-Druck (Negativ) -->
+                    <div class="carousel-slide">
+                        <div class="case-study-card failure">
+                            <div class="case-header">
+                                <span class="case-icon">🖨️</span>
+                                <div>
+                                    <h4>3D-Druck für Konsumenten (2013–2014)</h4>
+                                    <span class="case-subtitle">Die "False Dawn"-Falle</span>
+                                </div>
+                                <span class="case-badge failure">⚠️ Warnung</span>
+                            </div>
+                            
+                            <div class="case-context">
+                                <strong>Kontext:</strong> Unternehmen wie <strong>3D Systems (DDD)</strong> und <strong>Stratasys (SSYS)</strong> wurden gehypt. Die These: "Bald hat jeder Haushalt einen 3D-Drucker und druckt seine Ersatzteile selbst."
+                            </div>
+                            
+                            <div class="case-inflection warning">
+                                <strong>⚠️ Der vermeintliche Inflektionspunkt:</strong> Die Aktienkurse explodierten, Medien berichteten täglich. Es sah aus wie der Beginn der S-Kurve (ähnlich wie beim PC in den 80ern).
+                            </div>
+                            
+                            <div class="case-analysis">
+                                <h5>📊 Warum es scheiterte (Whale Rock Failure):</h5>
+                                <ul>
+                                    <li><strong>S-Kurven-Check (Fehldiagnose):</strong> Die Technologie war nicht reif für den Massenmarkt. Es war zu kompliziert, langsam und die Materialien stanken/waren teuer. Die Adoption blieb bei den "Innovators" (Bastler) stecken.</li>
+                                    <li><strong>Kein Super-Leader Status:</strong> Es gab keine Netzwerkeffekte. Wenn du einen Drucker hast, hat dein Nachbar keinen Vorteil davon. Keine "IP-Burg" – billige chinesische Klone fluteten den Markt.</li>
+                                    <li><strong>Valuation:</strong> Die Bewertung preiste ein Szenario ein, in dem 50% der Haushalte einen Drucker haben. Die Realität blieb bei &lt;1%.</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="case-result failure">
+                                <strong>📉 Ergebnis:</strong> Die Blase platzte. Die Aktien fielen um über 80-90% von ihren Höchstständen und haben sich oft bis heute nicht erholt. Investoren verwechselten einen <strong>Hype-Zyklus</strong> mit einer nachhaltigen <strong>S-Kurve</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-nav">
+                    <button class="carousel-btn" onclick="moveCarousel('casestudies', -1)">◀</button>
+                    <div class="carousel-dots" id="casestudiesDots"></div>
+                    <span class="carousel-counter"><span id="casestudiesCurrent">1</span> / 4</span>
+                    <button class="carousel-btn" onclick="moveCarousel('casestudies', 1)">▶</button>
+                </div>
+            </div>
+
+            <div class="highlight-box" style="margin-top: 30px;">
+                <strong>💡 Das entscheidende Lernziel:</strong>
+                <p>Der Unterschied zwischen <strong>Tesla</strong> und <strong>3D-Druck</strong> zeigt den wichtigsten Aspekt des Frameworks:</p>
+                <p>Es reicht nicht, dass eine Technologie "cool" ist. Sie muss <strong>Reibungspunkte abbauen</strong> (Ease of Use), um den Sprung von 10% auf 50% Marktdurchdringung zu schaffen. Tesla machte das EV einfach (Supercharger-Netzwerk), 3D-Druck blieb kompliziert.</p>
+            </div>
+
+            <button class="next-section-btn" onclick="completeSection(4)">
                 Weiter zum Unternehmenslebenszyklus →
             </button>
         </div>
     </div>
 
-    <!-- Section 4: Damodarans Lifecycle -->
-    <div class="section-card" id="section4">
-        <div class="section-header" onclick="toggleSection(4)">
-            <h2>4️⃣ Damodarans 6 Lebenszyklus-Phasen</h2>
-            <span class="section-toggle" id="toggle4">▶️</span>
+    <!-- Section 5: Damodarans Lifecycle -->
+    <div class="section-card" id="section5">
+        <div class="section-header" onclick="toggleSection(5)">
+            <h2>5️⃣ Damodarans 6 Lebenszyklus-Phasen</h2>
+            <span class="section-toggle" id="toggle5">▶️</span>
         </div>
-        <div class="section-content" id="content4">
+        <div class="section-content" id="content5">
             <p>Professor Aswath Damodaran betrachtet Unternehmen wie lebende Organismen mit vorhersehbaren Alterungsprozessen. Jede Phase hat eigene Finanzkennzahlen und Investmentstrategien.</p>
 
             <div class="card-carousel" id="lifecycleCarousel">
@@ -1331,19 +1618,19 @@
                 </ul>
             </div>
 
-            <button class="next-section-btn" onclick="completeSection(4)">
+            <button class="next-section-btn" onclick="completeSection(5)">
                 Weiter zur Synthese →
             </button>
         </div>
     </div>
 
-    <!-- Section 5: Die Synthese -->
-    <div class="section-card" id="section5">
-        <div class="section-header" onclick="toggleSection(5)">
-            <h2>5️⃣ Die Synthese – Zwei Modelle, ein Sweet Spot</h2>
-            <span class="section-toggle" id="toggle5">▶️</span>
+    <!-- Section 6: Die Synthese -->
+    <div class="section-card" id="section6">
+        <div class="section-header" onclick="toggleSection(6)">
+            <h2>6️⃣ Die Synthese – Zwei Modelle, ein Sweet Spot</h2>
+            <span class="section-toggle" id="toggle6">▶️</span>
         </div>
-        <div class="section-content" id="content5">
+        <div class="section-content" id="content6">
             <p>Die Kombination beider Frameworks liefert ein mächtiges Werkzeug für das Investment-Timing:</p>
 
             <table class="comparison-table">
@@ -1419,19 +1706,19 @@
                 <p>Ist dieses Management-Team die <strong>Ausnahme</strong> (kann neue S-Kurven erfinden) oder die <strong>Regel</strong> (wird den Übergang nicht schaffen)?</p>
             </div>
 
-            <button class="next-section-btn" onclick="completeSection(5)">
+            <button class="next-section-btn" onclick="completeSection(6)">
                 Weiter zur Investment-Checkliste →
             </button>
         </div>
     </div>
 
-    <!-- Section 6: Investment-Checkliste -->
-    <div class="section-card" id="section6">
-        <div class="section-header" onclick="toggleSection(6)">
-            <h2>6️⃣ Deine Investment-Checkliste</h2>
-            <span class="section-toggle" id="toggle6">▶️</span>
+    <!-- Section 7: Investment-Checkliste -->
+    <div class="section-card" id="section7">
+        <div class="section-header" onclick="toggleSection(7)">
+            <h2>7️⃣ Deine Investment-Checkliste</h2>
+            <span class="section-toggle" id="toggle7">▶️</span>
         </div>
-        <div class="section-content" id="content6">
+        <div class="section-content" id="content7">
             <p>Die Kombination beider Modelle liefert eine klare Handlungsanleitung für den <strong>optimalen Investitionszeitpunkt</strong>:</p>
 
             <div class="checklist">
@@ -1488,19 +1775,19 @@
                 <cite>— Gemeinsame Erkenntnis von Sacerdote & Damodaran</cite>
             </div>
 
-            <button class="next-section-btn" onclick="completeSection(6)">
+            <button class="next-section-btn" onclick="completeSection(7)">
                 Weiter zum Quiz →
             </button>
         </div>
     </div>
 
-    <!-- Section 7: Quiz -->
-    <div class="section-card" id="section7">
-        <div class="section-header" onclick="toggleSection(7)">
-            <h2>7️⃣ Teste dein Wissen</h2>
-            <span class="section-toggle" id="toggle7">▶️</span>
+    <!-- Section 8: Quiz -->
+    <div class="section-card" id="section8">
+        <div class="section-header" onclick="toggleSection(8)">
+            <h2>8️⃣ Teste dein Wissen</h2>
+            <span class="section-toggle" id="toggle8">▶️</span>
         </div>
-        <div class="section-content" id="content7">
+        <div class="section-content" id="content8">
             <div class="quiz-container">
                 <h4>📝 Quiz: S-Kurven & Lifecycle</h4>
 
@@ -1606,19 +1893,19 @@
                 </button>
             </div>
 
-            <button class="next-section-btn" onclick="completeSection(7)" id="quizNextBtn" disabled>
+            <button class="next-section-btn" onclick="completeSection(8)" id="quizNextBtn" disabled>
                 Weiter zu den Key Takeaways →
             </button>
         </div>
     </div>
 
-    <!-- Section 8: Key Takeaways -->
-    <div class="section-card" id="section8">
-        <div class="section-header" onclick="toggleSection(8)">
-            <h2>8️⃣ Key Takeaways</h2>
-            <span class="section-toggle" id="toggle8">▶️</span>
+    <!-- Section 9: Key Takeaways -->
+    <div class="section-card" id="section9">
+        <div class="section-header" onclick="toggleSection(9)">
+            <h2>9️⃣ Key Takeaways</h2>
+            <span class="section-toggle" id="toggle9">▶️</span>
         </div>
-        <div class="section-content" id="content8">
+        <div class="section-content" id="content9">
             <div class="key-takeaways">
                 <h3>🏆 Das hast du gelernt</h3>
                 <div class="takeaway-grid">
@@ -1668,13 +1955,14 @@
 <script>
     // Section Management
     let currentSection = 0;
-    const totalSections = 8;
+    const totalSections = 9;
     let completedSections = new Set();
 
     // Carousel State
     const carousels = {
         experts: { current: 0, total: 2 },
         skurve: { current: 0, total: 4 },
+        casestudies: { current: 0, total: 4 },
         lifecycle: { current: 0, total: 6 },
         management: { current: 0, total: 2 }
     };
